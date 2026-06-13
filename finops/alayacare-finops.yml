@@ -1,0 +1,128 @@
+name: AlayaCare API FinOps Framework
+description: >
+  FinOps Framework FOCUS-aligned cost and usage considerations for the AlayaCare cloud-based
+  home and community care management platform. AlayaCare uses enterprise custom pricing based
+  on modules selected and monthly service hour volumes. All cost optimization recommendations
+  apply within the context of negotiated enterprise agreements. Base platform estimates from
+  third-party sources suggest approximately $1,000/month as a starting point; actual costs
+  vary significantly by agency size, module selection, and geographic region.
+specificationVersion: '1.0'
+framework: FinOps Framework
+alignment: FOCUS 1.0
+url: https://alayacare.com/pricing/
+provider: AlayaCare
+costDrivers:
+  - name: Module Selection
+    description: >
+      AlayaCare pricing is modular; costs vary based on which functional modules are activated:
+      clinical documentation, scheduling, billing and accounting, medication management,
+      forms, and workforce management. Each module adds to the base subscription cost.
+      API access scope is tied to licensed modules — only APIs for enabled modules are
+      accessible to integration developers.
+    category: License
+    optimization: >
+      Audit which modules are actively used by staff and accessed via API integrations.
+      Disable modules not in production use to reduce licensing costs. Phase module adoption
+      to align spend with operational readiness rather than pre-activating all modules.
+
+  - name: Monthly Service Hours Volume
+    description: >
+      AlayaCare pricing scales with the total number of service hours delivered per month
+      by the agency. Higher service hour volumes move agencies into higher pricing tiers.
+      This usage-based component means costs grow with agency size and client caseload.
+    category: Usage
+    unit: service-hours-per-month
+    optimization: >
+      Monitor service hour projections during budget planning cycles. If volume fluctuates
+      seasonally, negotiate contract structures that accommodate peak/trough patterns.
+      Validate that all recorded service hours in AlayaCare represent billable or reportable
+      activity — eliminate ghost visits or erroneous time entries that inflate volume counts.
+
+  - name: AlayaCare Connector Premium Add-on
+    description: >
+      The AlayaCare Connector (no-code workflow integration tool) is a premium add-on beyond
+      the core subscription. Agencies using Connector to automate integrations with payroll,
+      billing, CRM, or HR systems incur additional costs for this feature. Evaluate whether
+      the Connector cost is offset by reduced manual data entry and IT integration labour.
+    category: License
+    optimization: >
+      Compare the cost of Connector against direct REST API integration built in-house.
+      For agencies with development capacity, direct API integration may be more cost-effective
+      for high-volume data flows. Use Connector for rapid prototyping or low-volume integrations
+      where engineering investment is not justified.
+
+  - name: AlayaMarket Marketplace Participation
+    description: >
+      AlayaMarket staffing marketplace API access may carry separate costs for supply and
+      demand organizations. Regional endpoint access (Australia, Canada, USA) and event
+      notification setup through AWS SNS add operational overhead and potential infrastructure
+      costs for consuming the event stream in your own systems.
+    category: License
+    optimization: >
+      Assess the labour cost savings from automated shift matching vs. AlayaMarket
+      participation costs. Monitor SNS event consumption costs in your own AWS account
+      if self-hosting the event consumer infrastructure.
+
+  - name: Integration Development and Maintenance
+    description: >
+      Building and maintaining integrations with AlayaCare REST APIs requires ongoing
+      engineering investment. API credentials are environment-specific and may change on
+      environment restores, requiring credential rotation processes. SwaggerHub specification
+      updates (versions tracked per API module) indicate schema evolution that may require
+      integration updates.
+    category: Engineering
+    optimization: >
+      Use AlayaCare's SwaggerHub specifications and GitHub Pages documentation to reduce
+      integration discovery time. Implement robust credential management with automated
+      rotation detection. Monitor the external-integration-docs GitHub repository for
+      API version updates to avoid breaking changes (track spec version numbers: Client
+      v1.0.6, Employee v1.0.6, Scheduler v1.0.7, etc.).
+
+  - name: AWS SQS Event Infrastructure
+    description: >
+      Two-way integrations using AlayaCare's AWS SQS queues require your organization to
+      provision and maintain SQS consumer infrastructure. While SQS costs are low per message,
+      high-volume event streams from busy care agencies can accumulate meaningful AWS costs
+      in your own account for queue polling, Lambda processing, or EC2 consumer services.
+    category: Infrastructure
+    unit: per-SQS-message
+    optimization: >
+      Use SQS long polling (WaitTimeSeconds=20) to reduce empty receive calls and lower
+      polling costs. Set appropriate visibility timeout to avoid duplicate processing.
+      Monitor dead letter queue depth as an operational health metric — spikes indicate
+      consumer failures that may lead to message loss after the 3-day retention window.
+
+costAllocation:
+  - dimension: API Module
+    description: Allocate integration costs by AlayaCare module (Clinical, Scheduling, Billing, etc.) to map against functional business units
+  - dimension: Region
+    description: Separate costs by geographic region (Australia, Canada, USA) for multi-region AlayaCare deployments
+  - dimension: Environment
+    description: Track sandbox vs. production usage separately to isolate true operational costs from development activity
+  - dimension: Integration Type
+    description: Distinguish costs between Connector-based integrations and direct REST API integrations to evaluate ROI of each approach
+
+budgeting:
+  - recommendation: >
+      Request multi-year enterprise agreements with AlayaCare to lock in per-unit pricing
+      ahead of anticipated service volume growth.
+  - recommendation: >
+      Include engineering time estimates for integration maintenance (credential rotation,
+      API version upgrades) as an annual OpEx line item separate from AlayaCare subscription fees.
+  - recommendation: >
+      Budget for AlayaMarket onboarding costs if participating in the staffing marketplace —
+      include Customer Success Manager engagement time and technical setup for SNS event endpoints.
+  - recommendation: >
+      Monitor AlayaCare's external-integration-docs repository on GitHub for API version
+      changes that may require integration updates; budget 1-2 sprints per year for API
+      maintenance as specs evolve.
+  - recommendation: >
+      Evaluate total cost of ownership including avoided costs: AlayaCare's cloud hosting
+      eliminates on-premises infrastructure spend, and built-in scheduling/clinical tools
+      replace point solutions that would otherwise require separate licensing.
+
+contact:
+  sales: https://alayacare.com/pricing/
+  integrations: https://alayacare.com/brochures/alayacare-integrations-and-apis/
+  marketplace: team-alayamarket@alayacare.com
+  documentation: https://alayacare.github.io/external-integration-docs/

@@ -1,0 +1,216 @@
+aid: api-evangelist-alayacare
+name: AlayaCare
+description: >
+  AlayaCare is a cloud-based home and community care management platform providing REST APIs
+  for managing client profiles, scheduling visits, documenting clinical care, processing
+  billing and accounting, and tracking patient outcomes. The platform serves home care
+  agencies, nursing registries, and government-funded community care programs globally.
+  APIs cover clients, employees, scheduling, clinical records, tasks, forms, medications,
+  accounting, and file management, with integration via REST and AWS SQS event streaming.
+  AlayaCare also offers AlayaMarket, a staffing marketplace API for matching supply and
+  demand organizations, and AlayaCare Residential for residential aged care settings.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/alayacare/refs/heads/main/apis.yml
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.19'
+tags:
+  - Home Care
+  - Community Care
+  - Healthcare
+  - Scheduling
+  - Clinical
+  - Billing
+  - Client Management
+  - Care Management
+  - Aged Care
+  - Workforce Management
+apis:
+  - name: AlayaCare Client API
+    description: >
+      REST API for managing client (patient) profiles in AlayaCare, including demographics,
+      contact information, care groups, and client-level metadata. Supports creating,
+      retrieving, and updating patient records. Authenticated via HTTP Basic Auth using
+      tenant-specific public/private key pairs provisioned by AlayaCare.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+    tags:
+      - Clients
+      - Patients
+      - Demographics
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+      - type: OpenAPI
+        url: https://app.swaggerhub.com/apis/AlayaCare/client-api-external
+  - name: AlayaCare Employee API
+    description: >
+      REST API for managing employee records including staff information, designations,
+      departments, and employee-level attributes. Enables HR and workforce management
+      integrations. Supports pagination and date-range filtering. Authentication uses
+      HTTP Basic Auth with tenant-specific credentials.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/employees/
+    tags:
+      - Employees
+      - Workforce
+      - HR
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaCare Scheduler API
+    description: >
+      REST API for accessing and managing visit scheduling data, including visit details,
+      facility information, and service delivery records. Supports filtering by date range
+      and pagination. Critical for building scheduling integrations, rostering tools, and
+      payroll system connectors.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/scheduler/
+    tags:
+      - Scheduling
+      - Visits
+      - Rostering
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaCare Clinical API
+    description: >
+      REST API for accessing clinical documentation including progress notes, medications,
+      vital signs, and clinical observations recorded during care visits. Supports
+      integration with EMR/EHR systems and clinical data warehouses. Authenticated via
+      HTTP Basic Auth with tenant-scoped credentials.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/clinical/
+    tags:
+      - Clinical
+      - Progress Notes
+      - Vitals
+      - Medications
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaCare Tasks API
+    description: >
+      REST API (v1 and v2) for managing care tasks assigned to clients and employees within
+      AlayaCare. Supports creating, retrieving, and updating task records. Tasks v2 adds
+      expanded capabilities. Used for workflow automation and care coordination integrations.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/tasks/
+    tags:
+      - Tasks
+      - Care Coordination
+      - Workflow
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaCare Forms API
+    description: >
+      REST API for accessing digital form submissions captured during care delivery, including
+      assessment forms, intake forms, and clinical documentation forms. Updated November 2024
+      with Forms v2 support. Enables reporting, compliance, and quality assurance integrations.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/tasks/forms20
+    tags:
+      - Forms
+      - Assessments
+      - Documentation
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaCare Accounting API
+    description: >
+      REST API for financial operations within AlayaCare, including billing records, invoices,
+      and accounting data. Supports integration with payroll systems, financial reporting
+      tools, and ERP platforms. Authenticated via HTTP Basic Auth with tenant credentials.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/
+    tags:
+      - Billing
+      - Accounting
+      - Finance
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaCare Medication API
+    description: >
+      REST API for managing medication records associated with client care plans in AlayaCare.
+      Supports retrieval of medication lists, dosage information, and administration records
+      for integration with pharmacy systems and medication management platforms.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/
+    tags:
+      - Medications
+      - Pharmacy
+      - Clinical
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  - name: AlayaMarket Marketplace API
+    description: >
+      REST API for the AlayaMarket staffing marketplace enabling supply and demand
+      organizations to exchange shift offers and staffing requests. Demand organizations
+      use Outbox APIs to publish staffing needs; supply organizations use Inbox APIs to
+      respond. Supports both synchronous REST and asynchronous AWS SNS event notifications.
+      Available in three regions: Australia, Canada, and USA with sandbox environments.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/
+    baseURL: https://api.prod.alayacare.com
+    tags:
+      - Marketplace
+      - Staffing
+      - Workforce
+      - Shift Management
+    properties:
+      - type: Documentation
+        url: https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/
+      - type: GitHub
+        url: https://github.com/AlayaCare/alayamarket-external-docs
+  - name: AlayaCare Residential (Resi) API
+    description: >
+      REST API for AlayaCare's residential aged care product, supporting client extensions,
+      resident management, and care documentation specific to residential facility settings.
+      Separate from the home care APIs; hosted at residential.alayacare.com.au with
+      dedicated API documentation.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://acresi-api-docs.residential.alayacare.com/
+    baseURL: https://residential.alayacare.com.au/api/
+    tags:
+      - Residential
+      - Aged Care
+      - Client Extensions
+    properties:
+      - type: Documentation
+        url: https://acresi-api-docs.residential.alayacare.com/
+common:
+  - type: Website
+    url: https://alayacare.com/
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/
+  - type: GitHub
+    url: https://github.com/alayacare
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/alayacare/
+  - type: Blog
+    url: https://alayacare.com/blog/
+  - type: IntegrationsBrochure
+    url: https://alayacare.com/brochures/alayacare-integrations-and-apis/
+  - type: APITerms
+    url: https://alayacare.com/wp-content/uploads/2022/12/AlayaCare-API-Developer-Access-Terms-.pdf
+  - type: Plans
+    url: plans/alayacare-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/alayacare-rate-limits.yml
+  - type: FinOps
+    url: finops/alayacare-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

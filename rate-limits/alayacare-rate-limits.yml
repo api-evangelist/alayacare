@@ -1,0 +1,75 @@
+name: AlayaCare API Rate Limits
+description: >
+  AlayaCare does not publicly document specific rate limit thresholds for its external REST
+  APIs. Infrastructure is hosted on Amazon Web Services (AWS) and scales with client
+  transaction volumes per the client pricing model and SLA. The AlayaMarket Marketplace
+  API inherits standard AWS SQS limitations for event streaming, including a 3-day message
+  retention window and maximum 5 receive attempts with dead letter queue fallback.
+  Organizations should contact their AlayaCare account team for specific throughput
+  guidance and SLA details applicable to their subscription.
+specificationVersion: '0.1'
+url: https://alayacare.github.io/external-integration-docs/technical-architecture.html
+limits:
+  - name: External REST API Rate Limit
+    description: >
+      AlayaCare's external REST APIs (Client, Employee, Scheduler, Clinical, Tasks, Forms,
+      Medication, Accounting, Files) do not publish explicit per-minute or per-hour request
+      rate limits. The platform scales on AWS infrastructure in alignment with the client's
+      subscription and SLA. Clients making excessive requests may encounter throttling.
+      Use the page and count query parameters to implement efficient pagination rather than
+      large unbounded queries.
+    type: requests
+    period: not-publicly-disclosed
+    limit: contact-for-details
+    scope: per-tenant
+    enforcement: contact-for-details
+    parameters:
+      - name: page
+        description: Pagination page number
+      - name: count
+        description: Number of records per page
+  - name: SQS Event Queue Limits
+    description: >
+      AlayaCare's two-way integration pattern uses Amazon SQS Standard Queues for event
+      streaming. Standard SQS architectural limits apply: messages are retained for a
+      default 3-day period, and failed messages are retried up to 5 times before being
+      sent to a dead letter queue. Standard SQS throughput limits (nearly unlimited
+      transactions per second) apply at the AWS service level.
+    type: events
+    period: per-message
+    retention: 3 days
+    max_receive_attempts: 5
+    dead_letter_queue: true
+    queue_type: AWS SQS Standard
+    throughput: AWS SQS standard limits
+  - name: AlayaMarket API Rate Limit
+    description: >
+      The AlayaMarket Marketplace API (Outbox/Inbox) does not publish explicit rate limits.
+      Event-driven notifications use AWS SNS with standard SNS throughput limits. Manual
+      endpoint setup is required via the AlayaCare support team before receiving
+      asynchronous notifications. Contact team-alayamarket@alayacare.com for limits
+      applicable to your integration.
+    type: requests
+    period: not-publicly-disclosed
+    limit: contact-for-details
+    scope: per-organization
+    contact: team-alayamarket@alayacare.com
+  - name: Authentication Credential Scope
+    description: >
+      AlayaCare REST API credentials (public/private key pairs used in HTTP Basic Auth)
+      are database-specific and provisioned per environment (production/sandbox). Credentials
+      may change if environments are restored from backup. Separate credential pairs are
+      required for each tenant environment. AlayaMarket uses username/password login
+      returning a JWT IdToken for Bearer token authentication.
+    type: authentication
+    auth_method: HTTP Basic Authentication
+    credential_scope: per-tenant per-environment
+    note: Credentials may change on environment restore; maintain secure credential management
+notes:
+  - "Rate limits are not publicly documented; contact your AlayaCare account team for SLA details"
+  - "SQS queues have 3-day message retention and max 5 delivery attempts before dead letter queue"
+  - "Use pagination (page, count parameters) to avoid large result set performance issues"
+  - "AlayaMarket SNS event endpoints require manual setup via AlayaCare support"
+  - "Credentials are environment-specific and may be rotated on environment restore operations"
+  - "Transport security: TLS v1.2 enforced on all REST, SQS, and S3 communications"
+  - "Infrastructure: AWS-hosted, scaling aligned with client transaction volumes and SLA tier"
