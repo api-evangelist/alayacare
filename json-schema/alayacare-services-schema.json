@@ -1,0 +1,1186 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Services API Schemas",
+  "definitions": {
+    "Branch": {
+      "description": "AlayaCare branch",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Branch ID",
+          "example": 1000
+        },
+        "name": {
+          "type": "string",
+          "description": "Branch name",
+          "example": "Toronto branch"
+        }
+      }
+    },
+    "ClientDetails": {
+      "description": "Visit client details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare client profile ID",
+          "example": 7890
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Client full name",
+          "example": "John Smith"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Time Zone name in IANA format (iana.org/time-zones)",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "full_name"
+      ]
+    },
+    "EmployeeDetails": {
+      "description": "Visit employee details",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare employee ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External employee ID",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare client profile ID",
+          "example": 7891
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Employee full name",
+          "example": "Jane Smith"
+        },
+        "email": {
+          "type": "string",
+          "description": "Employee email",
+          "example": "employee_1@workplace.com"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Time Zone name in IANA format (iana.org/time-zones)",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "full_name"
+      ]
+    },
+    "SuccessResponse": {
+      "description": "Success response.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External ID",
+          "example": "entity_external_id"
+        }
+      },
+      "required": [
+        "id",
+        "external_id"
+      ]
+    },
+    "ErrorResponse": {
+      "description": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 400,
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "example": "Invalid request",
+          "description": "Detailed error message"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "ProfileAttribute": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "description": "Attribute key in the demographics object",
+          "type": "string",
+          "example": "first_name"
+        },
+        "description": {
+          "description": "Attribute description as it shows in the web application",
+          "type": "string",
+          "example": "First Name"
+        }
+      }
+    },
+    "ProfileAttributeList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of profile attributes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ProfileAttribute"
+          }
+        }
+      }
+    },
+    "ServiceStatus": {
+      "type": "string",
+      "description": "Current service status.",
+      "enum": [
+        "active",
+        "on_hold",
+        "waiting_list",
+        "discharged"
+      ]
+    },
+    "Service": {
+      "type": "object",
+      "required": [
+        "alayacare_service_id",
+        "service_name",
+        "service_status"
+      ],
+      "properties": {
+        "alayacare_service_code_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare service code ID",
+          "example": 1
+        },
+        "alayacare_service_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare service ID",
+          "example": 1
+        },
+        "service_code_name": {
+          "type": "string",
+          "description": "Service code defined for service",
+          "example": "OTVISIT"
+        },
+        "service_id": {
+          "type": "string",
+          "description": "external service ID",
+          "example": "sor_service_id_1",
+          "x-nullable": true
+        },
+        "service_name": {
+          "type": "string",
+          "description": "Name of client's service",
+          "example": "PSW Home Visit"
+        },
+        "service_start_date": {
+          "type": "string",
+          "description": "Date where the service began",
+          "example": "2021-03-19"
+        },
+        "service_status": {
+          "$ref": "#/components/schemas/ServiceStatus"
+        },
+        "service_reason": {
+          "type": "string",
+          "description": "the reason corresponding to service status",
+          "example": "hospitalization"
+        }
+      }
+    },
+    "ServiceList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of services",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Service"
+          }
+        }
+      }
+    },
+    "ServiceFunderDetails": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare funder ID",
+          "type": "integer",
+          "minimum": 1,
+          "example": 1
+        },
+        "external_id": {
+          "description": "External funder ID",
+          "type": "string",
+          "example": "sor_funder_id_1",
+          "x-nullable": true
+        },
+        "name": {
+          "description": "Funder name",
+          "type": "string",
+          "example": "Insurance Company"
+        },
+        "code": {
+          "description": "Funder code",
+          "type": "string",
+          "example": "IC-1"
+        },
+        "organization": {
+          "description": "Organization",
+          "type": "string",
+          "example": "Home Healthcare Agency"
+        },
+        "organization_code": {
+          "description": "Organization code",
+          "type": "string",
+          "example": "HHC-0101"
+        },
+        "percentage": {
+          "type": "integer",
+          "example": 100
+        },
+        "billing_contact": {
+          "$ref": "#/components/schemas/ServiceFunderBillingContact"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "ServiceFunderBillingContact": {
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "profile_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Billing contact profile ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Billing contact full name.",
+          "example": "Clark Kent"
+        }
+      }
+    },
+    "ServiceDetails": {
+      "type": "object",
+      "required": [
+        "alayacare_service_id",
+        "service_name",
+        "service_status"
+      ],
+      "properties": {
+        "alayacare_service_code_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "AlayaCare service code ID",
+          "example": 1
+        },
+        "alayacare_service_id": {
+          "type": "string",
+          "description": "Alaycare service ID",
+          "example": 347
+        },
+        "cost_centre": {
+          "$ref": "#/components/schemas/CostCentre"
+        },
+        "employee": {
+          "$ref": "#/components/schemas/EmployeeDetails"
+        },
+        "funders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ServiceFunderDetails"
+          }
+        },
+        "patient": {
+          "$ref": "#/components/schemas/ClientDetails"
+        },
+        "profile": {
+          "$ref": "#/components/schemas/ServiceProfile"
+        },
+        "provider_details": {
+          "$ref": "#/components/schemas/ServiceProviderDetails"
+        },
+        "service_code_name": {
+          "type": "string",
+          "description": "Service code defined for service.",
+          "example": "OTVISIT"
+        },
+        "service_id": {
+          "type": "string",
+          "description": "External service ID",
+          "example": 347,
+          "x-nullable": true
+        },
+        "service_instructions": {
+          "description": "Service instructions",
+          "type": "string",
+          "example": "Call in the morning to confirm each visit",
+          "x-nullable": true
+        },
+        "service_name": {
+          "type": "string",
+          "description": "Name of client's service",
+          "example": "OT Home Visit"
+        },
+        "service_start_date": {
+          "type": "string",
+          "description": "Date the service starts",
+          "example": "2021-03-19"
+        },
+        "service_status": {
+          "$ref": "#/components/schemas/ServiceStatus"
+        },
+        "start_date": {
+          "type": "string",
+          "description": "Service start datetime",
+          "example": "2018-01-01"
+        },
+        "status_end_date": {
+          "type": "string",
+          "description": "The current service status end date",
+          "example": "2021-03-21T13:30:00+00:00"
+        },
+        "status_reason": {
+          "type": "string",
+          "description": "The reason of the service status",
+          "example": "Hospitalized"
+        },
+        "status_start_date": {
+          "type": "string",
+          "description": "The current service status date",
+          "example": "2021-03-19T13:30:00+00:00"
+        },
+        "use_client_address": {
+          "type": "boolean",
+          "description": "whether or not to use the client address",
+          "example": true
+        }
+      }
+    },
+    "ServiceCode": {
+      "description": "Details of service codes",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Service code id",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Service Code name",
+          "example": "SC1"
+        },
+        "branch": {
+          "$ref": "#/components/schemas/Branch"
+        }
+      }
+    },
+    "ServiceCodeList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of service codes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ServiceCode"
+          }
+        }
+      }
+    },
+    "ServiceTagList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of service tags",
+      "properties": {
+        "items": {
+          "type": "array",
+          "example": [
+            "Diabetes service",
+            "Hospice care"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ServiceForm": {
+      "description": "Details of forms",
+      "type": "object",
+      "properties": {
+        "branch": {
+          "$ref": "#/components/schemas/Branch"
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Service code id",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Service Code name",
+          "example": "SC1"
+        },
+        "status": {
+          "type": "string",
+          "description": "service form status",
+          "example": "active"
+        },
+        "version": {
+          "type": "string",
+          "description": "service form version",
+          "example": 1
+        }
+      }
+    },
+    "ServiceFormList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of forms",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ServiceForm"
+          }
+        }
+      }
+    },
+    "CostCentre": {
+      "description": "Details of a cost centre",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Cost centre description",
+          "example": "Montreal"
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Cost centre ID",
+          "example": 2
+        },
+        "number": {
+          "type": "string",
+          "description": "Cost centre number for display in-app",
+          "example": "5555"
+        },
+        "status": {
+          "type": "string",
+          "description": "Cost centre status",
+          "example": "enabled"
+        }
+      }
+    },
+    "ServiceProfile": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the service profile, defined through the AlayaCare web application.\nOn the example below default profile keys for the service are used.\nExample profile attributes:\n+ `city`: string\n+ `state`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `first_name`: string\n+ `last_name`: string\n+ `emergency_response_level`: string\n+ `form_context_fields`: object\n",
+      "type": "object",
+      "example": {
+        "city": "Montreal",
+        "state": "QC",
+        "address": "4200 Blvd. St.-Laurent",
+        "country": "Canada",
+        "zip": "H2W2R2",
+        "address_suite": 800,
+        "form_context_fields": {
+          "context_field_name_1": "context_field_value_1",
+          "context_field_name_2": "context_field_value_2"
+        }
+      }
+    },
+    "ServiceProviderDetails": {
+      "description": "Collection of key/value pairs representing service details for the Service Provider.\nAll values are treated as strings.\nCorresponds to the \"Latest Referral Info\" section of the service on the AlayaCare web application.\n",
+      "type": "object",
+      "properties": {
+        "authorization_schedule_type_name": {
+          "type": "string",
+          "description": "Summary of provider's authorization for service",
+          "example": "Patient is currently available for service"
+        },
+        "billing_code_1": {
+          "type": "string",
+          "description": "Bill code for the service. Additional bill codes will result in incrementing keys.",
+          "example": "1000 - Home nursing visit"
+        },
+        "brn": {
+          "type": "string",
+          "description": "Billing Reference Number of the service",
+          "example": "12345"
+        },
+        "client_guid": {
+          "type": "string",
+          "description": "GUID of the client in funder's system of record",
+          "example": "11aaa11-22b2-c333-44d4-55555555e555"
+        },
+        "contract_code": {
+          "type": "string",
+          "description": "Provider's LHIN contract code",
+          "example": "ALAYA-HOM-HME-V-NU"
+        },
+        "end_date_1": {
+          "type": "string",
+          "description": "Service end date. Subsequent frequency updates will result in incrementing keys.",
+          "example": "2018-01-31"
+        },
+        "focus_intervention": {
+          "type": "string",
+          "description": "Summary of focus of intervention",
+          "example": "Client requires nursing for wound care management."
+        },
+        "geographic_area": {
+          "type": "string",
+          "description": "Geographic indicator of service area, e.g. postal code",
+          "example": "H4C"
+        },
+        "notification_notes": {
+          "type": "string",
+          "description": "Provider notification notes",
+          "example": "Scheduled 4 weeks of care"
+        },
+        "offer_id": {
+          "type": "string",
+          "description": "ID of the service offer",
+          "example": "12345"
+        },
+        "organization_code": {
+          "type": "string",
+          "description": "Service provider's organization code",
+          "example": "10ALAYA"
+        },
+        "patient_available_date": {
+          "type": "string",
+          "description": "Date patient is available for service",
+          "example": "2018-01-31"
+        },
+        "provider_assignment_id": {
+          "type": "string",
+          "description": "ID of the service provider",
+          "example": "12345"
+        },
+        "quantity_of_service_1": {
+          "type": "string",
+          "description": "Quantity of service based on units of service",
+          "example": "1.00"
+        },
+        "referral_caseload": {
+          "type": "string",
+          "description": "Client's referral caseload",
+          "example": "ALAYA - MTL - Nursing"
+        },
+        "required_first_visit_date": {
+          "type": "string",
+          "description": "First visit of the service must be scheduled on or before this date",
+          "example": "2018-01-31"
+        },
+        "service_assignment_id": {
+          "type": "string",
+          "description": "Unique ID of the service",
+          "example": "11aaa11-22b2-c333-44d4-55555555e555"
+        },
+        "service_delivery_location_code": {
+          "type": "string",
+          "description": "Code for service delivery location",
+          "example": "Home"
+        },
+        "service_delivery_type": {
+          "type": "string",
+          "description": "Description of the type of service delivery",
+          "example": "Visit nursing home"
+        },
+        "service_plan_goals": {
+          "type": "string",
+          "description": "Summary of service plan goals",
+          "example": "Client will receive wound care"
+        },
+        "service_type_code": {
+          "type": "string",
+          "description": "Code for type of service",
+          "example": "Nursing"
+        },
+        "start_date_1": {
+          "type": "string",
+          "description": "Service start date. Subsequent frequency updates will result in incrementing keys.",
+          "example": "2018-01-31"
+        },
+        "summary_1": {
+          "type": "string",
+          "description": "Summary of scheduled service frequency. Subsequent frequency updates will result in incrementing keys.",
+          "example": "8.00 visit(s), starting 01-Jan-2018 and ending 31-Jan-2018"
+        },
+        "treatment_orders": {
+          "type": "string",
+          "description": "Treatment orders",
+          "example": "Patient requires weekly deliveries of medical supplies"
+        },
+        "unit_of_service_1": {
+          "type": "string",
+          "description": "Unit of service",
+          "example": "Visits"
+        }
+      }
+    },
+    "ServiceCreateSchema": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ServiceSchema"
+        },
+        {
+          "$ref": "#/components/schemas/ServiceRelationSchema"
+        }
+      ],
+      "properties": {
+        "service_accounting": {
+          "$ref": "#/components/schemas/ServiceAccountingSchema"
+        },
+        "program_creation_data": {
+          "$ref": "#/components/schemas/ProgramCreationDataSchema"
+        }
+      },
+      "required": [
+        "name",
+        "client",
+        "funding_methodology",
+        "funder",
+        "service_code_id"
+      ]
+    },
+    "ServiceSchema": {
+      "type": "object",
+      "properties": {
+        "billable_rate": {
+          "type": "number",
+          "description": "The billable rate for a Service",
+          "example": 25
+        },
+        "service_id": {
+          "type": "string",
+          "description": "The external id of this Service",
+          "example": "ext_id_44"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the Service",
+          "example": "Personal Care"
+        },
+        "client": {
+          "type": "object",
+          "properties": {
+            "alayacare_client_id": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The AlayaCare Client Id",
+              "example": 1001
+            },
+            "client_id": {
+              "type": "string",
+              "description": "The external Client Id",
+              "example": "sor_external_client_id"
+            }
+          }
+        },
+        "start_date": {
+          "type": "string",
+          "description": "The start date of the Service (ISO8601)",
+          "example": "2020-01-01"
+        },
+        "projected_end_date": {
+          "type": "string",
+          "description": "The projected end date of the Service (ISO8601)",
+          "example": "2021-01-31"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Notes associated with the Service",
+          "example": "Be kind"
+        },
+        "service_instructions": {
+          "type": "string",
+          "description": "Instructions associated with the Service",
+          "example": "Please use buzz code 203"
+        },
+        "use_client_address": {
+          "type": "boolean",
+          "description": "Whether or not the client address is used",
+          "example": false
+        },
+        "funder_details": {
+          "type": "object",
+          "description": "Funder details accepted as a dictionary. All values must be strings."
+        },
+        "guid_funder_breakdowns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/GuidFunderBreakdownsSchema"
+          },
+          "description": "The Guid Funder Breakdowns for this Service"
+        },
+        "funding_methodology": {
+          "type": "string",
+          "description": "The funding methodology / program type for this Service",
+          "enum": [
+            "cluster_billing",
+            "cob",
+            "co_contribution",
+            "co-pay",
+            "ltci",
+            "medicaid",
+            "payor_invoicing",
+            "single_funder",
+            "single_payor",
+            "split_funders",
+            "split_percentage"
+          ]
+        },
+        "service_code_name": {
+          "type": "string",
+          "description": "The unique name of the Service's Service Code",
+          "example": "CODE"
+        },
+        "service_code_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The ID of the Service's Service Code",
+          "example": 1
+        },
+        "employee": {
+          "type": "object",
+          "description": "The fields 'employee_id' and 'alayacare_employee_id' are mutually exclusive, specifying both is an invalid request.\n",
+          "properties": {
+            "alayacare_employee_id": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The id of the Service's primary employee",
+              "example": 101
+            },
+            "employee_id": {
+              "type": "string",
+              "description": "The external id of the service's primary employee",
+              "example": "ext_employee_id_123"
+            }
+          }
+        },
+        "profile": {
+          "$ref": "#/components/schemas/ServiceProfile"
+        },
+        "import_id": {
+          "type": "string",
+          "description": "The import id for this Service",
+          "example": "IMPORT_ID_A"
+        },
+        "add_to_associated_employees": {
+          "type": "boolean",
+          "description": "Whether or not to add the primary employee to the list of associated employees",
+          "example": true
+        },
+        "reports": {
+          "type": "array",
+          "description": "List of Report IDs to be attached in the service. This field is mutually exclusive with the field `report_ids`.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Report ID",
+                "example": 1
+              },
+              "is_required": {
+                "type": "boolean",
+                "description": "Whether or not the report is required",
+                "example": true
+              }
+            }
+          }
+        },
+        "report_ids": {
+          "type": "array",
+          "description": "List of Report IDs to be attached in the service. This field is only accepted if the feature flag Forms 2.0 is deactivated.",
+          "example": [
+            1,
+            2,
+            3
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Report ID"
+          }
+        },
+        "form_ids": {
+          "type": "array",
+          "description": "List of Form IDs to be attached in the service. This field is only accepted if the feature flag Forms 2.0 is activated.",
+          "example": [
+            4,
+            5,
+            6
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Form ID"
+          }
+        },
+        "activity_code_ids": {
+          "type": "array",
+          "description": "List of activity code IDs to be attached to the service.",
+          "example": [
+            10,
+            11,
+            12
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Activity codes IDs"
+          }
+        },
+        "service_tags": {
+          "type": "array",
+          "description": "List of service tags to be attached to the service.",
+          "example": [
+            "Diabetes service",
+            "Hospice care"
+          ],
+          "items": {
+            "type": "string",
+            "description": "Service tags"
+          }
+        },
+        "cost_centre_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The ID of the cost centre of the service.",
+          "example": 10
+        }
+      }
+    },
+    "GuidFunderBreakdownsSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The id for the Guid Funder Breakdown",
+          "example": 1
+        },
+        "contact_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The id of the billing contact\nThis field  is only accepted if the funder type sent is Client individual\n",
+          "example": 10
+        },
+        "funder_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The id of the funder",
+          "example": 1
+        },
+        "is_primary": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Whether or not this is the primary funder",
+          "example": 1
+        },
+        "percentage": {
+          "type": "integer",
+          "description": "The percentage paid by this funder",
+          "example": 100
+        }
+      }
+    },
+    "ServiceRelationSchema": {
+      "type": "object",
+      "properties": {
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The id of a skill",
+                "example": 5
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      }
+    },
+    "ProgramCreationDataSchema": {
+      "type": "object",
+      "properties": {
+        "billing_cycle": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "minimum": 1,
+          "description": "The billing cylce for the program.\n\nValid values are:\n 1 - ONE_WEEK\n 2 - TWO_WEEKS\n 3 - FOUR_WEEKS\n 4 - CALENDAR_MONTH\n 5 - DAILY\n",
+          "example": 1
+        },
+        "is_guarantor_taxable": {
+          "type": "boolean",
+          "description": "Whether or not the guarantor is taxable"
+        },
+        "office_identification_set_id": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 1
+        }
+      }
+    },
+    "ServiceAccountingSchema": {
+      "type": "object",
+      "properties": {
+        "billable_using": {
+          "type": "string",
+          "nullable": true,
+          "enum": [
+            null,
+            "multiple_programs",
+            "multiple_bill_codes"
+          ],
+          "example": "multiple_bill_codes"
+        },
+        "rating_rule_type": {
+          "type": "string",
+          "enum": [
+            "time_increment",
+            "percentage"
+          ],
+          "example": "time_increment"
+        },
+        "service_id": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 1
+        },
+        "bill_rate_id": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 1
+        },
+        "is_taxable": {
+          "type": "boolean",
+          "example": true
+        },
+        "non_covered_amt": {
+          "type": "boolean",
+          "default": false,
+          "example": true
+        },
+        "rating_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "program_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "cost_centre_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "funder_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "minutes": {
+                "type": "integer"
+              },
+              "is_default": {
+                "type": "boolean"
+              },
+              "bill_code_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "rank": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "percent": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "is_taxalbe": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ServiceUpdate": {
+      "description": "AlayaCare service entity data for updating",
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/components/schemas/ServiceProfile"
+        },
+        "provider_details": {
+          "$ref": "#/components/schemas/ServiceProviderDetails"
+        },
+        "service_id": {
+          "type": "string",
+          "description": "External service id",
+          "example": "sor_external_service_id_1"
+        },
+        "service_instructions": {
+          "description": "Service instructions",
+          "type": "string",
+          "example": "Call in the morning to confirm each visit",
+          "x-nullable": true
+        },
+        "primary_employee_id": {
+          "description": "The ID of the primary employee assigned to the service",
+          "type": "integer",
+          "minimum": 1,
+          "example": 100,
+          "x-nullable": true
+        },
+        "primary_employee_external_id": {
+          "description": "The external ID of the primary employee assigned to the service",
+          "type": "string",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "reports": {
+          "type": "array",
+          "description": "List of Report or Form IDs to be attached in the service.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Report ID",
+                "example": 1
+              },
+              "is_required": {
+                "type": "boolean",
+                "description": "Whether or not the report or form is required",
+                "example": true
+              }
+            }
+          }
+        },
+        "service_accounting": {
+          "$ref": "#/components/schemas/ServiceAccountingSchema"
+        }
+      }
+    },
+    "PaginatedList": {
+      "description": "Base model of all paginated lists",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages availbale",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "count",
+        "page",
+        "total_pages",
+        "items"
+      ]
+    }
+  }
+}

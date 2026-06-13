@@ -1,0 +1,2860 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Scheduler API Schemas",
+  "definitions": {
+    "Branch": {
+      "description": "AlayaCare branch",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Branch ID",
+          "example": 1000
+        },
+        "name": {
+          "type": "string",
+          "description": "Branch name",
+          "example": "Toronto branch"
+        }
+      }
+    },
+    "PayCode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Pay Code ID",
+          "example": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Pay Code Code",
+          "example": "1"
+        },
+        "description": {
+          "type": "string",
+          "description": "Pay Code Description",
+          "example": "1"
+        },
+        "rate": {
+          "type": "number",
+          "description": "Rate",
+          "example": 23.345
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit",
+          "example": "hours | visits | amount"
+        }
+      }
+    },
+    "VisitAccounting": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Visit ID",
+          "example": 1
+        },
+        "hours_approved": {
+          "type": "number",
+          "description": "Hours Approved",
+          "example": 1.0
+        },
+        "pay_code_regular": {
+          "$ref": "#/definitions/PayCode"
+        },
+        "pay_code_overtime": {
+          "$ref": "#/definitions/PayCode"
+        }
+      }
+    },
+    "FacilityList": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Facility"
+          }
+        }
+      }
+    },
+    "Facility": {
+      "description": "AlayaCare facility",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare facility ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare facility name",
+          "example": "Toronto Facility"
+        },
+        "profile": {
+          "$ref": "#/definitions/FacilityProfile"
+        },
+        "branch": {
+          "$ref": "#/definitions/Branch"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "FacilityProfile": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the agency profile, defined through\nthe AlayaCare web application.\nOn the example below default profile keys for the facility profile are used.\nExample profile attributes:\n+ `name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Facility name",
+          "type": "string",
+          "example": "Alayacare"
+        }
+      }
+    },
+    "ClientDetails": {
+      "description": "Visit client details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "description": "AlayaCare client profile ID",
+          "example": 7890
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Client full name",
+          "example": "John Smith"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Time Zone name in IANA format (iana.org/time-zones)",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "full_name"
+      ]
+    },
+    "ClientBranchDetails": {
+      "description": "Visit client details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "description": "AlayaCare client profile ID",
+          "example": 7890
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Client full name",
+          "example": "John Smith"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Time Zone name in IANA format (iana.org/time-zones)",
+          "example": "America/Toronto"
+        },
+        "branch_id": {
+          "type": "integer",
+          "description": "AlayaCare branch ID",
+          "example": 1000
+        }
+      },
+      "required": [
+        "id",
+        "full_name"
+      ]
+    },
+    "EmployeeDetails": {
+      "description": "Visit employee details",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare employee ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External employee ID",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "description": "AlayaCare client profile ID",
+          "example": 7891
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Employee full name",
+          "example": "Jane Smith"
+        },
+        "email": {
+          "type": "string",
+          "description": "Employee email",
+          "example": "employee_1@workplace.com"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Time Zone name in IANA format (iana.org/time-zones)",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "full_name"
+      ]
+    },
+    "SuccessResponse": {
+      "description": "Success response.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External ID",
+          "example": "entity_external_id"
+        }
+      },
+      "required": [
+        "id",
+        "external_id"
+      ]
+    },
+    "VisitUpdatePartialSuccessResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 207,
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "example": "Partial success when locking visits. Visits are not approved or could not be found",
+          "description": "Detailed error message"
+        },
+        "alayacare_visit_ids": {
+          "type": "array",
+          "description": "List of Alayacare visit IDs",
+          "items": {
+            "type": "integer",
+            "description": "Alayacare visit ID.",
+            "example": 1245
+          }
+        },
+        "visit_ids": {
+          "type": "array",
+          "description": "List of Alayacare external visit IDs",
+          "items": {
+            "type": "string",
+            "description": "Alayacare external visit ID.",
+            "example": "ext_visit_1245"
+          }
+        }
+      }
+    },
+    "ErrorResponse": {
+      "description": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 400,
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "example": "Invalid request",
+          "description": "Detailed error message"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "BaseVisit": {
+      "type": "object",
+      "properties": {
+        "alayacare_employee_id": {
+          "type": "integer",
+          "description": "AlayaCare employee ID",
+          "example": 101,
+          "x-nullable": true
+        },
+        "alayacare_service_id": {
+          "type": "integer",
+          "description": "AlayaCare service ID",
+          "example": 1
+        },
+        "alayacare_visit_id": {
+          "type": "integer",
+          "description": "AlayaCare visit ID",
+          "example": 10001
+        },
+        "employee_id": {
+          "type": "string",
+          "description": "External employee ID",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "service_id": {
+          "type": "string",
+          "description": "External service ID",
+          "example": "sor_service_id_1",
+          "x-nullable": true
+        },
+        "visit_id": {
+          "type": "string",
+          "description": "External visit ID",
+          "example": "sor_visit_id_1",
+          "x-nullable": true
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the visit based on status hierarchy from AlayaCare web application.",
+          "example": "scheduled",
+          "enum": [
+            "scheduled",
+            "vacant",
+            "on_hold",
+            "cancelled",
+            "offered",
+            "clocked",
+            "late",
+            "completed",
+            "missed",
+            "approved"
+          ]
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit start time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit end time (ISO 8601)",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitNote"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitTag"
+          }
+        },
+        "cancelled": {
+          "type": "boolean",
+          "description": "Indicates if visit is cancelled"
+        },
+        "cancel_code": {
+          "$ref": "#/definitions/VisitCancelCode"
+        }
+      },
+      "required": [
+        "alayacare_service_id",
+        "alayacare_visit_id",
+        "start_at",
+        "end_at",
+        "cancelled",
+        "cancel_code"
+      ]
+    },
+    "VisitListDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisit"
+        }
+      ],
+      "properties": {
+        "alayacare_client_id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "client_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        },
+        "break_minutes": {
+          "type": "integer",
+          "description": "Break minutes for the visit",
+          "example": 10,
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "alayacare_client_id"
+      ]
+    },
+    "Visit": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisit"
+        }
+      ],
+      "properties": {
+        "alayacare_client_id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "client_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "alayacare_client_id"
+      ]
+    },
+    "VisitIDList": {
+      "type": "object",
+      "properties": {
+        "alayacare_visit_ids": {
+          "type": "array",
+          "description": "List of Alayacare visit IDs (visit IDs should be listed separated by a coma)",
+          "example": [
+            1245,
+            1246
+          ],
+          "items": {
+            "type": "integer",
+            "description": "Alayacare visit ID.",
+            "required": [
+              "alayacare_visit_ids"
+            ]
+          }
+        },
+        "visit_ids": {
+          "type": "array",
+          "description": "List of Alayacare external visit IDs",
+          "example": [
+            "ext_visit_1245",
+            "ext_visit_1246"
+          ],
+          "items": {
+            "type": "string",
+            "description": "Alayacare external visit ID (External visit IDs should be listed separated by a coma).",
+            "required": [
+              "visit_ids"
+            ]
+          }
+        }
+      }
+    },
+    "FacilityVisit": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisit"
+        }
+      ],
+      "properties": {
+        "alayacare_facility_id": {
+          "type": "integer",
+          "description": "AlayaCare facility ID",
+          "example": 1001
+        },
+        "facility_id": {
+          "type": "string",
+          "description": "External facility ID",
+          "example": "sor_facility_id_1",
+          "x-nullable": true
+        },
+        "break_minutes": {
+          "type": "integer",
+          "description": "Break minutes for the visit",
+          "example": 10,
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "alayacare_facility_id"
+      ]
+    },
+    "VisitList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of visits",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitListDetails"
+          }
+        }
+      }
+    },
+    "FacilityVisitList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of visits",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FacilityVisit"
+          }
+        }
+      }
+    },
+    "VisitServiceDetails": {
+      "description": "Visit service details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare service ID",
+          "type": "integer",
+          "example": 1
+        },
+        "external_id": {
+          "description": "External service ID",
+          "type": "string",
+          "example": "sor_service_record_1",
+          "x-nullable": true
+        },
+        "name": {
+          "description": "Service name",
+          "type": "string",
+          "example": "Wound Care"
+        },
+        "service_code_id": {
+          "description": "AlayaCare service code id",
+          "type": "integer",
+          "example": 1
+        },
+        "service_code_name": {
+          "description": "AlayaCare service code name",
+          "type": "string",
+          "example": "WOUND-CARE"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "service_code_id",
+        "service_code_name"
+      ]
+    },
+    "VisitFunderDetails": {
+      "description": "Visit funder details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare funder ID",
+          "type": "integer",
+          "example": 1
+        },
+        "external_id": {
+          "description": "External funder ID",
+          "type": "string",
+          "example": "sor_funder_id_1",
+          "x-nullable": true
+        },
+        "name": {
+          "description": "Funder name",
+          "type": "string",
+          "example": "Insurance Company"
+        },
+        "code": {
+          "description": "Funder code",
+          "type": "string",
+          "example": "IC-1"
+        },
+        "organization": {
+          "description": "Organization",
+          "type": "string",
+          "example": "Home Healthcare Agency"
+        },
+        "organization_code": {
+          "description": "Organization code",
+          "type": "string",
+          "example": "HHC-0101"
+        },
+        "percentage": {
+          "type": "integer",
+          "example": 100
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "VisitTimekeeping": {
+      "description": "The state of the verified start and end times",
+      "type": "object",
+      "properties": {
+        "verified_start_time": {
+          "description": "Datetime string referring to the time the first clock in happened, or one manually overwritten",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "verified_end_time": {
+          "description": "Datetime string referring to the time the last clock out happened, or one manually overwritten",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T13:40:00+00:00"
+        },
+        "is_verified_start_time_overwritten": {
+          "description": "This is true in case the verified_start_time was overwritten by the user and false if is the default from the work-sessions",
+          "type": "boolean",
+          "example": false
+        },
+        "is_verified_end_time_overwritten": {
+          "description": "This is true in case the verified_end_time was overwritten by the user and false if is the default from the work-sessions",
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "Location": {
+      "description": "User location information",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "lat": {
+          "type": "number",
+          "description": "latitude",
+          "example": 45.518
+        },
+        "lng": {
+          "type": "number",
+          "description": "longitude",
+          "example": -73.582
+        }
+      }
+    },
+    "VisitWorkSession": {
+      "type": "object",
+      "description": "Visit work session",
+      "properties": {
+        "clock_in": {
+          "description": "Work session start time",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "clock_out": {
+          "description": "Work session end time",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T14:30:00+00:00",
+          "x-nullable": true
+        },
+        "employee_id": {
+          "description": "Work session employee id",
+          "type": "integer",
+          "example": 101
+        },
+        "clock_in_location": {
+          "$ref": "#/definitions/Location"
+        },
+        "clock_out_location": {
+          "$ref": "#/definitions/Location"
+        }
+      }
+    },
+    "VisitDailyActivity": {
+      "type": "object",
+      "description": "Activity of daily living",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "ADL description",
+          "example": "Take out the trash"
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Indicates if the ADL was completed during the visit",
+          "example": false
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason why the ADL was not completed, in case it wasn't",
+          "example": "Not a garbage day",
+          "x-nullable": true
+        }
+      }
+    },
+    "VisitTagList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitTag"
+          }
+        }
+      }
+    },
+    "VisitTagCreate": {
+      "type": "array",
+      "description": "An array of visit tags.",
+      "items": {
+        "$ref": "#/definitions/VisitTag"
+      }
+    },
+    "VisitTag": {
+      "type": "string",
+      "description": "Name of tag.",
+      "example": "First visit"
+    },
+    "VisitNoteCreate": {
+      "description": "Visit note",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Content of the visit note",
+          "maxLength": 1000,
+          "example": "A sample visit note."
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "VisitInterventionsUpdate": {
+      "description": "Interventions",
+      "type": "object",
+      "properties": {
+        "interventions": {
+          "type": "string",
+          "description": "list of visit intervention ids",
+          "example": "[1, 2, 3, 4]"
+        }
+      }
+    },
+    "VisitNote": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/VisitNoteCreate"
+        }
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation time of the note",
+          "example": "2017-07-08T13:30:00+00:00"
+        }
+      },
+      "required": [
+        "created_at"
+      ]
+    },
+    "VisitFacilityDetails": {
+      "description": "Visit facility",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare facility ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Facility name",
+          "example": "Clinic name"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External facility ID",
+          "example": "sor_clinic_id_1",
+          "x-nullable": true
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Time Zone name in IANA format (iana.org/time-zones)",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "VisitCancelCode": {
+      "description": "Visit cancellation code",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare cancel code ID",
+          "example": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Cancel code",
+          "example": "CLNT_REQ_RESCHEDULE"
+        },
+        "description": {
+          "type": "string",
+          "description": "Cancel code description",
+          "example": "Client requested reschedule",
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "id",
+        "code"
+      ]
+    },
+    "VisitCancelCodeList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of cancel codes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/VisitCancelCode"
+              }
+            ],
+            "properties": {
+              "branch": {
+                "$ref": "#/definitions/Branch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "VisitActivityCode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare activity code ID",
+          "example": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Activity code",
+          "example": "01- Assessment"
+        },
+        "description": {
+          "type": "string",
+          "description": "Activity code description",
+          "example": "New client assessment"
+        }
+      },
+      "required": [
+        "id",
+        "code"
+      ]
+    },
+    "VisitSkill": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare activity code ID",
+          "example": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Skill description",
+          "example": "Driver License"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "integer",
+          "description": "Order of location in route",
+          "example": 1
+        },
+        "is_home_address": {
+          "type": "boolean",
+          "description": "If address defined matches the client address from the client profile, this value is true. Otherwise, the value is false.",
+          "example": true
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Latitude of the address",
+          "example": 45.5017
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Longitude of the address",
+          "example": 73.5673
+        },
+        "address_1": {
+          "type": "string",
+          "description": "First line of the address",
+          "example": "4200 St Laurent Blvd"
+        },
+        "address_2": {
+          "type": "string",
+          "description": "Second line of the address",
+          "example": "800"
+        },
+        "city": {
+          "type": "string",
+          "description": "City",
+          "example": "Montreal"
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province",
+          "example": "QC"
+        },
+        "zip_code": {
+          "type": "string",
+          "description": "ZIP or postal code",
+          "example": "H2W 2R2"
+        },
+        "country": {
+          "type": "string",
+          "description": "Country",
+          "example": "Canada"
+        }
+      }
+    },
+    "BaseVisitDetails": {
+      "type": "object",
+      "properties": {
+        "alayacare_employee_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare employee ID",
+          "example": 101,
+          "x-nullable": true
+        },
+        "alayacare_service_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare service ID",
+          "example": 1
+        },
+        "alayacare_visit_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare visit ID",
+          "example": 10001
+        },
+        "employee_id": {
+          "type": "string",
+          "description": "External employee ID",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "service_id": {
+          "type": "string",
+          "description": "External service ID",
+          "example": "sor_service_id_1",
+          "x-nullable": true
+        },
+        "visit_id": {
+          "type": "string",
+          "description": "External visit ID",
+          "example": "sor_visit_id_1",
+          "x-nullable": true
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the visit based on status hierarchy from AlayaCare web application.",
+          "example": "scheduled",
+          "enum": [
+            "scheduled",
+            "vacant",
+            "on_hold",
+            "cancelled",
+            "offered",
+            "clocked",
+            "late",
+            "completed",
+            "missed",
+            "approved"
+          ]
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit start time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit end time (ISO 8601)",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "cancelled": {
+          "type": "boolean",
+          "description": "Indicates if visit is cancelled"
+        },
+        "employee": {
+          "$ref": "#/definitions/EmployeeDetails"
+        },
+        "service": {
+          "$ref": "#/definitions/VisitServiceDetails"
+        },
+        "funders": {
+          "description": "Visit funders",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitFunderDetails"
+          }
+        },
+        "work_sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitWorkSession"
+          }
+        },
+        "adls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitDailyActivity"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitNote"
+          }
+        },
+        "cancel_code": {
+          "$ref": "#/definitions/VisitCancelCode"
+        },
+        "activity_codes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitActivityCode"
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitSkill"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitTag"
+          }
+        },
+        "service_instructions": {
+          "description": "Service instructions",
+          "type": "string",
+          "example": "Call in the morning to confirm each visit",
+          "x-nullable": true
+        },
+        "service_code_id": {
+          "description": "Visit override service code id.",
+          "type": "integer",
+          "example": 1,
+          "x-nullable": true
+        },
+        "service_code_name": {
+          "description": "Visit override service code name.",
+          "type": "string",
+          "example": "Default Appointment",
+          "x-nullable": true
+        },
+        "route": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Address"
+          }
+        }
+      },
+      "required": [
+        "alayacare_service_id",
+        "alayacare_visit_id",
+        "start_at",
+        "end_at",
+        "cancelled",
+        "employee",
+        "service",
+        "work_sessions",
+        "adls",
+        "notes",
+        "cancel_code",
+        "activity_codes",
+        "tags",
+        "service_instructions"
+      ]
+    },
+    "VisitDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisitDetails"
+        }
+      ],
+      "properties": {
+        "alayacare_visit_guid": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare visit GUID",
+          "example": 10002
+        },
+        "alayacare_client_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "client_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        },
+        "client": {
+          "$ref": "#/definitions/ClientBranchDetails"
+        },
+        "facility": {
+          "$ref": "#/definitions/VisitFacilityDetails"
+        },
+        "timekeeping": {
+          "$ref": "#/definitions/VisitTimekeeping"
+        }
+      },
+      "required": [
+        "alayacare_client_id",
+        "client"
+      ]
+    },
+    "FacilityVisitDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisitDetails"
+        }
+      ],
+      "properties": {
+        "alayacare_facility_id": {
+          "format": "int64",
+          "description": "AlayaCare ID of the facility",
+          "example": 1001
+        },
+        "facility_id": {
+          "type": "string",
+          "description": "External ID of the facility",
+          "example": "facility_ext_id",
+          "x-nullable": true
+        },
+        "facility": {
+          "$ref": "#/definitions/ClientDetails"
+        }
+      },
+      "required": [
+        "alayacare_facility_id",
+        "facility_id"
+      ]
+    },
+    "BaseVisitUpdate": {
+      "description": "AlayaCare visit entity data for updates",
+      "type": "object",
+      "properties": {
+        "visit_id": {
+          "description": "External visit ID\nAllows correlating the visit in AlayaCare to visit data on an external system.\nIf not specified AlayaCare visit ID would be used as default value.\n",
+          "type": "string",
+          "example": "sor_visit_id_1",
+          "x-nullable": true
+        },
+        "employee_id": {
+          "description": "External employee ID\nIf no employee is specified a vacant visit will be created.\n",
+          "type": "string",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "alayacare_employee_id": {
+          "description": "AlayaCare employee ID\nIf no employee is specified a vacant visit will be created.\n",
+          "type": "integer",
+          "example": 101
+        },
+        "service_id": {
+          "description": "External service ID\nCan be omitted if the client has a single active service.\n",
+          "type": "string",
+          "example": "sor_service_record_1",
+          "x-nullable": true
+        },
+        "alayacare_service_id": {
+          "description": "AlayaCare service ID\nCan be omitted if the client has a single active service.\n",
+          "type": "integer",
+          "example": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit start time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit end time (ISO 8601)",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "cancelled": {
+          "type": "boolean",
+          "description": "Indicates if visit is cancelled",
+          "default": false
+        },
+        "cancel_code_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the cancel code.\nValue must be `null` if visit is not cancelled.\n",
+          "example": 101,
+          "x-nullable": true
+        },
+        "service_instructions": {
+          "description": "Service instructions",
+          "type": "string",
+          "example": "Call in the morning to confirm each visit",
+          "x-nullable": true
+        }
+      }
+    },
+    "VisitUpdate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisitUpdate"
+        }
+      ],
+      "properties": {
+        "client_id": {
+          "description": "External client ID",
+          "type": "string",
+          "example": "sor_client_id_1"
+        },
+        "alayacare_client_id": {
+          "description": "AlayaCare client ID",
+          "type": "integer",
+          "example": 1001
+        }
+      }
+    },
+    "FacilityVisitUpdate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseVisitUpdate"
+        }
+      ]
+    },
+    "VisitCreate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/VisitUpdate"
+        }
+      ],
+      "description": "AlayaCare visit entity data for creation",
+      "required": [
+        "start_at",
+        "end_at"
+      ]
+    },
+    "FacilityVisitCreate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FacilityVisitUpdate"
+        }
+      ],
+      "description": "date for creating a facility visit",
+      "properties": {
+        "alayacare_facility_id": {
+          "format": "int64",
+          "description": "AlayaCare ID of the facility",
+          "example": 1001
+        },
+        "facility_id": {
+          "type": "string",
+          "description": "External ID of the facility",
+          "example": "facility_ext_id",
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "start_at",
+        "end_at"
+      ]
+    },
+    "DeliveryDateInformation": {
+      "properties": {
+        "alayacare_visit_id": {
+          "type": "integer",
+          "description": "AlayaCare visit ID",
+          "example": 17432
+        },
+        "delivery_date": {
+          "type": "string",
+          "description": "Delivery date for visit in UTC format",
+          "example": "2022-12-13"
+        }
+      }
+    },
+    "IvrVisitInterventions": {
+      "description": "A list of visit interventions",
+      "type": "object",
+      "required": [
+        "intervention_id",
+        "completed",
+        "position"
+      ],
+      "properties": {
+        "intervention_id": {
+          "description": "ID of the intervention configured in the client's careplan",
+          "type": "integer",
+          "example": 101
+        },
+        "completed": {
+          "description": "Completion of the instance of the intervention in the visit",
+          "type": "boolean",
+          "example": true
+        },
+        "comment": {
+          "description": "Comment entered in the visit intervention",
+          "type": "string",
+          "example": "Vitals recorded. Blood pressure normal.",
+          "x-nullable": true
+        },
+        "position": {
+          "type": "integer",
+          "example": 1
+        },
+        "duration": {
+          "description": "Duration of the intervention in minutes",
+          "type": "integer",
+          "example": 10,
+          "x-nullable": true
+        },
+        "work_session_uuid": {
+          "description": "UUID of the work session",
+          "type": "string",
+          "example": "uuid",
+          "x-nullable": true
+        }
+      }
+    },
+    "VisitInterventionsList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of visits",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitInterventions"
+          }
+        }
+      }
+    },
+    "VisitInterventions": {
+      "description": "A list of visit interventions",
+      "type": "object",
+      "properties": {
+        "intervention_id": {
+          "type": "integer",
+          "description": "ID of the intervention configured in the client's careplan",
+          "example": 101
+        },
+        "completed": {
+          "type": "boolean",
+          "example": true,
+          "description": "Completion of the instance of the intervention in the visit"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Comment entered in the visit intervention. Will return the `not_completed_reason_name` if it is set but there is no comment",
+          "example": "Vitals recorded. Blood pressure normal."
+        },
+        "not_completed_reason_name": {
+          "type": "string",
+          "description": "Reason code for not completed the visit intervention",
+          "example": "client_declined"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "not_documented",
+            "not_done",
+            "done"
+          ],
+          "description": "The status of the visit intervention"
+        },
+        "intervention": {
+          "$ref": "#/definitions/Intervention"
+        },
+        "position": {
+          "type": "integer",
+          "example": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit start time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "created_by": {
+          "type": "object",
+          "description": "User who created the intervention in the visit",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1001
+            },
+            "first_name": {
+              "type": "string",
+              "example": "John"
+            },
+            "last_name": {
+              "type": "string",
+              "example": "Smith"
+            }
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit updated time (ISO 8601)",
+          "example": "2018-07-08T13:30:00+00:00"
+        },
+        "updated_by": {
+          "type": "object",
+          "description": "User who last updated the intervention in the visit",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1001
+            },
+            "first_name": {
+              "type": "string",
+              "example": "John"
+            },
+            "last_name": {
+              "type": "string",
+              "example": "Smith"
+            }
+          }
+        },
+        "visit_id": {
+          "description": "External ID of the visit",
+          "type": "string",
+          "example": "external_id_123"
+        },
+        "alayacare_visit_id": {
+          "description": "Alayacare ID of the visit",
+          "type": "integer",
+          "example": 2384
+        }
+      }
+    },
+    "Intervention": {
+      "type": "object",
+      "properties": {
+        "careplan_id": {
+          "type": "integer",
+          "description": "ID of the client's careplan",
+          "example": 709
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Alayacare client external ID",
+          "example": "external_id_client_123"
+        },
+        "alayacare_client_id": {
+          "type": "integer",
+          "description": "Alayacare client ID",
+          "example": 1001
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the intervention",
+          "example": "Blood pressure measurement"
+        },
+        "completions": {
+          "type": "array",
+          "description": "Date-time of completion of the intervention (ISO 8601)",
+          "items": {
+            "type": "object"
+          }
+        },
+        "is_required": {
+          "type": "boolean",
+          "description": "Intervention is required or not to clock out of the visit"
+        },
+        "module": {
+          "type": "string",
+          "description": "Alayacare Module to which the intervention is attached",
+          "example": "Vitals"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the intervention in the Careplan",
+          "example": "active",
+          "enum": [
+            "draft",
+            "active",
+            "completed",
+            "archived"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "description": "One of the types defined in the setting \"Care Documentation > Care Plan Intervention Types\"",
+          "example": "Nursing"
+        }
+      }
+    },
+    "DailyActivityCategory": {
+      "description": "Daily activity category",
+      "type": "string",
+      "enum": [
+        "adl_personal_care",
+        "adl_mobility",
+        "adl_equipment",
+        "adl_nutrition",
+        "adl_household_management",
+        "adl_support",
+        "adl_medication"
+      ]
+    },
+    "DailyActivityService": {
+      "description": "Daily activity service",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "External service ID",
+          "example": "sor_service_external_id_1",
+          "x-nullable": true
+        },
+        "alayacare_id": {
+          "type": "integer",
+          "description": "AlayaCare service ID",
+          "example": 1
+        }
+      }
+    },
+    "DailyActivity": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/DailyActivityCategory"
+        },
+        "name": {
+          "type": "string",
+          "description": "Activity name.",
+          "example": "brush teeth"
+        },
+        "rrule": {
+          "type": "string",
+          "description": "Recurrence rule applied to the daily activity.",
+          "example": "FREQ=WEEKLY;DTSTART=20180204T180000Z;UNTIL=20180304T180000Z;WKST=MO;BYDAY=MO,WE,FR"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DailyActivityService"
+          }
+        }
+      },
+      "required": [
+        "category",
+        "name"
+      ]
+    },
+    "DailyActivityList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of ADLs",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DailyActivity"
+          }
+        }
+      }
+    },
+    "ProfileAttribute": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "description": "Attribute key in the demographics object",
+          "type": "string",
+          "example": "first_name"
+        },
+        "description": {
+          "description": "Attribute description as it shows in the web application",
+          "type": "string",
+          "example": "First Name"
+        }
+      }
+    },
+    "ProfileAttributeList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of profile attributes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProfileAttribute"
+          }
+        }
+      }
+    },
+    "ServiceCode": {
+      "description": "Details of service codes",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Service code id",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Service Code name",
+          "example": "SC1"
+        },
+        "branch": {
+          "$ref": "#/definitions/Branch"
+        }
+      }
+    },
+    "ServiceCodeList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of service codes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceCode"
+          }
+        }
+      }
+    },
+    "PaginatedList": {
+      "description": "Base model of all paginated lists",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages available",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "count",
+        "page",
+        "total_pages",
+        "items"
+      ]
+    },
+    "EVVVisitList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of evv visits",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVVVisit"
+          }
+        }
+      }
+    },
+    "EVVVisit_Exception": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Visit exception ID"
+        },
+        "created_on": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation time of the visit exception",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "code": {
+          "type": "string",
+          "description": "Exception type code"
+        },
+        "category": {
+          "type": "string",
+          "description": "Exception type category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Exception type name"
+        },
+        "is_acknowledged": {
+          "type": "boolean",
+          "description": "Exception has been acknowledged",
+          "example": true
+        },
+        "status": {
+          "type": "string",
+          "description": "Visit exception status"
+        },
+        "details": {
+          "type": "string",
+          "description": "Visit exception details"
+        },
+        "comments": {
+          "type": "string",
+          "description": "Visit exception comments"
+        },
+        "reason_code": {
+          "type": "string",
+          "description": "Visit exception reason code"
+        },
+        "reason_name": {
+          "type": "string",
+          "description": "Visit exception reason name"
+        },
+        "reason_category": {
+          "type": "string",
+          "description": "Visit exception reason category"
+        },
+        "resolution_code": {
+          "type": "string",
+          "description": "Visit exception resolution code"
+        },
+        "resolution_name": {
+          "type": "string",
+          "description": "Visit exception resolution name"
+        },
+        "change_by": {
+          "type": "string",
+          "description": "Visit exception change made by"
+        }
+      }
+    },
+    "EVVVisit_BillCode": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Bill code",
+          "example": "HSW"
+        },
+        "description": {
+          "type": "string",
+          "description": "Bill code description",
+          "example": "HSW"
+        },
+        "id": {
+          "type": "integer",
+          "description": "Bill code Id"
+        },
+        "units": {
+          "type": "string",
+          "description": "Bill code units"
+        },
+        "is_midnight_rule_applicable": {
+          "type": "boolean",
+          "description": "Whether or not the visits associated to this bill code will be split into two billable items in overnight schedules."
+        }
+      }
+    },
+    "EVVVisit_Attribute": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "description": "Attribute tag"
+        },
+        "value": {
+          "type": "string",
+          "description": "Attribute value"
+        }
+      }
+    },
+    "EVVVisit_Note": {
+      "type": "object",
+      "properties": {
+        "created_on": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation time of the note",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the visit note",
+          "maxLength": 1000,
+          "example": "A sample visit note."
+        }
+      }
+    },
+    "EVVVisit_Service": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Service name",
+          "type": "string",
+          "example": "Wound Care"
+        },
+        "start_date": {
+          "description": "Service start date",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "projected_end_date": {
+          "description": "Projected end date",
+          "type": "string",
+          "format": "date-time",
+          "example": "2022-08-08T13:30:00+00:00"
+        },
+        "service_code_id": {
+          "description": "AlayaCare service code id",
+          "type": "integer",
+          "example": 1
+        },
+        "service_code_name": {
+          "description": "AlayaCare service code name",
+          "type": "string",
+          "example": "WOUND-CARE"
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Client attributes",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Attribute"
+          },
+          "example": [
+            {
+              "tag": "medicaid_prior_authorization_number",
+              "value": "100"
+            }
+          ]
+        },
+        "status": {
+          "description": "Service current status",
+          "type": "string",
+          "example": "active",
+          "enum": [
+            "active",
+            "discharged",
+            "on_hold",
+            "waiting_list"
+          ]
+        }
+      }
+    },
+    "EVVVisit_ClientFunderActiveServiceSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Service name",
+          "type": "string",
+          "example": "Wound Care"
+        },
+        "status": {
+          "description": "Service Status",
+          "type": "string",
+          "example": "active",
+          "enum": [
+            "active",
+            "discharged",
+            "on_hold",
+            "waiting_list"
+          ]
+        },
+        "start_date": {
+          "description": "Service start date",
+          "type": "string",
+          "format": "date-time",
+          "example": "2021-07-08T13:30:00+00:00"
+        },
+        "projected_end_date": {
+          "description": "Projected end date",
+          "type": "string",
+          "format": "date-time",
+          "example": "2022-07-08T13:30:00+00:00"
+        }
+      }
+    },
+    "EVVVisit_WorkSession": {
+      "type": "object",
+      "description": "Visit work session",
+      "properties": {
+        "clock_in": {
+          "description": "Work session start time",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "clock_out": {
+          "description": "Work session end time",
+          "type": "string",
+          "format": "date-time",
+          "example": "2017-07-08T14:30:00+00:00",
+          "x-nullable": true
+        },
+        "clock_in_location": {
+          "$ref": "#/definitions/Location"
+        },
+        "clock_out_location": {
+          "$ref": "#/definitions/Location"
+        },
+        "clock_in_phone": {
+          "description": "Work session Phone with IVR",
+          "type": "string",
+          "example": "+1454515475"
+        },
+        "clock_out_phone": {
+          "description": "Work session Phone with IVR",
+          "type": "string",
+          "example": "+1454515475"
+        }
+      }
+    },
+    "EVVVisit_Timekeeping": {
+      "type": "object",
+      "description": "It contains information related to the Visit Timekeeping object associated with the EVV Visit.",
+      "properties": {
+        "first_clock_in_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This field will always have the first clock-in time from the visit work sessions, regardless if it was overwritten or not.",
+          "example": "2017-07-08T14:30:00+00:00",
+          "x-nullable": true
+        },
+        "last_clock_out_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This field will always have the last clock-out time from the visit work sessions, regardless if it was overwritten or it's is null.",
+          "example": "2017-07-08T15:30:00+00:00",
+          "x-nullable": true
+        },
+        "adjusted_start_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This field contains adjusted start time, if the end time isn't adjusted it will be populated with the first clock-in time, it will only be null if there's no worksession and no adjusted start time.",
+          "example": "2017-07-08T14:30:00+00:00",
+          "x-nullable": true
+        },
+        "adjusted_end_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This field contains adjusted end time, if the end time isn't adjusted it will be populated with the last clock-out time, it will only be null if there's no worksession and no adjusted end time.",
+          "example": "2017-07-08T15:45:00+00:00",
+          "x-nullable": true
+        },
+        "is_adjusted_start_time": {
+          "type": "boolean",
+          "description": "It will be true if the start time is adjusted.",
+          "example": false
+        },
+        "is_adjusted_end_time": {
+          "type": "boolean",
+          "description": "It will be true if the end time is adjusted.",
+          "example": true
+        }
+      }
+    },
+    "EVVVisit_Funder": {
+      "type": "object",
+      "properties": {
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Funder attributes",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Attribute"
+          },
+          "example": [
+            {
+              "tag": "npi",
+              "value": "1407958499"
+            },
+            {
+              "tag": "provider_api",
+              "value": "1"
+            },
+            {
+              "tag": "aggregator_state",
+              "value": "GA"
+            },
+            {
+              "tag": "evv_destination_state",
+              "value": "GA"
+            },
+            {
+              "tag": "payer_id",
+              "value": "NJ_HZ"
+            },
+            {
+              "tag": "payer_code",
+              "value": "NJHZ"
+            },
+            {
+              "tag": "tax_id",
+              "value": "767469540"
+            },
+            {
+              "tag": "provider_name",
+              "value": "KPE DBA INDIA"
+            },
+            {
+              "tag": "plan_id",
+              "value": "12345"
+            },
+            {
+              "tag": "provider_taxonomy_code",
+              "value": "38382829"
+            },
+            {
+              "tag": "evv_vendor",
+              "value": "tellus_rs"
+            },
+            {
+              "tag": "provider_id",
+              "value": "317066193"
+            },
+            {
+              "tag": "business_entity_id",
+              "value": "203542"
+            },
+            {
+              "tag": "hhax_payer_id",
+              "value": "123456"
+            }
+          ]
+        },
+        "address": {
+          "type": "string",
+          "description": "Funder address"
+        },
+        "address_suite": {
+          "type": "string",
+          "description": "Funder address suite"
+        },
+        "code": {
+          "description": "Funder code",
+          "type": "string",
+          "example": "IC-1"
+        },
+        "city": {
+          "type": "string",
+          "description": "Funder address city"
+        },
+        "description": {
+          "description": "Funder description",
+          "type": "string"
+        },
+        "name": {
+          "description": "Funder name",
+          "type": "string",
+          "example": "Insurance Company"
+        },
+        "pull_billing_data_from_visit_notes": {
+          "description": "True if is founder fetch the billing information from notes.",
+          "type": "boolean",
+          "example": true
+        },
+        "state": {
+          "type": "string",
+          "description": "Funder address state"
+        },
+        "zip": {
+          "type": "string",
+          "description": "Funder address zip"
+        }
+      }
+    },
+    "EVVVisit_Diagnoses": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Diagnosis name",
+          "example": "A028"
+        },
+        "is_primary": {
+          "type": "boolean",
+          "description": "Diagnosis is primary or not primary",
+          "example": true
+        }
+      }
+    },
+    "EVVVisit_Client": {
+      "type": "object",
+      "properties": {
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "address": {
+          "type": "string",
+          "description": "Client address"
+        },
+        "address_suite": {
+          "type": "string",
+          "description": "Client address suite"
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Client attributes",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Attribute"
+          },
+          "example": [
+            {
+              "tag": "country",
+              "value": "US"
+            },
+            {
+              "tag": "email",
+              "value": "example@gmail.com"
+            },
+            {
+              "tag": "member_id",
+              "value": "1407958499"
+            },
+            {
+              "tag": "alternate_member_id",
+              "value": "16795F4A6A5"
+            },
+            {
+              "tag": "mcp_number",
+              "value": "123456"
+            },
+            {
+              "tag": "jurisdiction_id",
+              "value": "123456"
+            },
+            {
+              "tag": "medicare_id",
+              "value": "123456789"
+            },
+            {
+              "tag": "newborn_indicator",
+              "value": "0"
+            }
+          ]
+        },
+        "birthday": {
+          "type": "string",
+          "description": "Client birthday"
+        },
+        "city": {
+          "type": "string",
+          "description": "Client address city"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "Client first name",
+          "example": "John"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Employee gender"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Client last name",
+          "example": "Smith"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Client phone"
+        },
+        "phone_other": {
+          "type": "string",
+          "description": "Client other phone"
+        },
+        "phone_personal": {
+          "type": "string",
+          "description": "Client personal phone"
+        },
+        "state": {
+          "type": "string",
+          "description": "Client address state"
+        },
+        "zip": {
+          "type": "string",
+          "description": "Client address zip"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Timezone name in IANA format (iana.org/time-zones). If not set, returns the branch timezone.",
+          "example": "America/Toronto"
+        },
+        "diagnoses": {
+          "type": "array",
+          "description": "Client diagnoses",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Diagnoses"
+          }
+        }
+      }
+    },
+    "EVVVisit_Employee": {
+      "type": "object",
+      "properties": {
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Employee attributes",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Attribute"
+          },
+          "example": [
+            {
+              "tag": "SSN",
+              "value": "1407958499"
+            },
+            {
+              "tag": "registration_id",
+              "value": "123"
+            },
+            {
+              "tag": "rendering_provider_npi",
+              "value": "26NH18121900"
+            },
+            {
+              "tag": "caregiver_type",
+              "value": "both"
+            },
+            {
+              "tag": "start_date",
+              "value": "2020-05-25"
+            }
+          ]
+        },
+        "birthday": {
+          "type": "string",
+          "description": "Employee birthday"
+        },
+        "email": {
+          "type": "string",
+          "description": "Employee email"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "Employee first name",
+          "example": "John"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Employee gender"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Employee last name",
+          "example": "Smith"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Employee phone"
+        },
+        "updated_by": {
+          "type": "object",
+          "description": "User who last updated the employee",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 100
+            }
+          }
+        },
+        "updated_on": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Datetime of last time the employee was updated"
+        }
+      }
+    },
+    "EVVVisit_CancelCode": {
+      "description": "Visit cancellation code",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare cancel code ID",
+          "example": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Cancel code",
+          "example": "CLNT_REQ_RESCHEDULE"
+        },
+        "description": {
+          "type": "string",
+          "description": "Cancel code description",
+          "example": "Client requested reschedule",
+          "x-nullable": true
+        },
+        "is_billable": {
+          "type": "boolean",
+          "description": "Cancel Code is billable or not billable",
+          "example": true
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "is_billable"
+      ]
+    },
+    "EVVVisit_ReferringProvider": {
+      "type": "object",
+      "properties": {
+        "npi": {
+          "type": "string",
+          "description": "Referring Provider NPI",
+          "example": "679363"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "Referring Provider first name"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Referring Provider last name"
+        }
+      }
+    },
+    "EVVVisit_Interventions": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Visit's intervention name",
+          "example": "DINN"
+        }
+      }
+    },
+    "EVVVisit_Authorizations": {
+      "type": "object",
+      "properties": {
+        "authorization_number": {
+          "type": "string",
+          "description": "Authorization Number",
+          "example": "123456789"
+        },
+        "member_number": {
+          "type": "string",
+          "description": "Member Number",
+          "example": "123456789"
+        }
+      }
+    },
+    "EVVVisit": {
+      "type": "object",
+      "properties": {
+        "alayacare_client_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "alayacare_employee_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare employee ID",
+          "example": 101,
+          "x-nullable": true
+        },
+        "alayacare_funder_id": {
+          "description": "AlayaCare funder ID",
+          "type": "integer",
+          "example": 1
+        },
+        "alayacare_funder_state": {
+          "description": "AlayaCare funder state",
+          "type": "string",
+          "example": "NY"
+        },
+        "alayacare_service_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare service ID",
+          "example": 1
+        },
+        "alayacare_visit_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "AlayaCare visit ID",
+          "example": 10001
+        },
+        "bill_code": {
+          "$ref": "#/definitions/EVVVisit_BillCode"
+        },
+        "cancelled": {
+          "type": "boolean",
+          "description": "Indicates if visit is cancelled"
+        },
+        "cancel_code": {
+          "$ref": "#/definitions/EVVVisit_CancelCode"
+        },
+        "client": {
+          "$ref": "#/definitions/EVVVisit_Client"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_id_1",
+          "x-nullable": true
+        },
+        "created_by": {
+          "type": "string",
+          "description": "User who created the intervention in the visit",
+          "example": "system"
+        },
+        "created_on": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit created time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "employee": {
+          "$ref": "#/definitions/EVVVisit_Employee"
+        },
+        "employee_id": {
+          "type": "string",
+          "description": "External employee ID",
+          "example": "sor_employee_id_1",
+          "x-nullable": true
+        },
+        "funder_id": {
+          "type": "string",
+          "description": "External funder ID",
+          "example": "sor_funder_id_1",
+          "x-nullable": true
+        },
+        "service_id": {
+          "type": "string",
+          "description": "External service ID",
+          "example": "sor_service_id_1",
+          "x-nullable": true
+        },
+        "visit_id": {
+          "type": "string",
+          "description": "External visit ID",
+          "example": "sor_visit_id_1",
+          "x-nullable": true
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the visit based on status hierarchy from AlayaCare web application.",
+          "example": "scheduled",
+          "enum": [
+            "scheduled",
+            "vacant",
+            "on_hold",
+            "cancelled",
+            "offered",
+            "clocked",
+            "late",
+            "completed",
+            "missed",
+            "approved"
+          ]
+        },
+        "evv_status": {
+          "type": "string",
+          "description": "EVV status pf the visit",
+          "example": "scheduled",
+          "enum": [
+            "scheduled",
+            "deleted",
+            "missed",
+            "approved",
+            "billed"
+          ]
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit start time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit end time (ISO 8601)",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "updated_by": {
+          "type": "string",
+          "description": "User who updated the visit",
+          "example": "system"
+        },
+        "updated_on": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Visit updated time (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Timezone name in IANA format (iana.org/time-zones). If not set, returns the branch timezone.",
+          "example": "America/Toronto"
+        },
+        "invoice_number": {
+          "type": "string",
+          "description": "master invoice number"
+        },
+        "invoice_line_item_number": {
+          "type": "string",
+          "description": "invoice line number"
+        },
+        "invoice_line_service_date": {
+          "type": "string",
+          "description": "invoice line service date",
+          "example": "2022-01-01"
+        },
+        "invoice_line_trn": {
+          "type": "string",
+          "description": "The latest TRN of the invoice line",
+          "example": "12345"
+        },
+        "invoice_line_units_billed": {
+          "type": "number",
+          "description": "invoice line units billed",
+          "example": 8.5
+        },
+        "invoice_line_rate_by_billing_increment": {
+          "type": "number",
+          "description": "invoice line rate by billing increment",
+          "example": 4.5
+        },
+        "invoice_line_billing_increment": {
+          "type": "integer",
+          "description": "invoice line billing increment",
+          "example": 15
+        },
+        "invoice_total": {
+          "type": "string",
+          "description": "invoice total"
+        },
+        "invoice_quantity": {
+          "type": "string",
+          "description": "invoice quantity"
+        },
+        "invoice_quantity_units": {
+          "type": "string",
+          "description": "invoice quantity units"
+        },
+        "invoice_unit_price": {
+          "type": "string",
+          "description": "invoice unit price"
+        },
+        "claim_status": {
+          "type": "string",
+          "description": "status of the claim"
+        },
+        "claim_update_flow": {
+          "type": "string",
+          "description": "The update flow of the claim, if claim is voided or revised.",
+          "example": "revise_and_resend"
+        },
+        "funder": {
+          "$ref": "#/definitions/EVVVisit_Funder"
+        },
+        "service": {
+          "$ref": "#/definitions/EVVVisit_Service"
+        },
+        "work_sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_WorkSession"
+          }
+        },
+        "timekeeping": {
+          "$ref": "#/definitions/EVVVisit_Timekeeping"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Note"
+          }
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_Exception"
+          }
+        },
+        "referring_provider": {
+          "$ref": "#/definitions/EVVVisit_ReferringProvider"
+        },
+        "interventions": {
+          "$ref": "#/definitions/EVVVisit_Interventions"
+        },
+        "authorizations": {
+          "$ref": "#/definitions/EVVVisit_Authorizations"
+        },
+        "client_active_services": {
+          "description": "List of active Client Services linked to the same Sandata payer as the visit",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVVVisit_ClientFunderActiveServiceSchema"
+          }
+        }
+      }
+    },
+    "VisitVerificationDetails": {
+      "description": "Extended Visit Verification information",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Visit ID",
+          "example": 1000
+        },
+        "pay": {
+          "type": "object",
+          "properties": {
+            "quantity": {
+              "type": "number",
+              "example": 1.23
+            },
+            "units": {
+              "type": "string",
+              "enum": [
+                "hours",
+                "visits",
+                "amount"
+              ]
+            },
+            "rate": {
+              "type": "number",
+              "example": 10.0
+            }
+          }
+        },
+        "bill": {
+          "type": "object",
+          "properties": {
+            "quantity": {
+              "type": "number",
+              "example": 1.0
+            },
+            "units": {
+              "type": "string",
+              "enum": [
+                "hours",
+                "visits",
+                "rate"
+              ]
+            },
+            "rate": {
+              "type": "number",
+              "example": 5.0
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "vacant",
+            "on_hold",
+            "cancelled",
+            "offered",
+            "clocked",
+            "late",
+            "completed",
+            "missed"
+          ]
+        },
+        "approval_status": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "not_approved",
+            "in_violation",
+            "rejected"
+          ]
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VisitVerificationException"
+          }
+        }
+      }
+    },
+    "VisitVerificationException": {
+      "type": "object",
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "example": "reason_code"
+        },
+        "reason_name": {
+          "type": "string",
+          "example": "Stuck in traffic"
+        },
+        "reason_category": {
+          "type": "string",
+          "example": "Reason Category"
+        },
+        "resolution_code": {
+          "type": "string",
+          "example": "resolution_code"
+        },
+        "resolution_name": {
+          "type": "string",
+          "example": "Validated with comments"
+        },
+        "comments": {
+          "type": "string",
+          "example": "Arrived under acceptable time frame"
+        },
+        "is_acknowledged": {
+          "type": "boolean",
+          "example": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "details": {
+          "type": "string",
+          "example": "Work session information unavailable",
+          "description": "Visit exception details"
+        },
+        "name": {
+          "type": "string",
+          "example": "Client overlapping work sessions",
+          "description": "Exception type name"
+        }
+      }
+    },
+    "NextVisitId": {
+      "type": "object",
+      "properties": {
+        "visit_id": {
+          "type": "integer",
+          "description": "Visit ID",
+          "example": 1000
+        }
+      }
+    }
+  }
+}

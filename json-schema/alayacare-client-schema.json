@@ -1,0 +1,1675 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Client API Schemas",
+  "definitions": {
+    "Branch": {
+      "description": "AlayaCare branch.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare branch ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare branch name",
+          "example": "Toronto branch"
+        },
+        "profile": {
+          "$ref": "#/components/schemas/BranchProfile"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "BranchList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of branches",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Branch"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "GroupDetail": {
+      "description": "Patient group.",
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "object",
+          "description": "AlayaCare branch",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Branch ID",
+              "example": 1000
+            },
+            "name": {
+              "type": "string",
+              "description": "Branch name",
+              "example": "Toronto branch"
+            }
+          }
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the group",
+          "example": "saint-michel's hospital group"
+        },
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare group ID.",
+          "example": 1
+        },
+        "is_disabled": {
+          "type": "boolean",
+          "description": "flag indicating if the group is disabled",
+          "example": false
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare group name",
+          "example": "Group A"
+        }
+      }
+    },
+    "Group": {
+      "description": "Create Patient group.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare group ID.",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare group name",
+          "example": "Group A"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "GroupsList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of groups",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/GroupDetail"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ProfileAttribute": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "description": "Attribute key in the demographics object",
+          "type": "string",
+          "example": "first_name"
+        },
+        "description": {
+          "description": "Attribute description as it shows in the web application",
+          "type": "string",
+          "example": "First Name"
+        }
+      }
+    },
+    "ProfileAttributeList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of profile attributes",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProfileAttribute"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ProfilePictureUrl": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Pre-authorized profile picture URL.",
+          "type": "string",
+          "example": "https://place-hold.it/200"
+        }
+      }
+    },
+    "ClientContactStatus": {
+      "type": "string",
+      "enum": [
+        "enabled",
+        "disabled"
+      ]
+    },
+    "BranchProfile": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the agency profile, defined through\nthe AlayaCare web application.\nOn the example below default profile keys for the agency profile are used.\n\nExample profile attributes:\n+ `first_name`: string\n+ `last_name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `gender`: string\n+ `relationship`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Branch company name",
+          "type": "string",
+          "example": "Alayacare"
+        },
+        "phone_main": {
+          "description": "Branch main phone number",
+          "type": "string",
+          "example": "514-999-9999"
+        }
+      }
+    },
+    "ClientContactDemographics": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the patient contact profile, defined through the AlayaCare web application.\nOn the example below default profile keys for the client contact are used.\n\nExample profile attributes:\n+ `first_name`: string\n+ `last_name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `gender`: string\n+ `relationship`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n",
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "description": "Profile first name",
+          "type": "string",
+          "example": "Jane"
+        },
+        "last_name": {
+          "description": "Profile last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "gender": {
+          "description": "Profile gender",
+          "type": "string",
+          "example": "M",
+          "enum": [
+            "M",
+            "F",
+            "O"
+          ]
+        }
+      }
+    },
+    "ClientContact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Client contact ID",
+          "example": 1
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "branch": {
+          "type": "object",
+          "description": "AlayaCare branch",
+          "properties": {
+            "id": {
+              "description": "Branch ID",
+              "type": "integer",
+              "example": 1000
+            },
+            "name": {
+              "description": "Branch name",
+              "type": "string",
+              "example": "Toronto branch"
+            }
+          }
+        },
+        "external_id": {
+          "type": "string",
+          "example": "crm_client_contact_external_id_1",
+          "description": "Client contact external ID",
+          "nullable": true
+        },
+        "contact_type": {
+          "type": "string",
+          "example": "Medical",
+          "nullable": true
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor",
+          "nullable": true
+        },
+        "language": {
+          "$ref": "#/components/schemas/ClientLanguage"
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientContactStatus"
+        },
+        "emergency": {
+          "type": "boolean",
+          "example": false,
+          "default": false,
+          "nullable": true
+        },
+        "is_billing_contact": {
+          "type": "boolean",
+          "example": false,
+          "nullable": true
+        },
+        "eb_medicaid_employee_relationship": {
+          "type": "string",
+          "example": "Spouse",
+          "nullable": true
+        },
+        "eb_medicaid_provider_type": {
+          "type": "string",
+          "example": "Attending provider",
+          "nullable": true
+        },
+        "eb_medicaid_npi": {
+          "type": "string",
+          "example": "12345678",
+          "nullable": true
+        },
+        "demographics": {
+          "$ref": "#/components/schemas/ClientContactDemographics"
+        },
+        "clients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ClientContactDetails"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "ac_id",
+        "external_id",
+        "status",
+        "demographics"
+      ]
+    },
+    "ClientContactListItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Client contact ID",
+          "example": 1
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "external_id": {
+          "type": "string",
+          "example": "crm_client_contact_external_id_1",
+          "description": "Client contact external ID",
+          "nullable": true
+        },
+        "contact_type": {
+          "type": "string",
+          "example": "Medical",
+          "nullable": true
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor",
+          "nullable": true
+        },
+        "language": {
+          "$ref": "#/components/schemas/ClientLanguage"
+        },
+        "npi": {
+          "type": "string",
+          "description": "National provider identification number",
+          "example": "12345678"
+        },
+        "provider_type": {
+          "type": "string",
+          "description": "Type of healthcare provider",
+          "example": "Attending provider"
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientContactStatus"
+        },
+        "demographics": {
+          "$ref": "#/components/schemas/ClientContactDemographics"
+        }
+      },
+      "required": [
+        "id",
+        "ac_id",
+        "external_id",
+        "status",
+        "demographics"
+      ]
+    },
+    "ClientContactCreate": {
+      "description": "Only one of 'client_id' and 'external_client_id' can be provided",
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientContactUpdate"
+        }
+      ],
+      "type": "object",
+      "properties": {
+        "profile_id": {
+          "description": "AlayaCare profile ID",
+          "type": "integer",
+          "example": 100
+        }
+      }
+    },
+    "ClientContactUpdate": {
+      "type": "object",
+      "properties": {
+        "external_id": {
+          "type": "string",
+          "example": "crm_client_contact_external_id_1",
+          "description": "Client contact external ID"
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientContactStatus"
+        },
+        "contact_type": {
+          "type": "string",
+          "example": "Medical"
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor"
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_external_id_1"
+        },
+        "is_billing_contact": {
+          "type": "boolean",
+          "example": false,
+          "description": "Is the contact a billing contact"
+        },
+        "emergency": {
+          "type": "boolean",
+          "example": false,
+          "default": false,
+          "nullable": true
+        },
+        "language": {
+          "$ref": "#/components/schemas/ClientLanguage"
+        },
+        "demographics": {
+          "$ref": "#/components/schemas/ClientContactDemographics"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ClientContactRolesUpdate"
+          }
+        },
+        "eb_medicaid_provider_type": {
+          "type": "string",
+          "example": "Attending provider"
+        },
+        "eb_medicaid_npi": {
+          "type": "string",
+          "example": "1234567"
+        },
+        "eb_medicaid_employee_relationship": {
+          "type": "string",
+          "example": "Spouse"
+        }
+      }
+    },
+    "ClientContactRolesUpdate": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "Client Designee",
+            "Legal Guardian",
+            "Health Care Proxy",
+            "Physician",
+            "Power of Attorney",
+            "Client Representative",
+            "Enduring Guardian (ANZ)"
+          ]
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "effective_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "effective_to": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ClientStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "on_hold",
+        "discharged",
+        "waiting_list",
+        "unknown"
+      ],
+      "nullable": true
+    },
+    "ClientLanguage": {
+      "type": "string",
+      "description": "Supported language codes.\nIn some cases, a language (e.g. 'english') can be provided when creating an entity,\nand will be automatically converted to a language code (e.g. 'en').\n",
+      "enum": [
+        "sq",
+        "ar",
+        "hy",
+        "ast",
+        "bn",
+        "my",
+        "yue",
+        "zh",
+        "hr",
+        "cs",
+        "fa_AF",
+        "nl",
+        "en",
+        "fo",
+        "fr",
+        "de",
+        "el",
+        "he",
+        "hi",
+        "hu",
+        "it",
+        "ja",
+        "rw",
+        "ko",
+        "mdr",
+        "ne",
+        "ps",
+        "fa",
+        "pl",
+        "pt",
+        "pa",
+        "ro",
+        "ru",
+        "sr",
+        "sk",
+        "so",
+        "es",
+        "sw",
+        "tl",
+        "ta",
+        "ti",
+        "uk",
+        "ur",
+        "vi",
+        "other"
+      ],
+      "nullable": true
+    },
+    "CareTeamMember": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Smith",
+          "description": "Employee name"
+        },
+        "id": {
+          "type": "integer",
+          "example": 1001,
+          "description": "AlayaCare ID of the employee"
+        },
+        "external_id": {
+          "type": "string",
+          "example": "sor_employee_external_id_1",
+          "description": "External ID of the employee"
+        }
+      }
+    },
+    "ClientDemographics": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the patient profile, defined through the AlayaCare webapp.\nOn the example below default profile keys for the client are used.\n\nExample profile attributes:\n\n+ `address_suite`: string\n+ `address`: string\n+ `birthday`: string\n+ `care_needs`: string\n+ `city`: string\n+ `company`: string\n+ `country`: string\n+ `email_preferred`: string\n+ `email`: string\n+ `emergency_response_level`: string\n+ `fax`: string\n+ `first_name`: string\n+ `gender`: string\n+ `health_card_version`: string\n+ `health_card`: string\n+ `last_name`: string\n+ `medical_status`: string\n+ `phone_main`: string\n+ `phone_other`: string\n+ `phone_personal`: string\n+ `remarks`: string\n+ `salutation`: string\n+ `service_frequency`: string\n+ `state`: string\n+ `timeframe`: string\n+ `title`: string\n+ `zip`: string\n",
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "description": "Client first name",
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "description": "Client last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "gender": {
+          "description": "Client gender",
+          "type": "string",
+          "enum": [
+            "M",
+            "F",
+            "O"
+          ],
+          "example": "M"
+        }
+      }
+    },
+    "ClientDemographicsLocation": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the patient profile, defined through the AlayaCare webapp.\nOn the example below default profile keys for the client are used.\n\nExample profile attributes:\n\n+ `address_suite`: string\n+ `address`: string\n+ `birthday`: string\n+ `care_needs`: string\n+ `city`: string\n+ `company`: string\n+ `country`: string\n+ `email_preferred`: string\n+ `email`: string\n+ `emergency_response_level`: string\n+ `fax`: string\n+ `first_name`: string\n+ `gender`: string\n+ `health_card_version`: string\n+ `health_card`: string\n+ `last_name`: string\n+ `medical_status`: string\n+ `phone_main`: string\n+ `phone_other`: string\n+ `phone_personal`: string\n+ `remarks`: string\n+ `salutation`: string\n+ `service_frequency`: string\n+ `state`: string\n+ `timeframe`: string\n+ `title`: string\n+ `zip`: string\n",
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "description": "Client first name",
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "description": "Client last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "location": {
+          "$ref": "#/components/schemas/Location"
+        },
+        "gender": {
+          "description": "Client gender",
+          "type": "string",
+          "enum": [
+            "M",
+            "F",
+            "O"
+          ],
+          "example": "M"
+        }
+      }
+    },
+    "ClientCreateDemographics": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientDemographics"
+        }
+      ],
+      "required": [
+        "first_name",
+        "last_name"
+      ]
+    },
+    "ClientDetails": {
+      "description": "AlayaCare client entity",
+      "type": "object",
+      "properties": {
+        "demographics": {
+          "$ref": "#/components/schemas/ClientDemographicsLocation"
+        },
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 1001
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_client_external_id_1",
+          "nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "description": "AlayaCare profile ID",
+          "example": 7890
+        },
+        "branch_id": {
+          "type": "integer",
+          "description": "AlayaCare client ID",
+          "example": 2001
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientStatus"
+        },
+        "contacts": {
+          "type": "array",
+          "description": "Client contacts",
+          "items": {
+            "$ref": "#/components/schemas/ClientContactListItem"
+          }
+        },
+        "care_team": {
+          "type": "array",
+          "description": "List of employees on a client's care team.",
+          "items": {
+            "$ref": "#/components/schemas/CareTeamMember"
+          }
+        },
+        "language": {
+          "$ref": "#/components/schemas/ClientLanguage"
+        },
+        "groups": {
+          "type": "array",
+          "description": "Client groups",
+          "items": {
+            "$ref": "#/components/schemas/Group"
+          }
+        },
+        "cost_centre": {
+          "$ref": "#/components/schemas/CostCentre"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ClientTag"
+          }
+        },
+        "timezone": {
+          "description": "Timezone name in IANA format (iana.org/time-zones). If not set, returns the branch timezone.\n",
+          "type": "string",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "ac_id",
+        "external_id",
+        "profile_id",
+        "demographics",
+        "branch_id",
+        "status",
+        "contacts",
+        "care_team"
+      ]
+    },
+    "Client": {
+      "description": "AlayaCare client list view",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare client ID",
+          "type": "integer",
+          "example": 1000
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "external_id": {
+          "description": "External client ID",
+          "type": "string",
+          "example": "sor_client_external_id_1",
+          "nullable": true
+        },
+        "profile_id": {
+          "description": "AlayaCare profile ID",
+          "type": "integer",
+          "example": 100
+        },
+        "first_name": {
+          "description": "Client first name",
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "description": "Client last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientStatus"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ClientTag"
+          }
+        },
+        "_link": {
+          "description": "Client link on the web application",
+          "type": "string",
+          "example": "https://demo3.alayacare.ca/permalink/client/b1"
+        }
+      },
+      "required": [
+        "id",
+        "ac_id",
+        "external_id",
+        "profile_id",
+        "first_name",
+        "last_name",
+        "status",
+        "_link"
+      ]
+    },
+    "BlockedEmployeeList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of blocked or blocking employees",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/BlockedEmployeeListItem"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ClientList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of clients",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ClientListItem"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ContactList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of clients",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ClientContactListItem"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BlockedEmployeeListItem": {
+      "description": "Employee blocked by or blocking a client",
+      "type": "object",
+      "properties": {
+        "employee": {
+          "$ref": "#/components/schemas/CareTeamMember"
+        },
+        "block_originator": {
+          "type": "string",
+          "description": "Whether the employee or the client requested the block",
+          "enum": [
+            "client",
+            "employee"
+          ]
+        },
+        "comments": {
+          "type": "string",
+          "description": "Reason for the block"
+        }
+      }
+    },
+    "ClientListItem": {
+      "description": "AlayaCare client list item",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare client ID",
+          "type": "integer",
+          "example": 1000
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "branch": {
+          "type": "object",
+          "description": "AlayaCare branch",
+          "properties": {
+            "id": {
+              "description": "Branch ID",
+              "type": "integer",
+              "example": 1000
+            },
+            "name": {
+              "description": "Branch name",
+              "type": "string",
+              "example": "Toronto branch"
+            }
+          }
+        },
+        "external_id": {
+          "description": "External client ID",
+          "type": "string",
+          "example": "sor_client_external_id_1",
+          "nullable": true
+        },
+        "profile_id": {
+          "description": "AlayaCare profile ID",
+          "type": "integer",
+          "example": 100
+        },
+        "first_name": {
+          "description": "Client first name",
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "description": "Client last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientStatus"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ClientTag"
+          }
+        },
+        "_link": {
+          "description": "Client link on the web application",
+          "type": "string",
+          "example": "https://demo3.alayacare.ca/permalink/client/b1"
+        }
+      }
+    },
+    "ClientContactDetails": {
+      "description": "AlayaCare client list item",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare client ID",
+          "type": "integer",
+          "example": 1000
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "branch": {
+          "type": "object",
+          "description": "AlayaCare branch",
+          "properties": {
+            "id": {
+              "description": "Branch ID",
+              "type": "integer",
+              "example": 1000
+            },
+            "name": {
+              "description": "Branch name",
+              "type": "string",
+              "example": "Toronto branch"
+            }
+          }
+        },
+        "external_id": {
+          "description": "External client ID",
+          "type": "string",
+          "example": "sor_client_external_id_1",
+          "nullable": true
+        },
+        "first_name": {
+          "description": "Client first name",
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "description": "Client last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientStatus"
+        },
+        "contact_relationship": {
+          "$ref": "#/components/schemas/ClientContactRelationship"
+        },
+        "_link": {
+          "description": "Client link on the web application",
+          "type": "string",
+          "example": "https://demo3.alayacare.ca/permalink/client/b1"
+        }
+      }
+    },
+    "ClientContactRelationship": {
+      "description": "AlayaCare client contact relationship specific properties details",
+      "type": "object",
+      "properties": {
+        "contact_type": {
+          "type": "string",
+          "example": "Medical",
+          "nullable": true
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor",
+          "nullable": true
+        },
+        "status": {
+          "$ref": "#/components/schemas/ClientContactStatus"
+        },
+        "eb_medicaid_employee_relationship": {
+          "type": "string",
+          "example": "Spouse",
+          "nullable": true
+        },
+        "eb_medicaid_provider_type": {
+          "type": "string",
+          "example": "Attending provider",
+          "nullable": true
+        },
+        "eb_medicaid_npi": {
+          "type": "string",
+          "example": "12345678",
+          "nullable": true
+        }
+      }
+    },
+    "ClientCreate": {
+      "description": "AlayaCare client entity data for creation.",
+      "type": "object",
+      "properties": {
+        "demographics": {
+          "$ref": "#/components/schemas/ClientCreateDemographics"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "Client external ID",
+          "example": "sor_client_external_id_1"
+        },
+        "branch_id": {
+          "type": "integer",
+          "description": "AlayaCare branch the client belongs to",
+          "example": 2001
+        },
+        "profile_id": {
+          "description": "AlayaCare profile ID",
+          "type": "integer",
+          "example": 100
+        },
+        "language": {
+          "$ref": "#/components/schemas/ClientLanguage"
+        },
+        "groups": {
+          "description": "List of groups. Group objects have ID and name for convenience\nof input, but only the IDs are used here. For valid IDs,\nrequest /groups. If Group Association is enabled, a client MUST be assigned\nat least one group. Otherwise the profile will be invisible.\n",
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Group"
+          }
+        },
+        "timezone": {
+          "description": "Timezone name in IANA format (iana.org/time-zones). If set to null, will inherit the branch timezone.\n",
+          "type": "string",
+          "example": "America/Toronto"
+        },
+        "intake_group": {
+          "description": "If True, the client will be assigned to the intake groups. If no Intake groups are found, a default group with name \"INTAKE\" is created. Review the intake documentation to see if this applies.",
+          "type": "boolean",
+          "default": false,
+          "example": true
+        },
+        "is_billing_contact": {
+          "description": "If True, the client self contact will be assigned as a billing contact.",
+          "type": "boolean",
+          "example": false,
+          "nullable": true
+        },
+        "correspondence_method": {
+          "description": "Preferred method of correspondence for the client self contact.",
+          "type": "string",
+          "example": "email",
+          "enum": [
+            "email",
+            "mail"
+          ],
+          "nullable": true
+        }
+      }
+    },
+    "ClientUpdate": {
+      "description": "AlayaCare client entity data for update.",
+      "type": "object",
+      "properties": {
+        "demographics": {
+          "$ref": "#/components/schemas/ClientDemographics"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "Client external ID",
+          "example": "sor_client_external_id_1"
+        },
+        "language": {
+          "$ref": "#/components/schemas/ClientLanguage"
+        },
+        "groups": {
+          "description": "List of groups. Group objects have ID and name for convenience\nof input, but only the IDs are used here. For valid IDs,\nrequest /groups.\n",
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Group"
+          }
+        },
+        "timezone": {
+          "description": "Timezone name in IANA format (iana.org/time-zones). If set to null, will inherit the branch timezone.\n",
+          "type": "string",
+          "example": "America/Toronto"
+        }
+      }
+    },
+    "ClientStatusList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "description": "Paginated list of client status",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ClientStatusDetails"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ClientStatusDetails": {
+      "description": "AlayaCare client status entity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare client status ID",
+          "example": 1001
+        },
+        "effective_date": {
+          "type": "string",
+          "description": "Date the status will become in effect. Expected format is ISO 8601.",
+          "example": "2018-07-08T00:00:00+00:00"
+        },
+        "status": {
+          "description": "Updatable status of a client",
+          "type": "string",
+          "example": "on_hold",
+          "enum": [
+            "active",
+            "pending",
+            "on_hold",
+            "discharged",
+            "waiting_list"
+          ]
+        },
+        "reason": {
+          "$ref": "#/components/schemas/ReasonDetails"
+        },
+        "note": {
+          "description": "Note attached to the client status.",
+          "type": "string",
+          "example": "On hold due to hospitalization."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date the record was created (ISO 8601) - Time saved at `T00:00:00+00:00`",
+          "example": "2019-07-08T00:00:00+00:00"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date the record was updated (ISO 8601) - Time saved at `T00:00:00+00:00`",
+          "example": "2020-07-08T00:00:00+00:00"
+        },
+        "created_by": {
+          "$ref": "#/components/schemas/CreatedByDetails"
+        },
+        "updated_by": {
+          "$ref": "#/components/schemas/UpdatedByDetails"
+        }
+      }
+    },
+    "CreatedByDetails": {
+      "type": "object",
+      "description": "User who created the record",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Id of the employee who created the record",
+          "example": 284
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External ID of the employee who created the record",
+          "example": "450"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the employee who created the record",
+          "example": "John Smith"
+        }
+      }
+    },
+    "UpdatedByDetails": {
+      "type": "object",
+      "description": "User who updated the record",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Id of the employee who updated the record",
+          "example": 284
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External ID of the employee who updated the record",
+          "example": "450"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the employee who updated the record",
+          "example": "John Smith"
+        }
+      }
+    },
+    "ReasonDetails": {
+      "description": "AlayaCare Status Change Details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare status reason ID.",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare status reason name",
+          "example": "Vacation"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "ClientStatusCreated": {
+      "description": "AlayaCare client status entity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare client status ID",
+          "example": 1001
+        }
+      }
+    },
+    "ClientStatusCreate": {
+      "description": "AlayaCare client status entity to create",
+      "type": "object",
+      "properties": {
+        "effective_date": {
+          "type": "string",
+          "description": "Date the status will become in effect. Expected format is ISO 8601.",
+          "example": "2018-07-08T00:00:00+00:00",
+          "format": "date-time"
+        },
+        "status": {
+          "description": "Updatable status of a client",
+          "type": "string",
+          "example": "on_hold",
+          "enum": [
+            "active",
+            "on_hold",
+            "discharged",
+            "waiting_list"
+          ]
+        },
+        "reason_id": {
+          "description": "Client status change reason ID. Available and mandatory for 'On Hold' or 'Discharged' status.",
+          "type": "integer",
+          "example": 1
+        },
+        "note": {
+          "description": "Note attached to the client status. Max 255 characters.",
+          "type": "string",
+          "example": "On hold due to hospitalization."
+        },
+        "end_date": {
+          "description": "Adding an `end_date` will automatically create an `active` status with an `effective_date` equal to the `end_date`. Expected format is ISO 8601.",
+          "type": "string",
+          "example": "2018-07-08T00:00:00+00:00",
+          "format": "date-time"
+        },
+        "services": {
+          "$ref": "#/components/schemas/ClientServicesStatus"
+        }
+      },
+      "required": [
+        "effective_date",
+        "status"
+      ]
+    },
+    "ClientStatusUpdate": {
+      "description": "AlayaCare client status entity to create",
+      "type": "object",
+      "properties": {
+        "effective_date": {
+          "type": "string",
+          "description": "Date the status will become in effect. Expected format is ISO 8601.",
+          "example": "2018-07-08T00:00:00+00:00",
+          "format": "date-time"
+        },
+        "reason_id": {
+          "description": "Client status change reason ID. Available and mandatory for 'On Hold' or 'Discharged' status.",
+          "type": "string",
+          "example": "1"
+        },
+        "note": {
+          "description": "Note attached to the client status. Max 255 characters.",
+          "type": "string",
+          "example": "On hold due to hospitalization."
+        },
+        "end_date": {
+          "description": "Adding an `end_date` will automatically create an `active` status with an `effective_date` equal to the `end_date`. Expected format is ISO 8601.",
+          "type": "string",
+          "example": "2018-07-08T00:00:00+00:00",
+          "format": "date-time"
+        },
+        "services": {
+          "$ref": "#/components/schemas/ClientServicesStatus"
+        }
+      }
+    },
+    "ClientServicesStatus": {
+      "description": "Client service statuses update details if this block is not sent,\nit is defaulted to FALSE, meaning the services statuses are not updated\n",
+      "type": "object",
+      "properties": {
+        "update_services": {
+          "type": "boolean",
+          "description": "Whether or not to apply the client status change to their associated services.",
+          "example": true
+        },
+        "service_status": {
+          "type": "string",
+          "description": "The status change will be applied to services with this specific services_status only.",
+          "enum": [
+            "on_hold",
+            "active",
+            "discharged",
+            "waiting_list"
+          ],
+          "example": "on_hold"
+        },
+        "service_status_reason": {
+          "type": "integer",
+          "description": "The status change will be applied to services with this specific service_status_reason only.",
+          "example": 9
+        }
+      }
+    },
+    "ClientTagList": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PaginatedList"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ClientTag"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ClientTagCreate": {
+      "type": "array",
+      "description": "An array of Client tags.",
+      "items": {
+        "$ref": "#/components/schemas/ClientTag"
+      }
+    },
+    "ClientTag": {
+      "type": "string",
+      "description": "Name of tag.",
+      "example": "Tag"
+    },
+    "CostCentre": {
+      "description": "Details of a cost centre",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Cost centre description",
+          "example": "Montreal"
+        },
+        "id": {
+          "type": "integer",
+          "description": "Cost centre ID",
+          "example": 2
+        },
+        "number": {
+          "type": "string",
+          "description": "Cost centre number for display in-app",
+          "example": "5555"
+        },
+        "status": {
+          "type": "string",
+          "description": "Cost centre status",
+          "example": "enabled"
+        }
+      },
+      "nullable": true
+    },
+    "ErrorResponse": {
+      "description": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 400,
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "example": "Invalid request",
+          "description": "Detailed error message"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "SuccessResponse": {
+      "description": "Success response.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare ID",
+          "example": 1001
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External ID",
+          "example": "entity_external_id",
+          "nullable": true
+        }
+      },
+      "required": [
+        "id",
+        "external_id"
+      ]
+    },
+    "PaginatedList": {
+      "description": "Base model of all paginated lists",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages available",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "count",
+        "page",
+        "total_pages",
+        "items"
+      ]
+    },
+    "Location": {
+      "description": "Location information",
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "description": "latitude",
+          "example": 45.518
+        },
+        "lon": {
+          "type": "number",
+          "description": "longitude",
+          "example": -73.582
+        },
+        "zip": {
+          "type": "string",
+          "description": "postal code",
+          "example": "H0H 0H0"
+        }
+      },
+      "nullable": true
+    },
+    "ServiceStatusCreate": {
+      "type": "object",
+      "properties": {
+        "status_id": {
+          "type": "string",
+          "description": "ID of the status",
+          "enum": [
+            "active",
+            "on_hold",
+            "waiting_list",
+            "discharged"
+          ]
+        },
+        "upcoming_status_id": {
+          "type": "integer",
+          "description": "ID of the upcoming status",
+          "nullable": true
+        },
+        "status_reason": {
+          "type": "string",
+          "description": "Reason for the status",
+          "nullable": true
+        },
+        "status_date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2025-02-26T04:32:10.000Z",
+          "description": "Date of the status, set to now if not provided."
+        },
+        "status_end_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date of the status",
+          "nullable": true
+        }
+      },
+      "required": [
+        "status_id"
+      ]
+    },
+    "CareProviderNoteCreate": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "ID of the category.\nEither category_id or category_description is required.\n"
+        },
+        "category_description": {
+          "type": "string",
+          "description": "Description of the category.\nEither category_id or category_description is required.\n"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the note"
+        },
+        "share_category_with_branch": {
+          "type": "boolean",
+          "description": "Whether the new category should be shared with the branch or specific to the client.\nOnly applicable if category_description is provided with a new string.\n",
+          "default": true
+        }
+      },
+      "required": [
+        "content"
+      ]
+    },
+    "CareProviderNoteCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the category"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the category"
+        }
+      }
+    },
+    "CareProviderNoteDetail": {
+      "type": "object",
+      "description": "Details about the care provider note.\nThe category object is only present if include=category is provided.\n",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the note"
+        },
+        "patient_id": {
+          "type": "integer",
+          "description": "ID of the patient"
+        },
+        "patient_external_id": {
+          "type": "string",
+          "description": "External ID of the patient"
+        },
+        "category_id": {
+          "type": "integer",
+          "description": "ID of the category"
+        },
+        "category": {
+          "$ref": "#/components/schemas/CareProviderNoteCategory"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the note"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time the note was created"
+        },
+        "create_user_id": {
+          "type": "integer",
+          "description": "ID of the user who created the note"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time the note was updated"
+        },
+        "update_user_id": {
+          "type": "integer",
+          "description": "ID of the user who updated the note"
+        },
+        "is_archived": {
+          "type": "boolean",
+          "description": "Whether the note is archived"
+        }
+      }
+    },
+    "CareProviderNoteCursorList": {
+      "type": "object",
+      "description": "Cursor-based paginated list of care provider notes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CareProviderNoteDetail"
+          }
+        },
+        "next_cursor": {
+          "type": "string",
+          "description": "Cursor to the next page. Will be null when there are no more items.",
+          "nullable": true
+        }
+      }
+    },
+    "CareProviderNoteCategoryCursorList": {
+      "type": "object",
+      "description": "Cursor-based paginated list of care provider note categories",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CareProviderNoteCategory"
+          }
+        },
+        "next_cursor": {
+          "type": "string",
+          "description": "Cursor to the next page. Will be null when there are no more items.",
+          "nullable": true
+        }
+      }
+    }
+  }
+}

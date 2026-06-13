@@ -1,0 +1,6607 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Market API Schemas",
+  "definitions": {
+    "StatusHealthzResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "OutboxOfferCore": {
+      "type": "object",
+      "properties": {
+        "care_type": {
+          "$ref": "#/components/schemas/CareTypeCore"
+        },
+        "offer_type": {
+          "$ref": "#/components/schemas/OfferTypeCore"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "demand_labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "care_type",
+        "offer_type",
+        "expires_at"
+      ]
+    },
+    "OutboxOfferCreateRequest": {
+      "type": "object",
+      "properties": {
+        "offer": {
+          "$ref": "#/components/schemas/OutboxOfferCore"
+        },
+        "alayacare": {
+          "$ref": "#/components/schemas/OutboxAlayaCareCore"
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "direct_supply_persona_ids": {
+          "description": "Identifiers of one (or more) supply organization for direct-to-supplier\nmatching.\n",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "price": {
+          "$ref": "#/components/schemas/OutboxOfferPriceCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/OutboxOfferClientRequest"
+        },
+        "service": {
+          "$ref": "#/components/schemas/OutboxServiceRequest"
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxOfferVisitRequest"
+          }
+        }
+      },
+      "required": [
+        "offer",
+        "client",
+        "service"
+      ]
+    },
+    "OutboxShiftOfferCore": {
+      "type": "object",
+      "properties": {
+        "care_type": {
+          "$ref": "#/components/schemas/CareTypeCore"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "demand_labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "care_type",
+        "expires_at"
+      ]
+    },
+    "OutboxShiftOfferItem": {
+      "type": "object",
+      "properties": {
+        "price": {
+          "$ref": "#/components/schemas/OutboxOfferPriceCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/OutboxOfferClientRequest"
+        },
+        "service": {
+          "$ref": "#/components/schemas/OutboxServiceRequest"
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxOfferVisitRequest"
+          }
+        }
+      },
+      "required": [
+        "client",
+        "service",
+        "visits"
+      ]
+    },
+    "OutboxShiftOfferCreateRequest": {
+      "type": "object",
+      "properties": {
+        "offer": {
+          "$ref": "#/components/schemas/OutboxShiftOfferCore"
+        },
+        "direct_supply_persona_ids": {
+          "description": "Identifiers of one (or more) supply organization for direct-to-supplier\nmatching.\n",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxShiftOfferItem"
+          }
+        }
+      },
+      "required": [
+        "offer",
+        "items"
+      ]
+    },
+    "OutboxShiftOfferCreateResponse": {
+      "type": "object",
+      "properties": {
+        "shift": {
+          "title": "OutboxShiftOfferCreateShiftResponse",
+          "description": "The `shift` object included in the response when creating a shift offer.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "title": "OutboxShiftOfferCreateItemsResponse",
+            "description": "The `item` objects included in the response when creating a shift offer.",
+            "type": "object",
+            "properties": {
+              "offer": {
+                "title": "OutboxShiftOfferCreateItemOfferResponse",
+                "description": "The `offer` object included in the response when creating a shift offer.",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "care_type": {
+                    "$ref": "#/components/schemas/CareTypeCore"
+                  },
+                  "start_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Derived from the visits"
+                  },
+                  "end_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Derived from the visits"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "demand_labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "id",
+                  "care_type",
+                  "start_at",
+                  "end_at",
+                  "expires_at",
+                  "created_at"
+                ]
+              },
+              "client": {
+                "title": "OutboxShiftOfferCreateItemClientResponse",
+                "description": "The `client` object included in the response when creating a shift offer.",
+                "type": "object",
+                "properties": {
+                  "outbox_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "demographics": {
+                    "title": "OutboxShiftOfferCreateItemClientDemographicsResponse",
+                    "description": "The `client` `demographics` object included in the response when creating a shift offer.",
+                    "type": "object",
+                    "properties": {
+                      "first_name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "first_name",
+                      "last_name"
+                    ]
+                  }
+                },
+                "required": [
+                  "outbox_id",
+                  "demographics"
+                ]
+              },
+              "service": {
+                "title": "OutboxShiftOfferCreateItemServiceResponse",
+                "description": "The `service` object included in the response when creating a shift offer.",
+                "type": "object",
+                "properties": {
+                  "outbox_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "outbox_id",
+                  "name"
+                ]
+              },
+              "visits": {
+                "title": "OutboxShiftOfferCreateItemVisitsResponse",
+                "description": "The `visits` object included in the response when creating a shift offer.",
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "outbox_id": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "outbox_id"
+                  ]
+                }
+              },
+              "response_counts": {
+                "$ref": "#/components/schemas/OfferResponseCountsCore"
+              }
+            },
+            "required": [
+              "offer",
+              "client",
+              "service",
+              "visits",
+              "response_counts"
+            ]
+          }
+        }
+      },
+      "required": [
+        "shift",
+        "items"
+      ]
+    },
+    "OutboxBundleOfferCreateRequest": {
+      "type": "object",
+      "properties": {
+        "offer": {
+          "title": "OutboxBundleOfferCreateOfferRequest",
+          "type": "object",
+          "properties": {
+            "expires_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "comment": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "expires_at"
+          ]
+        },
+        "direct_supply_persona_ids": {
+          "description": "Identifiers of one (or more) supply organization for direct-to-supplier\nmatching.\n",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "title": "OutboxBundleOfferCreateItemRequest",
+            "type": "object",
+            "properties": {
+              "care_type": {
+                "$ref": "#/components/schemas/CareTypeCore"
+              },
+              "demand_labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "price": {
+                "$ref": "#/components/schemas/OutboxOfferPriceCore"
+              },
+              "client": {
+                "$ref": "#/components/schemas/OutboxOfferClientRequest"
+              },
+              "service": {
+                "$ref": "#/components/schemas/OutboxServiceRequest"
+              },
+              "alayacare": {
+                "$ref": "#/components/schemas/OutboxAlayaCareCore"
+              }
+            },
+            "required": [
+              "care_type",
+              "client",
+              "service"
+            ]
+          }
+        }
+      },
+      "required": [
+        "offer",
+        "items"
+      ]
+    },
+    "OutboxBundleOfferCreateResponse": {
+      "type": "object",
+      "properties": {
+        "bundle": {
+          "title": "OutboxBundleOfferCreateBundleResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The ID of the bundle. Referred to as `shift_id` when retrieving the offer\nin all other contexts.\n"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "title": "OutboxBundleOfferCreateItemsResponse",
+            "type": "object",
+            "properties": {
+              "offer": {
+                "title": "OutboxBundleOfferCreateItemOfferResponse",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "care_type": {
+                    "$ref": "#/components/schemas/CareTypeCore"
+                  },
+                  "status": {
+                    "$ref": "#/components/schemas/OfferStatusCore"
+                  },
+                  "start_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Derived from the visits"
+                  },
+                  "end_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Derived from the visits"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "demand_labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "id",
+                  "care_type",
+                  "start_at",
+                  "expires_at",
+                  "created_at"
+                ]
+              },
+              "client": {
+                "title": "OutboxBundleOfferCreateItemClientResponse",
+                "type": "object",
+                "properties": {
+                  "outbox_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "demographics": {
+                    "title": "OutboxBundleOfferCreateItemClientDemographicsResponse",
+                    "type": "object",
+                    "properties": {
+                      "first_name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "first_name",
+                      "last_name"
+                    ]
+                  }
+                },
+                "required": [
+                  "outbox_id",
+                  "demographics"
+                ]
+              },
+              "service": {
+                "title": "OutboxBundleOfferCreateItemServiceResponse",
+                "type": "object",
+                "properties": {
+                  "outbox_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "outbox_id",
+                  "name"
+                ]
+              },
+              "response_counts": {
+                "$ref": "#/components/schemas/OfferResponseCountsCore"
+              }
+            },
+            "required": [
+              "offer",
+              "client",
+              "service",
+              "response_counts"
+            ]
+          }
+        }
+      },
+      "required": [
+        "bundle",
+        "items"
+      ]
+    },
+    "OutboxOfferCollectionResponse": {
+      "description": "API response of an offer on the outbox API.\n",
+      "type": "object",
+      "properties": {
+        "offer": {
+          "$ref": "#/components/schemas/OutboxOfferExtendedCore"
+        },
+        "client": {
+          "title": "OutboxOfferCollectionClientResponse",
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string"
+            },
+            "demographics": {
+              "$ref": "#/components/schemas/DemographicLeanCore"
+            }
+          },
+          "required": [
+            "demographics",
+            "outbox_id"
+          ]
+        },
+        "service": {
+          "title": "OutboxOfferServiceLeanResponse",
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "name",
+            "outbox_id"
+          ]
+        },
+        "response_counts": {
+          "$ref": "#/components/schemas/OfferResponseCountsCore"
+        }
+      },
+      "required": [
+        "offer",
+        "client",
+        "service",
+        "response_counts"
+      ]
+    },
+    "OutboxOfferExtendedCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/OutboxOfferCore"
+        },
+        {
+          "$ref": "#/components/schemas/OfferReasonCodeCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "shift_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "status": {
+              "$ref": "#/components/schemas/OfferStatusCore"
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Derived from the visits"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Derived from the visits"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "status",
+            "start_at",
+            "created_at"
+          ]
+        }
+      ]
+    },
+    "OfferResponseCountsCore": {
+      "type": "object",
+      "properties": {
+        "modified_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The creation or last update of the offer or any responses to it."
+        },
+        "sent": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of recipients to whom the offer was sent."
+        },
+        "accepted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of accepted offers."
+        },
+        "declined": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The number of declined offers."
+        }
+      }
+    },
+    "OutboxOfferDetailResponse": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "offer": {
+              "$ref": "#/components/schemas/OutboxOfferExtendedCore"
+            },
+            "demand": {
+              "$ref": "#/components/schemas/OrganizationLeanCore"
+            },
+            "supply": {
+              "$ref": "#/components/schemas/OrganizationLeanCore"
+            },
+            "alayacare": {
+              "$ref": "#/components/schemas/OutboxAlayaCareCore"
+            },
+            "case_manager": {
+              "$ref": "#/components/schemas/CaseManagerCore"
+            },
+            "direct_supply_persona_ids": {
+              "description": "Identifiers of one (or more) supply organization for direct-to-supplier\nmatching.\n",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "price": {
+              "$ref": "#/components/schemas/OutboxOfferPriceCore"
+            },
+            "client": {
+              "$ref": "#/components/schemas/OutboxOfferClientResponse"
+            },
+            "service": {
+              "$ref": "#/components/schemas/OutboxServiceResponse"
+            },
+            "visits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxOfferVisitResponse"
+              }
+            },
+            "response_counts": {
+              "$ref": "#/components/schemas/OfferResponseCountsCore"
+            }
+          },
+          "required": [
+            "offer",
+            "demand",
+            "client",
+            "service",
+            "response_counts"
+          ]
+        }
+      ]
+    },
+    "OutboxOfferMatchCollectionResponse": {
+      "description": "API response for the representation of Offer Matches on the outbox API.\n",
+      "type": "object",
+      "properties": {
+        "match": {
+          "$ref": "#/components/schemas/OfferMatchCore"
+        },
+        "supply": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        }
+      }
+    },
+    "OutboxOfferPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxOfferCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "OutboxOfferMatchPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxOfferMatchCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InboxOfferCollectionResponse": {
+      "description": "API response for the core representation of an offer response on the inbox API.\n",
+      "type": "object",
+      "properties": {
+        "offer": {
+          "$ref": "#/components/schemas/InboxOfferCore"
+        },
+        "match": {
+          "$ref": "#/components/schemas/OfferMatchCore"
+        }
+      }
+    },
+    "InboxReferralCollectionResponse": {
+      "description": "API response for the core representation of a referral response on the inbox API.\n",
+      "type": "object",
+      "properties": {
+        "referral": {
+          "title": "InboxReferralCollectionReferralResponse",
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ReferralReasonCodeCore"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "sequence_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "offer_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "shift_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "care_type": {
+                  "$ref": "#/components/schemas/CareTypeCore"
+                },
+                "referral_type": {
+                  "$ref": "#/components/schemas/ReferralTypeCore"
+                },
+                "start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "status": {
+                  "$ref": "#/components/schemas/ReferralStatusCore"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "care_type",
+                "referral_type",
+                "start_at",
+                "status",
+                "created_at"
+              ]
+            }
+          ]
+        },
+        "revision": {
+          "title": "InboxReferralCollectionRevisionResponse",
+          "type": "object",
+          "properties": {
+            "revision_group_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "revision_number": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "revision_group_id",
+            "revision_number"
+          ]
+        }
+      },
+      "required": [
+        "referral",
+        "revision"
+      ]
+    },
+    "InboxOfferCore": {
+      "description": "Core representation of an offer on the inbox API.\nMeant to be used in the nested `offer` in a top level (API) response schema.\n",
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/OfferReasonCodeCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "shift_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "care_type": {
+              "$ref": "#/components/schemas/CareTypeCore"
+            },
+            "offer_type": {
+              "$ref": "#/components/schemas/OfferTypeCore"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "care_type",
+            "offer_type",
+            "expires_at",
+            "start_at",
+            "created_at"
+          ]
+        }
+      ]
+    },
+    "InboxOfferDetailResponse": {
+      "description": "API response for the anonymous representation of an offer on the inbox API.\nSimilarly to the `InboxOfferCore`, this schema is meant to be used in the nested `offer`\nin a top level (API) response schema, e.g. the `InboxOfferScalarApiResponse`\nThis includes everything from the `InboxOfferCore` along with some additional information\non the client, service and visits.\nNot all client information is included here, hence the \"anon\" (anonymous) prefix.\n",
+      "type": "object",
+      "properties": {
+        "offer": {
+          "$ref": "#/components/schemas/InboxOfferCore"
+        },
+        "alayacare": {
+          "$ref": "#/components/schemas/InboxOfferAlayaCareResponse"
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "price": {
+          "$ref": "#/components/schemas/PriceCore"
+        },
+        "client": {
+          "title": "InboxOfferDetailClientResponse",
+          "type": "object",
+          "properties": {
+            "address": {
+              "$ref": "#/components/schemas/AddressAnonCore"
+            },
+            "allergies": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AllergyCore"
+              }
+            },
+            "risks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RiskCore"
+              }
+            },
+            "custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "address"
+          ]
+        },
+        "service": {
+          "title": "InboxOfferDetailServiceResponse",
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ServiceCore"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "use_client_address": {
+                  "type": "boolean"
+                },
+                "address": {
+                  "$ref": "#/components/schemas/AddressAnonCore"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          ]
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxOfferVisitResponse"
+          }
+        },
+        "match": {
+          "$ref": "#/components/schemas/OfferMatchCore"
+        },
+        "demand": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        }
+      },
+      "required": [
+        "offer",
+        "match",
+        "demand",
+        "client",
+        "service"
+      ]
+    },
+    "SortByCore": {
+      "type": "string",
+      "enum": [
+        "last_modified"
+      ],
+      "default": "last_modified"
+    },
+    "SortOrderCore": {
+      "type": "string",
+      "enum": [
+        "asc",
+        "desc"
+      ],
+      "default": "desc"
+    },
+    "InboxOfferPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InboxOfferCollectionResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "OfferMatchCore": {
+      "description": "Core representation of an Offer Match.\nMeant to be used in the nested `match` in a top level (API) response schema.\n",
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/OfferMatchReasonCodeCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "response": {
+              "$ref": "#/components/schemas/OfferMatchResponseCore"
+            },
+            "status": {
+              "$ref": "#/components/schemas/OfferMatchStatusCore"
+            },
+            "sequence_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "response",
+            "status",
+            "sequence_id",
+            "created_at"
+          ]
+        }
+      ]
+    },
+    "OutboxOfferCloseRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/OfferReasonCodeCore"
+        }
+      ]
+    },
+    "OfferReasonCodeCore": {
+      "description": "`reason_code` and `reason_comment` associated to a cancelled or closed offer.\n",
+      "type": "object",
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "enum": [
+            "datetime_change",
+            "client_request",
+            "client_hospitalization",
+            "client_passed_away",
+            "client_refused_service",
+            "processing_error",
+            "other"
+          ]
+        },
+        "reason_comment": {
+          "type": "string"
+        }
+      }
+    },
+    "OfferMatchReasonCodeCore": {
+      "description": "`reason_code` associated with a declined Offer Match.\n",
+      "type": "object",
+      "properties": {
+        "reason_code": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        }
+      }
+    },
+    "InboxOfferDeclineRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/OfferMatchReasonCodeCore"
+        }
+      ]
+    },
+    "InboxOfferAcceptRequest": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        }
+      }
+    },
+    "OutboxOfferAssignRequest": {
+      "type": "object",
+      "properties": {
+        "offer_match_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "offer_match_id"
+      ]
+    },
+    "OfferStatusCore": {
+      "type": "string",
+      "enum": [
+        "open",
+        "assigned",
+        "closed",
+        "declined_by_all",
+        "expired"
+      ]
+    },
+    "OfferMatchResponseCore": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined"
+      ]
+    },
+    "OfferMatchStatusCore": {
+      "type": "string",
+      "nullable": true,
+      "enum": [
+        "open",
+        "expired",
+        "closed",
+        "assigned",
+        "fulfilled"
+      ]
+    },
+    "CareTypeCore": {
+      "type": "string",
+      "enum": [
+        "psw",
+        "nursing"
+      ]
+    },
+    "OfferTypeCore": {
+      "type": "string",
+      "enum": [
+        "visit",
+        "service"
+      ]
+    },
+    "OutboxOfferPriceCore": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "$ref": "#/components/schemas/PriceCore"
+        },
+        "custom": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PriceCore"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "supply_persona_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "supply_persona_id"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "default"
+      ]
+    },
+    "PriceCore": {
+      "type": "object",
+      "properties": {
+        "rate": {
+          "type": "number",
+          "format": "decimal",
+          "description": "The dollar amount for offer per unit.",
+          "example": 30.0
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit for the rate.",
+          "enum": [
+            "per_visit",
+            "per_hour",
+            "amount"
+          ]
+        }
+      },
+      "required": [
+        "rate",
+        "unit"
+      ]
+    },
+    "PageCore": {
+      "description": "Root page schema for returning collections.",
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/components/schemas/PageNumberCore"
+        },
+        "items_per_page": {
+          "$ref": "#/components/schemas/ItemsPerPageCore"
+        },
+        "total_items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_pages": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "page",
+        "items_per_page",
+        "total_items",
+        "total_pages"
+      ]
+    },
+    "PageNumberCore": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "ItemsPerPageCore": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 100
+    },
+    "OrganizationLeanCore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "InboxReferralVisitResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxReferralVisitTaskResponse"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "OutboxOfferVisitRequest": {
+      "type": "object",
+      "properties": {
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxOfferVisitTaskRequest"
+          }
+        }
+      },
+      "required": [
+        "outbox_id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "OutboxReferralVisitRequest": {
+      "type": "object",
+      "properties": {
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxReferralVisitTaskRequest"
+          }
+        }
+      },
+      "required": [
+        "outbox_id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "OutboxOfferVisitResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxOfferVisitTaskResponse"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "outbox_id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "OutboxReferralVisitResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outbox_id": {
+          "type": "string"
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxReferralVisitTaskResponse"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "InboxOfferVisitResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxOfferVisitTaskResponse"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "OutboxOfferVisitTaskRequest": {
+      "type": "object",
+      "properties": {
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "outbox_id",
+        "name",
+        "is_required"
+      ]
+    },
+    "OutboxOfferVisitTaskResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "outbox_id",
+        "name",
+        "is_required"
+      ]
+    },
+    "InboxOfferVisitTaskResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "is_required"
+      ]
+    },
+    "InboxReferralVisitTaskResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "is_required"
+      ]
+    },
+    "OutboxReferralVisitTaskRequest": {
+      "type": "object",
+      "properties": {
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "outbox_id",
+        "name",
+        "is_required"
+      ]
+    },
+    "OutboxReferralVisitTaskResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "outbox_id",
+        "name",
+        "is_required"
+      ]
+    },
+    "ServiceCore": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expected_start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "custom_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CustomFieldCore"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "OutboxServiceRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ServiceCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "use_client_address": {
+              "type": "boolean",
+              "description": "For informational purposes only. This is an explicit indicator to the\nsupply organization whether the client address should be used as the\nservice address.\n\nSetting to `true` means the client address should be used for the\nservice address. So, if a service address is also provided in the\nrequest, it can safely be ignored.\n\nNot providing this or setting to `false` means the specified\nservice address should be used instead.\n"
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "referral_only_custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "OutboxServiceResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ServiceCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "use_client_address": {
+              "type": "boolean"
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "referral_only_custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "ClientCore": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/components/schemas/AddressCore"
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "first_name": {
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "zip": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "address_suite": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number",
+                    "format": "double",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "format": "double",
+                    "minimum": -180,
+                    "maximum": 180
+                  }
+                }
+              },
+              "contact_type": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "is_active": {
+                "type": "boolean",
+                "default": true
+              },
+              "is_emergency": {
+                "type": "boolean"
+              },
+              "phone_number": {
+                "description": "Main phone number.",
+                "type": "string"
+              },
+              "phone_other": {
+                "type": "string"
+              },
+              "phone_personal": {
+                "type": "string"
+              },
+              "language": {
+                "type": "string"
+              },
+              "relationship": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "demographics": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "last_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "phone_number": {
+              "description": "Main phone number.",
+              "type": "string"
+            },
+            "phone_other": {
+              "type": "string"
+            },
+            "phone_personal": {
+              "type": "string"
+            },
+            "date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "gender": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "first_name",
+            "last_name"
+          ]
+        },
+        "allergies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/AllergyCore"
+          }
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/RiskCore"
+          }
+        },
+        "diagnoses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "is_primary": {
+                "type": "boolean"
+              },
+              "start_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "end_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "treatment": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "surgeries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "details": {
+                "type": "string"
+              },
+              "start_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "end_date": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        },
+        "custom_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CustomFieldCore"
+          }
+        }
+      },
+      "required": [
+        "demographics",
+        "address"
+      ]
+    },
+    "InboxClientResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      ]
+    },
+    "OutboxOfferClientRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "referral_only_custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "OutboxReferralClientRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "OutboxOfferClientResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "referral_only_custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "OutboxReferralClientResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ClientCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "DemographicLeanCore": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "last_name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "first_name",
+        "last_name"
+      ]
+    },
+    "RiskCore": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "example": "allergy"
+        },
+        "severity": {
+          "type": "integer"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "AllergyCore": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "treatment": {
+          "type": "string"
+        }
+      }
+    },
+    "AddressAnonCore": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zip": {
+          "type": "string",
+          "minLength": 1
+        },
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approx_latitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "approx_longitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "approx_radius_meters": {
+          "type": "number",
+          "format": "double",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "city",
+        "state",
+        "zip",
+        "country"
+      ]
+    },
+    "AddressCore": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 1
+        },
+        "address_suite": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zip": {
+          "type": "string",
+          "minLength": 1
+        },
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "required": [
+        "address",
+        "city",
+        "state",
+        "zip",
+        "country"
+      ]
+    },
+    "OutboxOfferAssignmentSettingUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "offer_assignment": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "manual"
+          ]
+        }
+      },
+      "required": [
+        "offer_assignment"
+      ]
+    },
+    "OutboxOfferAssignmentSettingUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "offer_assignment": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "manual"
+          ]
+        }
+      },
+      "required": [
+        "offer_assignment"
+      ]
+    },
+    "TakeRateCore": {
+      "type": "number",
+      "format": "decimal",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "A percentage of the offer price set by demand, represented by a fraction\nbetween 0 and 1. For example, a regional take rate of 0.1 is 10%.\n"
+    },
+    "DemandTakeRateCore": {
+      "type": "object",
+      "properties": {
+        "demand_persona_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "rate": {
+          "$ref": "#/components/schemas/TakeRateCore"
+        }
+      },
+      "required": [
+        "demand_persona_id",
+        "rate"
+      ]
+    },
+    "RegionalTakeRateUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "rate": {
+          "$ref": "#/components/schemas/TakeRateCore"
+        }
+      },
+      "required": [
+        "rate"
+      ]
+    },
+    "RegionalTakeRateDetailResponse": {
+      "type": "object",
+      "properties": {
+        "rate": {
+          "$ref": "#/components/schemas/TakeRateCore"
+        }
+      },
+      "required": [
+        "rate"
+      ]
+    },
+    "DemandTakeRateCreateRequest": {
+      "type": "object",
+      "properties": {
+        "rate": {
+          "$ref": "#/components/schemas/TakeRateCore"
+        }
+      }
+    },
+    "DemandTakeRateCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/DemandTakeRateCore"
+          }
+        }
+      }
+    },
+    "OutboxReferralCreateRequest": {
+      "type": "object",
+      "properties": {
+        "referral": {
+          "type": "object",
+          "properties": {
+            "care_type": {
+              "$ref": "#/components/schemas/CareTypeCore"
+            },
+            "referral_type": {
+              "$ref": "#/components/schemas/ReferralTypeCore"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "demand_labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "care_type",
+            "referral_type"
+          ]
+        },
+        "supply_persona_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The supply organization to which the referral is destined."
+        },
+        "alayacare": {
+          "$ref": "#/components/schemas/OutboxAlayaCareCore"
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "price": {
+          "$ref": "#/components/schemas/PriceCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/OutboxReferralClientRequest"
+        },
+        "service": {
+          "title": "OutboxReferralServiceCreateRequest",
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "use_client_address": {
+              "type": "boolean",
+              "description": "For informational purposes only. This is an explicit indicator to the\nsupply organization whether the client address should be used as the\nservice address.\n\nSetting to `true` means the client address should be used for the\nservice address. So, if a service address is also provided in the\nrequest, it can safely be ignored.\n\nNot providing this or setting to `false` means the specified\nservice address should be used instead.\n"
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expected_start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "instructions": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "outbox_id",
+            "name"
+          ]
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxReferralVisitRequest"
+          }
+        }
+      },
+      "required": [
+        "referral",
+        "supply_persona_id",
+        "client",
+        "service"
+      ]
+    },
+    "OutboxReferralUpdateRequest": {
+      "properties": {
+        "referral": {
+          "title": "OutboxReferralUpdateReferralRequest",
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string"
+            },
+            "demand_labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "supply_persona_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The supply organization to which the referral is destined."
+        },
+        "alayacare": {
+          "$ref": "#/components/schemas/OutboxAlayaCareCore"
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "price": {
+          "$ref": "#/components/schemas/PriceCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/OutboxReferralClientRequest"
+        },
+        "service": {
+          "title": "OutboxReferralUpdateServiceRequest",
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "use_client_address": {
+              "type": "boolean",
+              "description": "For informational purposes only. This is an explicit indicator to the\nsupply organization whether the client address should be used as the\nservice address.\n\nSetting to `true` means the client address should be used for the\nservice address. So, if a service address is also provided in the\nrequest, it can safely be ignored.\n\nNot providing this or setting to `false` means the specified\nservice address should be used instead.\n"
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expected_start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "instructions": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "outbox_id",
+            "name"
+          ]
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxReferralVisitRequest"
+          }
+        },
+        "revision": {
+          "title": "OutboxReferralUpdateRevisionRequest",
+          "type": "object",
+          "properties": {
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "comment": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "reasons"
+          ]
+        }
+      },
+      "required": [
+        "referral",
+        "supply_persona_id",
+        "client",
+        "service",
+        "revision"
+      ]
+    },
+    "SysAdminReferralCollectionResponse": {
+      "description": "API response of an referral on the outbox API.\n",
+      "type": "object",
+      "properties": {
+        "referral": {
+          "$ref": "#/components/schemas/OutboxReferralCore"
+        },
+        "demand": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "supply": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "alayacare": {
+          "title": "SysAdminReferralCollectionAlayacareResponse",
+          "properties": {
+            "has_authorization": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "has_authorization"
+          ]
+        },
+        "client": {
+          "title": "SysAdminReferralCollectionClientResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string"
+            },
+            "demographics": {
+              "$ref": "#/components/schemas/DemographicLeanCore"
+            }
+          },
+          "required": [
+            "id",
+            "outbox_id",
+            "demographics"
+          ]
+        },
+        "service": {
+          "title": "SysAdminReferralCollectionServiceResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "outbox_id"
+          ]
+        },
+        "revision": {
+          "title": "SysAdminReferralCollectionRevisionResponse",
+          "type": "object",
+          "properties": {
+            "revision_group_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "revision_number": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "revision_reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "revision_comment": {
+              "type": "string"
+            },
+            "is_latest_revision": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "revision_group_id",
+            "revision_number",
+            "is_latest_revision"
+          ]
+        }
+      },
+      "required": [
+        "referral",
+        "supply",
+        "client",
+        "service",
+        "revision"
+      ]
+    },
+    "OutboxReferralCollectionResponse": {
+      "description": "API response of an referral on the outbox API.\n",
+      "type": "object",
+      "properties": {
+        "referral": {
+          "$ref": "#/components/schemas/OutboxReferralCore"
+        },
+        "supply": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "alayacare": {
+          "title": "OutboxReferralCollectionAlayacareResponse",
+          "properties": {
+            "has_authorization": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "has_authorization"
+          ]
+        },
+        "client": {
+          "title": "OutboxReferralCollectionClientResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string"
+            },
+            "demographics": {
+              "$ref": "#/components/schemas/DemographicLeanCore"
+            }
+          },
+          "required": [
+            "id",
+            "outbox_id",
+            "demographics"
+          ]
+        },
+        "service": {
+          "title": "OutboxReferralCollectionServiceResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "outbox_id"
+          ]
+        },
+        "revision": {
+          "title": "OutboxReferralCollectionRevisionResponse",
+          "type": "object",
+          "properties": {
+            "revision_group_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "revision_number": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "revision_reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "revision_comment": {
+              "type": "string"
+            },
+            "is_latest_revision": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "revision_group_id",
+            "revision_number",
+            "is_latest_revision"
+          ]
+        }
+      },
+      "required": [
+        "referral",
+        "supply",
+        "client",
+        "service",
+        "revision"
+      ]
+    },
+    "OutboxReferralCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ReferralReasonCodeCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "sequence_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "offer_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "shift_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "care_type": {
+              "$ref": "#/components/schemas/CareTypeCore"
+            },
+            "referral_type": {
+              "$ref": "#/components/schemas/ReferralTypeCore"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "cancellation_comment": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "demand_labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "status": {
+              "$ref": "#/components/schemas/ReferralStatusCore"
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Derived from the visits"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Derived from the visits"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "sequence_id",
+            "care_type",
+            "referral_type",
+            "status",
+            "start_at",
+            "created_at"
+          ]
+        }
+      ]
+    },
+    "SysAdminReferralDetailResponse": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "referral": {
+              "$ref": "#/components/schemas/OutboxReferralCore"
+            },
+            "demand": {
+              "$ref": "#/components/schemas/OrganizationLeanCore"
+            },
+            "supply": {
+              "$ref": "#/components/schemas/OrganizationLeanCore"
+            },
+            "alayacare": {
+              "$ref": "#/components/schemas/OutboxAlayaCareCore"
+            },
+            "case_manager": {
+              "$ref": "#/components/schemas/CaseManagerCore"
+            },
+            "price": {
+              "$ref": "#/components/schemas/PriceCore"
+            },
+            "client": {
+              "$ref": "#/components/schemas/OutboxReferralClientResponse"
+            },
+            "service": {
+              "title": "SysAdminReferralServiceDetailResponse",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "outbox_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "use_client_address": {
+                  "type": "boolean"
+                },
+                "address": {
+                  "$ref": "#/components/schemas/AddressCore"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "expected_start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "instructions": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "skills": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "custom_fields": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomFieldCore"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "outbox_id",
+                "name"
+              ]
+            },
+            "visits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxReferralVisitResponse"
+              }
+            },
+            "revision": {
+              "$ref": "#/components/schemas/ReferralRevisionResponse"
+            }
+          },
+          "required": [
+            "referral",
+            "demand",
+            "supply",
+            "client",
+            "service",
+            "revision"
+          ]
+        }
+      ]
+    },
+    "OutboxReferralDetailResponse": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "referral": {
+              "$ref": "#/components/schemas/OutboxReferralCore"
+            },
+            "supply": {
+              "$ref": "#/components/schemas/OrganizationLeanCore"
+            },
+            "alayacare": {
+              "$ref": "#/components/schemas/OutboxAlayaCareCore"
+            },
+            "case_manager": {
+              "$ref": "#/components/schemas/CaseManagerCore"
+            },
+            "price": {
+              "$ref": "#/components/schemas/PriceCore"
+            },
+            "client": {
+              "$ref": "#/components/schemas/OutboxReferralClientResponse"
+            },
+            "service": {
+              "title": "OutboxReferralServiceDetailResponse",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "outbox_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "use_client_address": {
+                  "type": "boolean"
+                },
+                "address": {
+                  "$ref": "#/components/schemas/AddressCore"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "expected_start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "instructions": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "skills": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "custom_fields": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomFieldCore"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "outbox_id",
+                "name"
+              ]
+            },
+            "visits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxReferralVisitResponse"
+              }
+            },
+            "revision": {
+              "$ref": "#/components/schemas/ReferralRevisionResponse"
+            }
+          },
+          "required": [
+            "referral",
+            "supply",
+            "client",
+            "service",
+            "revision"
+          ]
+        }
+      ]
+    },
+    "SysAdminReferralPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SysAdminReferralCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "OutboxReferralPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxReferralCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InboxReferralDetailResponse": {
+      "description": "API response for the complete representation of an assigned referral on the inbox API.\nThis schema is similar to the `InboxAnonReferral` except that it includes the complete\nrepresentation of the referral instead of the anonymous representation.\n",
+      "type": "object",
+      "properties": {
+        "referral": {
+          "title": "InboxReferralDetailReferralResponse",
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ReferralReasonCodeCore"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "sequence_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "offer_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "shift_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "care_type": {
+                  "$ref": "#/components/schemas/CareTypeCore"
+                },
+                "referral_type": {
+                  "$ref": "#/components/schemas/ReferralTypeCore"
+                },
+                "start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "comment": {
+                  "type": "string"
+                },
+                "cancellation_comment": {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                "status": {
+                  "$ref": "#/components/schemas/ReferralStatusCore"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "care_type",
+                "referral_type",
+                "start_at",
+                "status",
+                "created_at"
+              ]
+            }
+          ]
+        },
+        "demand": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "alayacare": {
+          "$ref": "#/components/schemas/InboxReferralAlayaCareResponse"
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "price": {
+          "$ref": "#/components/schemas/PriceCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/InboxClientResponse"
+        },
+        "service": {
+          "title": "InboxReferralDetailServiceResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "use_client_address": {
+              "type": "boolean"
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expected_start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "instructions": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxReferralVisitResponse"
+          }
+        },
+        "revision": {
+          "$ref": "#/components/schemas/ReferralRevisionResponse"
+        }
+      },
+      "required": [
+        "referral",
+        "demand",
+        "service",
+        "client",
+        "revision"
+      ]
+    },
+    "InboxReferralPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InboxReferralCollectionResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "OutboxReferralCancelRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ReferralReasonCodeCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string",
+              "maxLength": 1000
+            }
+          }
+        }
+      ]
+    },
+    "InboxReferralCancelRequest": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/ReferralReasonCodeCore"
+        }
+      ]
+    },
+    "ReferralReasonCodeCore": {
+      "description": "`reason_code` associated to a cancelled or closed referral.\n",
+      "type": "object",
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "enum": [
+            "datetime_change",
+            "client_request",
+            "client_hospitalization",
+            "client_passed_away",
+            "client_refused_service",
+            "processing_error",
+            "other"
+          ]
+        }
+      }
+    },
+    "InboxClientTasksUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "client_tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "title": "InboxClientTasksUpdateItemRequest",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "inbox_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "inbox_id"
+            ]
+          }
+        }
+      },
+      "required": [
+        "client_tasks"
+      ]
+    },
+    "ReferralStatusCore": {
+      "type": "string",
+      "enum": [
+        "assigned",
+        "processed",
+        "cancelled"
+      ]
+    },
+    "ReferralTypeCore": {
+      "type": "string",
+      "enum": [
+        "visit",
+        "service"
+      ]
+    },
+    "InboxVisitAssignRequest": {
+      "type": "object",
+      "properties": {
+        "employee_id": {
+          "type": "integer"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "ssn": {
+          "type": "string"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "employee_id",
+        "first_name",
+        "last_name"
+      ]
+    },
+    "InboxVisitTaskCompletionRequest": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/components/schemas/InboxVisitTaskCompletionCore"
+          }
+        }
+      },
+      "required": [
+        "tasks"
+      ]
+    },
+    "InboxVisitTaskCompletionCore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "is_completed": {
+          "type": "boolean"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completion_comment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "is_completed"
+      ]
+    },
+    "InboxVisitTaskCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxVisitTaskCompletionCore"
+          }
+        }
+      },
+      "required": [
+        "tasks"
+      ]
+    },
+    "InboxVisitTasksCreationRequest": {
+      "type": "object",
+      "properties": {
+        "inbox_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "inbox_ids"
+      ]
+    },
+    "InboxVisitTasksCreationResponse": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "title": "InboxVisitTasksCreationItemResponse",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "inbox_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "inbox_id"
+            ]
+          }
+        }
+      }
+    },
+    "InboxVisitScheduleRequest": {
+      "type": "object",
+      "properties": {
+        "inbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "referral_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "inbox_id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "InboxVisitScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "inbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "referral_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id",
+        "inbox_id",
+        "start_at",
+        "end_at",
+        "service_id",
+        "referral_id"
+      ]
+    },
+    "InboxVisitRescheduleRequest": {
+      "type": "object",
+      "properties": {
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "start_at",
+        "end_at"
+      ]
+    },
+    "InboxVisitRescheduleResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "InboxVisitAdjustTimekeepingRequest": {
+      "type": "object",
+      "properties": {
+        "verified_start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verified_end_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "OutboxVisitPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxVisitCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InboxVisitPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InboxVisitCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SysAdminVisitPageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SysAdminVisitCollectionResponse"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SysAdminVisitDetailResponse": {
+      "type": "object",
+      "properties": {
+        "visit": {
+          "title": "SysAdminVisitDetailCore",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string"
+            },
+            "inbox_id": {
+              "type": "string"
+            },
+            "referral_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "scheduled",
+                "deleted",
+                "cancelled",
+                "on_hold"
+              ]
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "verified_start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "verified_end_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "status",
+            "id",
+            "referral_id",
+            "service_id",
+            "service_outbox_id",
+            "start_at",
+            "end_at"
+          ]
+        },
+        "supply": {
+          "title": "SysAdminVisitDetailSupplyResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "supply_employee": {
+          "title": "SysAdminVisitDetailSupplyEmployeeResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "supply_persona_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "ssn_placeholder": {
+              "type": "string"
+            },
+            "inbox_employee_id": {
+              "type": "integer"
+            },
+            "first_name": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            },
+            "date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "data": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "id",
+            "supply_persona_id",
+            "ssn_placeholder",
+            "inbox_employee_id",
+            "first_name",
+            "last_name"
+          ]
+        },
+        "tasks": {
+          "title": "SysAdminVisitTaskResponse",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outbox_id": {
+                "type": "string"
+              },
+              "is_completed": {
+                "type": "boolean"
+              },
+              "completed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "completion_comment": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "is_completed"
+            ]
+          }
+        }
+      },
+      "required": [
+        "supply",
+        "visit",
+        "tasks"
+      ]
+    },
+    "InboxVisitDetailResponse": {
+      "type": "object",
+      "properties": {
+        "visit": {
+          "title": "InboxVisitDetailCore",
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/InboxVisitCore"
+            },
+            {
+              "properties": {
+                "verified_start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "verified_end_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          ]
+        },
+        "supply_employee": {
+          "title": "InboxVisitDetailSupplyEmployeeResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "supply_persona_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "ssn_placeholder": {
+              "type": "string"
+            },
+            "inbox_employee_id": {
+              "type": "integer"
+            },
+            "first_name": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            },
+            "date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "data": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "id",
+            "supply_persona_id",
+            "ssn_placeholder",
+            "inbox_employee_id",
+            "first_name",
+            "last_name"
+          ]
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "title": "InboxVisitDetailVisitTaskResponse",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outbox_id": {
+                "type": "string"
+              },
+              "is_completed": {
+                "type": "boolean"
+              },
+              "completed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "completion_comment": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "is_completed"
+            ]
+          }
+        }
+      },
+      "required": [
+        "visit",
+        "tasks"
+      ]
+    },
+    "OutboxVisitDetailResponse": {
+      "type": "object",
+      "properties": {
+        "visit": {
+          "title": "OutboxVisitDetailCore",
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/OutboxVisitCore"
+            },
+            {
+              "properties": {
+                "verified_start_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "verified_end_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          ]
+        },
+        "supply": {
+          "title": "OutboxVisitDetailSupplyResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "supply_employee": {
+          "title": "OutboxVisitDetailSupplyEmployeeResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "supply_persona_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "ssn_placeholder": {
+              "type": "string"
+            },
+            "first_name": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            },
+            "date_of_birth": {
+              "type": "string",
+              "format": "date"
+            },
+            "data": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "id",
+            "supply_persona_id",
+            "ssn_placeholder",
+            "first_name",
+            "last_name"
+          ]
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "title": "OutboxVisitDetailVisitTaskResponse",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outbox_id": {
+                "type": "string"
+              },
+              "is_completed": {
+                "type": "boolean"
+              },
+              "completed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "completion_comment": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "is_completed"
+            ]
+          }
+        }
+      },
+      "required": [
+        "supply",
+        "visit",
+        "tasks"
+      ]
+    },
+    "SysAdminVisitCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outbox_id": {
+          "type": "string"
+        },
+        "inbox_id": {
+          "type": "string"
+        },
+        "referral_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "deleted",
+            "cancelled",
+            "on_hold"
+          ]
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "status",
+        "id",
+        "referral_id",
+        "service_id",
+        "service_outbox_id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "OutboxVisitCollectionResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/OutboxVisitCore"
+        }
+      ]
+    },
+    "InboxVisitCollectionResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/InboxVisitCore"
+        }
+      ]
+    },
+    "VisitCore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "referral_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "deleted",
+            "cancelled",
+            "on_hold"
+          ]
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "status",
+        "id",
+        "referral_id",
+        "service_id",
+        "start_at",
+        "end_at"
+      ]
+    },
+    "InboxVisitCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/VisitCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "inbox_id": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "OutboxVisitCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/VisitCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "visit_outbox_id": {
+              "type": "string"
+            },
+            "service_outbox_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "service_outbox_id"
+          ]
+        }
+      ]
+    },
+    "InboxWorkSessionStartRequest": {
+      "type": "object",
+      "properties": {
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "start_latitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "start_longitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "visit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "visit_inbox_id": {
+          "type": "string"
+        },
+        "inbox_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "start_at",
+        "inbox_id"
+      ]
+    },
+    "InboxWorkSessionEndRequest": {
+      "type": "object",
+      "properties": {
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "work_session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "end_latitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "end_longitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "visit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "visit_inbox_id": {
+          "type": "string"
+        },
+        "inbox_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "end_at"
+      ]
+    },
+    "InboxFormSubmissionFieldCore": {
+      "type": "object",
+      "properties": {
+        "field_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "value_type": {
+          "type": "string",
+          "enum": [
+            "attachment",
+            "boolean",
+            "decimal",
+            "json",
+            "string"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "field_id",
+        "value_type",
+        "value"
+      ]
+    },
+    "FormSubmissionHiddenFieldCore": {
+      "type": "object",
+      "properties": {
+        "field_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "field_id"
+      ]
+    },
+    "InboxFormSubmissionCreationRequest": {
+      "type": "object",
+      "properties": {
+        "form_template_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "visit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "work_session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxFormSubmissionFieldCore"
+          },
+          "minItems": 1
+        },
+        "hidden_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/FormSubmissionHiddenFieldCore"
+          }
+        }
+      },
+      "required": [
+        "form_template_id",
+        "fields"
+      ]
+    },
+    "InboxFormSubmissionCreationResponse": {
+      "type": "object",
+      "properties": {
+        "form_template_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "visit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "work_session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxFormSubmissionFieldCore"
+          },
+          "minItems": 1
+        },
+        "hidden_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/FormSubmissionHiddenFieldCore"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "form_template_id",
+        "fields"
+      ]
+    },
+    "OutboxFormSubmissionFieldCore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "field_outbox_id": {
+          "type": "string",
+          "description": "ID of the form template field provided by the demand organization."
+        },
+        "value_type": {
+          "type": "string",
+          "enum": [
+            "attachment",
+            "boolean",
+            "decimal",
+            "json",
+            "string"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "field_outbox_id",
+        "value_type",
+        "value"
+      ]
+    },
+    "OutboxFormSubmissionHiddenFieldCore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "field_outbox_id": {
+          "type": "string",
+          "description": "ID of the form template field provided by the demand organization."
+        }
+      },
+      "required": [
+        "id",
+        "field_outbox_id"
+      ]
+    },
+    "OutboxFormSubmissionDetailResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "form_template_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "form_template_outbox_id": {
+          "type": "string",
+          "description": "ID of the form template provided by the demand organization."
+        },
+        "client_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the client of the form submission."
+        },
+        "client_outbox_id": {
+          "type": "string",
+          "description": "ID of the client provided by the demand organization."
+        },
+        "service_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the service of the form submission."
+        },
+        "service_outbox_id": {
+          "type": "string",
+          "description": "ID of the service provided by the demand organization."
+        },
+        "visit_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the visit of the form submission."
+        },
+        "work_session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the work session linked to the form submission."
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxFormSubmissionFieldCore"
+          },
+          "minItems": 1
+        },
+        "hidden_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxFormSubmissionHiddenFieldCore"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "form_template_id",
+        "form_template_outbox_id",
+        "client_id",
+        "client_outbox_id",
+        "fields"
+      ]
+    },
+    "OutboxWorkSessionPageResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxWorkSessionCollectionResponse"
+          }
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "OutboxWorkSessionCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "visit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "visit_outbox_id": {
+          "type": "string",
+          "description": "ID of the visit provided by the demand organization."
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "start_latitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "start_longitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "end_latitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "end_longitude": {
+          "type": "number",
+          "format": "double",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "required": [
+        "id",
+        "visit_id",
+        "start_at"
+      ]
+    },
+    "InboxWorkSessionStartResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/InboxWorkSessionStartRequest"
+        }
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Work Session ID."
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "SysAdminOfferDetailResponse": {
+      "type": "object",
+      "properties": {
+        "offer": {
+          "$ref": "#/components/schemas/OutboxOfferExtendedCore"
+        },
+        "demand": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "supply": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "alayacare": {
+          "$ref": "#/components/schemas/OutboxAlayaCareCore"
+        },
+        "case_manager": {
+          "$ref": "#/components/schemas/CaseManagerCore"
+        },
+        "direct_supply_persona_ids": {
+          "description": "Identifiers of one (or more) supply organization for direct-to-supplier\nmatching.\n",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "price": {
+          "title": "SysAdminOfferDetailPriceResponse",
+          "type": "object",
+          "properties": {
+            "default": {
+              "$ref": "#/components/schemas/SysAdminPriceCore"
+            },
+            "custom": {
+              "type": "array",
+              "items": {
+                "title": "SysAdminOfferPriceCustomCore",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SysAdminPriceCore"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "supply_persona_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      }
+                    },
+                    "required": [
+                      "supply_persona_id"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "default"
+          ]
+        },
+        "client": {
+          "title": "SysAdminOfferDetailClientResponse",
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "contacts": {
+              "title": "SysAdminOfferDetailClientContactResponse",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "title": "SysAdminOfferDetailClientContactAddressResponse",
+                    "type": "object",
+                    "properties": {
+                      "city": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "zip": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      },
+                      "address_suite": {
+                        "type": "string"
+                      },
+                      "latitude": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": -90,
+                        "maximum": 90
+                      },
+                      "longitude": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": -180,
+                        "maximum": 180
+                      }
+                    }
+                  },
+                  "contact_type": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "is_emergency": {
+                    "type": "boolean"
+                  },
+                  "phone_number": {
+                    "description": "Main phone number.",
+                    "type": "string"
+                  },
+                  "phone_other": {
+                    "type": "string"
+                  },
+                  "phone_personal": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "relationship": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "demographics": {
+              "title": "SysAdminOfferDetailClientDemographicsResponse",
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "last_name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "phone_number": {
+                  "description": "Main phone number.",
+                  "type": "string"
+                },
+                "phone_other": {
+                  "type": "string"
+                },
+                "phone_personal": {
+                  "type": "string"
+                },
+                "date_of_birth": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "gender": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "first_name",
+                "last_name"
+              ]
+            },
+            "allergies": {
+              "title": "SysAdminOfferDetailClientAllergiesResponse",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AllergyCore"
+              }
+            },
+            "risks": {
+              "title": "SysAdminOfferDetailClientRisksResponse",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RiskCore"
+              }
+            },
+            "diagnoses": {
+              "title": "SysAdminOfferDetailClientDiagnosesResponse",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "is_primary": {
+                    "type": "boolean"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "treatment": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "surgeries": {
+              "title": "SysAdminOfferDetailClientSurgeriesResponse",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            },
+            "custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            },
+            "referral_only_custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "outbox_id",
+            "demographics",
+            "address"
+          ]
+        },
+        "service": {
+          "title": "SysAdminOfferDetailServiceResponse",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "outbox_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "use_client_address": {
+              "type": "boolean"
+            },
+            "address": {
+              "$ref": "#/components/schemas/AddressCore"
+            },
+            "start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expected_start_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "instructions": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            },
+            "referral_only_custom_fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CustomFieldCore"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "outbox_id",
+            "name"
+          ]
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "title": "SysAdminOfferDetailVisitResponse",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outbox_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "start_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "end_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "instructions": {
+                "type": "string"
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "title": "SysAdminOfferDetailVisitTaskResponse",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "outbox_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "is_required": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "outbox_id",
+                    "name",
+                    "is_required"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "outbox_id",
+              "start_at",
+              "end_at"
+            ]
+          }
+        },
+        "response_counts": {
+          "$ref": "#/components/schemas/OfferResponseCountsCore"
+        }
+      },
+      "required": [
+        "response_counts",
+        "offer",
+        "demand",
+        "client",
+        "service"
+      ]
+    },
+    "SysAdminPriceCore": {
+      "type": "object",
+      "properties": {
+        "rate_demand": {
+          "type": "number",
+          "format": "decimal",
+          "description": "The dollar amount for offer per unit.",
+          "example": 30.0
+        },
+        "rate_supply": {
+          "type": "number",
+          "format": "decimal",
+          "description": "The dollar amount for offer per unit.",
+          "example": 30.0
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit for the rate.",
+          "enum": [
+            "per_visit",
+            "per_hour",
+            "amount"
+          ]
+        }
+      },
+      "required": [
+        "rate_demand",
+        "rate_supply",
+        "unit"
+      ]
+    },
+    "CustomFieldCore": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    },
+    "CustomFieldCollectionCore": {
+      "type": "object",
+      "properties": {
+        "custom_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CustomFieldCore"
+          }
+        }
+      }
+    },
+    "ReferralRevisionResponse": {
+      "type": "object",
+      "properties": {
+        "revision_group_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "revision_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "revision_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "revision_comment": {
+          "type": "string"
+        },
+        "is_latest_revision": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "revision_group_id",
+        "revision_number",
+        "is_latest_revision"
+      ]
+    },
+    "OutboxAlayaCareCore": {
+      "type": "object",
+      "properties": {
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/AuthorizationCore"
+          }
+        },
+        "care_plan": {
+          "$ref": "#/components/schemas/OutboxCarePlanCore"
+        },
+        "form_templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxFormTemplateCore"
+          }
+        }
+      }
+    },
+    "InboxOfferAlayaCareResponse": {
+      "type": "object",
+      "properties": {
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/AuthorizationCore"
+          }
+        },
+        "care_plan": {
+          "$ref": "#/components/schemas/InboxOfferCarePlanResponse"
+        },
+        "form_templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxOfferFormTemplateResponse"
+          }
+        }
+      }
+    },
+    "InboxReferralAlayaCareResponse": {
+      "type": "object",
+      "properties": {
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/AuthorizationCore"
+          }
+        },
+        "care_plan": {
+          "$ref": "#/components/schemas/InboxReferralCarePlanResponse"
+        },
+        "form_templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxFormTemplateDetailResponse"
+          }
+        }
+      }
+    },
+    "AuthorizationCore": {
+      "type": "object",
+      "properties": {
+        "authorization_number": {
+          "type": "string"
+        },
+        "authorization_status": {
+          "type": "string"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "first_day_of_week": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "import_id": {
+          "type": "string"
+        },
+        "member_number": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "program_id": {
+          "type": "string"
+        },
+        "custom_number_of_days": {
+          "type": "integer"
+        },
+        "rule_type": {
+          "type": "string"
+        },
+        "rule_custom": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_daily": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_weekly": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_monthly": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_period": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_monday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_tuesday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_wednesday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_thursday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_friday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_saturday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "rule_sunday": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "authorization_status",
+        "first_day_of_week",
+        "rule_type",
+        "start_date"
+      ]
+    },
+    "CaseManagerCore": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "fax_number": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "FormTemplateFieldCore": {
+      "type": "object",
+      "properties": {
+        "field_tag": {
+          "type": "string"
+        },
+        "field_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "json_logic": {
+          "type": "object"
+        },
+        "label": {
+          "type": "string"
+        },
+        "parent_id": {
+          "type": "integer"
+        },
+        "rank": {
+          "type": "integer"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "settings": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "field_type",
+        "id",
+        "label",
+        "parent_id",
+        "rank",
+        "required"
+      ]
+    },
+    "FormTemplateCore": {
+      "type": "object",
+      "properties": {
+        "admin_eyes_only": {
+          "type": "boolean"
+        },
+        "approve_automatically": {
+          "type": "boolean"
+        },
+        "clinical_event_name": {
+          "type": "string"
+        },
+        "display_instructions_in_pdf": {
+          "type": "boolean"
+        },
+        "display_report": {
+          "type": "boolean"
+        },
+        "exclude_from_shift_report": {
+          "type": "boolean"
+        },
+        "form_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "language_code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "notify_alert_queue": {
+          "type": "boolean"
+        },
+        "pre_populate": {
+          "type": "boolean"
+        },
+        "requires_clock_in": {
+          "type": "boolean"
+        },
+        "schema_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "schema_version": {
+          "type": "integer"
+        },
+        "visit_link_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "admin_eyes_only",
+        "approve_automatically",
+        "display_instructions_in_pdf",
+        "display_report",
+        "exclude_from_shift_report",
+        "form_type",
+        "id",
+        "language_code",
+        "name",
+        "notify_alert_queue",
+        "pre_populate",
+        "requires_clock_in",
+        "schema_id",
+        "schema_version",
+        "visit_link_required"
+      ]
+    },
+    "OutboxFormTemplateCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/FormTemplateCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FormTemplateFieldCore"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InboxOfferFormTemplateResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/FormTemplateCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FormTemplateFieldCore"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InboxFormTemplateFieldResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/FormTemplateFieldCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    "InboxFormTemplateDetailResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/FormTemplateCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InboxFormTemplateFieldResponse"
+              }
+            },
+            "form_template_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "demand_persona_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    "OutboxCarePlanDiagnosisCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/CarePlanDiagnosisCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "CarePlanDiagnosisCore": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "is_from_library": {
+          "type": "boolean"
+        },
+        "is_primary": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "name",
+        "start_date",
+        "is_primary"
+      ]
+    },
+    "CarePlanGoalCore": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "is_from_library": {
+          "type": "boolean"
+        },
+        "is_primary": {
+          "type": "boolean"
+        },
+        "last_updated_progress": {
+          "title": "GoalLastUpdatedProgressCore",
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string"
+            },
+            "percentage": {
+              "type": "integer"
+            },
+            "completed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "progress_type": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "name",
+        "start_date",
+        "is_primary",
+        "type",
+        "progress_type"
+      ]
+    },
+    "OutboxCarePlanGoalCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/CarePlanGoalCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "outbox_id": {
+              "type": "integer"
+            },
+            "diagnoses": {
+              "type": "array",
+              "items": {
+                "title": "OutboxCarePlanGoalDiagnosisCore",
+                "type": "object",
+                "properties": {
+                  "outbox_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "outbox_id",
+                  "name"
+                ]
+              }
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "InboxCarePlanGoalResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/CarePlanGoalCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "diagnoses": {
+              "type": "array",
+              "items": {
+                "title": "InboxCarePlanGoalDiagnosisCore",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CarePlanInterventionCore": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "external_link": {
+          "title": "CarePlanInterventionExternalLinkCore",
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "label",
+            "url"
+          ]
+        },
+        "has_duration": {
+          "type": "boolean"
+        },
+        "is_from_library": {
+          "type": "boolean"
+        },
+        "is_required": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rank": {
+          "type": "integer"
+        },
+        "recurrence": {
+          "title": "CarePlanInterventionRecurrenceCore",
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "integer"
+            },
+            "frequency": {
+              "type": "string"
+            },
+            "interval": {
+              "type": "integer"
+            },
+            "weekdays": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "monthday": {
+              "type": "integer"
+            },
+            "available_from": {
+              "type": "string"
+            },
+            "available_to": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frequency",
+            "interval"
+          ]
+        },
+        "recurrence_type": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "has_duration",
+        "is_required",
+        "name",
+        "rank",
+        "recurrence_type",
+        "start_date",
+        "status",
+        "type"
+      ]
+    },
+    "OutboxCarePlanInterventionCore": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/CarePlanInterventionCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "goals": {
+              "type": "array",
+              "items": {
+                "title": "OutboxCarePlanInterventionGoalCore",
+                "type": "object",
+                "properties": {
+                  "outbox_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "outbox_id",
+                  "name"
+                ]
+              }
+            },
+            "outbox_id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "outbox_id"
+          ]
+        }
+      ]
+    },
+    "InboxReferralCarePlanInterventionResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/CarePlanInterventionCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "goals": {
+              "type": "array",
+              "items": {
+                "title": "InboxCarePlanInterventionGoalCore",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            },
+            "client_task_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    "OutboxCarePlanCore": {
+      "type": "object",
+      "properties": {
+        "outbox_id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string"
+        },
+        "diagnoses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxCarePlanDiagnosisCore"
+          }
+        },
+        "goals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxCarePlanGoalCore"
+          }
+        },
+        "interventions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/OutboxCarePlanInterventionCore"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "name",
+        "outbox_id",
+        "start_date"
+      ]
+    },
+    "InboxOfferCarePlanResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string"
+        },
+        "interventions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CarePlanInterventionCore"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "name",
+        "start_date"
+      ]
+    },
+    "InboxReferralCarePlanResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string"
+        },
+        "diagnoses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CarePlanDiagnosisCore"
+          }
+        },
+        "goals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxCarePlanGoalResponse"
+          }
+        },
+        "interventions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InboxReferralCarePlanInterventionResponse"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "name",
+        "start_date"
+      ]
+    },
+    "MessageCategoryCore": {
+      "type": "string",
+      "enum": [
+        "client_attachment",
+        "comment"
+      ]
+    },
+    "MessageSenderTypeCore": {
+      "type": "string",
+      "enum": [
+        "demand",
+        "supply"
+      ]
+    },
+    "OrgAdminMessageSendRequest": {
+      "properties": {
+        "sequence_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "category": {
+          "$ref": "#/components/schemas/MessageCategoryCore"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2500
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "file": {
+          "type": "object",
+          "title": "OrgAdminMessageSendFileRequest",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "size_in_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 52428800
+            }
+          },
+          "required": [
+            "url",
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "sequence_id",
+        "category"
+      ]
+    },
+    "OrgAdminMessageDetailResponse": {
+      "properties": {
+        "message": {
+          "type": "object",
+          "title": "OrgAdminMessageDetailMessageResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "sequence_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "category": {
+              "$ref": "#/components/schemas/MessageCategoryCore"
+            },
+            "sender_type": {
+              "$ref": "#/components/schemas/MessageSenderTypeCore"
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 2500
+            },
+            "author": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "file": {
+              "type": "object",
+              "title": "OrgAdminMessageDetailFileResponse",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "size_in_bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 52428800
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "sequence_id",
+            "category",
+            "sender_type",
+            "created_at"
+          ]
+        },
+        "sender": {
+          "type": "object",
+          "title": "OrgAdminMessageDetailSenderResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        },
+        "recipient": {
+          "type": "object",
+          "title": "OrgAdminMessageDetailRecipientResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "message",
+        "sender",
+        "recipient"
+      ]
+    },
+    "OrgAdminMessagePageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OrgAdminMessageCollectionResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "OrgAdminMessageCollectionResponse": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "category": {
+          "$ref": "#/components/schemas/MessageCategoryCore"
+        },
+        "sender_type": {
+          "$ref": "#/components/schemas/MessageSenderTypeCore"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2500
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "file": {
+          "type": "object",
+          "title": "MessageCollectionFileResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "category",
+        "sender_type",
+        "created_at"
+      ]
+    },
+    "SysAdminMessagePageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SysAdminMessageDetailResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "SysAdminMessageDetailResponse": {
+      "properties": {
+        "message": {
+          "type": "object",
+          "title": "SysAdminMessageDetailMessageResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "sequence_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "category": {
+              "$ref": "#/components/schemas/MessageCategoryCore"
+            },
+            "sender_type": {
+              "$ref": "#/components/schemas/MessageSenderTypeCore"
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 2500
+            },
+            "author": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "file": {
+              "type": "object",
+              "title": "SysAdminMessageDetailFileResponse",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "size_in_bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 52428800
+                }
+              },
+              "required": [
+                "id",
+                "url",
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "sequence_id",
+            "category",
+            "sender_type",
+            "created_at"
+          ]
+        },
+        "sender": {
+          "type": "object",
+          "title": "SysAdminMessageDetailSenderResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        },
+        "recipient": {
+          "type": "object",
+          "title": "SysAdminMessageDetailRecipientResponse",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "message",
+        "sender",
+        "recipient"
+      ]
+    },
+    "OrgAdminFilePresignedDetailResponse": {
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "OutboxSequencePageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OutboxSequenceCollectionResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "SequenceClientResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "demographics": {
+          "$ref": "#/components/schemas/DemographicLeanCore"
+        }
+      },
+      "required": [
+        "outbox_id",
+        "demographics"
+      ]
+    },
+    "SequenceServiceResponse": {
+      "type": "object",
+      "properties": {
+        "outbox_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "outbox_id"
+      ]
+    },
+    "InboxSequenceClientResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "demographics": {
+          "$ref": "#/components/schemas/DemographicLeanCore"
+        }
+      }
+    },
+    "InboxSequenceServiceResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "SequenceLatestReferralResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "SequenceOfferResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "OutboxSequenceCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "supply": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/SequenceClientResponse"
+        },
+        "service": {
+          "$ref": "#/components/schemas/SequenceServiceResponse"
+        },
+        "latest_referral": {
+          "$ref": "#/components/schemas/SequenceLatestReferralResponse"
+        },
+        "offer": {
+          "$ref": "#/components/schemas/SequenceOfferResponse"
+        },
+        "latest_message_created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "created_at",
+        "supply",
+        "client",
+        "service"
+      ]
+    },
+    "InboxSequencePageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InboxSequenceCollectionResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "InboxSequenceCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "demand": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/InboxSequenceClientResponse"
+        },
+        "service": {
+          "$ref": "#/components/schemas/InboxSequenceServiceResponse"
+        },
+        "latest_referral": {
+          "$ref": "#/components/schemas/SequenceLatestReferralResponse"
+        },
+        "offer": {
+          "$ref": "#/components/schemas/SequenceOfferResponse"
+        },
+        "latest_message_created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "created_at",
+        "demand",
+        "client",
+        "service"
+      ]
+    },
+    "SysAdminSequencePageResponse": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/PageCore"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SysAdminSequenceCollectionResponse"
+              }
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      ]
+    },
+    "SysAdminSequenceCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "demand": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "supply": {
+          "$ref": "#/components/schemas/OrganizationLeanCore"
+        },
+        "client": {
+          "$ref": "#/components/schemas/SequenceClientResponse"
+        },
+        "service": {
+          "$ref": "#/components/schemas/SequenceServiceResponse"
+        },
+        "latest_referral": {
+          "$ref": "#/components/schemas/SequenceLatestReferralResponse"
+        },
+        "offer": {
+          "$ref": "#/components/schemas/SequenceOfferResponse"
+        },
+        "latest_message_created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "created_at",
+        "demand",
+        "supply",
+        "client",
+        "service"
+      ]
+    }
+  }
+}

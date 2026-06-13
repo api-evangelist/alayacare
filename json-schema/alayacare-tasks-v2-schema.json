@@ -1,0 +1,895 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Tasks-V2 API Schemas",
+  "definitions": {
+    "Person": {
+      "type": "object",
+      "description": "Encapsulates the bare details of a person",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "nullable": false,
+          "description": "Primary ID (Employee ID, User ID etc.) of person"
+        },
+        "external_id": {
+          "type": "string",
+          "nullable": true,
+          "description": "External ID of person"
+        },
+        "guid": {
+          "type": "integer",
+          "nullable": true,
+          "description": "GUID"
+        },
+        "profile_id": {
+          "type": "integer",
+          "nullable": true,
+          "description": "Profile ID"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last Name/Family Name"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First Name"
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Full Name"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of person"
+        },
+        "deep_link": {
+          "type": "string",
+          "description": "Deep link to person"
+        },
+        "profile_photo_url": {
+          "type": "string",
+          "description": "URL to profile photo"
+        }
+      }
+    },
+    "BulkDeleteActionRequest": {
+      "type": "object",
+      "description": "Encapsulates a bulk delete action request",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "The task identifiers of the tasks to delete. All tasks specified in the\npayload will be deleted. This operation either succeeds as a whole or\nfails at a whole. If any of the tasks does not exist or is inaccessible,\nthe entire operation will fail."
+        }
+      }
+    },
+    "BulkUpdateActionRequest": {
+      "type": "object",
+      "description": "Encapsulates a bulk update action request",
+      "properties": {
+        "update_contexts": {
+          "type": "boolean",
+          "description": "Whether to update contexts from the payload. If set to true, the\n`contexts` property must be set in the payload."
+        },
+        "update_escalation_dates": {
+          "type": "boolean",
+          "description": "Whether to update escalation dates from the payload. If set to true, the\n`escalation_dates` property must be set in the payload."
+        },
+        "update_extensions": {
+          "type": "boolean",
+          "description": "Whether to update extensions from the payload. If set to true, the\n`extensions` property must be set in the payload."
+        },
+        "update_tags": {
+          "type": "boolean",
+          "description": "Whether to update tags from the payload. If set to true, the `tags`\nproperty must be set in the payload."
+        },
+        "items": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "description": "The tasks to update. All tasks specified in the payload will be updated.\nThis operation either succeeds as a whole or fails at a whole. If any of\nthe tasks does not exist or is inaccessible, the entire operation will\nfail. Use the task identifiers as keys in the dictionary, and the full\ntask payload as values."
+        }
+      }
+    },
+    "BulkUpdateActionResponse": {
+      "type": "object",
+      "description": "Encapsulates a bulk update action response",
+      "properties": {
+        "items": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "description": "The first 100 tasks that were updated. The task identifiers are the keys\nin the dictionary, and the full task payload are sent as values."
+        }
+      }
+    },
+    "BulkUpdateStatusActionRequest": {
+      "type": "object",
+      "description": "Encapsulates a bulk update status action request",
+      "properties": {
+        "items": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "description": "The task identifiers and status to update. All tasks specified in the\npayload will be updated. This operation either succeeds as a whole or\nfails at a whole. If any of the tasks does not exist or is inaccessible,\nthe entire operation will fail. Use the task identifiers as keys in the\ndictionary, and the status as values."
+        }
+      }
+    },
+    "BulkUpdatePatchActionRequest": {
+      "type": "object",
+      "description": "Encapsulates a bulk update patch action request",
+      "properties": {
+        "items": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/TaskPatchRequest"
+          },
+          "description": "The tasks to update. All tasks specified in the payload will be updated.\nThis operation either succeeds as a whole or fails at a whole. If any of\nthe tasks does not exist or is inaccessible, the entire operation will\nfail. Use the task identifiers as keys in the dictionary, and the patch\ndata structure in the values."
+        }
+      }
+    },
+    "CloneTaskRequest": {
+      "type": "object",
+      "description": "Encapsulates a clone task request",
+      "properties": {
+        "task_id": {
+          "type": "integer",
+          "description": "The task identifier of the task to clone."
+        }
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the cloned task. If not provided, the name of the original task  will be used."
+      }
+    },
+    "NamedEntity": {
+      "type": "object",
+      "description": "Encapsulates an entity that has a name, but is not a person.",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "nullable": false,
+          "description": "Primary ID of entity"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of entity"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of entity"
+        },
+        "deep_link": {
+          "type": "string",
+          "description": "Deep link to entity"
+        }
+      }
+    },
+    "Priority": {
+      "type": "integer",
+      "oneOf": [
+        {
+          "title": "Low",
+          "const": 1
+        },
+        {
+          "title": "Normal",
+          "const": 2
+        },
+        {
+          "title": "Important",
+          "const": 3
+        },
+        {
+          "title": "Urgent",
+          "const": 4
+        }
+      ],
+      "example": 4,
+      "description": "Priority of a Task or Sub Task"
+    },
+    "Status": {
+      "type": "integer",
+      "oneOf": [
+        {
+          "title": "Open",
+          "const": 1
+        },
+        {
+          "title": "In Progress",
+          "const": 3
+        },
+        {
+          "title": "Completed",
+          "const": 5
+        },
+        {
+          "title": "Closed",
+          "const": 7
+        }
+      ],
+      "example": 1,
+      "description": "Status of a Task or Sub Task"
+    },
+    "SubTask": {
+      "type": "object",
+      "description": "Tasks can have 0 or more sub tasks. Progress on a parent task is tracked by\nreviewing the status of sub tasks.",
+      "title": "Sub Task",
+      "properties": {
+        "subtask_id": {
+          "type": "integer",
+          "example": 12
+        },
+        "due_at": {
+          "nullable": true,
+          "type": "string",
+          "format": "datetime",
+          "example": "2023-02-27T10:00:00.000Z",
+          "description": "When the sub task is due."
+        },
+        "name": {
+          "type": "string",
+          "example": "Update chart with results",
+          "nullable": false,
+          "description": "Free-form entered by user"
+        },
+        "details": {
+          "type": "string",
+          "example": "- Validate results.\n- Update most recent chart with new results."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2023-02-02T19:00:45.000Z",
+          "description": "When the sub task was created"
+        },
+        "created_by": {
+          "$ref": "#/components/schemas/Person",
+          "description": "Who created the sub task."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2023-02-02T19:00:58.000Z",
+          "description": "When the task was most recently updated."
+        },
+        "updated_by": {
+          "$ref": "#/components/schemas/Person",
+          "description": "Who updated the sub task."
+        },
+        "status": {
+          "$ref": "#/components/schemas/Status",
+          "nullable": false,
+          "description": "Status of the Sub Task"
+        },
+        "contexts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskContext"
+          },
+          "description": "Applicable contexts."
+        }
+      }
+    },
+    "SubTaskPatchRequest": {
+      "type": "object",
+      "description": "Request body for patching a sub task. The request contains one or more fields to update in a sub task. The fields are optional, but at least one field must be provided.\nIt should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the sub task will retain its current value. If a field is set to `null`, the value will be blanked out in the sub task object.",
+      "title": "Sub Task Patch Request",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Check vitals for Mrs. Doe",
+          "nullable": false,
+          "description": "Free-form name of the task as entered by the user."
+        },
+        "due_at": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-31T22:00:00.000Z",
+          "nullable": true,
+          "description": "When the task is due."
+        },
+        "status": {
+          "$ref": "#/components/schemas/Status"
+        },
+        "details": {
+          "type": "string",
+          "example": "Check Blood Pressure and Heart Rate.\nRecent readings were out of range.\nIf readings are out of range again, alert nursing staff.",
+          "description": "Free text entered by user to provide more detail."
+        },
+        "contexts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskContext"
+          },
+          "description": "Applicable contexts."
+        }
+      }
+    },
+    "TaskComment": {
+      "type": "object",
+      "description": "Comments on a task.",
+      "title": "Task Comment",
+      "properties": {
+        "comment_id": {
+          "type": "integer",
+          "example": 1,
+          "description": "Primary Key"
+        },
+        "comment": {
+          "type": "string",
+          "example": "Comment"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2023-02-02T19:00:45.000Z",
+          "description": "When the comment was created"
+        },
+        "created_by": {
+          "$ref": "#/components/schemas/Person",
+          "description": "Who created the comment."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2023-02-02T19:00:58.000Z",
+          "description": "When the comment was most recently updated."
+        },
+        "updated_by": {
+          "$ref": "#/components/schemas/Person",
+          "description": "Who updated the comment"
+        }
+      }
+    },
+    "TaskCommentList": {
+      "type": "object",
+      "items": {
+        "$ref": "#/components/schemas/TaskComment"
+      }
+    },
+    "TaskContext": {
+      "type": "object",
+      "description": "Context to which a task applies.",
+      "title": "Task Context",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "api.patients.client",
+          "description": "Type of the context. Domain services define their contexts and provide\ninstructions on how to connect to them through the component registry.",
+          "nullable": false
+        },
+        "primary_id": {
+          "type": "string",
+          "example": 27,
+          "description": "Identifies the referenced context.",
+          "nullable": false
+        },
+        "display_name": {
+          "type": "string",
+          "example": "John Doe",
+          "description": "Display name of the context.",
+          "nullable": true
+        },
+        "deep_link": {
+          "type": "string",
+          "example": "/#/employees/2s/overview",
+          "description": "Deep link to the context. Domain services define their deep links and\nprovide instructions on how to connect to them through the component\nregistry.",
+          "nullable": true
+        },
+        "is_visible": {
+          "type": "boolean",
+          "example": true,
+          "description": "Indicates whether the context is visible. If set to False, the context\nwill not be displayed in the frontend."
+        },
+        "props": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Contents are context-dependent. Has the most important fields from a context.\nFor examples, a Client context may contain `first_name` and `last_name`.\nDepending on the context type, this field may be two-way.",
+          "example": {
+            "name.last": "Doe",
+            "name.first": "John"
+          }
+        }
+      }
+    },
+    "TaskExtension": {
+      "type": "object",
+      "description": "Custom defined extensions",
+      "title": "Task Extension",
+      "properties": {
+        "field_id": {
+          "type": "integer",
+          "example": 1,
+          "description": "Extension field ID",
+          "nullable": false
+        },
+        "field_type": {
+          "ref": "#/components/schemas/TaskExtensionType"
+        },
+        "field_label": {
+          "type": "string",
+          "example": "Health Care Number",
+          "description": "Label of the extension. The label is used as the title of the extension\nwhen rendered."
+        },
+        "field_value": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object"
+            ]
+          },
+          "example": true,
+          "description": "Value. The type is dependent on the extension type."
+        }
+      }
+    },
+    "TaskExtensionSchema": {
+      "type": "object",
+      "description": "Schema for custom defined extension field",
+      "title": "Task Extension Schema",
+      "properties": {
+        "field_id": {
+          "type": "integer",
+          "example": 1,
+          "description": "Extension field ID",
+          "nullable": false
+        },
+        "type": {
+          "$ref": "#/components/schemas/TaskExtensionType"
+        },
+        "label": {
+          "type": "string",
+          "example": "Health Care Number",
+          "description": "Label of the extension. The label is used as the title of the extension\nwhen rendered."
+        },
+        "tag": {
+          "type": "string",
+          "example": "intake",
+          "description": "Additional tag"
+        },
+        "instructions": {
+          "type": "string",
+          "example": "Enter the health care number of the patient",
+          "description": "Instructions for the extension."
+        },
+        "rank": {
+          "type": "integer",
+          "example": 1,
+          "description": "Rank of the extension. Extensions are rendered in ascending order of rank."
+        },
+        "required": {
+          "type": "boolean",
+          "example": true,
+          "description": "Indicates whether the extension is required. If set to True, the extension\nmust be filled."
+        },
+        "settings": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional settings for the extension. The settings are dependent on the\nextension type."
+        }
+      }
+    },
+    "TaskExtensionType": {
+      "type": "string",
+      "oneOf": [
+        {
+          "title": "text",
+          "const": "text"
+        },
+        {
+          "title": "textarea",
+          "const": "textarea"
+        },
+        {
+          "title": "number",
+          "const": "number"
+        },
+        {
+          "title": "signature",
+          "const": "signature"
+        },
+        {
+          "title": "checkbox",
+          "const": "checkbox"
+        },
+        {
+          "title": "list",
+          "const": "list"
+        },
+        {
+          "title": "list_multiple",
+          "const": "list_multiple"
+        },
+        {
+          "title": "section",
+          "const": "section"
+        },
+        {
+          "title": "time",
+          "const": "time"
+        },
+        {
+          "title": "date",
+          "const": "date"
+        },
+        {
+          "title": "hyperlink",
+          "const": "hyperlink"
+        },
+        {
+          "title": "information",
+          "const": "information"
+        }
+      ]
+    },
+    "Task": {
+      "type": "object",
+      "description": "Task Model\nPrimary Key: task_id",
+      "title": "Task",
+      "properties": {
+        "task_id": {
+          "type": "integer",
+          "example": 1
+        },
+        "branch": {
+          "$ref": "#/components/schemas/NamedEntity",
+          "description": "Branch to which the task belongs."
+        },
+        "source": {
+          "$ref": "#/components/schemas/TaskSource",
+          "description": "Source of the task."
+        },
+        "name": {
+          "type": "string",
+          "example": "Check vitals for Mrs. Doe",
+          "nullable": false,
+          "description": "Free-form name of the task as entered by the user."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-17T18:00:05.000Z"
+        },
+        "created_by": {
+          "$ref": "#/components/schemas/Person",
+          "description": "Who created the Task"
+        },
+        "due_at": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-31T22:00:00.000Z",
+          "nullable": true,
+          "description": "When the task is due."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-20T19:23:05.000Z",
+          "description": "Time the task was most recently updated."
+        },
+        "updated_by": {
+          "$ref": "#/components/schemas/Person",
+          "description": "Who most recently updated the Task."
+        },
+        "current_priority": {
+          "$ref": "#/components/schemas/Priority",
+          "description": "Current Priority of the Task. This is calculated based on the `initial_priority`, `escalation_dates` and current date/time."
+        },
+        "assigned_to_user": {
+          "$ref": "#/components/schemas/Person",
+          "nullable": true,
+          "description": "Person to whom the task is assigned."
+        },
+        "assigned_to_group": {
+          "$ref": "#/components/schemas/NamedEntity",
+          "nullable": true,
+          "description": "Group to which the task is assigned."
+        },
+        "custom_icon": {
+          "type": "string",
+          "nullable": true,
+          "description": "Custom icon to be displayed for the task."
+        },
+        "status": {
+          "$ref": "#/components/schemas/Status"
+        },
+        "status_at": {
+          "type": "string",
+          "nullable": true,
+          "format": "date-time",
+          "example": "2023-01-20T19:23:05.000Z",
+          "description": "Time the task status was most recently updated."
+        },
+        "status_by": {
+          "$ref": "#/components/schemas/Person",
+          "nullable": true,
+          "description": "Who most recently updated the status of the Task."
+        },
+        "details": {
+          "type": "string",
+          "example": "Check Blood Pressure and Heart Rate.\nRecent readings were out of range.\nIf readings are out of range again, alert nursing staff.",
+          "description": "Free text entered by user to provide more detail."
+        },
+        "notify_at": {
+          "type": "string",
+          "nullable": true,
+          "format": "date-time",
+          "example": "2023-01-20T19:23:05.000Z",
+          "description": "Time the assignee(s) should be notified. Assignee(s) will not be notified\nif blank."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 25
+          },
+          "description": "User-defined tags."
+        },
+        "has_comments": {
+          "type": "boolean",
+          "nullable": false,
+          "description": "Indicates whether comments have been added to the task."
+        },
+        "has_sub_tasks": {
+          "type": "boolean",
+          "nullable": false,
+          "description": "Indicates whether sub tasks have been created."
+        },
+        "contexts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskContext"
+          },
+          "description": "Applicable contexts."
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskExtension"
+          },
+          "description": "Custom defined extension values"
+        },
+        "extensions_schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskExtensionSchema"
+          },
+          "description": "Schema for custom defined extension fields"
+        }
+      }
+    },
+    "TaskCount": {
+      "type": "object",
+      "description": "Task Count",
+      "title": "Task Count",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "example": 1,
+          "description": "Number of tasks"
+        }
+      }
+    },
+    "TaskPatchRequest": {
+      "type": "object",
+      "description": "Request body for patching a task. The request contains one or more fields to update in a task. The fields are optional, but at least one field must be provided.\nIt should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the task will retain its current value. If a field is set to `null`, the value will be blanked out in the task object.",
+      "title": "Task Patch Request",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Check vitals for Mrs. Doe",
+          "nullable": false,
+          "description": "Free-form name of the task as entered by the user."
+        },
+        "due_at": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-31T22:00:00.000Z",
+          "nullable": true,
+          "description": "When the task is due."
+        },
+        "assigned_to_user": {
+          "$ref": "#/components/schemas/Person",
+          "nullable": true,
+          "description": "Person to whom the task is assigned."
+        },
+        "assigned_to_group": {
+          "$ref": "#/components/schemas/NamedEntity",
+          "nullable": true,
+          "description": "Group to which the task is assigned."
+        },
+        "custom_icon": {
+          "type": "string",
+          "nullable": true,
+          "description": "Custom icon to be displayed for the task."
+        },
+        "initial_priority": {
+          "$ref": "#/components/schemas/Priority",
+          "description": "Reset the initial priority. if there are `escalation_dates` defined, then the `current_priority` may\nbe immediately different from the `initial_priority`."
+        },
+        "status": {
+          "$ref": "#/components/schemas/Status"
+        },
+        "details": {
+          "type": "string",
+          "example": "Check Blood Pressure and Heart Rate.\nRecent readings were out of range.\nIf readings are out of range again, alert nursing staff.",
+          "description": "Free text entered by user to provide more detail."
+        },
+        "notify_at": {
+          "type": "string",
+          "nullable": true,
+          "format": "date-time",
+          "example": "2023-01-20T19:23:05.000Z",
+          "description": "Time the assignee(s) should be notified. Assignee(s) will not be notified\nif blank."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 25
+          },
+          "description": "User-defined tags."
+        },
+        "contexts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskContext"
+          },
+          "description": "Applicable contexts."
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TaskExtension"
+          },
+          "description": "Custom defined extensions"
+        }
+      }
+    },
+    "TaskSource": {
+      "type": "integer",
+      "oneOf": [
+        {
+          "title": "Web",
+          "const": 0
+        },
+        {
+          "title": "Client Family Portal",
+          "const": 1
+        },
+        {
+          "title": "Mobile",
+          "const": 2
+        },
+        {
+          "title": "External",
+          "const": 3
+        }
+      ]
+    },
+    "PaginatedSubTaskList": {
+      "$reg": "#/components/schemas/PaginatedResults",
+      "properties": {
+        "items": {
+          "$ref": "#/components/schemas/SubTask"
+        }
+      }
+    },
+    "PaginatedTaskList": {
+      "$reg": "#/components/schemas/PaginatedResults",
+      "properties": {
+        "items": {
+          "$ref": "#/components/schemas/Task"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "title": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "request_id": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        }
+      },
+      "required": [
+        "message",
+        "request_id"
+      ]
+    },
+    "PaginatedResults": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "Resource collection",
+          "items": {
+            "type": "object"
+          }
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "minimum": 1,
+          "example": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "Number of items per page requested",
+          "minimum": 1,
+          "example": 10
+        },
+        "count": {
+          "type": "integer",
+          "description": "Count of items returned",
+          "minimum": 0,
+          "example": 10
+        },
+        "previous": {
+          "type": "string",
+          "description": "Link to previous page",
+          "nullable": true
+        },
+        "next": {
+          "type": "string",
+          "description": "Link to next page",
+          "nullable": true
+        },
+        "total_count": {
+          "type": "integer",
+          "description": "Total number of items available. Only returned if `include_total_pages` is\nset to true. Not supported on all resources."
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages. Only returned if `include_total_pages` is set to\ntrue. Not supported on all resources."
+        }
+      },
+      "x-example": {
+        "examples-1": {
+          "items": [],
+          "page": 1,
+          "count": 10
+        }
+      },
+      "required": [
+        "items",
+        "page",
+        "count"
+      ]
+    }
+  }
+}

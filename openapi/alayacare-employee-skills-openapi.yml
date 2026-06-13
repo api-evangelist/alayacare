@@ -1,0 +1,917 @@
+swagger: '2.0'
+info:
+  title: AlayaCare Skills API
+  version: "1.0.0"
+  description: |
+    **AlayaCare IDs:**
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+    - employee_id
+    - skill_id
+
+    **External IDs**
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+    - external_employee_id
+
+    External IDs are required to be unique.
+    No other assumptions are made regarding their format they are treated as strings.
+
+    **Remarks**
+    - All dates must be in ISO 8601 format with timezone data
+    
+    **Skills Considerations**
+    - The skill master list and employee skills management are supported by this API
+    - Client specific skills are not supported by this API
+
+host: homecare.alayacare.ca
+basePath: /ext/api/v2/employees
+securityDefinitions:
+  basic_auth:
+    type: basic
+    description: Basic HTTP auth over https
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+
+paths:
+
+  /branches:
+      get:
+        tags: [Branches]
+        parameters:
+          - $ref: '#/parameters/page'
+          - $ref: '#/parameters/count'
+        summary: |
+          Get a list of available branches
+        responses:
+          '200':
+            description: A list of branches
+            schema:
+              $ref: '#/definitions/BranchList'
+          "401":
+            $ref: '#/responses/ErrorResponseAuthentication'
+
+  /skill_categories:
+    get:
+      tags: [Skill Categories]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/count'
+      summary: Get a list of skill categories
+      responses:
+        "200":
+          description: A list of skill categories details
+          schema:
+            $ref: '#/definitions/SkillCategoryList'
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+
+  /skills:
+    get:
+      tags: [Skills]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/count'
+        - $ref: '#/parameters/branch_id'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/category_id'
+      summary: Get a list of skills
+      responses:
+        "200":
+          description: A list of skills
+          schema:
+            $ref: '#/definitions/SkillList'
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+    post:
+      tags: [Skills]
+      summary: |
+        Create a skill
+      description: |
+        - `branch_id` is optional, if omitted the skill will be created in the default branch.
+        - `branch_id` can only be set at creation.
+        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) are optional depending on business needs.
+      parameters:
+      - name: body
+        description: Skill definition in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: "#/definitions/SkillCreate"
+      responses:
+        "201":
+          description: An employee specific skill
+          schema:
+            $ref: '#/definitions/SkillDetails'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: 'Field category_id is required'
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+  
+  /skills/{skill_id}:
+    parameters:
+      - name: skill_id
+        description: AlayaCare ID of the skill
+        in: path
+        type: string
+        required: true
+    get:
+      tags: [Skills]
+      summary: Get skill details using its AlayaCare Skill ID
+      responses:
+        "200":
+          description: Skill details
+          schema:
+            $ref: "#/definitions/SkillDetails"
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+        "404":
+          $ref: '#/responses/ErrorResponseSkillNotFound'
+    put:
+      tags: [Skills]
+      summary: Modify skill details using its AlayaCare Skill ID
+      description: |
+        - Changing the `branch_id` of a skill is not supported by this API. Any `branch_id` sent will be ignored.
+        - Skill fields sent in the payload will overwrite existing fields on the skill.
+      parameters:
+      - name: body
+        description: Object with fields to be updated
+        in: body
+        schema:
+          $ref: "#/definitions/SkillUpdate"
+      responses:
+        "200":
+          description: Skill updated successfuly
+          schema:
+            $ref: '#/definitions/SkillDetails'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: 'Custom field name invalid.'
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+        "404":
+          $ref: '#/responses/ErrorResponseSkillNotFound'
+
+  /employees/{employee_id}/skills:
+    parameters:
+      - name: employee_id
+        description: The AlayaCare ID of a employee
+        in: path
+        type: integer
+        required: true
+    get:
+      tags: [Employee Skills]
+      summary: Get a list of an employee's skills by the employee AlayaCare ID
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/count'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/category_id'
+      responses:
+        200:
+          description: A list of an employee skills
+          schema:
+            $ref: '#/definitions/EmployeeSkillList'
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+    post:
+      tags: [Employee Skills]
+      summary: Create an employee specific skill by the employee AlayaCare ID
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EmployeeSkillCreate'
+      description: |
+        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+        - `comment` can only be set if one or more skill field is configured on the skill master list. 
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.
+      responses:
+        201:
+          description: An employee specific skill
+          schema:
+            $ref: '#/definitions/EmployeeSkillDetails'
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: 'Field skill_id is required'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+        409:
+          description: Conflict
+          examples:
+            application/json:
+              {
+                  'code': 409,
+                  'message': 'Branch conflict: Skill cannot be assigned to the employee'
+              }
+
+  /employees/{employee_id}/skills/{skill_id}:
+    parameters:
+      - name: employee_id
+        description: The AlayaCare ID of an employee
+        in: path
+        type: integer
+        required: true
+      - name: skill_id
+        description: The AlayaCare ID of a skill
+        in: path
+        type: integer
+        required: true
+    get:
+      tags: [Employee Skills]
+      summary: Get an employee's skills details by the employee AlayaCare ID
+      responses:
+        "200":
+          description: Skill details
+          schema:
+            $ref: "#/definitions/EmployeeSkillDetails"
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+        "404":
+          $ref: '#/responses/ErrorResponseEmployeeSkillNotFound'
+    put:
+      tags: [Employee Skills]
+      summary: Update an employee's skill by the employee AlayaCare ID
+      description: |
+        - Skill fields sent in the payload will overwrite existing fields on the employee skill.
+        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+        - `comment` can only be set if one or more skill field is configured on the skill master list. 
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.
+        
+      parameters:
+        - name: body
+          description: Employe skill data to update
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeSkillUpdate'
+      responses:
+        200:
+          description: Employee skill updated successfuly
+          schema:
+            $ref: '#/definitions/EmployeeSkillDetails'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: 'Custom field name invalid.'        
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeSkillNotFound'
+    delete:
+      tags: [Employee Skills]
+      summary: Remove a employee's skill by the employee AlayaCare ID
+      description: |
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.
+      responses:
+        204:
+          description: Skill successfully deleted
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeSkillNotFound'
+          
+  /employees/by_id/{external_employee_id}/skills:
+    parameters:
+      - name: external_employee_id
+        description: The external ID of an employee
+        in: path
+        type: string
+        required: true
+    get:
+      tags: [Employee Skills]
+      summary: Get a list of an employee's skills by the employee external ID
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/count'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/category_id'
+      responses:
+        200:
+          description: A list of an employee skills
+          schema:
+            $ref: '#/definitions/EmployeeSkillList'
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+    post:
+      tags: [Employee Skills]
+      summary: Create an employee specific skill by the employee external ID
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EmployeeSkillCreate'
+      description: |
+        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+        - `comment` can only be set if one or more skill field is configured on the skill master list. 
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.
+      responses:
+        201:
+          description: An employee specific skill
+          schema:
+            $ref: '#/definitions/EmployeeSkillDetails'
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: 'Field skill_id is required'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+        409:
+          description: Conflict
+          examples:
+            application/json:
+              {
+                  'code': 409,
+                  'message': 'Branch conflict: Skill cannot be assigned to the employee'
+              }
+  
+  /employees/by_id/{external_employee_id}/skills/{skill_id}:
+    parameters:
+    - name: external_employee_id
+      description: External ID of an employee
+      in: path
+      type: integer
+      required: true
+    - name: skill_id
+      description: ID of the employee's skill
+      in: path
+      required: true
+      type: string
+    get:
+      tags: [Employee Skills]
+      summary: Get an employee's skills details by the employee external ID
+      responses:
+        "200":
+          description: Skill details
+          schema:
+            $ref: "#/definitions/EmployeeSkillDetails"
+        "401":
+          $ref: '#/responses/ErrorResponseAuthentication'
+        "404":
+          $ref: '#/responses/ErrorResponseEmployeeSkillNotFound'
+    put:
+      tags: [Employee Skills]
+      summary: Update an employee's skill by the employee external ID
+      description: |
+        - Skill fields sent in the payload will overwrite existing fields on the employee skill.
+        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+        - `comment` can only be set if one or more skill field is configured on the skill master list.
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.
+      parameters:
+        - name: body
+          description: Employe skill data to update
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeSkillUpdate'
+      responses:
+        200:
+          description: Employee skill updated successfuly
+          schema:
+            $ref: '#/definitions/EmployeeSkillDetails'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: 'Custom field name invalid.'        
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeSkillNotFound'
+    delete:
+      tags: [Employee Skills]
+      summary: Remove a employee's skill by the employee external ID
+      description: |
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.
+      responses:
+        204:
+          description: Skill successfully deleted
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeSkillNotFound'
+
+parameters:
+
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  branch:
+    description: 'Filter by branch ID'
+    name: branch
+    in: query
+    required: false
+    type: integer
+  branch_id:
+    description: 'Filter by branch ID'
+    name: branch_id
+    in: query
+    required: false
+    type: integer
+  filter:
+    description: 'Substring search on skill category and name'
+    name: filter
+    in: query
+    required: false
+    type: string
+  category_id:
+    description: 'Filter skills by category ID, one or more using **OR**'
+    name: category_id
+    in: query
+    required: false
+    type: integer
+
+responses:
+
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        {
+          "code": 401,
+          "message": "Authorization required."
+        }
+
+  ErrorResponseEmployeeNotFound:
+    description: Employee not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        {
+          "code": 404,
+          "message": "Employee not found."
+        }
+
+  ErrorResponseSkillNotFound:
+    description: Skill not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        {
+          "code": 404,
+          "message": "Skill not found."
+        }
+
+  ErrorResponseEmployeeSkillNotFound:
+    description: Employee skill relationship not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        {
+          "code": 404,
+          "message": "Employee skill relationship not found"
+        }
+
+definitions:
+
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+
+  CreatedDetails:
+    description: Created by and Created at information
+    type: object
+    properties:
+      created_by:
+        type: object
+        description: User who created the employee skill entry
+        properties:
+          id:
+            type: integer
+            description: Id of the employee who assigned the skill
+            example: 284
+          external_id: 
+            type: string
+            description: External ID of the employee who assigned the skill
+            example: 450
+          name:
+            type: string
+            description: Name of the employee who assigned the skill
+            example: John Smith
+      created_at:
+        type: string
+        format: 'date-time'
+        description: Date employee specific skill was assigned to the employee (ISO 8601) - Time saved at `T00:00:00+00:00`
+        example: '2017-07-08T00:00:00+00:00' 
+
+  Branch:
+    description: AlayaCare branch.
+    type: object
+    properties:
+      id:
+        type: integer
+        description: AlayaCare branch ID
+        example: 1
+      name:
+        type: string
+        description: AlayaCare branch name
+        example: Toronto branch
+      profile:
+        $ref: '#/definitions/BranchProfile'
+    required:
+    - id
+    - name
+
+  BranchList:
+    allOf:
+    - $ref: "#/definitions/PaginatedList"
+    description: Paginated list of branches
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Branch'
+
+  BranchSummary:
+    description: Branch summary
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the branch
+        example: 1
+      name:
+        type: string
+        description: Name of the branch
+        example: 'Headquarters'
+
+  SkillCategory:
+    description: Skill Category
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        description: ID of the skill category
+        example: 1
+      name:
+        type: string
+        description: Name of the skill category
+        example: 'Languages'  
+
+  SkillCategoryList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: List of skill Categories
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillCategory'
+  
+  SkillField:
+    description: Skill custom field attributes
+    type: object
+    required:
+      - name
+      - type
+      - label
+    properties:
+      name:
+        type: string
+        description : Name of the customizable field
+        example: "acquired_date"
+        enum:
+          - acquired_date
+          - expired_date
+          - label_1
+          - label_2
+      label:
+        type: string
+        description: Label of the customizable field
+        example: "Acquired date"
+      type:
+        type: string
+        description: Type of the customizable field
+        example: Date
+        enum:
+          - date
+          - text
+
+  SkillFieldCreate:
+    description: Skill custom field attributes
+    type: object
+    required:
+      - name
+      - label
+    properties:
+      name:
+        type: string
+        description : Name of the customizable field
+        example: "acquired_date"
+        enum:
+          - acquired_date
+          - expired_date
+          - label_1
+          - label_2
+      label:
+        type: string
+        description: Label of the customizable field
+        example: "Acquired date"
+  
+  SkillDetails:
+    description: AlayaCare skill entity
+    type: object
+    required:
+      - id
+      - name
+      - category
+      - branch
+    properties:
+      id:
+        type: integer
+        description: Skill ID
+        example: 1 
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category:
+        $ref: '#/definitions/SkillCategory'
+      branch:
+        $ref: '#/definitions/BranchSummary'
+      fields:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillField'
+
+  SkillList:
+      allOf:
+      - $ref: '#/definitions/PaginatedList'
+      description: |
+         List of skills
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: "#/definitions/SkillDetails"
+
+  SkillCreate:
+    properties:
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category_id:
+        type: integer
+        description: |
+          Set the skill category.
+        example: 4
+      branch_id:
+        type: integer
+        description: |
+          Set skill branch. If not specified, will default to branch of the user creating the employee.
+        example: 1
+      fields:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillFieldCreate'
+    required:
+      - name
+      - category_id
+  
+  SkillUpdate:
+    properties:
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category_id:
+        type: integer
+        description: |
+          Set the skill category.
+        example: 4
+      fields:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillFieldCreate'
+
+  EmployeeSkillField:
+    description: Field(s) configured in the skill
+    type: object
+    required:
+      - acquired_date
+      - expired_date
+      - label_1
+      - label_2
+    properties:
+      acquired_date:
+        type: string
+        format: date
+        description: The skill field `acquired_date` value. For `type = Date` format must be ISO 8601
+        example: "2018-07-08T00:00:00+00:00"
+      expired_date:
+        type: string
+        format: date
+        description: The skill field `expired_date` value. For `type = Date` format must be ISO 8601
+        example: "2020-07-08T00:00:00+00:00"
+      label_1:
+        type: string
+        description: The skill field `label_1` value.
+        example: "X3S J1M"
+      label_2:
+        type: string
+        description: The skill field `label_2` value.
+        example: "Volkswagen"
+  
+  EmployeeSkillDetails:
+    description: AlayaCare employee skill attributes
+    type: object
+    required:
+      - skill_id
+      - name
+      - category
+      - branch
+      - created_details
+    properties:
+      skill_id:
+        type: integer
+        description: Id of the skill to assign to the employee
+        example: 123
+      comment:
+        type: string
+        description: Free text comment on the employee specific skill
+        example: This employee has reached a proficiency level in this skill
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category:
+        $ref: '#/definitions/SkillCategory'
+      branch:
+        $ref: '#/definitions/BranchSummary'
+      fields:
+        $ref: '#/definitions/EmployeeSkillField'
+      created_details:
+        $ref: '#/definitions/CreatedDetails'
+
+  EmployeeSkillList:
+      allOf:
+      - $ref: '#/definitions/PaginatedList'
+      description: |
+         List of skills
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: "#/definitions/EmployeeSkillDetails"
+
+  EmployeeSkillCreate:
+    type: object
+    required:
+      - skill_id
+    properties:
+      skill_id:
+        type: integer
+        description: Id of the skill to assign to the employee
+        example: 123
+      comment:
+        type: string
+        description: Free text comment on the employee specific skill
+        example: This employee has reached a proficiency level in this skill
+      fields:
+        $ref: '#/definitions/EmployeeSkillField'
+  
+  EmployeeSkillUpdate:
+    type: object
+    properties:
+      comment:
+        type: string
+        description: Free text comment on the employee specific skill
+        example: This employee has reached a proficiency level in this skill
+      fields:
+        $ref: '#/definitions/EmployeeSkillField'
+
+  BranchProfile:
+    description: |
+      Collection of key/value pairs where keys are existing attributes in the agency profile, defined through
+      the AlayaCare web application.
+      On the example below default profile keys for the agency profile are used.
+
+      Example profile attributes:
+      + `first_name`: string
+      + `last_name`: string
+      + `city`: string
+      + `title`: string
+      + `state`: string
+      + `gender`: string
+      + `relationship`: string
+      + `contact_type`: string
+      + `fax`: string
+      + `company`: string
+      + `phone_other`: string
+      + `phone_main`: string
+      + `address`: string
+      + `country`: string
+      + `zip`: string
+      + `address_suite`: string
+      + `remarks`: string
+    type: object
+    properties:
+      name:
+        description: Branch company name
+        type: string
+        example: Alayacare
+      phone_main:
+        description: Branch main phone number
+        type: string
+        example: 514-999-9999
+
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+    required:
+    - count
+    - page
+    - total_pages
+    - items

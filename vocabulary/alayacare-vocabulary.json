@@ -1,0 +1,547 @@
+{
+  "title": "AlayaCare API Vocabulary",
+  "description": "Controlled vocabulary of terms, tags, and operations across AlayaCare APIs",
+  "tags": [
+    "Accounts",
+    "Activity Codes",
+    "Bill Code Rate RRules",
+    "Bill Code Rates",
+    "Bill Codes",
+    "Billing Cycles",
+    "Billing Periods",
+    "Branches",
+    "Care Provider Notes",
+    "Client Contacts",
+    "Client Cost Centres",
+    "Client Status",
+    "Clients",
+    "Cost Centres",
+    "EVV Export",
+    "Employee Cost Centres",
+    "Funders",
+    "Groups",
+    "Invoice Items",
+    "Invoices",
+    "Premium Bill Codes",
+    "Premiums",
+    "Profile",
+    "Service Codes",
+    "Service Status",
+    "Status Reasons",
+    "Time Off Types",
+    "Transactions",
+    "Visit Premiums"
+  ],
+  "operations": [
+    {
+      "operationId": "listBranches",
+      "summary": "Get a list of branches",
+      "method": "GET",
+      "path": "/branches",
+      "api": "client",
+      "tags": [
+        "Branches"
+      ]
+    },
+    {
+      "operationId": "listGroups",
+      "summary": "Get a list of client groups",
+      "method": "GET",
+      "path": "/groups",
+      "api": "client",
+      "tags": [
+        "Groups"
+      ]
+    },
+    {
+      "operationId": "listClientProfileAttributes",
+      "summary": "Get a list of client profile attributes",
+      "method": "GET",
+      "path": "/profile/client",
+      "api": "client",
+      "tags": [
+        "Profile"
+      ]
+    },
+    {
+      "operationId": "listClientContactProfileAttributes",
+      "summary": "Get a list of client contact profile attributes",
+      "method": "GET",
+      "path": "/profile/client_contact",
+      "api": "client",
+      "tags": [
+        "Profile"
+      ]
+    },
+    {
+      "operationId": "listClients",
+      "summary": "List clients",
+      "method": "GET",
+      "path": "/clients",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "createClient",
+      "summary": "Create client",
+      "method": "POST",
+      "path": "/clients",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "detailClient",
+      "summary": "Get client details using its AlayaCare Client ID",
+      "method": "GET",
+      "path": "/clients/{client_id}",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "updateClient",
+      "summary": "Update client details using its AlayaCare Client ID",
+      "method": "PUT",
+      "path": "/clients/{client_id}",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "detailClientByExt",
+      "summary": "Get client details using External Client ID",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "updateClientByExt",
+      "summary": "Update client details using External Client ID",
+      "method": "PUT",
+      "path": "/clients/by_id/{external_client_id}",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "listClientContacts",
+      "summary": "Get list of client contacts using AlayaCare Client ID",
+      "method": "GET",
+      "path": "/clients/{client_id}/contacts",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "listClientContactsByExt",
+      "summary": "Get list of client contacts using AlayaCare Client external ID",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/contacts",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "listClientBlockedEmployees",
+      "summary": "Get list of employees blocked by this client or blocking this client",
+      "method": "GET",
+      "path": "/clients/{client_id}/blocked_employees",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "listClientBlockedEmployeesByExt",
+      "summary": "Get list of employees blocked by this client or blocking this client using external client id",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/blocked_employees",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "getClientPicture",
+      "summary": "Get client profile picture pre-authorized URL",
+      "method": "GET",
+      "path": "/clients/{client_id}/picture",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "getClientPictureByExt",
+      "summary": "Get client profile picture pre-authorized URL using external client id",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/picture",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "listClientTags",
+      "summary": "Get all available tags for clients",
+      "method": "GET",
+      "path": "/clients/tags",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "createClientTag",
+      "summary": "Create a client tag",
+      "method": "POST",
+      "path": "/clients/tags",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "renameClientTag",
+      "summary": "Rename an existing client tag",
+      "method": "POST",
+      "path": "/clients/tags/rename",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "addTagsToClient",
+      "summary": "Add tags to a Client using its AlayaCare Client ID",
+      "method": "POST",
+      "path": "/clients/{client_id}/tags",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "updateClientTags",
+      "summary": "Update tags of a Client using its AlayaCare Client ID",
+      "method": "PUT",
+      "path": "/clients/{client_id}/tags",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "addTagsToClientByExt",
+      "summary": "Add tags to a Client using External Client ID",
+      "method": "POST",
+      "path": "/clients/by_id/{external_client_id}/tags",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "updateClientTagsByExt",
+      "summary": "Update tags of a Client using External Client ID",
+      "method": "PUT",
+      "path": "/clients/by_id/{external_client_id}/tags",
+      "api": "client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "operationId": "listClientStatuses",
+      "summary": "Get client status details using its AlayaCare Client ID",
+      "method": "GET",
+      "path": "/clients/{client_id}/status",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "createClientStatus",
+      "summary": "Create a client status using its AlayaCare Client ID",
+      "method": "POST",
+      "path": "/clients/{client_id}/status",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "detailClientStatus",
+      "summary": "Get a client status details using its AlayaCare Client and Status ID",
+      "method": "GET",
+      "path": "/clients/{client_id}/status/{status_id}",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "updateClientStatus",
+      "summary": "Update a client status using its AlayaCare Client and Status ID",
+      "method": "PUT",
+      "path": "/clients/{client_id}/status/{status_id}",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "deleteClientStatus",
+      "summary": "Remove a client status using its AlayaCare Client and Status ID",
+      "method": "DELETE",
+      "path": "/clients/{client_id}/status/{status_id}",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "listClientStatusesByExt",
+      "summary": "Get client status details using External Client ID",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/status",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "createClientStatusByExt",
+      "summary": "Create a client status using External Client ID",
+      "method": "POST",
+      "path": "/clients/by_id/{external_client_id}/status",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "detailClientStatusByExt",
+      "summary": "Get a client status details using External Client ID and Status ID",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/status/{status_id}",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "updateClientStatusByExt",
+      "summary": "Update a client status using External Client ID and Status ID",
+      "method": "PUT",
+      "path": "/clients/by_id/{external_client_id}/status/{status_id}",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "deleteClientStatusByExt",
+      "summary": "Remove a client status using External Client ID and Status ID",
+      "method": "DELETE",
+      "path": "/clients/by_id/{external_client_id}/status/{status_id}",
+      "api": "client",
+      "tags": [
+        "Client Status"
+      ]
+    },
+    {
+      "operationId": "createContact",
+      "summary": "Create client contact",
+      "method": "POST",
+      "path": "/contacts",
+      "api": "client",
+      "tags": [
+        "Client Contacts"
+      ]
+    },
+    {
+      "operationId": "detailContact",
+      "summary": "Get client contact details using its AlayaCare Client ID",
+      "method": "GET",
+      "path": "/contacts/{contact_id}",
+      "api": "client",
+      "tags": [
+        "Client Contacts"
+      ]
+    },
+    {
+      "operationId": "updateContact",
+      "summary": "Update client contact details using its AlayaCare Client ID",
+      "method": "PUT",
+      "path": "/contacts/{contact_id}",
+      "api": "client",
+      "tags": [
+        "Client Contacts"
+      ]
+    },
+    {
+      "operationId": "detailContactByExt",
+      "summary": "Get client contact details using External Client ID",
+      "method": "GET",
+      "path": "/contacts/by_id/{external_contact_id}",
+      "api": "client",
+      "tags": [
+        "Client Contacts"
+      ]
+    },
+    {
+      "operationId": "updateContactByExt",
+      "summary": "Update client contact details using External Client ID",
+      "method": "PUT",
+      "path": "/contacts/by_id/{external_contact_id}",
+      "api": "client",
+      "tags": [
+        "Client Contacts"
+      ]
+    },
+    {
+      "operationId": "createServiceStatus",
+      "summary": "Create a service status",
+      "method": "POST",
+      "path": "/service/{service_id}/status",
+      "api": "client",
+      "tags": [
+        "Service Status"
+      ]
+    },
+    {
+      "operationId": "createServiceStatusByExt",
+      "summary": "Create a service status using external client id",
+      "method": "POST",
+      "path": "/service/by_id/{external_service_id}/status",
+      "api": "client",
+      "tags": [
+        "Service Status"
+      ]
+    },
+    {
+      "operationId": "createCareProviderNote",
+      "summary": "Create a care provider note",
+      "method": "POST",
+      "path": "/clients/{client_id}/care-provider-notes",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "listCareProviderNotes",
+      "summary": "List care provider notes",
+      "method": "GET",
+      "path": "/clients/{client_id}/care-provider-notes",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "createCareProviderNoteByExt",
+      "summary": "Create a care provider note using external client id",
+      "method": "POST",
+      "path": "/clients/by_id/{external_client_id}/care-provider-notes",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "listCareProviderNotesByExt",
+      "summary": "List care provider notes",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/care-provider-notes",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "listCareProviderNoteCategories",
+      "summary": "List care provider note categories",
+      "method": "GET",
+      "path": "/clients/{client_id}/care-provider-notes/categories",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "listCareProviderNoteCategoriesByExt",
+      "summary": "List care provider note categories",
+      "method": "GET",
+      "path": "/clients/by_id/{external_client_id}/care-provider-notes/categories",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "detailCareProviderNote",
+      "summary": "Get a care provider note",
+      "method": "GET",
+      "path": "/care-provider-notes/{note_id}",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "archiveCareProviderNote",
+      "summary": "Archive a care provider note",
+      "method": "POST",
+      "path": "/care-provider-notes/{note_id}/archive",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "unarchiveCareProviderNote",
+      "summary": "Unarchive a care provider note",
+      "method": "POST",
+      "path": "/care-provider-notes/{note_id}/unarchive",
+      "api": "client",
+      "tags": [
+        "Care Provider Notes"
+      ]
+    },
+    {
+      "operationId": "get_medication",
+      "summary": "Fetch a medication by external client id",
+      "method": "GET",
+      "path": "/client/by_id/{external_client_id}/medications",
+      "api": "medication",
+      "tags": [
+        "Medication"
+      ]
+    },
+    {
+      "operationId": "update_status",
+      "summary": "Update a medication status",
+      "method": "POST",
+      "path": "/medications/{medication_id}/change_status/{new_status}",
+      "api": "medication",
+      "tags": [
+        "Medication"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1720 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Clinical API Schemas",
+  "definitions": {
+    "ErrorResponse": {
+      "description": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed error message"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "PaginatedList": {
+      "description": "Base model of all paginated lists",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages availbale",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "count",
+        "page",
+        "total_pages",
+        "items"
+      ]
+    },
+    "ProgressNotesList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of a client's progress notes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProgressNote"
+          }
+        }
+      }
+    },
+    "ProgressNote": {
+      "description": "A progress note",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "uuid of the progress note",
+          "format": "uuid",
+          "example": "5aea440b-7e10-4b5d-8b44-fda4efb2dc95"
+        },
+        "is_hidden": {
+          "type": "boolean",
+          "default": false
+        },
+        "note_type": {
+          "type": "string",
+          "description": "Note type category of the progress note",
+          "example": "progress_nursing"
+        },
+        "content": {
+          "type": "string",
+          "format": "html",
+          "description": "Content of the progress note. A subset of HTML is accepted.",
+          "example": "Client achieved 1 of 5 goals today when client walked up stairs unassissted."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date progress note was created (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "created_by": {
+          "type": "integer",
+          "description": "AlayaCare ID of the employee who created the progress note.",
+          "example": 1001
+        },
+        "textonly": {
+          "type": "string",
+          "description": "Content of the progress note as simple text (only if include_textonly is true)",
+          "example": "Client achieved 1 of 5 goals today when client walked up stairs unassissted."
+        }
+      }
+    },
+    "ProgressNoteDetails": {
+      "description": "A progress note",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "uuid of the progress note",
+          "example": "5aea440b-7e10-4b5d-8b44-fda4efb2dc95"
+        },
+        "is_hidden": {
+          "type": "boolean",
+          "default": false
+        },
+        "note_type": {
+          "type": "string",
+          "description": "Note type category of the progress note",
+          "example": "progress_nursing"
+        },
+        "content": {
+          "type": "string",
+          "format": "html",
+          "description": "Content of the progress note. A subset of HTML is accepted.",
+          "example": "Client achieved 1 of 5 goals today when client walked up stairs unassissted."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date progress note was created (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "created_by": {
+          "type": "integer",
+          "description": "AlayaCare ID of the employee who created the progress note.",
+          "example": 1001
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "Alayacare ID of the client",
+          "example": 1010
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "External ID of the client",
+          "example": "client_101"
+        },
+        "textonly": {
+          "type": "string",
+          "description": "Content of the progress note as simple text (only if include_textonly is true)",
+          "example": "Client achieved 1 of 5 goals today when client walked up stairs unassissted."
+        }
+      }
+    },
+    "ProgressNoteCreate": {
+      "description": "Progress note data required for creation.",
+      "type": "object",
+      "required": [
+        "note_type",
+        "content"
+      ],
+      "properties": {
+        "is_hidden": {
+          "type": "boolean",
+          "default": false
+        },
+        "note_type": {
+          "type": "string",
+          "description": "Note type category of the progress note",
+          "example": "progress_nursing"
+        },
+        "content": {
+          "type": "string",
+          "format": "html",
+          "description": "Content of the progress note.  A subset of HTML is accepted.",
+          "example": "Client achieved 1 of 5 goals today when client walked up stairs unassissted."
+        }
+      }
+    },
+    "NoteTypesList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of a client's progress notes",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "note_type": {
+                "type": "string",
+                "description": "Progress note type",
+                "example": "progress_nursing"
+              }
+            }
+          }
+        }
+      }
+    },
+    "RiskList": {
+      "description": "A list of client risks",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages available",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RiskDetails"
+          }
+        }
+      }
+    },
+    "RiskDetails": {
+      "description": "Details of the client risk",
+      "type": "object",
+      "properties": {
+        "risk_id": {
+          "type": "string",
+          "description": "Unique ID of the client risk",
+          "example": "abc-123"
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the client",
+          "example": 1957
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "External client ID",
+          "example": "sor_id_1"
+        },
+        "category": {
+          "type": "string",
+          "description": "Risk category (case-sensitive)",
+          "example": "Allergy",
+          "enum": [
+            "Allergy",
+            "Environment",
+            "Infectious Diseases",
+            "Funder",
+            "General",
+            "Pets"
+          ]
+        },
+        "risk": {
+          "type": "string",
+          "description": "Free text description of the client risk",
+          "example": "Allergic to penicillin"
+        },
+        "severity": {
+          "$ref": "#/definitions/RiskSeverity"
+        },
+        "created_by": {
+          "type": "object",
+          "description": "User who created the client risk entry",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the employee who created the risk",
+              "example": "John Smith"
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date client risk was created (ISO 8601) - Time saved at `T00:00:00+00:00`",
+          "example": "2017-07-08T00:00:00+00:00"
+        }
+      }
+    },
+    "RiskCategory": {
+      "description": "Risk category (case-sensitive)",
+      "type": "string",
+      "example": "Allergy",
+      "enum": [
+        "Allergy",
+        "Environment",
+        "Infectious Diseases",
+        "Funder",
+        "General",
+        "Pets"
+      ]
+    },
+    "RiskSeverity": {
+      "description": "Risk severity - 0 to 5",
+      "type": "integer",
+      "example": 3,
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "RiskCreate": {
+      "description": "Client risk data",
+      "type": "object",
+      "required": [
+        "category",
+        "risk",
+        "severity"
+      ],
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/RiskCategory"
+        },
+        "risk": {
+          "type": "string",
+          "description": "Free text description of the client risk",
+          "example": "Allergic to penicillin",
+          "minLength": 1
+        },
+        "severity": {
+          "$ref": "#/definitions/RiskSeverity"
+        }
+      }
+    },
+    "RiskUpdate": {
+      "description": "Client risk data",
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/RiskCategory"
+        },
+        "risk": {
+          "type": "string",
+          "description": "Free text description of the client risk",
+          "example": "Allergic to penicillin"
+        },
+        "severity": {
+          "$ref": "#/definitions/RiskSeverity"
+        }
+      }
+    },
+    "CreateSuccess": {
+      "type": "object",
+      "description": "Success returned from the API when creating or updating an entity.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The entity ID.",
+          "example": "70ad613a-376c-4389-bb45-78374dddd03e"
+        },
+        "type": {
+          "type": "string",
+          "description": "The clinical document type.",
+          "example": "medication"
+        },
+        "uri": {
+          "type": "string",
+          "description": "The entity URI.",
+          "example": "/medication/70ad613a-376c-4389-bb45-78374dddd03e"
+        }
+      }
+    },
+    "SuccessProgressNoteCreate": {
+      "type": "object",
+      "description": "Progress note created successfully",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The entity ID.",
+          "example": "70ad613a-376c-4389-bb45-78374dddd03e"
+        },
+        "type": {
+          "type": "string",
+          "description": "The clinical document type.",
+          "example": "progress_note"
+        },
+        "uri": {
+          "type": "string",
+          "description": "The entity URI.",
+          "example": "/progress_note/70ad613a-376c-4389-bb45-78374dddd03e"
+        }
+      }
+    },
+    "AdministeredByNurse": {
+      "type": "string",
+      "description": "Whether the medication is administered by a nurse or whether it is self-administered.",
+      "enum": [
+        "assisted",
+        "not_assisted"
+      ],
+      "example": "assisted"
+    },
+    "DeliveryMode": {
+      "type": "string",
+      "description": "The delivery mode of the medication.",
+      "enum": [
+        "ambulatory_pump_continuous",
+        "ambulatory_pump_intermittent",
+        "ambulatory_pump_pca",
+        "ambulatory_pump_taper",
+        "ambulatory_pump_other",
+        "iv_pump",
+        "iv_push",
+        "gravity"
+      ],
+      "example": "ambulatory_pump_continuous",
+      "x-nullable": true
+    },
+    "Discrepancy": {
+      "type": "string",
+      "description": "The discrepancy code.",
+      "enum": [
+        "none",
+        "dose_different",
+        "route_different",
+        "frequency_different",
+        "medication_not_currently_prescribed",
+        "client_no_longer_taking_medication",
+        "otc_not_taken_as_prescribed",
+        "allergy_to_prescribed_medication",
+        "duplicate_of_medication",
+        "drug_interaction",
+        "formulation_incorrect_or_omitted",
+        "expired_medication",
+        "other"
+      ],
+      "example": "dose_different",
+      "x-nullable": true
+    },
+    "DiscrepancyStatus": {
+      "type": "string",
+      "description": "The status of the discrepancy.",
+      "enum": [
+        "continue",
+        "discharge",
+        "hold"
+      ],
+      "example": "continue",
+      "x-nullable": true
+    },
+    "DosageType": {
+      "type": "string",
+      "description": "The unit used for the dosage.",
+      "enum": [
+        "li",
+        "meq",
+        "sol",
+        "ung",
+        "cap",
+        "international_units",
+        "millions_of_units",
+        "mcg",
+        "mg",
+        "g",
+        "ml",
+        "units",
+        "gtt",
+        "tab",
+        "oz",
+        "fl_oz",
+        "tsp",
+        "tbsp",
+        "gal",
+        "pt",
+        "other"
+      ],
+      "example": "mg"
+    },
+    "InformationSource": {
+      "type": "string",
+      "description": "The information source for the medication.",
+      "enum": [
+        "client",
+        "family_caregiver",
+        "rx_vials",
+        "blister_packs",
+        "physician_rx",
+        "physician_samples",
+        "pharmacist_list",
+        "referral_source",
+        "staff_nurse",
+        "other"
+      ],
+      "example": "staff_nurse"
+    },
+    "Route": {
+      "type": "string",
+      "description": "The route that the medication is administered.",
+      "enum": [
+        "po_oral",
+        "im_intramuscular",
+        "sq_subcutaneous",
+        "iv_intraveneous",
+        "bu_buccal",
+        "ep_epidural",
+        "ex_external",
+        "id_intradermal",
+        "in_inhalation",
+        "na_nasal",
+        "op_ophthalmic",
+        "ot_optic",
+        "re_rectal",
+        "sl_sublingual",
+        "transdermal",
+        "ur_urethral",
+        "v_vaginal",
+        "topical",
+        "reg_percutaneous_end_gastro_tube",
+        "it_intrathecal",
+        "au_ear",
+        "ad_right_ear",
+        "as_left_ear",
+        "au_both_ears",
+        "eye_right",
+        "eye_left",
+        "eye_both",
+        "ngt_nasal_gastric",
+        "g_gastronomy_tube",
+        "jejunostomy_tube",
+        "g_j_tube"
+      ],
+      "example": "po_oral"
+    },
+    "TimeInstruction": {
+      "type": "array",
+      "description": "A list of time instructions for the medication administration.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "daily",
+          "qam_once_a_day_am",
+          "qhs_once_a_day_bedtime",
+          "bid_twice_a_day",
+          "tid_three_times_a_day",
+          "qid_four_times_a_day",
+          "ac_before_meals",
+          "pc_after_meals",
+          "prn_as_required",
+          "other_use_note",
+          "q1h",
+          "q2h",
+          "q3h",
+          "q4h",
+          "q6h",
+          "q8h",
+          "q12h",
+          "q24h",
+          "q72h"
+        ],
+        "example": "daily"
+      }
+    },
+    "Status": {
+      "type": "string",
+      "description": "The medication status.",
+      "enum": [
+        "active",
+        "on_hold",
+        "completed",
+        "discontinued"
+      ],
+      "example": "active"
+    },
+    "Type": {
+      "type": "string",
+      "description": "The medication type.",
+      "enum": [
+        "prescriptions",
+        "over_the_counter",
+        "supplements",
+        "herbals",
+        "patches",
+        "inhalers",
+        "eye_drops",
+        "ointments",
+        "physician_samples",
+        "chelation",
+        "nutriceuticals",
+        "other"
+      ],
+      "example": "prescriptions"
+    },
+    "YesNo": {
+      "type": "string",
+      "x-nullable": true,
+      "description": "Whether the action was performed.",
+      "enum": [
+        true,
+        false
+      ],
+      "example": true
+    },
+    "Medication": {
+      "type": "object",
+      "description": "Medication details",
+      "required": [
+        "administered_by_nurse",
+        "created_at",
+        "created_employee_id",
+        "dose",
+        "dosage_type",
+        "id",
+        "information_source",
+        "medication",
+        "medication_type",
+        "route",
+        "status",
+        "time_instruction",
+        "updated_at",
+        "updated_employee_id"
+      ],
+      "properties": {
+        "administered_by_nurse": {
+          "$ref": "#/definitions/AdministeredByNurse"
+        },
+        "administration_times": {
+          "type": "string",
+          "description": "The times that the medication should be administered.",
+          "example": "In the mornings or evenings",
+          "x-nullable": true
+        },
+        "administrator": {
+          "type": "string",
+          "description": "Whether a health care professional has been notified.",
+          "example": true,
+          "x-nullable": true
+        },
+        "basal_rate_range": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`.",
+          "x-nullable": true
+        },
+        "bolus_frequency": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`.",
+          "x-nullable": true
+        },
+        "bolus_rate_range": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`.",
+          "x-nullable": true
+        },
+        "comments": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "concentration": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`.",
+          "x-nullable": true
+        },
+        "created_at": {
+          "type": "string",
+          "description": "The created date using ISO 8601 date-time formatting.",
+          "example": "2018-01-01T00:30:00+00:00"
+        },
+        "created_employee_id": {
+          "type": "integer",
+          "description": "The ID of the employee that created the entity."
+        },
+        "count_administered_today": {
+          "type": "integer",
+          "description": "The number of times today that the medication has been administered. This is only populated when specifying `with_last_administration`.",
+          "example": 3
+        },
+        "delivery_mode": {
+          "$ref": "#/definitions/DeliveryMode"
+        },
+        "delivery_mode_other": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_other`.",
+          "example": "ambulatory_pump_pca",
+          "x-nullable": true
+        },
+        "discrepancy": {
+          "$ref": "#/definitions/Discrepancy"
+        },
+        "discrepancy_note": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "discrepancy_status": {
+          "$ref": "#/definitions/DiscrepancyStatus"
+        },
+        "dosage_type": {
+          "$ref": "#/definitions/DosageType"
+        },
+        "dose": {
+          "type": "string",
+          "description": "The dosage of the medication to administer.",
+          "example": 2
+        },
+        "end_date": {
+          "type": "string",
+          "description": "The end date of the medication using ISO 8601 date formatting.",
+          "example": "2018-01-01",
+          "x-nullable": true
+        },
+        "end_date_unknown": {
+          "type": "boolean",
+          "description": "Whether the end date is unknown.",
+          "example": false
+        },
+        "episode_id": {
+          "type": "integer",
+          "description": "The ID of the episode.",
+          "example": 1,
+          "x-nullable": true
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "The external ID of the client.",
+          "example": "client_1234",
+          "x-nullable": true
+        },
+        "high_alert": {
+          "type": "boolean",
+          "description": "Whether the medication has been flagged as a high alert.",
+          "example": true
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The ID of the medication.",
+          "example": "445e1b60-7287-47fb-ae00-2ca35fb4d58e"
+        },
+        "information_source": {
+          "$ref": "#/definitions/InformationSource"
+        },
+        "last_administered_at": {
+          "type": "string",
+          "description": "The last administration date using ISO 8601 date-time formatting. This is only populated when specifying `with_last_administration`.",
+          "example": "2018-01-01T00:30:00+00:00",
+          "x-nullable": true
+        },
+        "max_boluses": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`.",
+          "x-nullable": true
+        },
+        "medication": {
+          "type": "string",
+          "description": "The medication name.",
+          "example": "Ibuprofen"
+        },
+        "medication_type": {
+          "$ref": "#/definitions/Type"
+        },
+        "ordering_physician": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "The ID of the client."
+        },
+        "pca_special_instructions": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`.",
+          "x-nullable": true
+        },
+        "route": {
+          "$ref": "#/definitions/Route"
+        },
+        "special_instructions": {
+          "type": "string",
+          "description": "Special instructions if required.",
+          "x-nullable": true
+        },
+        "start_date": {
+          "type": "string",
+          "description": "The start date of the medication using ISO 8601 date formatting.",
+          "example": "2018-01-01",
+          "x-nullable": true
+        },
+        "start_date_unknown": {
+          "type": "boolean",
+          "description": "Whether the start date is unknown.",
+          "example": false,
+          "x-nullable": true
+        },
+        "status": {
+          "$ref": "#/definitions/Status"
+        },
+        "time_instruction": {
+          "$ref": "#/definitions/TimeInstruction"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "The last updated date using ISO 8601 date-time formatting.",
+          "example": "2018-01-01T00:30:00+00:00"
+        },
+        "updated_employee_id": {
+          "type": "integer",
+          "description": "The ID of the employee that last updated the entity."
+        }
+      }
+    },
+    "MedicationCreate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MedicationUpdate"
+        }
+      ],
+      "type": "object",
+      "description": "Create a Medication",
+      "required": [
+        "administered_by_nurse",
+        "client_id",
+        "external_client_id",
+        "dose",
+        "dosage_type",
+        "information_source",
+        "medication",
+        "medication_type",
+        "route",
+        "status",
+        "time_instruction",
+        "created_employee_id",
+        "updated_employee_id"
+      ],
+      "properties": {
+        "administration_times": {
+          "type": "string",
+          "description": "The times that the medication should be administered.",
+          "example": "In the mornings or evenings"
+        },
+        "dosage_type": {
+          "$ref": "#/definitions/DosageType"
+        },
+        "dose": {
+          "type": "string",
+          "description": "The dosage of the medication to administer.",
+          "example": "2"
+        },
+        "end_date": {
+          "type": "string",
+          "description": "The end date of the medication using ISO 8601 date formatting.",
+          "example": "2018-01-01"
+        },
+        "end_date_unknown": {
+          "type": "boolean",
+          "description": "Whether the end date is unknown.",
+          "example": false
+        },
+        "medication": {
+          "type": "string",
+          "description": "The medication name.",
+          "example": "Ibuprofen"
+        },
+        "medication_type": {
+          "$ref": "#/definitions/Type"
+        },
+        "ordering_physician": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "The ID of the client.",
+          "example": 1234
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "The external ID of the client.",
+          "example": "client_1234"
+        },
+        "pca_special_instructions": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`."
+        },
+        "route": {
+          "$ref": "#/definitions/Route"
+        },
+        "start_date": {
+          "type": "string",
+          "description": "The start date of the medication using ISO 8601 date formatting.",
+          "example": "2018-01-01"
+        },
+        "start_date_unknown": {
+          "type": "boolean",
+          "description": "Whether the start date is unknown.",
+          "example": false
+        },
+        "time_instruction": {
+          "$ref": "#/definitions/TimeInstruction"
+        }
+      }
+    },
+    "MedicationUpdate": {
+      "type": "object",
+      "description": "Update a Medication",
+      "required": [
+        "id",
+        "created_employee_id",
+        "updated_employee_id"
+      ],
+      "properties": {
+        "administered_by_nurse": {
+          "$ref": "#/definitions/AdministeredByNurse"
+        },
+        "administrator": {
+          "type": "string",
+          "description": "Whether a health care professional has been notified.",
+          "example": true
+        },
+        "basal_rate_range": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`."
+        },
+        "bolus_frequency": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`."
+        },
+        "bolus_rate_range": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`."
+        },
+        "comments": {
+          "type": "string"
+        },
+        "concentration": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`."
+        },
+        "created_employee_id": {
+          "type": "integer",
+          "description": "The ID of the employee that created the entity."
+        },
+        "delivery_mode": {
+          "$ref": "#/definitions/DeliveryMode"
+        },
+        "delivery_mode_other": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_other`.",
+          "example": "ambulatory_pump_pca"
+        },
+        "discrepancy": {
+          "$ref": "#/definitions/Discrepancy"
+        },
+        "discrepancy_note": {
+          "type": "string"
+        },
+        "discrepancy_status": {
+          "$ref": "#/definitions/DiscrepancyStatus"
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "The external ID of the client.",
+          "example": "client_1234"
+        },
+        "high_alert": {
+          "type": "boolean",
+          "description": "Whether the medication has been flagged as a high alert.",
+          "example": true
+        },
+        "information_source": {
+          "$ref": "#/definitions/InformationSource"
+        },
+        "max_boluses": {
+          "type": "string",
+          "description": "Set only if `delivery_mode` is  `ambulatory_pump_pca`."
+        },
+        "special_instructions": {
+          "type": "string",
+          "description": "Special instructions if required."
+        },
+        "status": {
+          "$ref": "#/definitions/Status"
+        },
+        "updated_employee_id": {
+          "type": "integer",
+          "description": "The ID of the employee that last updated the entity."
+        }
+      }
+    },
+    "MedicationList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of the medications",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Medication"
+          }
+        }
+      }
+    },
+    "MedicationAdministration": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MedicationAdministrationCreate"
+        }
+      ],
+      "type": "object",
+      "description": "Medication admninistration details",
+      "required": [
+        "medication_id",
+        "created_employee_id",
+        "date_complete",
+        "id",
+        "updated_employee_id"
+      ]
+    },
+    "MedicationAdministrationCreate": {
+      "type": "object",
+      "description": "Medication admninistration details",
+      "required": [
+        "medication_id",
+        "created_employee_id",
+        "updated_employee_id"
+      ],
+      "properties": {
+        "amount_given": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "bolus_dose": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "bolus_dose_lockout": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "bolus_doses_attempted": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "bolus_doses_given": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "comments": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "Any additional comments for the administration."
+        },
+        "concentration": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "created_employee_id": {
+          "type": "integer",
+          "description": "The ID of the employee that created the entity."
+        },
+        "date_complete": {
+          "type": "string",
+          "description": "The date that the medication was administered using ISO 8601 date-time formatting. The default is now.",
+          "example": "2018-01-01T00:30:00+00:00"
+        },
+        "delivery_cycle": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "delivery_mode": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "delivery_period": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "device_type": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "did_not_administer": {
+          "type": "boolean",
+          "description": "Whether the medication was held. The default is `false`.",
+          "example": false
+        },
+        "dose": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "dose_volume": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "duration": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "hourly_rate": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "id": {
+          "type": "string"
+        },
+        "infusion_duration": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "initial_rate": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "kvo_rate": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "line_primed": {
+          "$ref": "#/definitions/YesNo"
+        },
+        "lock_level": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "max_bolus_dose": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "medication_id": {
+          "type": "string",
+          "description": "The ID of the medication being administered.",
+          "example": "7f835fe4-4485-44de-a6b8-00a0c1438327"
+        },
+        "next_dose_start_time": {
+          "type": "string",
+          "x-nullable": true,
+          "description": "The start time of the next dose using ISO 8601 date-time formatting."
+        },
+        "plateau_rate": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "rate": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "rate_increment": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "reservoir_bag_change": {
+          "$ref": "#/definitions/YesNo"
+        },
+        "residual_volume": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "route": {
+          "type": "string",
+          "x-nullable": true,
+          "example": "The route that was used in the administration."
+        },
+        "step_duration": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "taper": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "total_given": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "updated_employee_id": {
+          "type": "integer",
+          "description": "The ID of the employee that last updated the entity."
+        }
+      }
+    },
+    "MedicationAdministrationList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of the medication administration",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MedicationAdministration"
+          }
+        }
+      }
+    },
+    "VitalName": {
+      "type": "string",
+      "description": "The name identifying the vital type.",
+      "enum": [
+        "blood_glucose",
+        "bmi",
+        "height",
+        "pulse",
+        "pressure_min",
+        "pressure_max",
+        "weight",
+        "respiratory_rate",
+        "spo2",
+        "temperature"
+      ],
+      "example": "pressure_max"
+    },
+    "VitalUnits": {
+      "type": "string",
+      "description": "The unit used to record the vital.",
+      "enum": [
+        "c",
+        "f",
+        "kgs",
+        "lb",
+        "bpm",
+        "breaths_pm",
+        "mmhg",
+        "cm",
+        "in",
+        "mmol_l",
+        "mg_dl",
+        "kg_m2",
+        "%"
+      ],
+      "example": "mmhg"
+    },
+    "VitalOptionPosition": {
+      "type": "string",
+      "description": "The position of the client when recording a vital like `blood_pressure` or `pulse`.",
+      "enum": [
+        "lying",
+        "sitting",
+        "standing"
+      ],
+      "example": "sitting"
+    },
+    "VitalOptionRoute": {
+      "type": "string",
+      "description": "The route that awas used when recording a vital like `temperature`.",
+      "enum": [
+        "axillary",
+        "oral",
+        "rectal",
+        "tympanic"
+      ],
+      "example": "oral"
+    },
+    "VitalMetadataOptions": {
+      "type": "object",
+      "description": "The metadata options available for the vital.",
+      "required": [
+        "units"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The options type.",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "object",
+              "properties": {
+                "enum": {
+                  "type": "array",
+                  "description": "The list of available options for the position.",
+                  "items": {
+                    "type": "string",
+                    "example": [
+                      "lying",
+                      "sitting",
+                      "standing"
+                    ]
+                  }
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The `enum` options type.",
+                  "example": "string"
+                }
+              }
+            },
+            "route": {
+              "type": "object",
+              "properties": {
+                "enum": {
+                  "type": "array",
+                  "description": "The list of available options for the route.",
+                  "items": {
+                    "type": "string",
+                    "example": [
+                      "axillary",
+                      "oral",
+                      "rectal",
+                      "tympanic"
+                    ]
+                  }
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The `enum` options type.",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        },
+        "units": {
+          "type": "array",
+          "description": "A list of units available for the vital.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "The unit label.",
+                "example": "mmHg"
+              },
+              "value": {
+                "type": "string",
+                "description": "The unit code.",
+                "example": "mmhg"
+              }
+            }
+          }
+        }
+      }
+    },
+    "VitalMetadata": {
+      "type": "object",
+      "description": "Vital metadata",
+      "required": [
+        "active",
+        "label",
+        "groups",
+        "max",
+        "min",
+        "name",
+        "options",
+        "unit"
+      ],
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "description": "Whether the vital is active.",
+          "example": true
+        },
+        "groups": {
+          "type": "array",
+          "description": "The groups to which the vital belongs. If no groups are set, this will be set to `name`.",
+          "items": {
+            "type": "string",
+            "example": "blood_pressure"
+          }
+        },
+        "label": {
+          "type": "string",
+          "description": "The vital label.",
+          "example": "Systolic Blood pressure"
+        },
+        "max": {
+          "type": "number",
+          "description": "The maximum threshold for the vital.",
+          "example": 120
+        },
+        "min": {
+          "type": "number",
+          "description": "The minimum threshold for the vital.",
+          "example": 60
+        },
+        "name": {
+          "$ref": "#/definitions/VitalName"
+        },
+        "options": {
+          "$ref": "#/definitions/VitalMetadataOptions"
+        },
+        "unit": {
+          "type": "string",
+          "description": "The default unit used for the vital.",
+          "example": "mmhg"
+        }
+      }
+    },
+    "VitalMetadataList": {
+      "type": "object",
+      "description": "A list of vital metadata",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VitalMetadata"
+          }
+        }
+      }
+    },
+    "VitalOptions": {
+      "type": "object",
+      "x-nullable": true,
+      "description": "Additional options required for some vital types.",
+      "properties": {
+        "position": {
+          "$ref": "#/definitions/VitalOptionPosition"
+        },
+        "route": {
+          "$ref": "#/definitions/VitalOptionRoute"
+        }
+      }
+    },
+    "VitalCreate": {
+      "type": "object",
+      "description": "Vital details",
+      "required": [
+        "client_id",
+        "external_client_id",
+        "name",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "client_id": {
+          "type": "integer",
+          "description": "The client ID.",
+          "example": 1234
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "The external client ID.",
+          "example": "client_1234"
+        },
+        "comments": {
+          "x-nullable": true,
+          "type": "string",
+          "description": "A comment.",
+          "example": "No unexpected results"
+        },
+        "group": {
+          "x-nullable": true,
+          "type": "string",
+          "description": "The vital group. This is used to group together separate vitals that are measured together like low and high blood pressure. If no group, this should be set to `name`.",
+          "example": "blood_pressure"
+        },
+        "name": {
+          "$ref": "#/definitions/VitalName"
+        },
+        "options": {
+          "$ref": "#/definitions/VitalOptions"
+        },
+        "session_guid": {
+          "type": "string",
+          "description": "A unique identifier to group vitals recorded together within the same `group`.",
+          "example": "97a3e055-2fd1-469d-a058-b173499e37ff"
+        },
+        "source": {
+          "type": "string",
+          "description": "A description of how the vital was recorded. This may be set if the client recorded the vital themselves.",
+          "example": "default"
+        },
+        "unit": {
+          "$ref": "#/definitions/VitalUnits"
+        },
+        "user_guid": {
+          "x-nullable": true,
+          "type": "integer",
+          "description": "The `guid` of the user that created the vital. This will generally be the `guid` of the employee, unless the `source` or `user_type` indicate otherwise.",
+          "example": 234
+        },
+        "user_type": {
+          "type": "string",
+          "description": "The type of user that created the vital. Generally this will not be set unless thesomeone other than an employee created the vital.",
+          "x-nullable": true,
+          "example": null
+        },
+        "value": {
+          "type": "number",
+          "description": "The value of the recorded vital.",
+          "example": 38.4
+        }
+      }
+    },
+    "Vital": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/VitalCreate"
+        }
+      ],
+      "type": "object",
+      "description": "Vital details",
+      "required": [
+        "client_id",
+        "id",
+        "name",
+        "date",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "The created date using ISO 8601 date-time formatting.",
+          "example": "2018-01-01T00:30:00+00:00"
+        },
+        "id": {
+          "type": "string",
+          "description": "The vital ID.",
+          "example": "adedb729-54fa-473e-b929-9c71ef5c248e"
+        }
+      }
+    },
+    "VitalList": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "A list of vitals",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Vital"
+          }
+        }
+      }
+    },
+    "VitalLatest": {
+      "type": "object",
+      "description": "Latest vital details",
+      "required": [
+        "name",
+        "group",
+        "date",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "comments": {
+          "type": "string",
+          "description": "A comment.",
+          "example": "No unexpected results"
+        },
+        "date": {
+          "type": "string",
+          "description": "The created date using ISO 8601 date-time formatting.",
+          "example": "2018-01-01T00:30:00+00:00"
+        },
+        "group": {
+          "type": "string",
+          "description": "The vital group. This is used to group together separate vitals that are measured together like low and high blood pressure. If no group, this should default to `name`.",
+          "example": "blood_pressure"
+        },
+        "name": {
+          "$ref": "#/definitions/VitalName"
+        },
+        "session_guid": {
+          "type": "string",
+          "description": "A unique identifier to group vitals recorded together within the same `group`.",
+          "example": "97a3e055-2fd1-469d-a058-b173499e37ff"
+        },
+        "source": {
+          "type": "string",
+          "description": "A description of how the vital was recorded. This may be set if the client recorded the vital themselves.",
+          "example": "default"
+        },
+        "threshold_level": {
+          "type": "string",
+          "description": "The level of threshold that was reached. This will be `null` if no threshold was reached.",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "example": "high"
+        },
+        "threshold_reached": {
+          "type": "string",
+          "description": "The threshold that was reached.",
+          "enum": [
+            "min",
+            "max"
+          ],
+          "example": "max"
+        },
+        "unit": {
+          "$ref": "#/definitions/VitalUnits"
+        },
+        "value": {
+          "type": "number",
+          "description": "The value of the recorded vital.",
+          "example": 38.4
+        }
+      }
+    },
+    "VitalLatestList": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "A list of the latest vital for each type.",
+      "properties": {
+        "items": {
+          "type": "object",
+          "description": "The vital details for each vital type.",
+          "properties": {
+            "presure_max": {
+              "$ref": "#/definitions/VitalLatest"
+            }
+          }
+        }
+      }
+    },
+    "InterventionService": {
+      "description": "Intervention service",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare service ID",
+          "example": 1
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External service ID",
+          "example": "sor_service_external_id_1",
+          "x-nullable": true
+        }
+      }
+    },
+    "Intervention": {
+      "type": "object",
+      "description": "Care plan intervention",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Intervention name",
+          "example": "brush teeth"
+        },
+        "description": {
+          "type": "string",
+          "description": "Intervention description",
+          "example": "brush teeth"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the intervention",
+          "enum": [
+            "draft",
+            "active",
+            "completed",
+            "archived"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "description": "One of the types defined in the setting \"Care Documentation > Care Plan Intervention Types\"",
+          "example": "Nursing"
+        },
+        "start_date": {
+          "type": "string",
+          "description": "Intervention start date",
+          "example": "2018-01-01"
+        },
+        "end_date": {
+          "type": "string",
+          "description": "Intervention end date",
+          "example": "2018-01-01"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InterventionService"
+          }
+        }
+      }
+    },
+    "InterventionList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of interventions",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Intervention"
+          }
+        }
+      }
+    }
+  }
+}

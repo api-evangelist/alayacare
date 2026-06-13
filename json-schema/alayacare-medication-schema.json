@@ -1,0 +1,681 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Medication API Schemas",
+  "definitions": {
+    "Medication": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "brand_name": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "ingredient_strength": {
+              "type": "string",
+              "example": "350"
+            },
+            "ingredient_strength_unit": {
+              "type": "string",
+              "example": "mg",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_unit_setting?is_ingredient_strength=true\""
+            },
+            "dosage": {
+              "type": "string",
+              "example": "350"
+            },
+            "dosage_unit": {
+              "type": "string",
+              "example": "mg",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_unit_setting?is_dosage_quantity=true\""
+            },
+            "dosage_form": {
+              "type": "string",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_unit_setting?is_dosage_form=true\""
+            },
+            "drug_info_number": {
+              "type": "string"
+            },
+            "drug_family": {
+              "type": "string",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_drug_family_setting\""
+            },
+            "route": {
+              "type": "string",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_medication_route_setting\""
+            },
+            "administration_type": {
+              "type": "string",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_administration_type_setting"
+            },
+            "prn_reason": {
+              "type": "string",
+              "description": "Its only accepted when prn_as_needed is true"
+            },
+            "prn_as_needed": {
+              "type": "boolean"
+            },
+            "purpose": {
+              "type": "string"
+            },
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_medication_type_setting"
+            },
+            "website": {
+              "type": "string"
+            },
+            "high_alert": {
+              "type": "boolean"
+            },
+            "narcotic": {
+              "type": "boolean"
+            },
+            "ordering_physician": {
+              "type": "string"
+            },
+            "status_reason": {
+              "type": "string"
+            },
+            "frequency_setting": {
+              "type": "string",
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_frequency_setting\""
+            },
+            "start_date": {
+              "type": "string",
+              "description": "Format: YYYY-MM-DD"
+            },
+            "start_time": {
+              "type": "string",
+              "description": "Format: HH:mm:ss"
+            },
+            "end_date": {
+              "type": "string",
+              "description": "Format: YYYY-MM-DD"
+            },
+            "end_time": {
+              "type": "string",
+              "description": "Format: HH:mm:ss"
+            },
+            "start_date_unknown": {
+              "type": "boolean",
+              "default": false
+            },
+            "end_date_unknown": {
+              "type": "boolean",
+              "default": false
+            },
+            "administration_instructions": {
+              "type": "string"
+            },
+            "timing_notes": {
+              "type": "string"
+            },
+            "administration_site_details": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Options are the response of GET \"/medication_settings/{branch_id}/medication_administration_site_details_setting\""
+            },
+            "healthcare_professional_notified": {
+              "type": "string"
+            },
+            "needs_education": {
+              "type": "boolean"
+            },
+            "frequency": {
+              "type": "integer",
+              "example": 2
+            },
+            "frequency_max": {
+              "type": "integer"
+            },
+            "period": {
+              "type": "integer",
+              "example": 1
+            },
+            "period_max": {
+              "type": "integer"
+            },
+            "period_unit": {
+              "type": "string"
+            },
+            "duration": {
+              "type": "integer"
+            },
+            "duration_unit": {
+              "type": "string"
+            },
+            "timings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "weekdays": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": "MO, TU, WE, TH, FR, SA, SU"
+            },
+            "count": {
+              "type": "integer"
+            },
+            "time_of_day": {
+              "type": "string",
+              "description": "Options are "
+            },
+            "days_of_month": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Options are from 01 to 31"
+            },
+            "when": {
+              "type": "string"
+            },
+            "strict": {
+              "type": "boolean"
+            },
+            "create_user_id": {
+              "type": "integer"
+            },
+            "update_user_id": {
+              "type": "integer"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delivery_mode": {
+              "type": "string",
+              "description": "Required for infusion routes."
+            },
+            "concentration": {
+              "type": "number",
+              "format": "float"
+            },
+            "concentration_unit": {
+              "type": "string"
+            },
+            "infusion_fluid": {
+              "type": "string"
+            },
+            "ongoing": {
+              "type": "boolean"
+            },
+            "infusion_duration": {
+              "type": "integer"
+            },
+            "infusion_duration_unit": {
+              "type": "string"
+            },
+            "infusion_volume": {
+              "type": "number",
+              "format": "float"
+            },
+            "infusion_volume_unit": {
+              "type": "string"
+            },
+            "infusion_rate": {
+              "type": "number",
+              "format": "float"
+            },
+            "infusion_rate_unit": {
+              "type": "string"
+            },
+            "is_simplified_infusion": {
+              "type": "boolean",
+              "nullable": false,
+              "description": "Required for infusion routes."
+            },
+            "pre_infusion_flush_fluid": {
+              "type": "string"
+            },
+            "pre_infusion_flush_volume": {
+              "type": "number",
+              "format": "float"
+            },
+            "pre_infusion_flush_volume_max": {
+              "type": "number",
+              "format": "float"
+            },
+            "pre_infusion_flush_volume_unit": {
+              "type": "string"
+            },
+            "post_infusion_flush_fluid": {
+              "type": "string"
+            },
+            "post_infusion_flush_volume": {
+              "type": "number",
+              "format": "float"
+            },
+            "post_infusion_flush_volume_max": {
+              "type": "number",
+              "format": "float"
+            },
+            "post_infusion_flush_volume_unit": {
+              "type": "string"
+            },
+            "basal_rate": {
+              "type": "number",
+              "format": "float"
+            },
+            "basal_rate_max": {
+              "type": "number",
+              "format": "float"
+            },
+            "basal_rate_unit": {
+              "type": "string"
+            },
+            "bolus_frequency": {
+              "type": "integer"
+            },
+            "bolus_frequency_unit": {
+              "type": "string"
+            },
+            "bolus_rate": {
+              "type": "number",
+              "format": "float"
+            },
+            "bolus_rate_max": {
+              "type": "number",
+              "format": "float"
+            },
+            "bolus_rate_unit": {
+              "type": "string"
+            },
+            "max_boluses": {
+              "type": "string"
+            },
+            "infusion_instructions": {
+              "type": "string",
+              "description": "Required for simplified infusions."
+            }
+          }
+        }
+      ]
+    },
+    "MedicationList": {
+      "properties": {
+        "items": {
+          "$ref": "#/components/schemas/Medication"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "items_per_page": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "total_pages": {
+          "type": "integer"
+        }
+      }
+    },
+    "CreateMedication": {
+      "type": "object",
+      "required": [
+        "name",
+        "status",
+        "dosage",
+        "dosage_unit",
+        "route",
+        "administration_type",
+        "frequency_setting",
+        "start_date",
+        "start_time",
+        "start_date_unknown"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/Medication"
+        }
+      ]
+    },
+    "MedicationSettings": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "branch_id": {
+          "type": "integer"
+        },
+        "is_enabled": {
+          "type": "boolean"
+        },
+        "is_override": {
+          "type": "boolean"
+        },
+        "is_ingredient_strength": {
+          "type": "boolean"
+        },
+        "is_dosage_form": {
+          "type": "boolean"
+        },
+        "is_dosage_quantity": {
+          "type": "boolean"
+        },
+        "is_infusion": {
+          "type": "boolean"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "default_label": {
+                "type": "string",
+                "description": "standard label"
+              },
+              "label": {
+                "type": "string",
+                "description": "organization label"
+              },
+              "lang": {
+                "type": "string",
+                "description": "language"
+              }
+            }
+          }
+        },
+        "frequency": {
+          "type": "integer"
+        },
+        "frequency_max": {
+          "type": "integer"
+        },
+        "period": {
+          "type": "integer"
+        },
+        "period_max": {
+          "type": "integer"
+        },
+        "period_unit": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "duration_unit": {
+          "type": "string"
+        },
+        "timings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "07:00",
+            "10:00"
+          ]
+        },
+        "weekdays": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "MO",
+            "TU"
+          ]
+        },
+        "count": {
+          "type": "integer"
+        },
+        "time_of_day": {
+          "type": "string"
+        },
+        "days_of_month": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "example": [
+            15,
+            25
+          ]
+        },
+        "when": {
+          "type": "string"
+        },
+        "min_timings_count": {
+          "type": "integer"
+        },
+        "max_timings_count": {
+          "type": "integer"
+        },
+        "min_weekdays_count": {
+          "type": "integer"
+        },
+        "max_weekdays_count": {
+          "type": "integer"
+        },
+        "min_days_of_month_count": {
+          "type": "integer"
+        },
+        "max_days_of_month_count": {
+          "type": "integer"
+        },
+        "strict": {
+          "type": "boolean",
+          "example": false,
+          "description": "If true, each timing must contain the expected interval of hours between each other."
+        },
+        "interval": {
+          "type": "integer"
+        },
+        "interval_max": {
+          "type": "integer"
+        },
+        "infusion_fluid_section": {
+          "description": "Defines validation of infusion fluid section",
+          "type": "string",
+          "x-nullable": true,
+          "enum": [
+            "required",
+            "not_allowed"
+          ],
+          "example": "required"
+        },
+        "pre_infusion_flush_section": {
+          "description": "Defines validation of pre infusion flush section",
+          "type": "string",
+          "x-nullable": true,
+          "enum": [
+            "recommended"
+          ],
+          "example": "recommended"
+        },
+        "post_infusion_flush_section": {
+          "description": "Defines validation of post infusion flush section",
+          "type": "string",
+          "x-nullable": true,
+          "enum": [
+            "recommended"
+          ],
+          "example": "recommended"
+        },
+        "basal_rate_section": {
+          "description": "Defines validation of basal rate section",
+          "type": "string",
+          "x-nullable": true,
+          "enum": [
+            "recommended",
+            "not_allowed"
+          ],
+          "example": "recommended"
+        },
+        "bolus_section": {
+          "description": "Defines validation of bolus section",
+          "type": "string",
+          "x-nullable": true,
+          "enum": [
+            "recommended",
+            "not_allowed"
+          ],
+          "example": "recommended"
+        },
+        "admin_primary_section": {
+          "description": "Defines whether primary section is available in administration or not",
+          "type": "string",
+          "enum": [
+            "allowed",
+            "only_main",
+            "without_reservoir",
+            "forbidden"
+          ],
+          "example": "allowed",
+          "x-nullable": false,
+          "default": "allowed"
+        },
+        "admin_pca_section": {
+          "description": "Defines whether pca section is available in administration or not",
+          "type": "string",
+          "enum": [
+            "allowed",
+            "forbidden"
+          ],
+          "example": "allowed",
+          "x-nullable": false,
+          "default": "allowed"
+        },
+        "admin_insulin_section": {
+          "description": "Defines whether insulin section is available in administration or not",
+          "type": "string",
+          "enum": [
+            "allowed",
+            "forbidden"
+          ],
+          "example": "allowed",
+          "x-nullable": false,
+          "default": "allowed"
+        },
+        "admin_bolus_section": {
+          "description": "Defines whether bolus section is available in administration or not",
+          "type": "string",
+          "enum": [
+            "allowed",
+            "forbidden"
+          ],
+          "example": "allowed",
+          "x-nullable": false,
+          "default": "allowed"
+        }
+      }
+    },
+    "MedicationSettingList": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/MedicationSettings"
+          }
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number"
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages available"
+        }
+      }
+    },
+    "MedicationSettingBranchList": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "example": {
+        "medication_administration_reason_setting": {
+          "declined_dislikes_taste": {
+            "labels": {
+              "en": "Declined - Dislikes taste",
+              "fr": "Declined - Dislikes taste"
+            }
+          },
+          "declined_side_effects": {
+            "labels": {
+              "en": "Declined - Side effects",
+              "fr": "Declined - Side effects"
+            }
+          }
+        },
+        "medication_unit_setting": {
+          "aplicatorful_s": {
+            "is_ingredient_strength": true,
+            "is_dosage_form": true,
+            "is_dosage_quantity": true,
+            "labels": {
+              "en": "Applicatorful(s)",
+              "fr": "Applicatorful(s)"
+            }
+          },
+          "strip_s": {
+            "is_ingredient_strength": true,
+            "is_dosage_form": true,
+            "is_dosage_quantity": true,
+            "labels": {
+              "en": "Strip(s)",
+              "fr": "Strip(s)"
+            }
+          }
+        }
+      }
+    },
+    "APIError": {
+      "type": "object",
+      "description": "Error returned from the API",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The error code",
+          "example": "500"
+        },
+        "message": {
+          "type": "string",
+          "example": "An error occurred",
+          "description": "The error description"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    }
+  }
+}

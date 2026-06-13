@@ -1,0 +1,99 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "alaya": "https://alayacare.com/vocab/",
+    "fhir": "http://hl7.org/fhir/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Client": "alaya:Client",
+    "Employee": "alaya:Employee",
+    "Visit": "alaya:Visit",
+    "Task": "alaya:Task",
+    "Form": "alaya:Form",
+    "Medication": "alaya:Medication",
+    "ClinicalNote": "alaya:ClinicalNote",
+    "CarePlan": "alaya:CarePlan",
+    "Invoice": "alaya:Invoice",
+    "ShiftOffer": "alaya:ShiftOffer",
+    "Organization": "alaya:Organization",
+    "Branch": "alaya:Branch",
+    "Service": "alaya:Service",
+
+    "client_id": { "@id": "alaya:clientId", "@type": "xsd:integer" },
+    "external_client_id": { "@id": "alaya:externalClientId", "@type": "xsd:string" },
+    "employee_id": { "@id": "alaya:employeeId", "@type": "xsd:integer" },
+    "external_employee_id": { "@id": "alaya:externalEmployeeId", "@type": "xsd:string" },
+    "visit_id": { "@id": "alaya:visitId", "@type": "xsd:integer" },
+    "task_id": { "@id": "alaya:taskId", "@type": "xsd:integer" },
+    "form_id": { "@id": "alaya:formId", "@type": "xsd:integer" },
+    "medication_id": { "@id": "alaya:medicationId", "@type": "xsd:integer" },
+    "care_plan_id": { "@id": "alaya:carePlanId", "@type": "xsd:integer" },
+    "invoice_id": { "@id": "alaya:invoiceId", "@type": "xsd:integer" },
+
+    "first_name": { "@id": "schema:givenName" },
+    "last_name": { "@id": "schema:familyName" },
+    "email": { "@id": "schema:email" },
+    "phone": { "@id": "schema:telephone" },
+    "date_of_birth": { "@id": "schema:birthDate", "@type": "xsd:date" },
+    "gender": { "@id": "schema:gender" },
+    "address": { "@id": "schema:address" },
+    "city": { "@id": "schema:addressLocality" },
+    "province": { "@id": "schema:addressRegion" },
+    "country": { "@id": "schema:addressCountry" },
+    "postal_code": { "@id": "schema:postalCode" },
+
+    "status": { "@id": "alaya:status", "@type": "xsd:string" },
+    "start_date": { "@id": "alaya:startDate", "@type": "xsd:dateTime" },
+    "end_date": { "@id": "alaya:endDate", "@type": "xsd:dateTime" },
+    "created_at": { "@id": "alaya:createdAt", "@type": "xsd:dateTime" },
+    "updated_at": { "@id": "alaya:updatedAt", "@type": "xsd:dateTime" },
+
+    "branch_id": { "@id": "alaya:branchId", "@type": "xsd:integer" },
+    "department_id": { "@id": "alaya:departmentId", "@type": "xsd:integer" },
+    "designation_id": { "@id": "alaya:designationId", "@type": "xsd:integer" },
+    "service_id": { "@id": "alaya:serviceId", "@type": "xsd:integer" },
+
+    "diagnosis": { "@id": "fhir:Condition" },
+    "medication_name": { "@id": "fhir:Medication.name" },
+    "dosage": { "@id": "fhir:Dosage" },
+    "vital_signs": { "@id": "fhir:Observation" },
+    "progress_note": { "@id": "fhir:DocumentReference" },
+
+    "shift_offer": { "@id": "alaya:ShiftOffer" },
+    "demand_organization": { "@id": "alaya:DemandOrganization" },
+    "supply_organization": { "@id": "alaya:SupplyOrganization" },
+    "marketplace": { "@id": "alaya:AlayaMarket" },
+
+    "billing_code": { "@id": "alaya:billingCode" },
+    "invoice_amount": { "@id": "schema:price", "@type": "xsd:decimal" },
+    "currency": { "@id": "schema:priceCurrency" },
+    "payment_status": { "@id": "alaya:paymentStatus" },
+
+    "pagination": { "@id": "alaya:Pagination" },
+    "page": { "@id": "alaya:page", "@type": "xsd:integer" },
+    "per_page": { "@id": "alaya:perPage", "@type": "xsd:integer" },
+    "total": { "@id": "alaya:total", "@type": "xsd:integer" },
+
+    "provider": {
+      "@id": "schema:Organization",
+      "@type": "@id"
+    },
+    "name": "schema:name",
+    "description": "schema:description",
+    "identifier": "schema:identifier",
+    "url": { "@id": "schema:url", "@type": "@id" }
+  },
+  "@graph": [
+    {
+      "@type": "schema:Organization",
+      "name": "AlayaCare",
+      "description": "Cloud-based home and community care management platform providing REST APIs for managing client profiles, scheduling visits, documenting clinical care, processing billing, and tracking patient outcomes.",
+      "url": "https://alayacare.com/",
+      "schema:sameAs": [
+        "https://github.com/AlayaCare",
+        "https://www.linkedin.com/company/alayacare/"
+      ]
+    }
+  ]
+}

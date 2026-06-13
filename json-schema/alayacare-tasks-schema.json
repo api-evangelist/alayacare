@@ -1,0 +1,531 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Tasks API Schemas",
+  "definitions": {
+    "ErrorResponse": {
+      "description": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed error message"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "Branch": {
+      "description": "AlayaCare Branch",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Branch ID",
+          "example": 1000
+        },
+        "name": {
+          "type": "string",
+          "description": "Branch name",
+          "example": "AlayaCare Health"
+        }
+      }
+    },
+    "FormField": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The form field identifier.",
+          "example": 1234
+        },
+        "name": {
+          "type": "string",
+          "description": "The form field identifier.",
+          "example": "field_1234"
+        },
+        "label": {
+          "type": "string",
+          "description": "The form field label.",
+          "example": "Enter the client pain levels."
+        },
+        "type": {
+          "type": "string",
+          "description": "The form field type. This should exclude any types associated to file uploads (e.g. `picture`, `signature`, etc).",
+          "example": "list"
+        },
+        "list": {
+          "type": "array",
+          "description": "A list of options if the form field type is `list` or `ist_multiple`.",
+          "items": {
+            "type": "string",
+            "example": "Moderate pain"
+          }
+        }
+      }
+    },
+    "FormRead": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Report form ID of the task.",
+          "example": 1604
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the report form. Limited to 256 chars.\n",
+          "example": "New Client Assessment"
+        }
+      }
+    },
+    "Form": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Report form ID of the task.",
+          "example": 1604
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the report form. Limited to 256 chars.\n",
+          "example": "New Client Assessment"
+        },
+        "dispatch_fields": {
+          "type": "array",
+          "description": "The dispatch fields associated to the report form.",
+          "items": {
+            "$ref": "#/definitions/FormField"
+          }
+        },
+        "branch": {
+          "$ref": "#/definitions/Branch"
+        }
+      }
+    },
+    "FormCreate": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Report form ID of the task.",
+          "example": 1604
+        }
+      }
+    },
+    "FormList": {
+      "required": [
+        "count",
+        "page",
+        "total_pages",
+        "items"
+      ],
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": null
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages available",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Form"
+          }
+        }
+      }
+    },
+    "ReportFieldCreate": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The form field identifier.",
+          "example": "field_1234"
+        },
+        "value": {
+          "type": "string",
+          "description": "The form field value.",
+          "example": "Client input data."
+        }
+      }
+    },
+    "ReportField": {
+      "type": "object",
+      "required": [
+        "id",
+        "field_id",
+        "name",
+        "type",
+        "label"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The report field identifier.",
+          "example": 321
+        },
+        "field_id": {
+          "type": "integer",
+          "description": "The form field identifier.",
+          "example": 1234
+        },
+        "name": {
+          "type": "string",
+          "description": "The form field identifier name.",
+          "example": "field_1234"
+        },
+        "type": {
+          "type": "string",
+          "description": "The form field type.",
+          "example": "text"
+        },
+        "label": {
+          "type": "string",
+          "description": "The form field label describing the field.",
+          "example": "Record the client condition"
+        },
+        "value": {
+          "type": "string",
+          "description": "The form field value entered by the user.",
+          "example": "Client condition has improved"
+        }
+      }
+    },
+    "ReportRead": {
+      "type": "object",
+      "required": [
+        "id",
+        "form_id",
+        "fields"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The Report ID.",
+          "example": 1234
+        },
+        "form_id": {
+          "type": "integer",
+          "description": "The ID of the Report Form field.",
+          "example": 4567
+        },
+        "fields": {
+          "type": "array",
+          "description": "The Report field values.",
+          "items": {
+            "$ref": "#/definitions/ReportField"
+          }
+        }
+      }
+    },
+    "ReportCreate": {
+      "type": "object",
+      "required": [
+        "fields"
+      ],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "description": "The Report fied values.",
+          "items": {
+            "$ref": "#/definitions/ReportFieldCreate"
+          }
+        }
+      }
+    },
+    "TaskStatus": {
+      "type": "string",
+      "description": "Task status.",
+      "enum": [
+        "open",
+        "on_hold",
+        "pending",
+        "closed",
+        "rejected"
+      ]
+    },
+    "TaskPriority": {
+      "type": "string",
+      "description": "Task priority. Not a required field; default value is `low`.",
+      "enum": [
+        "low",
+        "normal",
+        "important",
+        "urgent"
+      ]
+    },
+    "TaskList": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages available",
+          "example": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Task"
+          }
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "required": [
+        "branch_id",
+        "description",
+        "created_at",
+        "create_user_id",
+        "update_user_id",
+        "updated_by",
+        "priority",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the task.",
+          "example": 1718
+        },
+        "form": {
+          "$ref": "#/definitions/FormRead"
+        },
+        "report": {
+          "$ref": "#/definitions/ReportRead"
+        },
+        "description": {
+          "type": "string",
+          "description": "Task description.",
+          "example": "Call client for assessment."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date task was created (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "create_user_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the employee who created the task.",
+          "example": 100
+        },
+        "create_user_name": {
+          "type": "string",
+          "description": "Name of the employee that created the task.",
+          "example": "Amanda Atkins"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date task was updated (ISO 8601)",
+          "example": "2017-07-08T13:30:00+00:00"
+        },
+        "update_user_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the employee who updated the task.",
+          "example": 100
+        },
+        "update_user_name": {
+          "type": "string",
+          "description": "Name of the employee that updated the task.",
+          "example": "Amanda Atkins"
+        },
+        "due_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and/or time when task is due. (ISO 8601)",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "priority": {
+          "$ref": "#/definitions/TaskPriority"
+        },
+        "status": {
+          "$ref": "#/definitions/TaskStatus"
+        },
+        "employee_id": {
+          "type": "integer",
+          "description": "ID of the employee assigned to the task.",
+          "example": 104
+        },
+        "employee_name": {
+          "type": "string",
+          "description": "Name of the employee assigned to the task.",
+          "example": "Amanda Atkins"
+        },
+        "external_employee_id": {
+          "type": "string",
+          "description": "External ID of the employee assigned to the task.",
+          "example": "sor_id_1"
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the client assigned to the task.",
+          "example": 5432
+        },
+        "client_name": {
+          "type": "string",
+          "description": "Name of the client assigned to the task.",
+          "example": "Steve Rogers"
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "External client ID.",
+          "example": "sor_id_1"
+        },
+        "details": {
+          "type": "string",
+          "description": "Details of the task.",
+          "example": "Client prefers mobile phone after 4pm."
+        },
+        "branch_id": {
+          "type": "integer",
+          "description": "ID of the task branch.",
+          "example": 1000
+        }
+      }
+    },
+    "TaskCreate": {
+      "type": "object",
+      "required": [
+        "description"
+      ],
+      "properties": {
+        "form": {
+          "$ref": "#/definitions/FormCreate"
+        },
+        "report": {
+          "$ref": "#/definitions/ReportCreate"
+        },
+        "description": {
+          "type": "string",
+          "description": "Task description. Limited to 256 chars.\n",
+          "example": "Call client for assessment."
+        },
+        "due_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and/or time when task is due. (ISO 8601).",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "priority": {
+          "$ref": "#/definitions/TaskPriority"
+        },
+        "employee_id": {
+          "type": "integer",
+          "description": "ID of the employee assigned to the task.",
+          "example": 104
+        },
+        "external_employee_id": {
+          "type": "string",
+          "description": "External ID of the employee assigned to the task.",
+          "example": "sor_id_1"
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the client assigned to the task.",
+          "example": 5432
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "External client ID.",
+          "example": "sor_id_1"
+        },
+        "details": {
+          "type": "string",
+          "description": "Details of the task.",
+          "example": "Client prefers mobile phone after 4pm."
+        }
+      }
+    },
+    "TaskUpdate": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Task description.",
+          "example": "Call client for assessment."
+        },
+        "due_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and/or time when task is due. (ISO 8601).",
+          "example": "2017-07-08T14:00:00+00:00"
+        },
+        "priority": {
+          "$ref": "#/definitions/TaskPriority"
+        },
+        "employee_id": {
+          "type": "integer",
+          "description": "ID of the employee assigned to the task.",
+          "example": 104
+        },
+        "external_employee_id": {
+          "type": "string",
+          "description": "External ID of the employee assigned to the task.",
+          "example": "sor_id_1"
+        },
+        "client_id": {
+          "type": "integer",
+          "description": "AlayaCare ID of the client assigned to the task.",
+          "example": 5432
+        },
+        "external_client_id": {
+          "type": "string",
+          "description": "External client ID.",
+          "example": "sor_id_1"
+        },
+        "details": {
+          "type": "string",
+          "description": "Details of the task.",
+          "example": "Client prefers mobile phone after 4pm."
+        }
+      }
+    }
+  }
+}

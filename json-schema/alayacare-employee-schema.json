@@ -1,0 +1,1358 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlayaCare Employee API Schemas",
+  "definitions": {
+    "ErrorResponse": {
+      "description": "Error response",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "Response code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed error message"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "DirectoryNotFoundSchema": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "http status response code",
+          "example": 404
+        },
+        "message": {
+          "type": "string",
+          "description": "Detail on the error",
+          "example": "Directory \"Ghost Directory\" not found"
+        }
+      }
+    },
+    "DeleteDirectoryActionSchema": {
+      "type": "object",
+      "properties": {
+        "forced-delete": {
+          "type": "boolean",
+          "description": "required to delete a non-empty directory",
+          "example": true
+        }
+      }
+    },
+    "FileNotFoundSchema": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "http status response code",
+          "example": 404
+        },
+        "message": {
+          "type": "string",
+          "description": "Detail on the error",
+          "example": "File \"/path/file.txt\" not found"
+        }
+      }
+    },
+    "SuccessResponse": {
+      "description": "Success response.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare ID"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External ID",
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "id",
+        "external_id"
+      ]
+    },
+    "Branch": {
+      "description": "AlayaCare branch.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare branch ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare branch name",
+          "example": "Toronto branch"
+        },
+        "profile": {
+          "$ref": "#/definitions/BranchProfile"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "AttachmentAction": {
+      "description": "Attachment actions",
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "example": "move",
+          "enum": [
+            "move",
+            "copy",
+            "rename"
+          ]
+        },
+        "destination": {
+          "type": "string",
+          "example": "dir2/child1/"
+        }
+      }
+    },
+    "BranchList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of branches",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Branch"
+          }
+        }
+      }
+    },
+    "Department": {
+      "description": "AlayaCare department.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare department ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare department name",
+          "example": "Nursing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "DepartmentListItem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Department"
+        }
+      ],
+      "description": "AlayaCare department.",
+      "type": "object",
+      "properties": {
+        "branch": {
+          "$ref": "#/definitions/BranchSummary"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "DepartmentList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of departments",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DepartmentListItem"
+          }
+        }
+      }
+    },
+    "Group": {
+      "description": "AlayaCare group.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "AlayaCare group ID",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "AlayaCare group name",
+          "example": "Group 1"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "GroupListItem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Group"
+        }
+      ],
+      "description": "AlayaCare group item.",
+      "type": "object",
+      "properties": {
+        "branch": {
+          "$ref": "#/definitions/BranchSummary"
+        }
+      }
+    },
+    "GroupList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of groups",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupListItem"
+          }
+        }
+      }
+    },
+    "Designation": {
+      "description": "AlayaCare designation.",
+      "type": "object",
+      "properties": {
+        "designation": {
+          "type": "string",
+          "description": "AlayaCare designation",
+          "example": "RN"
+        }
+      },
+      "required": [
+        "designation"
+      ]
+    },
+    "DesignationList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of designations",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Designation"
+          }
+        }
+      }
+    },
+    "Role": {
+      "description": "AlayaCare role",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the role",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the role",
+          "example": "csc"
+        },
+        "description": {
+          "type": "string",
+          "description": "Name of the role in the web application",
+          "example": "Coordinator"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the role",
+          "example": "admin"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "RoleList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of roles",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/Role"
+              }
+            ],
+            "properties": {
+              "branch": {
+                "$ref": "#/definitions/BranchSummary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "EmploymentType": {
+      "description": "Employment Type",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the employment type",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of employment type",
+          "example": "Full time"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "EmploymentTypeDetailsList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of employment types",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmploymentTypeDetails"
+          }
+        }
+      }
+    },
+    "EmploymentTypeDetails": {
+      "description": "Employment Type Details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the employment type",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of employment type",
+          "example": "Full time"
+        },
+        "branch": {
+          "$ref": "#/definitions/BranchSummary"
+        }
+      }
+    },
+    "EmployeeNotesDetailsList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of employee notes",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeNotesDetails"
+          }
+        }
+      }
+    },
+    "EmployeeNotesDetails": {
+      "description": "An employee note",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the employee note",
+          "example": 123
+        },
+        "status": {
+          "type": "string",
+          "default": "active",
+          "description": "Status of the employee note. Either `active` or `archived`.",
+          "example": "active",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "note_type": {
+          "type": "string",
+          "description": "Note type category of the employee note",
+          "example": "employee_general"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the employee note. A subset of HTML is accepted.",
+          "example": "Employee requested additional training."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date employee note was created (ISO 8601)",
+          "example": "2018-07-08T13:30:00+00:00"
+        },
+        "created_by": {
+          "type": "integer",
+          "description": "AlayaCare ID of the employee who created the employee note.",
+          "example": 1001
+        }
+      }
+    },
+    "EmployeeNotesCreate": {
+      "description": "Employee note data required for creation.",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "default": "active",
+          "description": "Status of the employee note. Either `active` or `archived`.",
+          "example": "active",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "note_type": {
+          "type": "string",
+          "description": "Note type category of the employee note",
+          "example": "employee_general"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the employee note. A subset of HTML is accepted.",
+          "example": "Employee requested additional training."
+        }
+      },
+      "required": [
+        "note_type",
+        "content"
+      ]
+    },
+    "NoteTypesList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of a employee note types",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "note_type": {
+                "type": "string",
+                "description": "Employee note type code",
+                "example": "employee_general"
+              },
+              "name": {
+                "type": "string",
+                "description": "Employee note type display name",
+                "example": "General"
+              }
+            }
+          }
+        }
+      }
+    },
+    "BranchSummary": {
+      "description": "Branch summary",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the branch",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the branch",
+          "example": "Headquarters"
+        }
+      }
+    },
+    "ProfileAttribute": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "description": "Attribute key in the demographics object",
+          "type": "string",
+          "example": "first_name"
+        },
+        "description": {
+          "description": "Attribute description as it shows in the web application",
+          "type": "string",
+          "example": "First Name"
+        }
+      }
+    },
+    "ProfileAttributeList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "Paginated list of profile attributes",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProfileAttribute"
+          }
+        }
+      }
+    },
+    "ProfilePictureUrl": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Pre-authorized profile picture url.",
+          "type": "string",
+          "example": "https://place-hold.it/200"
+        }
+      }
+    },
+    "Skill": {
+      "description": "A skill or qualification associated to an employee",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1234
+        },
+        "name": {
+          "type": "string",
+          "example": "Hoyer lift"
+        }
+      }
+    },
+    "EmployeeDetails": {
+      "description": "AlayaCare employee entity",
+      "type": "object",
+      "properties": {
+        "demographics": {
+          "$ref": "#/definitions/EmployeeDemographics"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "external_id": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "example": 7890
+        },
+        "branch_id": {
+          "type": "integer"
+        },
+        "status": {
+          "$ref": "#/definitions/EmployeeStatus"
+        },
+        "roles": {
+          "type": "array",
+          "description": "Employee roles",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "description": "Employee groups",
+          "items": {
+            "$ref": "#/definitions/Group"
+          }
+        },
+        "departments": {
+          "type": "array",
+          "description": "Employee departments",
+          "items": {
+            "$ref": "#/definitions/Department"
+          }
+        },
+        "designation": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "max_biweekly_capacity": {
+          "type": "number",
+          "x-nullable": true,
+          "example": 50.5
+        },
+        "min_biweekly_capacity": {
+          "type": "number",
+          "example": 20.5
+        },
+        "max_weekly_capacity": {
+          "type": "string",
+          "x-nullable": true,
+          "example": "24.5"
+        },
+        "min_weekly_capacity": {
+          "type": "string",
+          "example": "10"
+        },
+        "max_daily_capacity": {
+          "type": "string",
+          "x-nullable": true,
+          "example": 10
+        },
+        "min_daily_capacity": {
+          "type": "string",
+          "example": 0
+        },
+        "default_availability": {
+          "type": "string",
+          "example": "available"
+        },
+        "username": {
+          "type": "string"
+        },
+        "skills": {
+          "type": "array",
+          "description": "List of skills associated to an employee",
+          "items": {
+            "$ref": "#/definitions/Skill"
+          }
+        },
+        "ssn_sin": {
+          "type": "string",
+          "description": "Social security number or Social insurance number of the employee",
+          "example": 123456789,
+          "x-nullable": true
+        },
+        "contacts": {
+          "type": "array",
+          "description": "Employee contacts",
+          "items": {
+            "$ref": "#/definitions/EmployeeContact"
+          }
+        },
+        "language": {
+          "type": "string",
+          "example": "en"
+        },
+        "payroll_number": {
+          "type": "string",
+          "example": "A123"
+        },
+        "seniority": {
+          "type": "string",
+          "example": 897563
+        },
+        "employment_type": {
+          "$ref": "#/definitions/EmploymentType"
+        },
+        "cost_centre": {
+          "$ref": "#/definitions/CostCentre"
+        },
+        "timezone": {
+          "description": "Timezone name in IANA format (iana.org/time-zones). If not set, returns the branch timezone.\n",
+          "type": "string",
+          "example": "America/Toronto"
+        }
+      },
+      "required": [
+        "id",
+        "ac_id",
+        "external_id",
+        "demographics",
+        "branch_id",
+        "status",
+        "contacts"
+      ]
+    },
+    "EmployeeStatus": {
+      "description": "Enum of the status of an employee\n",
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "on_hold",
+        "suspended",
+        "terminated",
+        "applicant",
+        "rejected",
+        "unknown"
+      ]
+    },
+    "EmployeeStatusCreate": {
+      "description": "Enum of the status of an employee\n",
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "on_hold",
+        "suspended",
+        "terminated",
+        "applicant",
+        "rejected"
+      ]
+    },
+    "EmployeeStatusUpdate": {
+      "description": "AlayaCare employee entity data for status update",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "Updatable status of an employee",
+          "type": "string",
+          "example": "terminated",
+          "enum": [
+            "active",
+            "pending",
+            "on_hold",
+            "suspended",
+            "terminated",
+            "applicant",
+            "rejected"
+          ]
+        },
+        "comment": {
+          "description": "Can only be set for employee termination",
+          "type": "string",
+          "example": "Employee is moving to another agency"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "EmployeeList": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PaginatedList"
+        }
+      ],
+      "description": "List of employees\n",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/Employee"
+              }
+            ],
+            "properties": {
+              "branch": {
+                "$ref": "#/definitions/BranchSummary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Employee": {
+      "description": "AlayaCare employee list view\n",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "external_id": {
+          "type": "string",
+          "example": "external_id_1",
+          "x-nullable": true
+        },
+        "profile_id": {
+          "type": "integer",
+          "example": 7890
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Smith",
+          "x-nullable": true
+        },
+        "status": {
+          "$ref": "#/definitions/EmployeeStatus"
+        },
+        "job_title": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "email": {
+          "type": "string",
+          "example": "john@smith.com"
+        },
+        "phone": {
+          "type": "string",
+          "x-nullable": true,
+          "example": "+15555555555"
+        },
+        "phone_other": {
+          "type": "string",
+          "x-nullable": true,
+          "example": "+15555555555"
+        },
+        "designation": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "departments": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "description": "ID of a department"
+          }
+        },
+        "_link": {
+          "type": "string"
+        }
+      }
+    },
+    "EmployeeUpdate": {
+      "description": "AlayaCare employee entity data for creation",
+      "type": "object",
+      "properties": {
+        "demographics": {
+          "$ref": "#/definitions/EmployeeDemographics"
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "example": "john.smith"
+        },
+        "roles": {
+          "description": "List of roles. Role objects have ID for convenience\nof input, but only the IDs are used here. For valid IDs,\nrequest /roles.\n",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          }
+        },
+        "groups": {
+          "description": "List of groups. Group objects have ID for convenience\nof input, but only the IDs are used here. For valid IDs,\nrequest /groups.\n",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          }
+        },
+        "departments": {
+          "description": "List of departments. Department objects have ID for convenience\nof input, but only the IDs are used here. For valid IDs,\nrequest /departments.\n",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          }
+        },
+        "designation": {
+          "type": "string",
+          "example": "Nurse"
+        },
+        "payroll_number": {
+          "type": "string",
+          "example": "A123"
+        },
+        "seniority": {
+          "description": "The employee seniority value is determined by the Employee Seniority Type defined in the system settings. \nThis value must correspond to the selected type, which can be RANK, DATE, or NUMBER.\n",
+          "type": "string",
+          "example": 897563
+        },
+        "max_biweekly_capacity": {
+          "type": "number",
+          "example": 50.5
+        },
+        "min_biweekly_capacity": {
+          "type": "number",
+          "example": 20.5
+        },
+        "max_weekly_capacity": {
+          "type": "string",
+          "example": "24.5"
+        },
+        "min_weekly_capacity": {
+          "type": "string",
+          "example": "10"
+        },
+        "max_daily_capacity": {
+          "type": "string",
+          "example": 10
+        },
+        "min_daily_capacity": {
+          "type": "string",
+          "example": 2
+        },
+        "default_availability": {
+          "type": "string",
+          "description": "Default employee's availability. If not set, will inherit the branch default availability.\nAccepted values: \"available\", \"unavailable\"\n",
+          "example": "available"
+        },
+        "employment_type": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        },
+        "timezone": {
+          "description": "Timezone name in IANA format (iana.org/time-zones). If set to null, will inherit the branch timezone.\n",
+          "type": "string",
+          "example": "America/Toronto"
+        }
+      }
+    },
+    "EmployeeCreate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmployeeUpdate"
+        }
+      ],
+      "properties": {
+        "branch_id": {
+          "type": "integer",
+          "description": "Set employee branch. If not specified, will default to branch of the user creating the employee.\n"
+        },
+        "profile_id": {
+          "description": "Use an existing client or contact profile ID when creating an employee.\nDemographics will be shared between this employee and the previously\nexisting entity.\nA unique username is still required for any new employee.\n",
+          "type": "integer",
+          "example": 7890
+        },
+        "status": {
+          "$ref": "#/definitions/EmployeeStatusCreate"
+        }
+      },
+      "required": [
+        "username"
+      ]
+    },
+    "BranchProfile": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the agency profile, defined through\nthe AlayaCare web application.\nOn the example below default profile keys for the agency profile are used.\n\nExample profile attributes:\n+ `first_name`: string\n+ `last_name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `gender`: string\n+ `relationship`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Branch company name",
+          "type": "string",
+          "example": "Alayacare"
+        },
+        "phone_main": {
+          "description": "Branch main phone number",
+          "type": "string",
+          "example": "514-999-9999"
+        }
+      }
+    },
+    "EmployeeDemographics": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the employee profile, defined through the AlayaCare webapp.\nOn the example below default profile keys for the employee are used.\n\nExample profile attributes:\n\n+ `address_suite`: string\n+ `address`: string\n+ `birthday`: string\n+ `city`: string\n+ `company`: string\n+ `country`: string\n+ `department`: string\n+ `email_preferred`: string\n+ `email`: string\n+ `employee_id`: string\n+ `fax`: string\n+ `first_name`: string\n+ `gender`: string\n+ `group`: string\n+ `last_name`: string\n+ `phone_main`: string\n+ `phone_other`: string\n+ `phone_personal`: string\n+ `remarks`: string\n+ `salutation`: string\n+ `state`: string\n+ `timeframe`: string\n+ `title`: string\n+ `zip`: string\n+ `termination_date`: string\n",
+      "type": "object",
+      "required": [
+        "first_name",
+        "last_name",
+        "email"
+      ],
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "location": {
+          "$ref": "#/definitions/Location"
+        }
+      },
+      "example": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john@doe.com",
+        "salutation": "Mr.",
+        "gender": "M"
+      }
+    },
+    "EmployeeContactDemographics": {
+      "description": "Collection of key/value pairs where keys are existing attributes in the employee contact profile, defined through the AlayaCare web application.\nOn the example below default profile keys for the employeecontact are used.\n\nExample profile attributes:\n+ `first_name`: string\n+ `last_name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `gender`: string\n+ `relationship`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n",
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "description": "Employee first name",
+          "type": "string",
+          "example": "Jane"
+        },
+        "last_name": {
+          "description": "Employee last name",
+          "type": "string",
+          "example": "Smith"
+        }
+      }
+    },
+    "EmployeeContact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Employee contact ID",
+          "example": 1
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare ID for display in-app",
+          "example": "AC000000024"
+        },
+        "external_id": {
+          "type": "string",
+          "example": "crm_employee_contact_external_id_1",
+          "description": "Employee contact external ID",
+          "x-nullable": true
+        },
+        "status": {
+          "description": "Status of a contact",
+          "type": "string",
+          "enum": [
+            "enabled",
+            "disabled"
+          ]
+        },
+        "contact_type": {
+          "type": "string",
+          "example": "Medical",
+          "x-nullable": true
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor",
+          "x-nullable": true
+        },
+        "language": {
+          "type": "string",
+          "example": "en"
+        },
+        "demographics": {
+          "$ref": "#/definitions/EmployeeContactDemographics"
+        }
+      },
+      "required": [
+        "id",
+        "ac_id",
+        "external_id",
+        "status",
+        "demographics"
+      ]
+    },
+    "EmployeeContactDetails": {
+      "description": "AlayaCare employee list item",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmployeeContact"
+        }
+      ],
+      "properties": {
+        "employees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeContactListDetails"
+          }
+        }
+      }
+    },
+    "EmployeeContactListDetails": {
+      "description": "Employee contact list details",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "AlayaCare employee ID",
+          "type": "integer",
+          "example": 1000
+        },
+        "ac_id": {
+          "type": "string",
+          "description": "AlayaCare employee ID for display in-app",
+          "example": "AC000000024"
+        },
+        "branch": {
+          "type": "object",
+          "description": "AlayaCare branch",
+          "properties": {
+            "id": {
+              "description": "Branch ID",
+              "type": "integer",
+              "example": 1000
+            },
+            "name": {
+              "description": "Branch name",
+              "type": "string",
+              "example": "Toronto branch"
+            }
+          }
+        },
+        "email": {
+          "type": "string",
+          "description": "employee email address",
+          "example": "employee@homecare.com"
+        },
+        "external_id": {
+          "description": "External employee ID",
+          "type": "string",
+          "example": "employee_external_id_1",
+          "x-nullable": true
+        },
+        "first_name": {
+          "description": "employee first name",
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "description": "employee last name",
+          "type": "string",
+          "example": "Smith"
+        },
+        "status": {
+          "$ref": "#/definitions/EmployeeStatus"
+        },
+        "contact_relationship": {
+          "$ref": "#/definitions/EmployeeContactRelationship"
+        },
+        "_link": {
+          "description": "employee link on the web application",
+          "type": "string",
+          "example": "https://demo3.alayacare.ca/permalink/employee/b1"
+        }
+      }
+    },
+    "EmployeeContactRelationship": {
+      "description": "AlayaCare employee contact relationship specific properties details",
+      "type": "object",
+      "properties": {
+        "contact_type": {
+          "type": "string",
+          "example": "Medical",
+          "x-nullable": true
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor",
+          "x-nullable": true
+        },
+        "status": {
+          "$ref": "#/definitions/EmployeeContactStatus"
+        }
+      }
+    },
+    "EmployeeContactStatus": {
+      "type": "string",
+      "enum": [
+        "enabled",
+        "disabled"
+      ]
+    },
+    "EmployeeContactCreate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmployeeContactUpdate"
+        }
+      ],
+      "type": "object",
+      "description": "When creating an employee contact, either `employee_id` or\n`external_employee_id` must be provided; that will be the\nemployee to which the contact is associated.\nIf a `profile_id` is provided\n",
+      "properties": {
+        "profile_id": {
+          "description": "AlayaCare profile ID",
+          "type": "integer",
+          "example": 7890
+        }
+      }
+    },
+    "EmployeeContactUpdate": {
+      "type": "object",
+      "properties": {
+        "external_id": {
+          "type": "string",
+          "example": "crm_employee_contact_external_id_1",
+          "description": "Employee contact external ID"
+        },
+        "status": {
+          "description": "Status of a contact",
+          "type": "string",
+          "enum": [
+            "enabled",
+            "disabled"
+          ]
+        },
+        "contact_type": {
+          "type": "string",
+          "example": "Medical"
+        },
+        "relationship": {
+          "type": "string",
+          "example": "Doctor"
+        },
+        "employee_id": {
+          "type": "integer",
+          "description": "AlayaCare employee ID",
+          "example": 1001
+        },
+        "external_employee_id": {
+          "type": "string",
+          "description": "External employee ID",
+          "example": "sor_employee_external_id_1"
+        },
+        "demographics": {
+          "$ref": "#/definitions/EmployeeContactDemographics"
+        }
+      }
+    },
+    "PaginatedList": {
+      "description": "Base model of all paginated lists",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items in the response",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number",
+          "example": 1
+        },
+        "total_pages": {
+          "type": "integer",
+          "description": "Total number of pages availbale",
+          "example": 1
+        }
+      },
+      "required": [
+        "count",
+        "page",
+        "total_pages",
+        "items"
+      ]
+    },
+    "Location": {
+      "description": "Location information",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "lat": {
+          "type": "number",
+          "description": "latitude",
+          "example": 45.518
+        },
+        "lon": {
+          "type": "number",
+          "description": "longitude",
+          "example": -73.582
+        },
+        "zip": {
+          "type": "string",
+          "description": "postal code",
+          "example": "H0H 0H0"
+        }
+      }
+    },
+    "CostCentre": {
+      "description": "Details of a cost centre",
+      "type": "object",
+      "x-nullable": true,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Cost centre description",
+          "example": "Montreal"
+        },
+        "id": {
+          "type": "integer",
+          "description": "Cost centre ID",
+          "example": 2
+        },
+        "number": {
+          "type": "string",
+          "description": "Cost centre number for display in-app",
+          "example": "5555"
+        },
+        "status": {
+          "type": "string",
+          "description": "Cost centre status",
+          "example": "enabled"
+        }
+      }
+    }
+  }
+}
