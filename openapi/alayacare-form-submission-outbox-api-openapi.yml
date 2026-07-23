@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts form submission outbox API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: form submission outbox
+paths:
+  /v1/outbox/form_submissions/{form_submission_id}:
+    parameters:
+    - $ref: '#/components/parameters/FormSubmissionIdPathParam'
+    get:
+      tags:
+      - form submission outbox
+      description: "# Authorization\nRequired role: demand `org_admin` assigned to the referral \nassociated to the form submission.\n\n# Description\nRead a form submission.\n"
+      responses:
+        200:
+          description: Successfully retrieved the form submission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboxFormSubmissionDetailResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+  /v1/outbox/form_submissions/fields/{form_submission_field_id}/attachment/presigned:
+    parameters:
+    - $ref: '#/components/parameters/FormSubmissionFieldIdPathParam'
+    get:
+      tags:
+      - form submission outbox
+      description: "# Authorization\nRequired role: demand `org_admin` assigned to the referral \nassociated to the form submission.\n\n# Description\nGet the pre-signed URL for the file attached to a form submission field as\na demand organization.\n"
+      responses:
+        200:
+          description: Successfully got the pre-signed URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgAdminFilePresignedDetailResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  parameters:
+    FormSubmissionIdPathParam:
+      in: path
+      name: form_submission_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a form submission.
+    FormSubmissionFieldIdPathParam:
+      in: path
+      name: form_submission_field_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a form submission field.
+  schemas:
+    OutboxFormSubmissionHiddenFieldCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        field_outbox_id:
+          type: string
+          description: ID of the form template field provided by the demand organization.
+      required:
+      - id
+      - field_outbox_id
+    OutboxFormSubmissionFieldCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        field_outbox_id:
+          type: string
+          description: ID of the form template field provided by the demand organization.
+        value_type:
+          type: string
+          enum:
+          - attachment
+          - boolean
+          - decimal
+          - json
+          - string
+        value:
+          type: string
+      required:
+      - id
+      - field_outbox_id
+      - value_type
+      - value
+    OrgAdminFilePresignedDetailResponse:
+      properties:
+        url:
+          type: string
+      required:
+      - url
+    OutboxFormSubmissionDetailResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        form_template_id:
+          type: string
+          format: uuid
+        form_template_outbox_id:
+          type: string
+          description: ID of the form template provided by the demand organization.
+        client_id:
+          type: string
+          format: uuid
+          description: ID of the client of the form submission.
+        client_outbox_id:
+          type: string
+          description: ID of the client provided by the demand organization.
+        service_id:
+          type: string
+          format: uuid
+          description: ID of the service of the form submission.
+        service_outbox_id:
+          type: string
+          description: ID of the service provided by the demand organization.
+        visit_id:
+          type: string
+          format: uuid
+          description: ID of the visit of the form submission.
+        work_session_id:
+          type: string
+          format: uuid
+          description: ID of the work session linked to the form submission.
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxFormSubmissionFieldCore'
+          minItems: 1
+        hidden_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxFormSubmissionHiddenFieldCore'
+      required:
+      - id
+      - form_template_id
+      - form_template_outbox_id
+      - client_id
+      - client_outbox_id
+      - fields
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

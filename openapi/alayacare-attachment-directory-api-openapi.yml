@@ -1,0 +1,452 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Attachment Directory API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Attachment Directory
+paths:
+  /employees/{employee_id}/attachments/{directory_path}/:
+    parameters:
+    - name: employee_id
+      in: path
+      required: true
+      type: integer
+      description: 'AlayaCare internal ID of the employee
+
+        '
+    - name: directory_path
+      in: path
+      required: true
+      type: string
+      description: 'Path where the directory lives
+
+        '
+    get:
+      tags:
+      - Attachment Directory
+      summary: Get the content of a directory
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/responses/SuccessResponseDirectoryContent'
+        404:
+          description: Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+    post:
+      tags:
+      - Attachment Directory
+      summary: Create a new directory
+      description: 'Create a directory at the `path` location, along with the underlying directory structure if it doesn''t exist already.
+
+        The path location represents the destination of the directory.
+
+        '
+      produces:
+      - application/json
+      responses:
+        201:
+          $ref: '#/responses/SuccessResponseAttachmentDirectoryCreate'
+        400:
+          $ref: '#/responses/ErrorResponseDirectoryInvalidRequest'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+        409:
+          $ref: '#/responses/ErrorResponseDirectoryAlreadyExists'
+    put:
+      tags:
+      - Attachment Directory
+      summary: Copy, move or rename directory
+      description: 'Copy, move or rename a directory and create the underlying directory structure of the new location if it doesn''t already exist.
+
+
+        The url of the `PUT` request is the path to the source location.
+
+
+        The payload must indicate whether the intention of the action is to copy, move or rename the file.
+
+
+        If a directory is being copied or moved, the destination is mandatory in the payload.
+
+
+        The url of the `PUT` request is the path to the source location.
+
+        i.e., if we have the following directories:
+
+        - `dir1/child1/`
+
+        - `dir2/child2/`
+
+
+        and we want to copy `child1/` inside `dir2/` (the goal is to have `dir2/child1/`), the action to copy must be specified in the payload and must be: `dir2/child1/`. The `source` URL request has to be `dir1/child1/`.
+
+        '
+      parameters:
+      - name: body
+        description: Object with fields to be updated
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AttachmentAction'
+      responses:
+        200:
+          $ref: '#/responses/SuccessResponseAttachmentDirectoryUpdate'
+        400:
+          $ref: '#/responses/ErrorResponseDirectoryStructureInvalidRequest'
+        404:
+          description: Source Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+        409:
+          $ref: '#/responses/ErrorResponseDirectoryAlreadyExists'
+    delete:
+      tags:
+      - Attachment Directory
+      summary: Delete a directory
+      description: "Delete a directory which does not contain underlying directory or files.\n\nIf the directory contains underlying directories or files, a `forced-delete` field set to `true` must be provided in the request payload for the directory to be deleted. \n.\n"
+      parameters:
+      - name: forced-delete
+        in: body
+        required: false
+        description: required to delete a directory
+        schema:
+          $ref: '#/definitions/DeleteDirectoryActionSchema'
+      produces:
+      - application/json
+      responses:
+        204:
+          description: Directory deleted
+        400:
+          $ref: '#/responses/ErrorResponseHeaderMissing'
+        404:
+          description: Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+  /employees/by_id/{external_employee_id}/attachments/{directory_path}/:
+    parameters:
+    - name: external_employee_id
+      in: path
+      required: true
+      type: string
+    - name: directory_path
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - Attachment Directory
+      summary: Get the content of a directory
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/responses/SuccessResponseDirectoryContent'
+        404:
+          description: Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+    post:
+      tags:
+      - Attachment Directory
+      summary: Create a new directory
+      description: 'Create a directory at the `path` location, along with the underlying directory structure if it doesn''t exist already
+
+        '
+      produces:
+      - application/json
+      responses:
+        201:
+          $ref: '#/responses/SuccessResponseAttachmentDirectoryCreate'
+        400:
+          $ref: '#/responses/ErrorResponseDirectoryInvalidRequest'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+        409:
+          $ref: '#/responses/ErrorResponseDirectoryAlreadyExists'
+    put:
+      tags:
+      - Attachment Directory
+      summary: Copy, move or rename a directory
+      description: 'Copy, move or rename a directory and create the underlying directory structure of the new location if it doesn''t already exist.
+
+
+        The url of the `PUT` request is the path to the source location.
+
+
+        The payload must indicate whether the intention of the action is to copy, move or rename the file.
+
+
+        If a directory is being copied or moved, the destination is mandatory in the payload.
+
+
+        The url of the `PUT` request is the path to the source location.
+
+        i.e., if we have the following directories:
+
+        - `dir1/child1/`
+
+        - `dir2/child2/`
+
+
+        and we want to copy `child1/` inside `dir2/` (the goal is to have `dir2/child1/`), the action to copy must be specified in the payload and must be: `dir2/child1/`. The `source` URL request has to be `dir1/child1/`.
+
+        '
+      parameters:
+      - name: body
+        description: Object with fields to be updated
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AttachmentAction'
+      responses:
+        200:
+          $ref: '#/responses/SuccessResponseAttachmentDirectoryUpdate'
+        400:
+          $ref: '#/responses/ErrorResponseDirectoryStructureInvalidRequest'
+        404:
+          description: Source Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+        409:
+          $ref: '#/responses/ErrorResponseDirectoryAlreadyExists'
+    delete:
+      tags:
+      - Attachment Directory
+      summary: Delete a directory
+      description: "Delete a directory which does not contain underlying directory or files.\n\nIf the directory contains underlying directories or files, a `forced-delete` field set to `true` must be provided in the request payload for the directory to be deleted. \n"
+      parameters:
+      - name: forced-delete
+        in: body
+        required: false
+        description: required to delete a directory
+        schema:
+          $ref: '#/definitions/DeleteDirectoryActionSchema'
+      produces:
+      - application/json
+      responses:
+        204:
+          description: Directory deleted
+        400:
+          $ref: '#/responses/ErrorResponseHeaderMissing'
+        404:
+          description: Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  AttachmentAction:
+    description: Attachment actions
+    type: object
+    properties:
+      action:
+        type: string
+        example: move
+        enum:
+        - move
+        - copy
+        - rename
+      destination:
+        type: string
+        example: dir2/child1/
+  DeleteDirectoryActionSchema:
+    type: object
+    properties:
+      forced-delete:
+        type: boolean
+        description: required to delete a non-empty directory
+        example: true
+  DirectoryNotFoundSchema:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: http status response code
+        example: 404
+      message:
+        type: string
+        description: Detail on the error
+        example: Directory "Ghost Directory" not found
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+responses:
+  ErrorResponseDirectoryAlreadyExists:
+    description: Directory already exists.
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 409
+        message:
+          type: string
+          description: Detail on the error
+          example: Directory "Ghost Directory" already exists.
+  ErrorResponseHeaderMissing:
+    description: 'Missing `forced-delete` set to true in body.
+
+      '
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 400
+        message:
+          type: string
+          description: Detail on the error
+          example: This action will delete the directory and its content. Please confirm.
+  SuccessResponseAttachmentDirectoryUpdate:
+    description: Directory copied, moved or renamed
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 200
+        name:
+          type: string
+          description: 'Url to the new location of the copied or moved directory
+
+            '
+          example: /new_directory_copied/
+  ErrorResponseDirectoryInvalidRequest:
+    description: Can't post a file when creating a directory
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 400
+        message:
+          type: string
+          description: Detail on the error
+          example: Can't post a file when creating a directory
+  SuccessResponseAttachmentDirectoryCreate:
+    description: Directory created
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 201
+        name:
+          type: string
+          description: Url to the directory created
+          example: /new_directory/
+  SuccessResponseDirectoryContent:
+    description: Content of a directory
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          code:
+            type: integer
+            description: http status response code
+            example: 200
+          name:
+            type: string
+            description: Path to directory
+            example: employee/1002/report.pdf
+          last_modified:
+            type: string
+            format: date-time
+            description: 'When the directory was last modified (ISO 8601)
+
+              example: ''2020-07-08T13:30:00+00:00''
+
+              '
+          size:
+            type: integer
+            description: Size of the file in bytes
+    examples:
+      application/json:
+        employee_id: 1002
+        employee_external_id: ext_id
+        entries:
+        - last_modified: '2020-01-14T18:58:44+00:00'
+          name: Physician Order/
+          size: 0
+        - last_modified: '2020-01-14T18:58:44+00:00'
+          name: Physician Order/file.pdf
+          size: 123456
+  ErrorResponseDirectoryStructureInvalidRequest:
+    description: Can't move a directory to one of its own sub-directories
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 400
+        message:
+          type: string
+          description: Detail on the error
+          example: Can't move a directory to one of its own sub-directories
+  ErrorResponseEmployeeNotFound:
+    description: Employee not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Employee not found.

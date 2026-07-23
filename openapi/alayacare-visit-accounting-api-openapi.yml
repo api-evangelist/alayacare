@@ -1,0 +1,201 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Visit accounting API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Visit accounting
+paths:
+  /visits/{alayacare_visit_id}/accounting:
+    parameters:
+    - name: alayacare_visit_id
+      description: AlayaCare visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visit accounting
+      summary: Get visit accounting
+      responses:
+        '200':
+          description: Visit accounting.
+          schema:
+            $ref: '#/definitions/VisitAccounting'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /visits/by_id/{visit_id}/accounting:
+    parameters:
+    - name: visit_id
+      description: External visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visit accounting
+      summary: Get visit accounting
+      responses:
+        '200':
+          description: Visit accounting.
+          schema:
+            $ref: '#/definitions/VisitAccounting'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /facility_visits/{alayacare_visit_id}/accounting:
+    parameters:
+    - name: alayacare_visit_id
+      description: AlayaCare visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visit accounting
+      summary: Get visit accounting
+      responses:
+        '200':
+          description: Visit accounting.
+          schema:
+            $ref: '#/definitions/VisitAccounting'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /facility_visits/by_id/{visit_id}/accounting:
+    parameters:
+    - name: visit_id
+      description: External visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visit accounting
+      summary: Get visit accounting
+      responses:
+        '200':
+          description: Visit accounting.
+          schema:
+            $ref: '#/definitions/VisitAccounting'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  PayCode:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Pay Code ID
+        example: 1
+      code:
+        type: string
+        description: Pay Code Code
+        example: '1'
+      description:
+        type: string
+        description: Pay Code Description
+        example: '1'
+      rate:
+        type: number
+        description: Rate
+        example: 23.345
+      unit:
+        type: string
+        description: Unit
+        example: hours | visits | amount
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 400
+        description: Response code
+      message:
+        type: string
+        example: Invalid request
+        description: Detailed error message
+    required:
+    - code
+    - message
+  VisitAccounting:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Visit ID
+        example: 1
+      hours_approved:
+        type: number
+        description: Hours Approved
+        example: 1.0
+      pay_code_regular:
+        $ref: '#/definitions/PayCode'
+      pay_code_overtime:
+        $ref: '#/definitions/PayCode'
+responses:
+  ErrorResponseVisitNotFound:
+    description: Visit not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Visit not found
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.

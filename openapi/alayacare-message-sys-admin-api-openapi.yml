@@ -1,0 +1,294 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts message sys_admin API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: message sys_admin
+paths:
+  /v1/sys_admin/messages:
+    get:
+      tags:
+      - message sys_admin
+      description: '# Authorization
+
+        Required role: `sys_admin`
+
+
+        # Description
+
+        Get a paginated collection of messages for a sequence as a system admin.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/SequenceIdQueryParam'
+      - $ref: '#/components/parameters/MessageSenderTypeQueryParam'
+      - $ref: '#/components/parameters/MessageCategoryQueryParam'
+      - $ref: '#/components/parameters/PageNumberParam'
+      - $ref: '#/components/parameters/ItemsPerPageParam'
+      - in: query
+        name: sort_by
+        schema:
+          type: string
+          enum:
+          - created_at
+          default: created_at
+      - $ref: '#/components/parameters/SortOrderParam'
+      responses:
+        200:
+          description: Successfully returned messages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SysAdminMessagePageResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+  /v1/sys_admin/messages/by_file_id/{file_id}:
+    parameters:
+    - $ref: '#/components/parameters/FileIdPathParam'
+    get:
+      tags:
+      - message sys_admin
+      description: '# Authorization
+
+        Required role: `sys_admin`
+
+
+        # Description
+
+        Get a message by file ID.
+
+        '
+      responses:
+        200:
+          description: Successfully returned a message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SysAdminMessageDetailResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  parameters:
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    MessageCategoryQueryParam:
+      in: query
+      name: category
+      schema:
+        $ref: '#/components/schemas/MessageCategoryCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    SequenceIdQueryParam:
+      in: query
+      name: sequence_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    MessageSenderTypeQueryParam:
+      in: query
+      name: sender_type
+      schema:
+        $ref: '#/components/schemas/MessageSenderTypeCore'
+    FileIdPathParam:
+      in: path
+      name: file_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a file.
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+  schemas:
+    SysAdminMessageDetailResponse:
+      properties:
+        message:
+          type: object
+          title: SysAdminMessageDetailMessageResponse
+          properties:
+            id:
+              type: string
+              format: uuid
+            sequence_id:
+              type: string
+              format: uuid
+            category:
+              $ref: '#/components/schemas/MessageCategoryCore'
+            sender_type:
+              $ref: '#/components/schemas/MessageSenderTypeCore'
+            text:
+              type: string
+              maxLength: 2500
+            author:
+              type: string
+              maxLength: 100
+            created_at:
+              type: string
+              format: date-time
+            file:
+              type: object
+              title: SysAdminMessageDetailFileResponse
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                url:
+                  type: string
+                name:
+                  type: string
+                size_in_bytes:
+                  type: integer
+                  minimum: 0
+                  maximum: 52428800
+              required:
+              - id
+              - url
+              - name
+          required:
+          - id
+          - sequence_id
+          - category
+          - sender_type
+          - created_at
+        sender:
+          type: object
+          title: SysAdminMessageDetailSenderResponse
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+          required:
+          - id
+          - name
+        recipient:
+          type: object
+          title: SysAdminMessageDetailRecipientResponse
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+          required:
+          - id
+          - name
+      required:
+      - message
+      - sender
+      - recipient
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    MessageCategoryCore:
+      type: string
+      enum:
+      - client_attachment
+      - comment
+    PageCore:
+      description: Root page schema for returning collections.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageNumberCore'
+        items_per_page:
+          $ref: '#/components/schemas/ItemsPerPageCore'
+        total_items:
+          type: integer
+          minimum: 0
+        total_pages:
+          type: integer
+          minimum: 0
+      required:
+      - page
+      - items_per_page
+      - total_items
+      - total_pages
+    SysAdminMessagePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminMessageDetailResponse'
+        required:
+        - items
+    MessageSenderTypeCore:
+      type: string
+      enum:
+      - demand
+      - supply
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

@@ -1,0 +1,261 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Directory API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Directory
+paths:
+  /client/{id}/{path}/:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: integer
+    - name: path
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - Directory
+      summary: Get the content of a directory
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Content of a directory
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Path to file or directory
+                  example: client/1002/report.pdf
+                last_modified:
+                  type: string
+                  format: date-time
+                  description: 'When the file or directory was last modified (ISO 8601)
+
+                    '
+                  example: '2017-07-08T13:30:00+00:00'
+                size:
+                  type: integer
+                  description: Size of the file in bytes
+          examples:
+            application/json:
+            - last_modified: '2016-01-14T18:58:44+00:00'
+              name: client/1002/Physician Order/
+              size: 0
+            - last_modified: '2016-08-24T18:45:29+00:00'
+              name: client/1002/picture.jpg
+              size: 5499
+        404:
+          description: Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+    post:
+      tags:
+      - Directory
+      summary: Create a new directory
+      description: 'Create a directory at the `path` location, along with the underlying folder structure if it doesn''t exist already
+
+        '
+      produces:
+      - application/json
+      responses:
+        201:
+          description: Directory created
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 201
+              name:
+                type: string
+                description: Url to the directory created
+                example: client/1002/new directory/
+        400:
+          description: 'Bad Request: Can''t post a file when creating a directory
+
+            '
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Can't post a file when creating a folder
+    put:
+      tags:
+      - Directory
+      summary: Copy or move a directory
+      description: 'Copy or move a directory and create the underlying folder structure of the new location if it doesn''t already exist.
+
+
+        Whether the directory is moved or simply copied is defined by a `move` header that can be set to `true` (if the header is not provided, its value defaults to `false` and the `source` directory will remain).
+
+
+        The url of the `PUT` request is the path to the destination location.
+
+        i.e., if we have the following directories:
+
+        - `dir1/child1/`
+
+        - `dir2/child2/`
+
+
+        and we want to copy `child1/` inside `dir2/` (the goal is to have `dir2/child1/`), the `path` in the url of the `PUT` request has to be: `dir2/child1/`. The `source` header of the request has to be `dir1/child1/`.
+
+
+        A 400 response will be returned for a request to move a folder in one of its own subfolders.
+
+        '
+      parameters:
+      - name: source
+        in: header
+        type: string
+        description: 'path of the directory to copy or move (source directory)
+
+          '
+      - name: move
+        in: header
+        type: boolean
+        description: 'specifies if the directory is moved or copied (defaults to false, i.e. copied)
+
+          '
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Directory copied or moved
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 200
+              name:
+                type: string
+                description: 'Url to the new location of the copied or moved directory
+
+                  '
+                example: client/1002/new directory copied/
+        400:
+          description: 'Bad Request: Missing `source` header
+
+            '
+          schema:
+            type: object
+            properties:
+              message:
+                type: object
+                properties:
+                  source:
+                    type: string
+                    description: Detail on the error
+                    example: The request cannot be processed without the source variable
+        404:
+          description: Source Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+    delete:
+      tags:
+      - Directory
+      summary: Delete a directory
+      description: 'Delete a directory and its content. A `forced-delete` header set to `true` must be provided for the directory to be deleted. Otherwise, the reponse will be a confirmation message with a status `400`.
+
+        '
+      parameters:
+      - name: forced-delete
+        in: header
+        required: true
+        type: boolean
+        description: required header to delete a directory
+      produces:
+      - application/json
+      responses:
+        204:
+          description: Directory deleted
+        400:
+          description: 'Bad Request: Missing `forced-delete` header
+
+            '
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detailon the error
+                example: This action will delete the folder and its content. Please confirm
+        404:
+          description: Directory not found
+          schema:
+            $ref: '#/definitions/DirectoryNotFoundSchema'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  DirectoryNotFoundSchema:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: http status response code
+        example: 404
+      message:
+        type: string
+        description: detail on the error
+        example: Folder "Ghost Directory" not found

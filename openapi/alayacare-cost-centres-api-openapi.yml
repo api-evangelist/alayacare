@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Cost Centres API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Cost Centres
+paths:
+  /cost_centres:
+    get:
+      tags:
+      - Cost Centres
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      - name: status
+        in: query
+        description: Filter by `enabled` cost centres
+        schema:
+          type: string
+          enum:
+          - enabled
+          - disabled
+      summary: Get a list of cost centres
+      responses:
+        '200':
+          description: A list of cost centres
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCentreList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    CostCentreList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of cost centres
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CostCentre'
+    CostCentre:
+      description: Details of a cost centre
+      type: object
+      properties:
+        description:
+          type: string
+          description: Cost centre description
+          example: Montreal
+        id:
+          type: integer
+          description: Cost centre ID
+          example: 2
+          minimum: 1
+        number:
+          type: string
+          description: Cost centre number for display in-app
+          example: '5555'
+        status:
+          type: string
+          description: Cost centre status
+          example: enabled
+      nullable: true
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

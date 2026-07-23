@@ -1,0 +1,685 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Interventions API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Interventions
+paths:
+  /careplans/intervention_types:
+    get:
+      tags:
+      - Interventions
+      summary: Get a list of available intervention types.
+      responses:
+        '200':
+          description: A list of intervention types.
+          schema:
+            $ref: '#/definitions/InterventionTypeList'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInterventionTypeNotFound'
+  /careplans/{plan_id}/interventions:
+    parameters:
+    - description: ID of care plan
+      name: plan_id
+      in: path
+      required: true
+      type: integer
+    get:
+      tags:
+      - Interventions
+      summary: Get the intervention list of a Careplan
+      responses:
+        '200':
+          description: A list of interventions
+          schema:
+            $ref: '#/definitions/InterventionList'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+    post:
+      tags:
+      - Interventions
+      summary: Create an intervention in a Careplan using Alayacare care plan ID
+      description: "Create an intervention in a careplan. Based on Intervention are then recurrence definition they will them be available as visit interventions. \n- `recurrence_type` can be set with a frequency of `per_visit`, `per_request` or `custom`\n For `custom`  recurrence type the `recurrence` object is mandatory and additionnal information is required to define the frequency and the availability of the intervention.\n- `include_485` is Only required if the 485 feature flag is tuned ON\n\nInterventions can be linked to an alaycare Module\n- `id` is the ID on the entity selected in the module and assigned to the client\n- Form ID of the linked form is required to be set if `form` module is selected.\n- Vital ID of the linked vital can only be set if `vital` module is selected. Will be defaulted to `all` if no vital `id` is sent.\n- Medication ID of the linked medication can only be set if `medication` module is selected. Will be defaulted to `all` if no medication `id` is sent.\n"
+      parameters:
+      - description: Crearte an intervention
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CreateCarePlanIntervention'
+      responses:
+        '201':
+          description: Intervention successfully created
+          schema:
+            $ref: '#/definitions/Intervention'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+  /careplans/interventions/{intervention_id}:
+    parameters:
+    - description: ID of the intervention
+      name: intervention_id
+      in: path
+      required: true
+      type: integer
+    get:
+      tags:
+      - Interventions
+      summary: Get a specific intervention by intervention ID
+      responses:
+        '200':
+          description: A list of interventions
+          schema:
+            $ref: '#/definitions/Intervention'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInterventionNotFound'
+    put:
+      tags:
+      - Interventions
+      summary: Edit the given intervention
+      description: 'Update an intervention attached to a careplan
+
+        - Only services assigned to the client can be linked to the intervention
+
+        '
+      parameters:
+      - description: Update the intervention
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CreateCarePlanIntervention'
+      responses:
+        '204':
+          description: Intervention successfully updated
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInterventionNotFound'
+    delete:
+      tags:
+      - Interventions
+      summary: Delete a care plan intervention using the intervention ID
+      description: 'Delete a Care plan intervention
+
+        - Only interventions in `draft` status can be deleted
+
+        '
+      responses:
+        '204':
+          description: Intervention successfully deleted
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidUpdateForRootItemType'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInterventionNotFound'
+  /careplans/interventions/{intervention_id}/status/archived:
+    parameters:
+    - description: ID of careplan intervention
+      name: intervention_id
+      in: path
+      required: true
+      type: integer
+    put:
+      tags:
+      - Interventions
+      summary: Update intervention status to archived
+      responses:
+        '204':
+          description: Successfully updated status of intervention to archived
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidArchivalForRootItemType'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInterventionNotFound'
+  /careplans/interventions/{intervention_id}/status/completed:
+    parameters:
+    - description: ID of careplan intervention
+      name: intervention_id
+      in: path
+      required: true
+      type: integer
+    - description: Related information
+      name: body
+      in: body
+      required: true
+      schema:
+        type: object
+        required:
+        - end_date
+        - completion_note
+        properties:
+          end_date:
+            type: string
+            example: '2020-02-01'
+          completion_note:
+            type: string
+            example: We did it! High five!
+    put:
+      tags:
+      - Interventions
+      summary: Update intervention status to completed
+      responses:
+        '204':
+          description: Successfully updated status of intervention to archived
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidRequest'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInterventionNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  CareplanItemStatus:
+    type: string
+    enum:
+    - active
+    - completed
+    - archived
+  CreateCarePlanIntervention:
+    description: New intervention to create
+    type: object
+    required:
+    - name
+    - type
+    - recurrence_type
+    - start_date
+    - is_required
+    - has_duration
+    - include_485
+    - department_id
+    properties:
+      name:
+        description: Name of the intervention
+        type: string
+        example: Walking Exercizes
+      recurrence_type:
+        description: Type of recurrence assigned to the unavailability
+        type: string
+        enum:
+        - per_visit
+        - per_request
+        - custom
+      recurrence:
+        $ref: '#/definitions/DeconstructedFrequency'
+      start_date:
+        description: Start date of the intervention
+        type: string
+        example: '2018-01-10'
+      end_date:
+        description: End date of the intervention
+        type: string
+        example: '2018-01-10'
+      type:
+        type: string
+        description: Intervention type
+        example: Nursing
+      goal_ids:
+        description: List of goals linked to the intervention
+        type: array
+        items:
+          type: integer
+        example:
+        - 1
+        - 2
+        - 3
+      department_id:
+        description: The ID of selected department
+        type: integer
+        example: 1
+        x-nullable: true
+      service_ids:
+        description: The list of service ID's that is linked to the intervention. Only services assigned to the client can be linked to the intervention.
+        type: array
+        items:
+          type: integer
+        example:
+        - 1
+        - 4
+        - 6
+      external_service_ids:
+        description: The list of external service external ID's that is linked to the intervention. Only services assigned to the client can be linked to the intervention.
+        type: array
+        items:
+          type: string
+        example:
+        - sor_service_id_1
+        - sor_service_id_2
+        - sor_service_id_3
+      tag_ids:
+        description: The list of tag ID's that is linked to created diagnosis
+        type: array
+        items:
+          type: integer
+        example:
+        - 2
+        - 4
+        - 8
+      external_link:
+        $ref: '#/definitions/ExternalLink'
+      module:
+        $ref: '#/definitions/InterventionModule'
+      description:
+        description: Description of the care plan intervention
+        type: string
+        example: Try walk short distances. Increase the distance each time.
+      is_required:
+        description: Defines if the intervention is required to be completed, or commented on, to be able to clock out from a visit.
+        type: boolean
+        example: true
+      has_duration:
+        description: Captures time spent on the visit intervention.
+        type: boolean
+        example: true
+      include_485:
+        description: Include the intervention in 485 report. Is only required if the 485 feature flag is ON.
+        type: boolean
+        example: true
+  Intervention:
+    description: Careplan intervention
+    type: object
+    required:
+    - updated_at
+    - updated_by
+    - created_at
+    - created_by
+    - id
+    - name
+    - status
+    - recurrence_type
+    - start_date
+    - intervention_type
+    - is_required
+    - has_duration
+    - include_485
+    - rank
+    - completed_at
+    - completed_by
+    - completion_note
+    properties:
+      careplan_id:
+        description: Identifier for the careplan
+        type: integer
+        example: 52
+      client_id:
+        description: Identifier for the client
+        type: integer
+        example: 1043
+      id:
+        description: Identifier for the intervention
+        type: integer
+        example: 1
+      name:
+        description: Name of the intervention
+        type: string
+        example: Walking Exercizes
+      status:
+        $ref: '#/definitions/CareplanItemStatus'
+      recurrence:
+        $ref: '#/definitions/DeconstructedFrequency'
+      start_date:
+        type: string
+      end_date:
+        type: string
+      external_client_id:
+        type: string
+        description: external identifier of the client associated to this intervention
+        example: NS001
+      intervention_type:
+        type: string
+        description: Intervention type
+        example: Nursing
+      updated_at:
+        description: Datetime for the last update for this intervention
+        type: string
+        example: '2018-01-23T23:56:13+00:00'
+      updated_by:
+        $ref: '#/definitions/User'
+      created_at:
+        description: Datetime for the creation of this intervention
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+      created_by:
+        $ref: '#/definitions/User'
+      department:
+        $ref: '#/definitions/EntitySummary'
+      goals:
+        type: array
+        items:
+          $ref: '#/definitions/EntitySummary'
+      services:
+        $ref: '#/definitions/ServiceList'
+      tags:
+        $ref: '#/definitions/EntitySummaryList'
+      external_link:
+        $ref: '#/definitions/ExternalLink'
+      module:
+        $ref: '#/definitions/InterventionModule'
+      description:
+        description: Description of the care plan intervention
+        type: string
+        example: Try walk short distances. Increase the distance each time.
+      is_required:
+        description: Defines if the intervention is required to be completed or commented on to be able to clock out from a visit. If not set will be defaulted to false.
+        type: boolean
+        example: true
+      has_duration:
+        description: Captures time spent on the visit intervention. If not set will be defaulted to false.
+        type: boolean
+        example: true
+      include_485:
+        description: Include the intervention in 485 report. Is not set will be defaulted to false.
+        type: boolean
+        example: true
+      rank:
+        type: integer
+        example: 0
+      completed_at:
+        description: Datetime when the intervention was completed
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+        x-nullable: true
+      completed_by:
+        $ref: '#/definitions/User'
+        x-nullable: true
+      completion_note:
+        description: Completion note of the intervention
+        type: string
+        x-nullable: true
+  DeconstructedFrequency:
+    description: "Definition of the intervention frequency. \n- Is only required if `recurrence_type` is set to `custom`\n- `available_from` and `available_to` allow to define the Time of day when the intervention is available. Only present for `daily`, `weekly` and `monthly` frequencies. if not set will be defaulted to `any time of the day`.\n"
+    type: object
+    required:
+    - frequency
+    - interval
+    properties:
+      frequency:
+        description: The frequency type of the intervention. Additionnal information are required for `daily`, `weekly` and `monthly` frequencies.
+        type: string
+        enum:
+        - daily
+        - weekly
+        - monthly
+      count:
+        description: The number of time the intervention must be executed. Only required for `daily`, `weekly` and `monthly` frequencies.
+        type: integer
+        example: 3
+      interval:
+        description: Only required for `daily`, `weekly` and `monthly` frequencies
+        type: integer
+        example: 2
+      weekdays:
+        description: Only present when the 'frequency' field is set to 'weekly'
+        type: array
+        items:
+          type: string
+          enum:
+          - monday
+          - tuesday
+          - wednesday
+          - thursday
+          - friday
+          - saturday
+          - sunday
+      monthday:
+        description: Only present when the 'frequency' field is set to 'monthly'
+        type: integer
+        example: 25
+      available_from:
+        type: string
+        example: '13:00:00'
+      available_to:
+        type: string
+        example: '15:00:00'
+  ExternalLink:
+    type: object
+    required:
+    - label
+    - url
+    properties:
+      label:
+        type: string
+        example: How to use a catheter
+      url:
+        type: string
+        example: www.youtube.com/catheter
+  ServiceList:
+    type: array
+    items:
+      $ref: '#/definitions/ServiceDetails'
+  EntitySummaryList:
+    type: array
+    items:
+      $ref: '#/definitions/EntitySummary'
+  EntitySummary:
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: integer
+        description: AlayaCare entity ID
+        example: 1001
+      name:
+        type: string
+        description: Alayacare entity name
+        example: entity name
+  InterventionModule:
+    description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
+    type: object
+    properties:
+      name:
+        description: Alayacare module name linked to the intervention
+        type: string
+        x-nullable: true
+        enum:
+        - form
+        - medication
+        - vital
+      id:
+        description: '`id` is the ID on the entity selected in the module and assigned to the client
+
+          - Form ID of the linked form. Is required to be set if `form` module is selected.
+
+          - vital ID of the linked vital. Can only be set if `vital` module is selected. Will be defaulted to `all` if no `vital_id` is sent.
+
+          - Medication ID of the linked medication. Can only be set if `medication` module is selected. Will be defaulted to `all` if no `medication_id` is sent.
+
+          '
+        type: string
+        example: 3948
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      status_code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  User:
+    description: User id, first and last names
+    type: object
+    properties:
+      id:
+        description: The id of user
+        type: integer
+        example: 5
+      external_id:
+        description: The id of user
+        type: string
+        example: sor_external_id_1
+  InterventionList:
+    description: List of interventions
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Intervention'
+  InterventionTypeList:
+    description: List of intervention types
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/InterventionType'
+  ServiceDetails:
+    description: Service details
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare service ID
+        example: 1001
+      external_id:
+        type: string
+        description: External service ID
+        example: sor_service_id_1
+        x-nullable: true
+  InterventionType:
+    description: Type of the care plan intervention
+    type: object
+    example:
+    - Therapy
+    - Support
+    - Nutrition/Dietary
+responses:
+  ErrorInsufficientAccess:
+    description: You do not have the required permissions to perform this action
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 403
+        message: Access required
+  ErrorResponseInterventionTypeNotFound:
+    description: Intervention type not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Intervention type not found
+  ErrorResponseInvalidArchivalForRootItemType:
+    description: The root item type cannot be archived once it has been completed
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 400
+        message: The root item type cannot be archived once it has been completed
+  ErrorResponseCarePlanNotFound:
+    description: Care plan not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Care plan not found
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 401
+        message: Please verify your access level for this url.
+  ErrorResponseInvalidRequest:
+    description: Invalid data submitted for item creation.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 400
+        message: The field 'start_date' is required.
+  ErrorResponseInterventionNotFound:
+    description: Intervention not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Intervention not found
+  ErrorResponseInvalidUpdateForRootItemType:
+    description: The root item type cannot be deleted once it has been completed
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 400
+        message: The root item type cannot be deleted in current status

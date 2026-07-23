@@ -1,0 +1,1474 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Medication API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Medication
+paths:
+  /medications:
+    get:
+      tags:
+      - Medication
+      summary: Get a list of medications
+      description: 'The fields `count_administered_today` and `last_administered_at` will NOT be populated.
+
+        '
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - name: client_id
+        description: The ID of a client.
+        type: integer
+        in: query
+      - name: external_client_id
+        description: The external ID of a client.
+        type: string
+        in: query
+      - name: status
+        description: The status of a medication.
+        type: string
+        in: query
+      - name: with_last_administration
+        description: The fields `count_administered_today` and `last_administered_at` will be populated.
+        type: boolean
+        in: query
+      responses:
+        200:
+          description: A list of medications
+          schema:
+            $ref: '#/definitions/MedicationList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+    post:
+      tags:
+      - Medication
+      summary: Create a medication
+      parameters:
+      - description: Medication data in JSON format
+        name: medication
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/MedicationCreate'
+      responses:
+        201:
+          description: Medication created successfully
+          schema:
+            $ref: '#/definitions/CreateSuccess'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+  /medications/{medication_id}:
+    parameters:
+    - description: Medication ID
+      name: medication_id
+      in: path
+      required: true
+      type: string
+      format: uuid
+    get:
+      tags:
+      - Medication
+      summary: Get details of a medication
+      parameters:
+      - description: The fields `count_administered_today` and `last_administered_at` will be populated.
+        name: with_last_administration
+        in: query
+        type: boolean
+      responses:
+        200:
+          description: Medication details
+          schema:
+            $ref: '#/definitions/Medication'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      tags:
+      - Medication
+      summary: Update a medication
+      parameters:
+      - description: Medication data in JSON format
+        name: medication
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/MedicationUpdate'
+      responses:
+        200:
+          description: Medication updated successfully
+          schema:
+            $ref: '#/definitions/CreateSuccess'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+        404:
+          $ref: '#/responses/NotFound'
+  /client/{client_id}/medications:
+    get:
+      tags:
+      - Medication
+      summary: Fetch a list of medications by client
+      responses:
+        '200':
+          $ref: '#/components/responses/MedicationList'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+      parameters:
+      - name: client_id
+        schema:
+          type: integer
+        in: path
+        required: true
+        description: Client ID to fetch the medications from
+      - $ref: '#/components/parameters/include'
+      - $ref: '#/components/parameters/medications'
+      - $ref: '#/components/parameters/medication_ids'
+      - $ref: '#/components/parameters/exclude_medication_ids'
+      - $ref: '#/components/parameters/status'
+      - $ref: '#/components/parameters/frequency_setting'
+      - $ref: '#/components/parameters/administration_type'
+      - $ref: '#/components/parameters/discrepancy_type'
+      - $ref: '#/components/parameters/start_date'
+      - $ref: '#/components/parameters/end_date'
+      - $ref: '#/components/parameters/is_archived'
+      - $ref: '#/components/parameters/is_high_alert'
+      - $ref: '#/components/parameters/is_narcotic'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      - $ref: '#/components/parameters/sort_order'
+    post:
+      tags:
+      - Medication
+      summary: Create a new medication for a specific client
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        description: Client ID to save the medications
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CreateMedication'
+      responses:
+        '201':
+          $ref: '#/components/responses/Medication'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+        '409':
+          $ref: '#/components/responses/ValidationError'
+  /client/by_id/{external_client_id}/medications:
+    get:
+      tags:
+      - Medication
+      summary: Fetch a medication by external client id
+      operationId: get_medication
+      responses:
+        '200':
+          $ref: '#/components/responses/MedicationList'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+      parameters:
+      - name: external_client_id
+        schema:
+          type: integer
+        in: path
+        required: true
+        description: External client ID to fetch the medications from
+      - $ref: '#/components/parameters/include'
+      - $ref: '#/components/parameters/medications'
+      - $ref: '#/components/parameters/medication_ids'
+      - $ref: '#/components/parameters/exclude_medication_ids'
+      - $ref: '#/components/parameters/status'
+      - $ref: '#/components/parameters/frequency_setting'
+      - $ref: '#/components/parameters/administration_type'
+      - $ref: '#/components/parameters/discrepancy_type'
+      - $ref: '#/components/parameters/start_date'
+      - $ref: '#/components/parameters/end_date'
+      - $ref: '#/components/parameters/is_archived'
+      - $ref: '#/components/parameters/is_high_alert'
+      - $ref: '#/components/parameters/is_narcotic'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      - $ref: '#/components/parameters/sort_order'
+    post:
+      tags:
+      - Medication
+      summary: Create a new medication for a specific client
+      parameters:
+      - name: external_client_id
+        schema:
+          type: integer
+        in: path
+        required: true
+        description: Client external ID to save the medications
+      requestBody:
+        $ref: '#/components/requestBodies/CreateMedication'
+      responses:
+        '201':
+          $ref: '#/components/responses/Medication'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+        '409':
+          $ref: '#/components/responses/ValidationError'
+  /medications/{medication_id}/change_status/{new_status}:
+    post:
+      tags:
+      - Medication
+      summary: Update a medication status
+      operationId: update_status
+      responses:
+        '204':
+          description: Medication status updated successfully
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+        '409':
+          $ref: '#/components/responses/ValidationError'
+      parameters:
+      - name: medication_id
+        schema:
+          type: integer
+        in: path
+        required: true
+        description: Medication id
+      - name: new_status
+        schema:
+          type: string
+        in: path
+        required: true
+        description: New medication status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                edited_by:
+                  type: string
+                edited_at:
+                  type: string
+                archive:
+                  type: boolean
+                  default: false
+                is_discontinue_replacing_end_date:
+                  type: boolean
+                  default: false
+components:
+  examples:
+    AuthChallenge:
+      value:
+        code: '401'
+        message: Please verify your access level for this url.
+      summary: Authentication required.
+    Medication:
+      value:
+        id: 1
+        brand_name: Name of the medication brand name
+        name: Medication Name
+        administration_instructions: Detail administration instructions
+        administration_site_details: []
+        administration_type: witness
+        cms_485_status: new
+        code: null
+        count: 7
+        create_user_id: 100
+        created_at: '2023-01-26T15:09:40+00:00'
+        days_of_month: []
+        discrepancy_note: Discrepancy notes
+        discrepancy_status: continue
+        discrepancy_type: no_discrepancy
+        dosage: '1'
+        dosage_form: tab
+        dosage_unit: tab
+        drug_family: ophthalmic_anti_inflammatories
+        drug_info_number: '1234'
+        duration: null
+        duration_unit: null
+        end_date: null
+        end_date_unknown: false
+        end_time: ''
+        frequency: 1
+        frequency_max: null
+        frequency_setting: every_12_hours
+        high_alert: false
+        healthcare_professional_notified: Healthcare profissional
+        information_source: organization
+        ingredient_strength: '100'
+        ingredient_strength_unit: mg
+        interval: 12
+        interval_max: 12
+        is_archived: false
+        is_infusion: false
+        medication_profile_id: 1
+        narcotic: false
+        needs_education: true
+        ordering_physician: name of the doctor
+        period: 12
+        period_max: null
+        period_unit: h
+        prn_as_needed: false
+        prn_reason: null
+        purpose: The purpose of medication
+        route: bu_buccal
+        start_date: '2023-01-26'
+        start_date_unknown: false
+        start_time: 08:00
+        status: active
+        status_reason: null
+        strict: true
+        time_of_day: null
+        timing_notes: null
+        timings:
+        - 08:00
+        - '20:00'
+        types:
+        - prescriptions
+        update_user_id: 100
+        updated_at: '2023-01-26T15:09:40+00:00'
+        version: 1
+        website: null
+        weekdays: []
+        when: null
+    MedicationList:
+      value:
+        count: 1
+        items_per_page: 10
+        page: 1
+        total_pages: 1
+        items:
+          $ref: '#/components/examples/Medication'
+    CreateMedication:
+      value:
+        brand_name: Name of the medication brand name
+        name: Medication Name
+        cms_485_status: new
+        count: 7
+        days_of_month: []
+        discrepancy_note: Discrepancy notes
+        discrepancy_status: continue
+        discrepancy_type: no_discrepancy
+        dosage: '1'
+        dosage_form: tab
+        dosage_unit: tab
+        drug_family: ophthalmic_anti_inflammatories
+        drug_info_number: '1234'
+        end_date_unknown: false
+        end_time: ''
+        end_time_unknown: false
+        frequency: 1
+        frequency_setting: every_12_hours
+        healthcare_professional_notified: Healthcare profissional
+        information_source: organization
+        ingredient_strength: '100'
+        ingredient_strength_unit: mg
+        admin_timings_unknown: false
+        administration_instructions: Detail administration instructions
+        administration_type: witness
+        interval: 12
+        interval_max: 12
+        max_timings_count: 2
+        min_timings_count: 2
+        needs_education: true
+        ordering_physician: Dr. Name
+        period: 12
+        period_unit: h
+        purpose: The purpose of medication
+        route: bu_buccal
+        start_date: '2023-01-26'
+        start_date_unknown: false
+        start_time: 08:00
+        start_time_unknown: false
+        status: active
+        strict: true
+        timings:
+        - 0: 08:00
+        - 1: '20:00'
+        types:
+        - 0: prescriptions
+        weekdays: []
+    InvalidRequest:
+      value:
+        code: '400'
+        message: There was a problem with your request.
+      summary: Invalid data.
+  responses:
+    MedicationList:
+      description: Medication list.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationList'
+          examples:
+            MedicationListExample:
+              $ref: '#/components/examples/MedicationList'
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequestExample:
+              $ref: '#/components/examples/InvalidRequest'
+    ValidationError:
+      description: Conflict in the data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+    Medication:
+      description: A medication information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Medication'
+          examples:
+            MedicationListExample:
+              $ref: '#/components/examples/Medication'
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequest:
+              $ref: '#/components/examples/AuthChallenge'
+  schemas:
+    Medication:
+      type: object
+      allOf:
+      - type: object
+        properties:
+          name:
+            type: string
+          brand_name:
+            type: string
+          status:
+            type: string
+          code:
+            type: string
+          ingredient_strength:
+            type: string
+            example: '350'
+          ingredient_strength_unit:
+            type: string
+            example: mg
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_unit_setting?is_ingredient_strength=true"
+          dosage:
+            type: string
+            example: '350'
+          dosage_unit:
+            type: string
+            example: mg
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_unit_setting?is_dosage_quantity=true"
+          dosage_form:
+            type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_unit_setting?is_dosage_form=true"
+          drug_info_number:
+            type: string
+          drug_family:
+            type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_drug_family_setting"
+          route:
+            type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_medication_route_setting"
+          administration_type:
+            type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_administration_type_setting
+          prn_reason:
+            type: string
+            description: Its only accepted when prn_as_needed is true
+          prn_as_needed:
+            type: boolean
+          purpose:
+            type: string
+          types:
+            type: array
+            items:
+              type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_medication_type_setting
+          website:
+            type: string
+          high_alert:
+            type: boolean
+          narcotic:
+            type: boolean
+          ordering_physician:
+            type: string
+          status_reason:
+            type: string
+          frequency_setting:
+            type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_frequency_setting"
+          start_date:
+            type: string
+            description: 'Format: YYYY-MM-DD'
+          start_time:
+            type: string
+            description: 'Format: HH:mm:ss'
+          end_date:
+            type: string
+            description: 'Format: YYYY-MM-DD'
+          end_time:
+            type: string
+            description: 'Format: HH:mm:ss'
+          start_date_unknown:
+            type: boolean
+            default: false
+          end_date_unknown:
+            type: boolean
+            default: false
+          administration_instructions:
+            type: string
+          timing_notes:
+            type: string
+          administration_site_details:
+            type: array
+            items:
+              type: string
+            description: Options are the response of GET "/medication_settings/{branch_id}/medication_administration_site_details_setting"
+          healthcare_professional_notified:
+            type: string
+          needs_education:
+            type: boolean
+          frequency:
+            type: integer
+            example: 2
+          frequency_max:
+            type: integer
+          period:
+            type: integer
+            example: 1
+          period_max:
+            type: integer
+          period_unit:
+            type: string
+          duration:
+            type: integer
+          duration_unit:
+            type: string
+          timings:
+            type: array
+            items:
+              type: string
+          weekdays:
+            type: array
+            items:
+              type: string
+            example: MO, TU, WE, TH, FR, SA, SU
+          count:
+            type: integer
+          time_of_day:
+            type: string
+            description: 'Options are '
+          days_of_month:
+            type: array
+            items:
+              type: string
+            description: Options are from 01 to 31
+          when:
+            type: string
+          strict:
+            type: boolean
+          create_user_id:
+            type: integer
+          update_user_id:
+            type: integer
+          created_at:
+            type: string
+          updated_at:
+            type: string
+      - type: object
+        properties:
+          delivery_mode:
+            type: string
+            description: Required for infusion routes.
+          concentration:
+            type: number
+            format: float
+          concentration_unit:
+            type: string
+          infusion_fluid:
+            type: string
+          ongoing:
+            type: boolean
+          infusion_duration:
+            type: integer
+          infusion_duration_unit:
+            type: string
+          infusion_volume:
+            type: number
+            format: float
+          infusion_volume_unit:
+            type: string
+          infusion_rate:
+            type: number
+            format: float
+          infusion_rate_unit:
+            type: string
+          is_simplified_infusion:
+            type: boolean
+            nullable: false
+            description: Required for infusion routes.
+          pre_infusion_flush_fluid:
+            type: string
+          pre_infusion_flush_volume:
+            type: number
+            format: float
+          pre_infusion_flush_volume_max:
+            type: number
+            format: float
+          pre_infusion_flush_volume_unit:
+            type: string
+          post_infusion_flush_fluid:
+            type: string
+          post_infusion_flush_volume:
+            type: number
+            format: float
+          post_infusion_flush_volume_max:
+            type: number
+            format: float
+          post_infusion_flush_volume_unit:
+            type: string
+          basal_rate:
+            type: number
+            format: float
+          basal_rate_max:
+            type: number
+            format: float
+          basal_rate_unit:
+            type: string
+          bolus_frequency:
+            type: integer
+          bolus_frequency_unit:
+            type: string
+          bolus_rate:
+            type: number
+            format: float
+          bolus_rate_max:
+            type: number
+            format: float
+          bolus_rate_unit:
+            type: string
+          max_boluses:
+            type: string
+          infusion_instructions:
+            type: string
+            description: Required for simplified infusions.
+    APIError:
+      type: object
+      description: Error returned from the API
+      properties:
+        code:
+          type: string
+          description: The error code
+          example: '500'
+        message:
+          type: string
+          example: An error occurred
+          description: The error description
+      required:
+      - code
+      - message
+    CreateMedication:
+      type: object
+      required:
+      - name
+      - status
+      - dosage
+      - dosage_unit
+      - route
+      - administration_type
+      - frequency_setting
+      - start_date
+      - start_time
+      - start_date_unknown
+      allOf:
+      - $ref: '#/components/schemas/Medication'
+    MedicationList:
+      properties:
+        items:
+          $ref: '#/components/schemas/Medication'
+        count:
+          type: integer
+        items_per_page:
+          type: integer
+        page:
+          type: integer
+        total_pages:
+          type: integer
+  parameters:
+    sort_order:
+      name: sort_order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      in: query
+      required: false
+      description: 'Order in which the items should be sorted by. Ex: asc, desc'
+    include:
+      name: include
+      schema:
+        type: string
+      in: query
+      required: false
+      description: 'Parameter used to include extra information in the request. Options: "status_reason" and "cms_485_status"'
+    exclude_medication_ids:
+      name: exclude_medication_ids
+      schema:
+        type: integer
+      in: query
+      description: Filter medications that do not contain specified id
+    discrepancy_type:
+      name: discrepancy_type
+      schema:
+        type: string
+      in: query
+      required: false
+      description: Filter medications by discrepancy type. Options are the response of GET "/medication_settings/{branch_id}/medication_discrepancy_type_setting"
+    status:
+      name: status
+      schema:
+        type: string
+      in: query
+      required: false
+      description: Filter medications by status. Options are the response of GET "/medication_settings/{branch_id}/medication_medication_status_setting"
+    count:
+      name: count
+      schema:
+        type: integer
+        default: 10
+      in: query
+      required: false
+      description: Max number of items to filter by
+    end_date:
+      name: end_date
+      schema:
+        type: string
+      in: query
+      required: false
+      description: 'Filter medications by end datetime. Format: YYYY-MM-DD HH:mm:ss'
+    sort_by:
+      name: sort_by
+      schema:
+        type: string
+      in: query
+      required: false
+      description: Parameter to sort items by
+    start_date:
+      name: start_date
+      schema:
+        type: string
+      in: query
+      required: false
+      description: 'Filter medications by start datetime. Format: YYYY-MM-DD HH:mm:ss'
+    is_narcotic:
+      name: is_narcotic
+      schema:
+        type: boolean
+        default: false
+      in: query
+      description: Filter medications by narcotic
+    medication_ids:
+      name: medication_ids
+      schema:
+        type: integer
+      in: query
+      description: Filter medications by id
+    administration_type:
+      name: administration_type
+      schema:
+        type: string
+      in: query
+      required: false
+      description: Filter medications by administration type. Options are the response of GET "/medication_settings/{branch_id}/medication_administration_type_setting"
+    is_high_alert:
+      name: is_high_alert
+      schema:
+        type: boolean
+        default: false
+      in: query
+      description: Filter medications by high_alert
+    frequency_setting:
+      name: frequency_setting
+      schema:
+        type: string
+      in: query
+      required: false
+      description: Filter medications by frequency. Options are the response of GET "/medication_settings/{branch_id}/medication_frequency_setting"
+    medications:
+      name: medications
+      schema:
+        type: string
+      in: query
+      required: false
+      description: Filter medications by term
+    is_archived:
+      name: is_archived
+      schema:
+        type: boolean
+      in: query
+    page:
+      name: page
+      schema:
+        type: integer
+        default: 1
+      in: query
+      required: false
+      description: Page number to filter by
+  requestBodies:
+    CreateMedication:
+      description: Medication create data
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateMedication'
+          examples:
+            CreateMedication:
+              $ref: '#/components/examples/CreateMedication'
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  DeliveryMode:
+    type: string
+    description: The delivery mode of the medication.
+    enum:
+    - ambulatory_pump_continuous
+    - ambulatory_pump_intermittent
+    - ambulatory_pump_pca
+    - ambulatory_pump_taper
+    - ambulatory_pump_other
+    - iv_pump
+    - iv_push
+    - gravity
+    example: ambulatory_pump_continuous
+    x-nullable: true
+  Type:
+    type: string
+    description: The medication type.
+    enum:
+    - prescriptions
+    - over_the_counter
+    - supplements
+    - herbals
+    - patches
+    - inhalers
+    - eye_drops
+    - ointments
+    - physician_samples
+    - chelation
+    - nutriceuticals
+    - other
+    example: prescriptions
+  InformationSource:
+    type: string
+    description: The information source for the medication.
+    enum:
+    - client
+    - family_caregiver
+    - rx_vials
+    - blister_packs
+    - physician_rx
+    - physician_samples
+    - pharmacist_list
+    - referral_source
+    - staff_nurse
+    - other
+    example: staff_nurse
+  TimeInstruction:
+    type: array
+    description: A list of time instructions for the medication administration.
+    items:
+      type: string
+      enum:
+      - daily
+      - qam_once_a_day_am
+      - qhs_once_a_day_bedtime
+      - bid_twice_a_day
+      - tid_three_times_a_day
+      - qid_four_times_a_day
+      - ac_before_meals
+      - pc_after_meals
+      - prn_as_required
+      - other_use_note
+      - q1h
+      - q2h
+      - q3h
+      - q4h
+      - q6h
+      - q8h
+      - q12h
+      - q24h
+      - q72h
+      example: daily
+  MedicationUpdate:
+    type: object
+    description: Update a Medication
+    required:
+    - id
+    - created_employee_id
+    - updated_employee_id
+    properties:
+      administered_by_nurse:
+        $ref: '#/definitions/AdministeredByNurse'
+      administrator:
+        type: string
+        description: Whether a health care professional has been notified.
+        example: true
+      basal_rate_range:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+      bolus_frequency:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+      bolus_rate_range:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+      comments:
+        type: string
+      concentration:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+      created_employee_id:
+        type: integer
+        description: The ID of the employee that created the entity.
+      delivery_mode:
+        $ref: '#/definitions/DeliveryMode'
+      delivery_mode_other:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_other`.
+        example: ambulatory_pump_pca
+      discrepancy:
+        $ref: '#/definitions/Discrepancy'
+      discrepancy_note:
+        type: string
+      discrepancy_status:
+        $ref: '#/definitions/DiscrepancyStatus'
+      external_client_id:
+        type: string
+        description: The external ID of the client.
+        example: client_1234
+      high_alert:
+        type: boolean
+        description: Whether the medication has been flagged as a high alert.
+        example: true
+      information_source:
+        $ref: '#/definitions/InformationSource'
+      max_boluses:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+      special_instructions:
+        type: string
+        description: Special instructions if required.
+      status:
+        $ref: '#/definitions/Status'
+      updated_employee_id:
+        type: integer
+        description: The ID of the employee that last updated the entity.
+  Route:
+    type: string
+    description: The route that the medication is administered.
+    enum:
+    - po_oral
+    - im_intramuscular
+    - sq_subcutaneous
+    - iv_intraveneous
+    - bu_buccal
+    - ep_epidural
+    - ex_external
+    - id_intradermal
+    - in_inhalation
+    - na_nasal
+    - op_ophthalmic
+    - ot_optic
+    - re_rectal
+    - sl_sublingual
+    - transdermal
+    - ur_urethral
+    - v_vaginal
+    - topical
+    - reg_percutaneous_end_gastro_tube
+    - it_intrathecal
+    - au_ear
+    - ad_right_ear
+    - as_left_ear
+    - au_both_ears
+    - eye_right
+    - eye_left
+    - eye_both
+    - ngt_nasal_gastric
+    - g_gastronomy_tube
+    - jejunostomy_tube
+    - g_j_tube
+    example: po_oral
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  DosageType:
+    type: string
+    description: The unit used for the dosage.
+    enum:
+    - li
+    - meq
+    - sol
+    - ung
+    - cap
+    - international_units
+    - millions_of_units
+    - mcg
+    - mg
+    - g
+    - ml
+    - units
+    - gtt
+    - tab
+    - oz
+    - fl_oz
+    - tsp
+    - tbsp
+    - gal
+    - pt
+    - other
+    example: mg
+  Status:
+    type: string
+    description: The medication status.
+    enum:
+    - active
+    - on_hold
+    - completed
+    - discontinued
+    example: active
+  Medication:
+    type: object
+    description: Medication details
+    required:
+    - administered_by_nurse
+    - created_at
+    - created_employee_id
+    - dose
+    - dosage_type
+    - id
+    - information_source
+    - medication
+    - medication_type
+    - route
+    - status
+    - time_instruction
+    - updated_at
+    - updated_employee_id
+    properties:
+      administered_by_nurse:
+        $ref: '#/definitions/AdministeredByNurse'
+      administration_times:
+        type: string
+        description: The times that the medication should be administered.
+        example: In the mornings or evenings
+        x-nullable: true
+      administrator:
+        type: string
+        description: Whether a health care professional has been notified.
+        example: true
+        x-nullable: true
+      basal_rate_range:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+        x-nullable: true
+      bolus_frequency:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+        x-nullable: true
+      bolus_rate_range:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+        x-nullable: true
+      comments:
+        type: string
+        x-nullable: true
+      concentration:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+        x-nullable: true
+      created_at:
+        type: string
+        description: The created date using ISO 8601 date-time formatting.
+        example: '2018-01-01T00:30:00+00:00'
+      created_employee_id:
+        type: integer
+        description: The ID of the employee that created the entity.
+      count_administered_today:
+        type: integer
+        description: The number of times today that the medication has been administered. This is only populated when specifying `with_last_administration`.
+        example: 3
+      delivery_mode:
+        $ref: '#/definitions/DeliveryMode'
+      delivery_mode_other:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_other`.
+        example: ambulatory_pump_pca
+        x-nullable: true
+      discrepancy:
+        $ref: '#/definitions/Discrepancy'
+      discrepancy_note:
+        type: string
+        x-nullable: true
+      discrepancy_status:
+        $ref: '#/definitions/DiscrepancyStatus'
+      dosage_type:
+        $ref: '#/definitions/DosageType'
+      dose:
+        type: string
+        description: The dosage of the medication to administer.
+        example: 2
+      end_date:
+        type: string
+        description: The end date of the medication using ISO 8601 date formatting.
+        example: '2018-01-01'
+        x-nullable: true
+      end_date_unknown:
+        type: boolean
+        description: Whether the end date is unknown.
+        example: false
+      episode_id:
+        type: integer
+        description: The ID of the episode.
+        example: 1
+        x-nullable: true
+      external_client_id:
+        type: string
+        description: The external ID of the client.
+        example: client_1234
+        x-nullable: true
+      high_alert:
+        type: boolean
+        description: Whether the medication has been flagged as a high alert.
+        example: true
+      id:
+        type: string
+        format: uuid
+        description: The ID of the medication.
+        example: 445e1b60-7287-47fb-ae00-2ca35fb4d58e
+      information_source:
+        $ref: '#/definitions/InformationSource'
+      last_administered_at:
+        type: string
+        description: The last administration date using ISO 8601 date-time formatting. This is only populated when specifying `with_last_administration`.
+        example: '2018-01-01T00:30:00+00:00'
+        x-nullable: true
+      max_boluses:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+        x-nullable: true
+      medication:
+        type: string
+        description: The medication name.
+        example: Ibuprofen
+      medication_type:
+        $ref: '#/definitions/Type'
+      ordering_physician:
+        type: string
+        x-nullable: true
+      client_id:
+        type: integer
+        description: The ID of the client.
+      pca_special_instructions:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+        x-nullable: true
+      route:
+        $ref: '#/definitions/Route'
+      special_instructions:
+        type: string
+        description: Special instructions if required.
+        x-nullable: true
+      start_date:
+        type: string
+        description: The start date of the medication using ISO 8601 date formatting.
+        example: '2018-01-01'
+        x-nullable: true
+      start_date_unknown:
+        type: boolean
+        description: Whether the start date is unknown.
+        example: false
+        x-nullable: true
+      status:
+        $ref: '#/definitions/Status'
+      time_instruction:
+        $ref: '#/definitions/TimeInstruction'
+      updated_at:
+        type: string
+        description: The last updated date using ISO 8601 date-time formatting.
+        example: '2018-01-01T00:30:00+00:00'
+      updated_employee_id:
+        type: integer
+        description: The ID of the employee that last updated the entity.
+  DiscrepancyStatus:
+    type: string
+    description: The status of the discrepancy.
+    enum:
+    - continue
+    - discharge
+    - hold
+    example: continue
+    x-nullable: true
+  AdministeredByNurse:
+    type: string
+    description: Whether the medication is administered by a nurse or whether it is self-administered.
+    enum:
+    - assisted
+    - not_assisted
+    example: assisted
+  MedicationCreate:
+    allOf:
+    - $ref: '#/definitions/MedicationUpdate'
+    type: object
+    description: Create a Medication
+    required:
+    - administered_by_nurse
+    - client_id
+    - external_client_id
+    - dose
+    - dosage_type
+    - information_source
+    - medication
+    - medication_type
+    - route
+    - status
+    - time_instruction
+    - created_employee_id
+    - updated_employee_id
+    properties:
+      administration_times:
+        type: string
+        description: The times that the medication should be administered.
+        example: In the mornings or evenings
+      dosage_type:
+        $ref: '#/definitions/DosageType'
+      dose:
+        type: string
+        description: The dosage of the medication to administer.
+        example: '2'
+      end_date:
+        type: string
+        description: The end date of the medication using ISO 8601 date formatting.
+        example: '2018-01-01'
+      end_date_unknown:
+        type: boolean
+        description: Whether the end date is unknown.
+        example: false
+      medication:
+        type: string
+        description: The medication name.
+        example: Ibuprofen
+      medication_type:
+        $ref: '#/definitions/Type'
+      ordering_physician:
+        type: string
+      client_id:
+        type: integer
+        description: The ID of the client.
+        example: 1234
+      external_client_id:
+        type: string
+        description: The external ID of the client.
+        example: client_1234
+      pca_special_instructions:
+        type: string
+        description: Set only if `delivery_mode` is  `ambulatory_pump_pca`.
+      route:
+        $ref: '#/definitions/Route'
+      start_date:
+        type: string
+        description: The start date of the medication using ISO 8601 date formatting.
+        example: '2018-01-01'
+      start_date_unknown:
+        type: boolean
+        description: Whether the start date is unknown.
+        example: false
+      time_instruction:
+        $ref: '#/definitions/TimeInstruction'
+  MedicationList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of the medications
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Medication'
+  CreateSuccess:
+    type: object
+    description: Success returned from the API when creating or updating an entity.
+    properties:
+      id:
+        type: string
+        description: The entity ID.
+        example: 70ad613a-376c-4389-bb45-78374dddd03e
+      type:
+        type: string
+        description: The clinical document type.
+        example: medication
+      uri:
+        type: string
+        description: The entity URI.
+        example: /medication/70ad613a-376c-4389-bb45-78374dddd03e
+  Discrepancy:
+    type: string
+    description: The discrepancy code.
+    enum:
+    - none
+    - dose_different
+    - route_different
+    - frequency_different
+    - medication_not_currently_prescribed
+    - client_no_longer_taking_medication
+    - otc_not_taken_as_prescribed
+    - allergy_to_prescribed_medication
+    - duplicate_of_medication
+    - drug_interaction
+    - formulation_incorrect_or_omitted
+    - expired_medication
+    - other
+    example: dose_different
+    x-nullable: true
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+parameters:
+  count:
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+    description: Number of items per page. If not specified will default to 100.
+  page:
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+    description: Filter by page number. If not specified will default to 1.
+responses:
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.
+  InvalidRequest:
+    description: Invalid data.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Invalid request
+  NotFound:
+    description: Not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Progress note not found

@@ -1,0 +1,317 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Employee Notes API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Employee Notes
+paths:
+  /employee_notes/{employee_id}:
+    parameters:
+    - name: employee_id
+      description: AlayaCare ID of the employee
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Employee Notes
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - name: note_type
+        description: Filter on the employee note type category
+        in: query
+        type: string
+      - name: created_at
+        description: 'Filter employee notes by creation date greater or equal than specified value.
+
+          Expected format is ISO 8601.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+        type: string
+        format: date-time
+        in: query
+      summary: Get a list of employee notes by the employee's AlayaCare ID
+      responses:
+        '200':
+          description: A list of employee notes
+          schema:
+            $ref: '#/definitions/EmployeeNotesDetailsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+    post:
+      summary: Create an employee note by the employee's AlayaCare ID
+      tags:
+      - Employee Notes
+      description: '* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/
+
+        * Note `status` is optional, if omitted the employee note will be created with status set to `Active`.
+
+        '
+      parameters:
+      - name: body
+        description: Employee note data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EmployeeNotesCreate'
+      responses:
+        201:
+          description: Employee note created successfully
+          schema:
+            $ref: '#/definitions/EmployeeNotesDetails'
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        400:
+          $ref: '#/responses/ErrorResponseCreateNoteInvalidRequest'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+  /employee_notes/by_id/{external_employee_id}:
+    parameters:
+    - name: external_employee_id
+      description: External ID of the employee
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Employee Notes
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - name: note_type
+        description: Filter on the employee note type category
+        in: query
+        type: string
+      - name: created_at
+        description: 'Filter employee notes by creation date greater or equal than specified value.
+
+          Expected format is ISO 8601.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+        type: string
+        format: date-time
+        in: query
+      summary: Get a list of employee notes by the employee's external ID
+      responses:
+        '200':
+          description: A list of employee notes
+          schema:
+            $ref: '#/definitions/EmployeeNotesDetailsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+    post:
+      summary: Create an employee note by the employee's external ID
+      tags:
+      - Employee Notes
+      description: '* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/
+
+        * Note `status` is optional, if omitted the employee note will be created with status set to `Active`.
+
+        '
+      parameters:
+      - name: body
+        description: Employee note data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/EmployeeNotesCreate'
+      responses:
+        201:
+          description: Employee note created successfully
+          schema:
+            $ref: '#/definitions/EmployeeNotesDetails'
+        401:
+          $ref: '#/responses/ErrorResponseAuthentication'
+        400:
+          $ref: '#/responses/ErrorResponseCreateNoteInvalidRequest'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  EmployeeNotesCreate:
+    description: Employee note data required for creation.
+    type: object
+    properties:
+      status:
+        type: string
+        default: active
+        description: Status of the employee note. Either `active` or `archived`.
+        example: active
+        enum:
+        - active
+        - archived
+      note_type:
+        type: string
+        description: Note type category of the employee note
+        example: employee_general
+      content:
+        type: string
+        description: Content of the employee note. A subset of HTML is accepted.
+        example: Employee requested additional training.
+    required:
+    - note_type
+    - content
+  EmployeeNotesDetailsList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of employee notes
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/EmployeeNotesDetails'
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  EmployeeNotesDetails:
+    description: An employee note
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the employee note
+        example: 123
+      status:
+        type: string
+        default: active
+        description: Status of the employee note. Either `active` or `archived`.
+        example: active
+        enum:
+        - active
+        - archived
+      note_type:
+        type: string
+        description: Note type category of the employee note
+        example: employee_general
+      content:
+        type: string
+        description: Content of the employee note. A subset of HTML is accepted.
+        example: Employee requested additional training.
+      created_at:
+        type: string
+        format: date-time
+        description: Date employee note was created (ISO 8601)
+        example: '2018-07-08T13:30:00+00:00'
+      created_by:
+        type: integer
+        description: AlayaCare ID of the employee who created the employee note.
+        example: 1001
+parameters:
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+responses:
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.
+  ErrorResponseCreateNoteInvalidRequest:
+    description: Invalid data submitted for creation
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400,
+        message: Invalid note type
+  ErrorResponseEmployeeNotFound:
+    description: Employee not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Employee not found.

@@ -1,0 +1,249 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Vital Metadata API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Vital Metadata
+paths:
+  /vitals/client/{client_id}/metadata:
+    parameters:
+    - description: Client ID
+      name: client_id
+      in: path
+      required: true
+      type: integer
+    get:
+      tags:
+      - Vital Metadata
+      summary: Get a list of the metadata for a client's vitals by the client's AlayaCare ID
+      responses:
+        200:
+          description: Metadata details
+          schema:
+            $ref: '#/definitions/VitalMetadataList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/NotFound'
+  /vitals/client/by_id/{external_client_id}/metadata:
+    parameters:
+    - description: External client ID
+      name: external_client_id
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - Vital Metadata
+      summary: Get a list of the metadata for a client's vitals by the client's external ID
+      responses:
+        200:
+          description: Metadata details
+          schema:
+            $ref: '#/definitions/VitalMetadataList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/NotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  VitalMetadataOptions:
+    type: object
+    description: The metadata options available for the vital.
+    required:
+    - units
+    properties:
+      type:
+        type: string
+        description: The options type.
+        example: object
+      properties:
+        type: object
+        properties:
+          position:
+            type: object
+            properties:
+              enum:
+                type: array
+                description: The list of available options for the position.
+                items:
+                  type: string
+                  example:
+                  - lying
+                  - sitting
+                  - standing
+              type:
+                type: string
+                description: The `enum` options type.
+                example: string
+          route:
+            type: object
+            properties:
+              enum:
+                type: array
+                description: The list of available options for the route.
+                items:
+                  type: string
+                  example:
+                  - axillary
+                  - oral
+                  - rectal
+                  - tympanic
+              type:
+                type: string
+                description: The `enum` options type.
+                example: string
+      units:
+        type: array
+        description: A list of units available for the vital.
+        items:
+          type: object
+          properties:
+            label:
+              type: string
+              description: The unit label.
+              example: mmHg
+            value:
+              type: string
+              description: The unit code.
+              example: mmhg
+  VitalMetadataList:
+    type: object
+    description: A list of vital metadata
+    required:
+    - metadata
+    properties:
+      metadata:
+        type: array
+        items:
+          $ref: '#/definitions/VitalMetadata'
+  VitalMetadata:
+    type: object
+    description: Vital metadata
+    required:
+    - active
+    - label
+    - groups
+    - max
+    - min
+    - name
+    - options
+    - unit
+    properties:
+      active:
+        type: boolean
+        description: Whether the vital is active.
+        example: true
+      groups:
+        type: array
+        description: The groups to which the vital belongs. If no groups are set, this will be set to `name`.
+        items:
+          type: string
+          example: blood_pressure
+      label:
+        type: string
+        description: The vital label.
+        example: Systolic Blood pressure
+      max:
+        type: number
+        description: The maximum threshold for the vital.
+        example: 120
+      min:
+        type: number
+        description: The minimum threshold for the vital.
+        example: 60
+      name:
+        $ref: '#/definitions/VitalName'
+      options:
+        $ref: '#/definitions/VitalMetadataOptions'
+      unit:
+        type: string
+        description: The default unit used for the vital.
+        example: mmhg
+  VitalName:
+    type: string
+    description: The name identifying the vital type.
+    enum:
+    - blood_glucose
+    - bmi
+    - height
+    - pulse
+    - pressure_min
+    - pressure_max
+    - weight
+    - respiratory_rate
+    - spo2
+    - temperature
+    example: pressure_max
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+responses:
+  NotFound:
+    description: Not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Progress note not found
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.

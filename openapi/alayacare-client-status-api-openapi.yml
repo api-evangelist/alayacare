@@ -1,0 +1,740 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Client Status API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Client Status
+  description: Client status related endpoints.
+paths:
+  /clients/{client_id}/status:
+    parameters:
+    - name: client_id
+      description: AlayaCare ID of the client
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      tags:
+      - Client Status
+      summary: Get client status details using its AlayaCare Client ID
+      operationId: listClientStatuses
+      description: Returns a paginated list of client status records for a client by AlayaCare client ID.
+      parameters:
+      - name: status
+        description: Filter by a single client status.
+        in: query
+        schema:
+          type: string
+          enum:
+          - active
+          - pending
+          - on_hold
+          - waiting_list
+          - discharged
+      - name: effective_date
+        description: 'Filter for client status that are effective on a date greater or equal than specified value.
+
+          Expected format is ISO 8601.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: filter
+        in: query
+        description: Substring search on client status `note` and reason `name`
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of client status details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+    post:
+      tags:
+      - Client Status
+      summary: Create a client status using its AlayaCare Client ID
+      operationId: createClientStatus
+      description: '* `reason_id` can only be set and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons
+
+        * `end_date` can only be set for `on_hold` status
+
+        * Specific rules for configuring client status follow the internal AlayaCare application logic
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/ClientStatusCreate'
+      responses:
+        '200':
+          description: Client status created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusCreated'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: Field 'status' is required
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: 409
+                    message: 'Branch conflict: Reason cannot be assigned to the client'
+  /clients/{client_id}/status/{status_id}:
+    parameters:
+    - name: client_id
+      description: AlayaCare ID of the client
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: status_id
+      description: AlayaCare ID of the status
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      tags:
+      - Client Status
+      summary: Get a client status details using its AlayaCare Client and Status ID
+      operationId: detailClientStatus
+      description: Returns details for a client status by AlayaCare client ID and status ID.
+      responses:
+        '200':
+          description: Client status details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusDetails'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientStatusNotFound'
+    put:
+      tags:
+      - Client Status
+      summary: Update a client status using its AlayaCare Client and Status ID
+      operationId: updateClientStatus
+      description: '* `end_date` can only be edited for `on_hold` and `pending` status
+
+        * `effective_date` can only be edited for `on_hold`, `discharged` and `pending` status
+
+        * `reason_id` can only be edited and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons
+
+        * Specific rules for configuring client status follow the internal AlayaCare application logic
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/ClientStatusUpdate'
+      responses:
+        '200':
+          description: Client status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusCreated'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: Field 'reason_id' is invalid
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientStatusNotFound'
+    delete:
+      tags:
+      - Client Status
+      summary: Remove a client status using its AlayaCare Client and Status ID
+      operationId: deleteClientStatus
+      description: '* Only `on_hold`, `waiting_list` and `discharged` status can be deleted
+
+        '
+      responses:
+        '204':
+          description: Client status successfully deleted
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: Status cannot be deleted
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientStatusNotFound'
+  /clients/by_id/{external_client_id}/status:
+    parameters:
+    - name: external_client_id
+      description: External ID of the client
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Client Status
+      summary: Get client status details using External Client ID
+      operationId: listClientStatusesByExt
+      description: Returns a paginated list of client status records for a client by external client ID.
+      parameters:
+      - name: status
+        description: Filter by a single client status.
+        in: query
+        schema:
+          type: string
+          enum:
+          - active
+          - pending
+          - on_hold
+          - waiting_list
+          - discharged
+      - name: effective_date
+        description: 'Filter for client status that are effective on a date greater or equal than specified value.
+
+          Expected format is ISO 8601.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: filter
+        in: query
+        description: Substring search on client status `note` and reason `name`
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of client status details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorResponseMultipleClientsFound'
+    post:
+      tags:
+      - Client Status
+      summary: Create a client status using External Client ID
+      operationId: createClientStatusByExt
+      description: '* `reason_id` can only be set and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons
+
+        * `end_date` can only be set for `on_hold` status
+
+        * Specific rules for configuring client status follow the internal AlayaCare application logic
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/ClientStatusCreate'
+      responses:
+        '200':
+          description: Client status created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusCreated'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: Field 'status' is required
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '409':
+          description: "Conflict. Possible causes:\n  1. the reason ID given in the body cannot by assigned to the client;\n  2. multiple clients share the external ID given in the path and they should be merged\n"
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: 409
+                    message: 'Branch conflict: Reason cannot be assigned to the client'
+  /clients/by_id/{external_client_id}/status/{status_id}:
+    parameters:
+    - name: external_client_id
+      description: External ID of the client
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: status_id
+      description: AlayaCare ID of the status
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      tags:
+      - Client Status
+      summary: Get a client status details using External Client ID and Status ID
+      operationId: detailClientStatusByExt
+      description: Returns details for a client status by external client ID and status ID.
+      responses:
+        '200':
+          description: Client status details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusDetails'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientStatusNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorResponseMultipleClientsFound'
+    put:
+      tags:
+      - Client Status
+      summary: Update a client status using External Client ID and Status ID
+      operationId: updateClientStatusByExt
+      description: '* `end_date` can only be edited for `on_hold` and `pending` status
+
+        * `effective_date` can only be edited for `on_hold`, `discharged` and `pending` status
+
+        * `reason_id` can only be edited and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons
+
+        * Specific rules for configuring client status follow the internal AlayaCare application logic
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/ClientStatusUpdate'
+      responses:
+        '200':
+          description: Client status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientStatusCreated'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: Field 'reason_id' is invalid
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientStatusNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorResponseMultipleClientsFound'
+    delete:
+      tags:
+      - Client Status
+      summary: Remove a client status using External Client ID and Status ID
+      operationId: deleteClientStatusByExt
+      description: '* Only `on_hold`, `waiting_list` and `discharged` status can be deleted
+
+        '
+      responses:
+        '204':
+          description: Client status successfully deleted
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                response:
+                  value:
+                    code: 400
+                    message: Status cannot be deleted
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientStatusNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorResponseMultipleClientsFound'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    ClientStatusDetails:
+      description: AlayaCare client status entity
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare client status ID
+          example: 1001
+        effective_date:
+          type: string
+          description: Date the status will become in effect. Expected format is ISO 8601.
+          example: '2018-07-08T00:00:00+00:00'
+        status:
+          description: Updatable status of a client
+          type: string
+          example: on_hold
+          enum:
+          - active
+          - pending
+          - on_hold
+          - discharged
+          - waiting_list
+        reason:
+          $ref: '#/components/schemas/ReasonDetails'
+        note:
+          description: Note attached to the client status.
+          type: string
+          example: On hold due to hospitalization.
+        created_at:
+          type: string
+          format: date-time
+          description: Date the record was created (ISO 8601) - Time saved at `T00:00:00+00:00`
+          example: '2019-07-08T00:00:00+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date the record was updated (ISO 8601) - Time saved at `T00:00:00+00:00`
+          example: '2020-07-08T00:00:00+00:00'
+        created_by:
+          $ref: '#/components/schemas/CreatedByDetails'
+        updated_by:
+          $ref: '#/components/schemas/UpdatedByDetails'
+    ClientServicesStatus:
+      description: 'Client service statuses update details if this block is not sent,
+
+        it is defaulted to FALSE, meaning the services statuses are not updated
+
+        '
+      type: object
+      properties:
+        update_services:
+          type: boolean
+          description: Whether or not to apply the client status change to their associated services.
+          example: true
+        service_status:
+          type: string
+          description: The status change will be applied to services with this specific services_status only.
+          enum:
+          - on_hold
+          - active
+          - discharged
+          - waiting_list
+          example: on_hold
+        service_status_reason:
+          type: integer
+          description: The status change will be applied to services with this specific service_status_reason only.
+          example: 9
+    ClientStatusCreated:
+      description: AlayaCare client status entity
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare client status ID
+          example: 1001
+    ClientStatusCreate:
+      description: AlayaCare client status entity to create
+      type: object
+      properties:
+        effective_date:
+          type: string
+          description: Date the status will become in effect. Expected format is ISO 8601.
+          example: '2018-07-08T00:00:00+00:00'
+          format: date-time
+        status:
+          description: Updatable status of a client
+          type: string
+          example: on_hold
+          enum:
+          - active
+          - on_hold
+          - discharged
+          - waiting_list
+        reason_id:
+          description: Client status change reason ID. Available and mandatory for 'On Hold' or 'Discharged' status.
+          type: integer
+          example: 1
+        note:
+          description: Note attached to the client status. Max 255 characters.
+          type: string
+          example: On hold due to hospitalization.
+        end_date:
+          description: Adding an `end_date` will automatically create an `active` status with an `effective_date` equal to the `end_date`. Expected format is ISO 8601.
+          type: string
+          example: '2018-07-08T00:00:00+00:00'
+          format: date-time
+        services:
+          $ref: '#/components/schemas/ClientServicesStatus'
+      required:
+      - effective_date
+      - status
+    ClientStatusList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of client status
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ClientStatusDetails'
+    ClientStatusUpdate:
+      description: AlayaCare client status entity to create
+      type: object
+      properties:
+        effective_date:
+          type: string
+          description: Date the status will become in effect. Expected format is ISO 8601.
+          example: '2018-07-08T00:00:00+00:00'
+          format: date-time
+        reason_id:
+          description: Client status change reason ID. Available and mandatory for 'On Hold' or 'Discharged' status.
+          type: string
+          example: '1'
+        note:
+          description: Note attached to the client status. Max 255 characters.
+          type: string
+          example: On hold due to hospitalization.
+        end_date:
+          description: Adding an `end_date` will automatically create an `active` status with an `effective_date` equal to the `end_date`. Expected format is ISO 8601.
+          type: string
+          example: '2018-07-08T00:00:00+00:00'
+          format: date-time
+        services:
+          $ref: '#/components/schemas/ClientServicesStatus'
+    CreatedByDetails:
+      type: object
+      description: User who created the record
+      properties:
+        id:
+          type: integer
+          description: Id of the employee who created the record
+          example: 284
+        external_id:
+          type: string
+          description: External ID of the employee who created the record
+          example: '450'
+        name:
+          type: string
+          description: Name of the employee who created the record
+          example: John Smith
+    ReasonDetails:
+      description: AlayaCare Status Change Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare status reason ID.
+          example: 1
+        name:
+          type: string
+          description: AlayaCare status reason name
+          example: Vacation
+      required:
+      - id
+      - name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    UpdatedByDetails:
+      type: object
+      description: User who updated the record
+      properties:
+        id:
+          type: integer
+          description: Id of the employee who updated the record
+          example: 284
+        external_id:
+          type: string
+          description: External ID of the employee who updated the record
+          example: '450'
+        name:
+          type: string
+          description: Name of the employee who updated the record
+          example: John Smith
+  requestBodies:
+    ClientStatusCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientStatusCreate'
+      description: Client status data in JSON format
+      required: true
+    ClientStatusUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientStatusUpdate'
+      description: Client status data in JSON format
+      required: true
+  responses:
+    ErrorResponseMultipleClientsFound:
+      description: Conflict. Multiple clients share the external ID given in the path and they should be merged
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 409
+                message: Multiple clients found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseClientStatusNotFound:
+      description: Client status relationship not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client status relationship not found
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client not found.
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

@@ -1,0 +1,275 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Visit notes API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Visit notes
+paths:
+  /visits/{alayacare_visit_id}/notes:
+    parameters:
+    - name: alayacare_visit_id
+      description: AlayaCare visit ID
+      in: path
+      type: integer
+      required: true
+    post:
+      tags:
+      - Visit notes
+      summary: Add note to a visit using AlayaCare ID
+      parameters:
+      - name: body
+        description: Visit note data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitNoteCreate'
+      responses:
+        '201':
+          description: Visit note successfully created.
+          schema:
+            $ref: '#/definitions/Visit'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /visits/by_id/{visit_id}/notes:
+    parameters:
+    - name: visit_id
+      description: External visit ID
+      in: path
+      type: string
+      required: true
+    post:
+      tags:
+      - Visit notes
+      summary: Add note to a visit using External ID
+      parameters:
+      - name: body
+        description: Visit note data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitNoteCreate'
+      responses:
+        '201':
+          description: Visit note successfully created.
+          schema:
+            $ref: '#/definitions/Visit'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  VisitNoteCreate:
+    description: Visit note
+    type: object
+    properties:
+      text:
+        type: string
+        description: Content of the visit note
+        maxLength: 1000
+        example: A sample visit note.
+    required:
+    - text
+  VisitCancelCode:
+    description: Visit cancellation code
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare cancel code ID
+        example: 1
+      code:
+        type: string
+        description: Cancel code
+        example: CLNT_REQ_RESCHEDULE
+      description:
+        type: string
+        description: Cancel code description
+        example: Client requested reschedule
+        x-nullable: true
+    required:
+    - id
+    - code
+  VisitTag:
+    type: string
+    description: Name of tag.
+    example: First visit
+  Visit:
+    allOf:
+    - $ref: '#/definitions/BaseVisit'
+    properties:
+      alayacare_client_id:
+        type: integer
+        description: AlayaCare client ID
+        example: 1001
+      client_id:
+        type: string
+        description: External client ID
+        example: sor_client_id_1
+        x-nullable: true
+    required:
+    - alayacare_client_id
+  BaseVisit:
+    type: object
+    properties:
+      alayacare_employee_id:
+        type: integer
+        description: AlayaCare employee ID
+        example: 101
+        x-nullable: true
+      alayacare_service_id:
+        type: integer
+        description: AlayaCare service ID
+        example: 1
+      alayacare_visit_id:
+        type: integer
+        description: AlayaCare visit ID
+        example: 10001
+      employee_id:
+        type: string
+        description: External employee ID
+        example: sor_employee_id_1
+        x-nullable: true
+      service_id:
+        type: string
+        description: External service ID
+        example: sor_service_id_1
+        x-nullable: true
+      visit_id:
+        type: string
+        description: External visit ID
+        example: sor_visit_id_1
+        x-nullable: true
+      status:
+        type: string
+        description: Status of the visit based on status hierarchy from AlayaCare web application.
+        example: scheduled
+        enum:
+        - scheduled
+        - vacant
+        - on_hold
+        - cancelled
+        - offered
+        - clocked
+        - late
+        - completed
+        - missed
+        - approved
+      start_at:
+        type: string
+        format: date-time
+        description: Visit start time (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      end_at:
+        type: string
+        format: date-time
+        description: Visit end time (ISO 8601)
+        example: '2017-07-08T14:00:00+00:00'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/VisitNote'
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/VisitTag'
+      cancelled:
+        type: boolean
+        description: Indicates if visit is cancelled
+      cancel_code:
+        $ref: '#/definitions/VisitCancelCode'
+    required:
+    - alayacare_service_id
+    - alayacare_visit_id
+    - start_at
+    - end_at
+    - cancelled
+    - cancel_code
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 400
+        description: Response code
+      message:
+        type: string
+        example: Invalid request
+        description: Detailed error message
+    required:
+    - code
+    - message
+  VisitNote:
+    allOf:
+    - $ref: '#/definitions/VisitNoteCreate'
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: Creation time of the note
+        example: '2017-07-08T13:30:00+00:00'
+    required:
+    - created_at
+responses:
+  ErrorResponseVisitNotFound:
+    description: Visit not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Visit not found
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.

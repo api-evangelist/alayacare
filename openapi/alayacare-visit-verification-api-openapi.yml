@@ -1,0 +1,211 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Visit Verification API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Visit Verification
+paths:
+  /visit_verification/visits/{alayacare_visit_id}:
+    parameters:
+    - name: alayacare_visit_id
+      description: AlayaCare visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visit Verification
+      summary: Get extended visit verification information using AlayaCare ID
+      responses:
+        '200':
+          description: Visit details
+          schema:
+            $ref: '#/definitions/VisitVerificationDetails'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/responses/ErrorResponseUnauthorized'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 400
+        description: Response code
+      message:
+        type: string
+        example: Invalid request
+        description: Detailed error message
+    required:
+    - code
+    - message
+  VisitVerificationDetails:
+    description: Extended Visit Verification information
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Visit ID
+        example: 1000
+      pay:
+        type: object
+        properties:
+          quantity:
+            type: number
+            example: 1.23
+          units:
+            type: string
+            enum:
+            - hours
+            - visits
+            - amount
+          rate:
+            type: number
+            example: 10.0
+      bill:
+        type: object
+        properties:
+          quantity:
+            type: number
+            example: 1.0
+          units:
+            type: string
+            enum:
+            - hours
+            - visits
+            - rate
+          rate:
+            type: number
+            example: 5.0
+      status:
+        type: string
+        enum:
+        - scheduled
+        - vacant
+        - on_hold
+        - cancelled
+        - offered
+        - clocked
+        - late
+        - completed
+        - missed
+      approval_status:
+        type: string
+        enum:
+        - approved
+        - not_approved
+        - in_violation
+        - rejected
+      exceptions:
+        type: array
+        items:
+          $ref: '#/definitions/VisitVerificationException'
+  VisitVerificationException:
+    type: object
+    properties:
+      reason_code:
+        type: string
+        example: reason_code
+      reason_name:
+        type: string
+        example: Stuck in traffic
+      reason_category:
+        type: string
+        example: Reason Category
+      resolution_code:
+        type: string
+        example: resolution_code
+      resolution_name:
+        type: string
+        example: Validated with comments
+      comments:
+        type: string
+        example: Arrived under acceptable time frame
+      is_acknowledged:
+        type: boolean
+        example: false
+      status:
+        type: string
+        enum:
+        - resolved
+        - unresolved
+      details:
+        type: string
+        example: Work session information unavailable
+        description: Visit exception details
+      name:
+        type: string
+        example: Client overlapping work sessions
+        description: Exception type name
+responses:
+  ErrorResponseVisitNotFound:
+    description: Visit not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Visit not found
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.
+  ErrorResponseUnauthorized:
+    description: Authorization required due to release flag state.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 403
+        message: You do not have the required permissions to perform this action.

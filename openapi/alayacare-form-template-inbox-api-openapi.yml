@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts form template inbox API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: form template inbox
+paths:
+  /v1/inbox/form_templates/by_demand_persona_id/{demand_persona_id}/by_schema_id/{schema_id}/latest:
+    parameters:
+    - $ref: '#/components/parameters/DemandPersonaIdPathParam'
+    - $ref: '#/components/parameters/FormSchemaIdPathParam'
+    get:
+      tags:
+      - form template inbox
+      description: '# Authorization
+
+        Required role: supply `org_admin` in the trusted network
+
+        of the demand organization of the form.
+
+
+        # Description
+
+        Returns the latest form version available for a given schema_id within a demand organization.
+
+        '
+      responses:
+        200:
+          description: Successfully retrieved the form template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxFormTemplateDetailResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  schemas:
+    FormTemplateFieldCore:
+      type: object
+      properties:
+        field_tag:
+          type: string
+        field_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        json_logic:
+          type: object
+        label:
+          type: string
+        parent_id:
+          type: integer
+        rank:
+          type: integer
+        required:
+          type: boolean
+        settings:
+          type: object
+      required:
+      - field_type
+      - id
+      - label
+      - parent_id
+      - rank
+      - required
+    InboxFormTemplateDetailResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateCore'
+      - type: object
+        properties:
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/InboxFormTemplateFieldResponse'
+          form_template_id:
+            type: string
+            format: uuid
+          demand_persona_id:
+            type: string
+            format: uuid
+    InboxFormTemplateFieldResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateFieldCore'
+      - type: object
+        properties:
+          field_id:
+            type: string
+            format: uuid
+    FormTemplateCore:
+      type: object
+      properties:
+        admin_eyes_only:
+          type: boolean
+        approve_automatically:
+          type: boolean
+        clinical_event_name:
+          type: string
+        display_instructions_in_pdf:
+          type: boolean
+        display_report:
+          type: boolean
+        exclude_from_shift_report:
+          type: boolean
+        form_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        language_code:
+          type: string
+        name:
+          type: string
+        notify_alert_queue:
+          type: boolean
+        pre_populate:
+          type: boolean
+        requires_clock_in:
+          type: boolean
+        schema_id:
+          type: string
+          format: uuid
+        schema_version:
+          type: integer
+        visit_link_required:
+          type: boolean
+      required:
+      - admin_eyes_only
+      - approve_automatically
+      - display_instructions_in_pdf
+      - display_report
+      - exclude_from_shift_report
+      - form_type
+      - id
+      - language_code
+      - name
+      - notify_alert_queue
+      - pre_populate
+      - requires_clock_in
+      - schema_id
+      - schema_version
+      - visit_link_required
+  parameters:
+    FormSchemaIdPathParam:
+      in: path
+      name: schema_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Schema id of a form.
+    DemandPersonaIdPathParam:
+      in: path
+      name: demand_persona_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a demand organization.
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

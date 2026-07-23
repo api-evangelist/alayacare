@@ -1,0 +1,823 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Invoices API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Invoices
+paths:
+  /billing/periods/{billing_period_id}/invoices:
+    get:
+      tags:
+      - Invoices
+      summary: Fetch multiple private pay invoices
+      parameters:
+      - in: path
+        name: billing_period_id
+        description: Billing Period ID
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/clientSearch'
+      - $ref: '#/components/parameters/invoiceSearch'
+      - $ref: '#/components/parameters/status'
+      - $ref: '#/components/parameters/sortOrder'
+      - $ref: '#/components/parameters/billToParty'
+      - $ref: '#/components/parameters/balanceFrom'
+      - $ref: '#/components/parameters/balanceTo'
+      - $ref: '#/components/parameters/unpaidBalance'
+      - $ref: '#/components/parameters/clientTags'
+      - $ref: '#/components/parameters/clientTagMode'
+      - name: program_type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: program_name_search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: master_invoice_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - client_last_name
+          - client_first_name
+          - client_first_name_last_name
+          - client_last_name_first_name
+          - client_id,
+          - bill_to_party
+          - master_invoice_id
+          - invoice_number
+          - balance
+          - total
+          - program_type
+          - status
+      responses:
+        '200':
+          description: Collection of invoices
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                    description: The current page number
+                    minimum: 1
+                  count:
+                    type: integer
+                    example: 17
+                    description: Number of items in the list (all pages)
+                  items_per_page:
+                    type: integer
+                    example: 10
+                    description: number of items per page
+                  total_pages:
+                    type: integer
+                    example: 2
+                    description: The total number of pages of that size in the collection
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PrivateInvoicesSchema'
+  /billing/cycles/{billing_period_id}/invoices:
+    get:
+      tags:
+      - Invoices
+      summary: Fetch multiple private pay invoices
+      parameters:
+      - in: path
+        name: billing_period_id
+        description: Billing Period ID
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/clientSearch'
+      - $ref: '#/components/parameters/invoiceSearch'
+      - $ref: '#/components/parameters/status'
+      - $ref: '#/components/parameters/sortOrder'
+      - $ref: '#/components/parameters/billToParty'
+      - $ref: '#/components/parameters/balanceFrom'
+      - $ref: '#/components/parameters/balanceTo'
+      - $ref: '#/components/parameters/unpaidBalance'
+      - $ref: '#/components/parameters/clientTags'
+      - $ref: '#/components/parameters/clientTagMode'
+      - name: program_type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: program_name_search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - client_last_name
+          - client_first_name
+          - client_first_name_last_name
+          - client_last_name_first_name
+          - client_id,
+          - bill_to_party
+          - invoice_number
+          - balance
+          - total
+          - program_type
+          - status
+      responses:
+        '200':
+          description: Collection of invoices
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                    description: The current page number
+                    minimum: 1
+                  count:
+                    type: integer
+                    example: 17
+                    description: Number of items in the list (all pages)
+                  items_per_page:
+                    type: integer
+                    example: 10
+                    description: number of items per page
+                  total_pages:
+                    type: integer
+                    example: 2
+                    description: The total number of pages of that size in the collection
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InvoiceQuerySchema'
+  /billing/cycles/{billing_period_id}/invoices/{invoice_id}:
+    get:
+      tags:
+      - Invoices
+      summary: Fetch a specific invoice
+      parameters:
+      - in: path
+        name: billing_period_id
+        description: Billing Period ID
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      - in: path
+        name: invoice_id
+        description: Invoice ID
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        '200':
+          description: the invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceQuerySchema'
+  /billing/cycles/invoice/{invoice_id}/details:
+    get:
+      tags:
+      - Invoices
+      summary: Fetch a specific invoice's invoice items
+      parameters:
+      - in: path
+        name: invoice_id
+        description: Invoice ID
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        '200':
+          description: the invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceQuerySchema'
+  /billing/periods/invoice/{invoice_id}/details:
+    get:
+      tags:
+      - Invoices
+      summary: Fetch multiple private pay invoices
+      parameters:
+      - $ref: '#/components/parameters/sortOrder'
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - policy_rank
+      responses:
+        '200':
+          description: the invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceQuerySchema'
+components:
+  parameters:
+    clientSearch:
+      name: client_search
+      in: query
+      required: false
+      schema:
+        type: string
+    unpaidBalance:
+      name: unpaid_balance
+      in: query
+      required: false
+      schema:
+        type: boolean
+    sortOrder:
+      in: query
+      name: sort_order
+      description: Order to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: ASC
+    balanceFrom:
+      name: balance_from
+      in: query
+      required: false
+      schema:
+        type: number
+    status:
+      name: status
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - draft
+          - revised
+          - sent
+          - void
+          - deleted
+          - copy
+          - paid
+          - written_off
+          - suspended
+          - rejected
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    clientTags:
+      name: client_tags
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+    invoiceSearch:
+      name: invoice_search
+      in: query
+      required: false
+      schema:
+        type: string
+    balanceTo:
+      name: balance_to
+      in: query
+      required: false
+      schema:
+        type: number
+    billToParty:
+      name: bill_to_party
+      in: query
+      required: false
+      schema:
+        type: string
+    clientTagMode:
+      name: client_tag_mode
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - all
+        - any
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+  schemas:
+    PrivateInvoicesSchema:
+      type: object
+      properties:
+        invoice_number:
+          type: integer
+          example: 2348
+        invoice_version:
+          type: integer
+          example: 0
+        master_invoice_id:
+          type: integer
+          example: 12345
+          minimum: 1
+        status:
+          type: string
+          example: draft
+        balance:
+          type: string
+          example: '5.00'
+        payments:
+          type: string
+          example: '2.00'
+        adjustments:
+          type: string
+          example: '3.00'
+        total:
+          type: string
+          example: '10.00'
+        pdf_url:
+          type: string
+          example: https://alayacare.com/invoice5283_20190625.pdf
+        pdf_url_create_time:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        emailed:
+          type: boolean
+          example: true
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        program:
+          $ref: '#/components/schemas/ProgramSchema'
+        payor:
+          $ref: '#/components/schemas/PayorSchema'
+    BillToSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: Funder
+        guid:
+          type: string
+          example: '27990'
+        guid_to:
+          type: string
+          example: '27991'
+        is_active:
+          type: boolean
+          example: true
+        import_id:
+          type: integer
+          example: 123
+        remarks:
+          type: string
+          example: falls prevention program
+        contact_type:
+          type: string
+          example: Referral Contact
+        lang:
+          type: string
+          example: english
+        list:
+          type: string
+          example: Funder List (System)
+    InvoiceQuerySchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        status:
+          type: string
+          example: draft
+        invoice_number:
+          type: integer
+          example: 2348
+        invoice_version:
+          type: integer
+          example: 0
+        invoice_date:
+          type: string
+          format: date
+          example: 2018-01-16
+        updated_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        balance:
+          type: number
+          example: 5
+        total:
+          type: number
+          example: 10
+        can_be_written_off:
+          type: boolean
+          example: false
+        can_be_voided:
+          type: boolean
+          example: false
+        can_be_regenerated:
+          type: boolean
+          example: false
+        can_be_paid:
+          type: boolean
+          example: false
+        can_be_deleted:
+          type: boolean
+          example: false
+        can_add_transaction:
+          type: boolean
+          example: false
+        is_ccac_funder:
+          type: boolean
+          example: false
+        is_funder_batched_funder:
+          type: boolean
+          example: false
+        total_visits:
+          type: integer
+          example: 2
+        total_premiums:
+          type: integer
+          example: 3
+        total_supplies:
+          type: integer
+          example: 4
+        total_client_premiums:
+          type: integer
+          example: 5
+        total_income_items:
+          type: integer
+          example: 6
+        visits_and_premiums_subtotal:
+          type: number
+          example: 10
+        supplies_subtotal:
+          type: number
+          example: 0
+        client_premiums_subtotal:
+          type: number
+          example: 5
+        income_items_subtotal:
+          type: number
+          example: 6
+        client_id:
+          type: integer
+          example: 2
+          minimum: 1
+        crn:
+          type: string
+          example: '10009'
+          description: Has value only if BPAY FF is ON and is already generated
+        taxes:
+          $ref: '#/components/schemas/TaxesSchema'
+        bill_to:
+          $ref: '#/components/schemas/BillToSchema'
+        pdf_url:
+          type: string
+          example: /path/to/file.pdf
+        invoice_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemSchema'
+    TaxesSchema:
+      type: object
+      properties:
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
+    BillingContactSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 16
+        first_name:
+          type: string
+          example: Jane
+        last_name:
+          type: string
+          example: Jones
+        address:
+          type: string
+          example: 12 crescent street
+        address_suite:
+          type: string
+          example: app. 1B
+        city:
+          type: string
+          example: Cityville
+        state:
+          type: string
+          example: Quebec
+        zip:
+          type: string
+          example: H1H1H1
+        country:
+          type: string
+          example: Canada
+        phone_main:
+          type: string
+          example: '5141234567'
+    ClientSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 16
+          minimum: 1
+        first_name:
+          type: string
+          example: Jane
+        last_name:
+          type: string
+          example: Jones
+    InvoiceItemSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        invoice_id:
+          type: integer
+          example: 12
+          minimum: 1
+        source_id:
+          type: integer
+          example: 12
+        subtotal:
+          type: number
+          format: double
+          example: 10.0
+        total_cost:
+          type: number
+          format: double
+          example: 3.0
+        total_taxes:
+          type: number
+          format: double
+          example: 3.0
+        total:
+          type: number
+          format: double
+          example: 13.0
+        ajdustment_type:
+          type: string
+          example: adjustment
+        create_user_id:
+          type: integer
+          example: 2
+          minimum: 1
+        created_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        gl_asset_acc_account_id:
+          type: integer
+          example: 2
+          minimum: 1
+        gl_revenue_acc_account_id:
+          type: integer
+          example: 2
+          minimum: 1
+        item_end_at:
+          type: string
+          format: date
+          example: 2018-01-16T14:17:05-0500
+        item_start_at:
+          type: string
+          format: date
+          example: 2018-01-16T14:16:05-0500
+        memo:
+          type: string
+          example: memo
+        policy_version_id:
+          type: integer
+          example: 2
+          minimum: 1
+        quantity:
+          type: number
+          format: double
+          example: 2.0
+        quantity_units:
+          type: string
+          example: hours
+        receivables_cost_centre_id:
+          type: integer
+          example: 2
+          minimum: 1
+        taxable:
+          type: boolean
+          example: true
+        type:
+          type: string
+          example: visit
+        unitprice:
+          type: number
+          format: double
+          example: 2.0
+        updated_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        update_user_id:
+          type: integer
+          example: 2
+          minimum: 1
+        voided_by_id:
+          type: integer
+          example: 2
+          minimum: 1
+        payor:
+          $ref: '#/components/schemas/PayorSchema'
+    TaxTypesSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: HST
+        total:
+          type: number
+          example: 2
+    ProgramSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12345
+          minimum: 1
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        program_type:
+          type: string
+          example: LTCI
+        name:
+          type: string
+          example: Long Term Care Insurance
+        guarantor_funder:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 111
+            code:
+              type: string
+              example: GF1
+            name:
+              type: string
+              example: Some Funder
+        guarantor_billing_contact:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 111
+            first_name:
+              type: string
+              example: Bruce
+            last_name:
+              type: string
+              example: Lee
+        client_billing_cycle:
+          type: integer
+          example: 999
+          minimum: 1
+    PayorSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
+    FunderStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+          minimum: 1
+        code:
+          type: string
+          example: Some Funder
+        name:
+          type: string
+          example: Some Funder
+        description:
+          type: string
+          example: Some Funder
+        invoicing_model:
+          type: string
+          example: funder_individual
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

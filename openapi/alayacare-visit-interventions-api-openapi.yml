@@ -1,0 +1,485 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Visit interventions API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Visit interventions
+paths:
+  /visits/{alayacare_visit_id}/interventions:
+    get:
+      tags:
+      - Visit interventions
+      summary: Get a list of interventions for a visit using it's Alayacare ID
+      parameters:
+      - name: alayacare_visit_id
+        description: The ID of the visit
+        type: integer
+        in: path
+        required: true
+      - name: is_required
+        description: Filter for interventions that are required to finish a visit
+        type: boolean
+        in: query
+        required: false
+      - name: has_comment
+        description: Filter for interventions that have a comment or not_completed_reason_name
+        type: boolean
+        in: query
+        required: false
+      - name: is_completed
+        description: Filter for interventions that have been completed
+        type: boolean
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Visit details
+          schema:
+            $ref: '#/definitions/VisitInterventionsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/responses/ErrorResponseCareplanFeatureFlagState'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+    put:
+      tags:
+      - Visit interventions
+      summary: Link Interventions to a visit
+      description: '- The full list of Interventions must be provided in the request body, it will override the previously available list.
+
+        - Only active `interventions` on the patient active Careplan can be added
+
+        - Only the admin user can update the visit interventions when the work session is not open.
+
+        '
+      parameters:
+      - name: body
+        description: List of interventions to apply to a visit
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitInterventionsUpdate'
+      - name: alayacare_visit_id
+        description: The ID of the visit
+        type: integer
+        in: path
+        required: true
+      responses:
+        '200':
+          description: A list of interventions for a visit
+          schema:
+            $ref: '#/definitions/VisitInterventionsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/responses/ErrorResponseCareplanFeatureFlagState'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /visits/{alayacare_visit_id}/interventions/ivr:
+    put:
+      tags:
+      - Visit interventions
+      summary: Update interventions in a visit using it's Alayacare ID
+      description: '- The full list of Interventions must be provided in the request body, it will override the previously available list.
+
+        - User credentials MUST have an admin role.
+
+        - (Employee internal id) MUST be informed on the url path as a param, like this: ''?completions_by={employee_internal_id}''.
+
+        - Position should be always 0. It does not cover the interventions tries.
+
+        - The Employee ''?completions_by={employee_internal_id} must be clocked-in to the visit.
+
+        '
+      parameters:
+      - name: body
+        description: List of interventions to apply to a visit
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/IvrVisitInterventions'
+      - name: alayacare_visit_id
+        description: The ID of the visit
+        type: integer
+        in: path
+        required: true
+      - name: completions_by
+        description: Employee internal id
+        type: integer
+        in: query
+        required: true
+      responses:
+        '204':
+          description: Success with no content. Interventions were updated.
+        '400':
+          description: 'Make sure that:
+
+            - completions_by is informed.
+
+            - the Visit is assigned for the same (employee internal id) informed at completions_by query param.
+
+            - the Visit is clocked-in.
+
+            - the Employee is clocked-in to the visit.
+
+            - position is 0.
+
+            - intervention already exists.
+
+            '
+        '403':
+          description: Make sure that your api credentials have an admin role.
+        '404':
+          description: Make sure that visit_id is valid.
+  /visits/by_id/{visit_id}/interventions:
+    get:
+      tags:
+      - Visit interventions
+      summary: Get a list of interventions for a visit using it's Alayacare external ID
+      parameters:
+      - name: visit_id
+        description: The ID of the visit
+        type: integer
+        in: path
+        required: true
+      - name: is_required
+        description: Filter for interventions that are required to finish a visit
+        type: boolean
+        in: query
+        required: false
+      - name: has_comment
+        description: Filter for interventions that have a comment
+        type: boolean
+        in: query
+        required: false
+      - name: is_completed
+        description: Filter for interventions that have been completed
+        type: boolean
+        in: query
+        required: false
+      responses:
+        '200':
+          description: A list of interventions for a visit
+          schema:
+            $ref: '#/definitions/VisitInterventionsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/responses/ErrorResponseCareplanFeatureFlagState'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+    put:
+      tags:
+      - Visit interventions
+      summary: Update interventions in a visit using it's Alayacare external ID
+      description: '- The full list of Interventions must be provided in the request body, it will override the previously available list.
+
+        - Only active `interventions` on the patient active careplan can be added
+
+        - Only the admin user can update the visit interventions when the work session is not open..
+
+        '
+      parameters:
+      - name: body
+        description: List of interventions to apply to a visit
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitInterventionsUpdate'
+      - name: visit_id
+        description: The ID of the visit
+        type: integer
+        in: path
+        required: true
+      responses:
+        '200':
+          description: A list of interventions for a visit
+          schema:
+            $ref: '#/definitions/VisitInterventionsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/responses/ErrorResponseCareplanFeatureFlagState'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  VisitInterventions:
+    description: A list of visit interventions
+    type: object
+    properties:
+      intervention_id:
+        type: integer
+        description: ID of the intervention configured in the client's careplan
+        example: 101
+      completed:
+        type: boolean
+        example: true
+        description: Completion of the instance of the intervention in the visit
+      comment:
+        type: string
+        description: Comment entered in the visit intervention. Will return the `not_completed_reason_name` if it is set but there is no comment
+        example: Vitals recorded. Blood pressure normal.
+      not_completed_reason_name:
+        type: string
+        description: Reason code for not completed the visit intervention
+        example: client_declined
+      status:
+        type: string
+        enum:
+        - not_documented
+        - not_done
+        - done
+        description: The status of the visit intervention
+      intervention:
+        $ref: '#/definitions/Intervention'
+      position:
+        type: integer
+        example: 1
+      created_at:
+        type: string
+        format: date-time
+        description: Visit start time (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      created_by:
+        type: object
+        description: User who created the intervention in the visit
+        properties:
+          id:
+            type: integer
+            example: 1001
+          first_name:
+            type: string
+            example: John
+          last_name:
+            type: string
+            example: Smith
+      updated_at:
+        type: string
+        format: date-time
+        description: Visit updated time (ISO 8601)
+        example: '2018-07-08T13:30:00+00:00'
+      updated_by:
+        type: object
+        description: User who last updated the intervention in the visit
+        properties:
+          id:
+            type: integer
+            example: 1001
+          first_name:
+            type: string
+            example: John
+          last_name:
+            type: string
+            example: Smith
+      visit_id:
+        description: External ID of the visit
+        type: string
+        example: external_id_123
+      alayacare_visit_id:
+        description: Alayacare ID of the visit
+        type: integer
+        example: 2384
+  IvrVisitInterventions:
+    description: A list of visit interventions
+    type: object
+    required:
+    - intervention_id
+    - completed
+    - position
+    properties:
+      intervention_id:
+        description: ID of the intervention configured in the client's careplan
+        type: integer
+        example: 101
+      completed:
+        description: Completion of the instance of the intervention in the visit
+        type: boolean
+        example: true
+      comment:
+        description: Comment entered in the visit intervention
+        type: string
+        example: Vitals recorded. Blood pressure normal.
+        x-nullable: true
+      position:
+        type: integer
+        example: 1
+      duration:
+        description: Duration of the intervention in minutes
+        type: integer
+        example: 10
+        x-nullable: true
+      work_session_uuid:
+        description: UUID of the work session
+        type: string
+        example: uuid
+        x-nullable: true
+  Intervention:
+    type: object
+    properties:
+      careplan_id:
+        type: integer
+        description: ID of the client's careplan
+        example: 709
+      client_id:
+        type: string
+        description: Alayacare client external ID
+        example: external_id_client_123
+      alayacare_client_id:
+        type: integer
+        description: Alayacare client ID
+        example: 1001
+      name:
+        type: string
+        description: Name of the intervention
+        example: Blood pressure measurement
+      completions:
+        type: array
+        description: Date-time of completion of the intervention (ISO 8601)
+        items:
+          type: object
+      is_required:
+        type: boolean
+        description: Intervention is required or not to clock out of the visit
+      module:
+        type: string
+        description: Alayacare Module to which the intervention is attached
+        example: Vitals
+      status:
+        type: string
+        description: Status of the intervention in the Careplan
+        example: active
+        enum:
+        - draft
+        - active
+        - completed
+        - archived
+      type:
+        type: string
+        description: One of the types defined in the setting "Care Documentation > Care Plan Intervention Types"
+        example: Nursing
+  VisitInterventionsUpdate:
+    description: Interventions
+    type: object
+    properties:
+      interventions:
+        type: string
+        description: list of visit intervention ids
+        example: '[1, 2, 3, 4]'
+  VisitInterventionsList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of visits
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/VisitInterventions'
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 400
+        description: Response code
+      message:
+        type: string
+        example: Invalid request
+        description: Detailed error message
+    required:
+    - code
+    - message
+responses:
+  ErrorResponseVisitNotFound:
+    description: Visit not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Visit not found
+  ErrorResponseCareplanFeatureFlagState:
+    description: Authorization required due to feature flag state.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 403
+        message: You do not have the required permissions to perform this action.
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.

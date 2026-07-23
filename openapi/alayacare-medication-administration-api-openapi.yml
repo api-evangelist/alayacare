@@ -1,0 +1,361 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Medication Administration API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Medication Administration
+paths:
+  /medications/{medication_id}/administrations:
+    parameters:
+    - description: Medication ID
+      name: medication_id
+      in: path
+      required: true
+      type: string
+      format: uuid
+    get:
+      tags:
+      - Medication Administration
+      summary: Get a list of medication administrations
+      description: The fields that are populated on the when administering a medication depend on the medication `delivery_mode`.
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        200:
+          description: A list of medication administrations
+          schema:
+            $ref: '#/definitions/MedicationAdministrationList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+        404:
+          $ref: '#/responses/NotFound'
+    post:
+      tags:
+      - Medication Administration
+      summary: Create a medication administration.
+      parameters:
+      - description: Medication administration data
+        name: medication_administration
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/MedicationAdministrationCreate'
+      responses:
+        201:
+          description: Administration created successfully
+          schema:
+            type: object
+            description: Success returned from the API when creating or updating an entity.
+            properties:
+              id:
+                type: string
+                description: The entity ID.
+                example: 70ad613a-376c-4389-bb45-78374dddd03e
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+  /medications/{medication_id}/administrations/{admin_id}:
+    parameters:
+    - description: Medication ID
+      name: medication_id
+      in: path
+      required: true
+      type: string
+      format: uuid
+    - description: Medication Administration ID
+      name: admin_id
+      in: path
+      required: true
+      type: string
+      format: uuid
+    get:
+      tags:
+      - Medication Administration
+      summary: Get details of a medication administration
+      responses:
+        200:
+          description: Medication administration details
+          schema:
+            $ref: '#/definitions/MedicationAdministration'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+        404:
+          $ref: '#/responses/NotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  MedicationAdministrationCreate:
+    type: object
+    description: Medication admninistration details
+    required:
+    - medication_id
+    - created_employee_id
+    - updated_employee_id
+    properties:
+      amount_given:
+        type: string
+        x-nullable: true
+      bolus_dose:
+        type: string
+        x-nullable: true
+      bolus_dose_lockout:
+        type: string
+        x-nullable: true
+      bolus_doses_attempted:
+        type: string
+        x-nullable: true
+      bolus_doses_given:
+        type: string
+        x-nullable: true
+      comments:
+        type: string
+        x-nullable: true
+        description: Any additional comments for the administration.
+      concentration:
+        type: string
+        x-nullable: true
+      created_employee_id:
+        type: integer
+        description: The ID of the employee that created the entity.
+      date_complete:
+        type: string
+        description: The date that the medication was administered using ISO 8601 date-time formatting. The default is now.
+        example: '2018-01-01T00:30:00+00:00'
+      delivery_cycle:
+        type: string
+        x-nullable: true
+      delivery_mode:
+        type: string
+        x-nullable: true
+      delivery_period:
+        type: string
+        x-nullable: true
+      device_type:
+        type: string
+        x-nullable: true
+      did_not_administer:
+        type: boolean
+        description: Whether the medication was held. The default is `false`.
+        example: false
+      dose:
+        type: string
+        x-nullable: true
+      dose_volume:
+        type: string
+        x-nullable: true
+      duration:
+        type: string
+        x-nullable: true
+      hourly_rate:
+        type: string
+        x-nullable: true
+      id:
+        type: string
+      infusion_duration:
+        type: string
+        x-nullable: true
+      initial_rate:
+        type: string
+        x-nullable: true
+      kvo_rate:
+        type: string
+        x-nullable: true
+      line_primed:
+        $ref: '#/definitions/YesNo'
+      lock_level:
+        type: string
+        x-nullable: true
+      max_bolus_dose:
+        type: string
+        x-nullable: true
+      medication_id:
+        type: string
+        description: The ID of the medication being administered.
+        example: 7f835fe4-4485-44de-a6b8-00a0c1438327
+      next_dose_start_time:
+        type: string
+        x-nullable: true
+        description: The start time of the next dose using ISO 8601 date-time formatting.
+      plateau_rate:
+        type: string
+        x-nullable: true
+      rate:
+        type: string
+        x-nullable: true
+      rate_increment:
+        type: string
+        x-nullable: true
+      reservoir_bag_change:
+        $ref: '#/definitions/YesNo'
+      residual_volume:
+        type: string
+        x-nullable: true
+      route:
+        type: string
+        x-nullable: true
+        example: The route that was used in the administration.
+      step_duration:
+        type: string
+        x-nullable: true
+      taper:
+        type: string
+        x-nullable: true
+      total_given:
+        type: string
+        x-nullable: true
+      updated_employee_id:
+        type: integer
+        description: The ID of the employee that last updated the entity.
+  YesNo:
+    type: string
+    x-nullable: true
+    description: Whether the action was performed.
+    enum:
+    - true
+    - false
+    example: true
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  MedicationAdministration:
+    allOf:
+    - $ref: '#/definitions/MedicationAdministrationCreate'
+    type: object
+    description: Medication admninistration details
+    required:
+    - medication_id
+    - created_employee_id
+    - date_complete
+    - id
+    - updated_employee_id
+  MedicationAdministrationList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of the medication administration
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/MedicationAdministration'
+parameters:
+  page:
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+    description: Filter by page number. If not specified will default to 1.
+  count:
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+    description: Number of items per page. If not specified will default to 100.
+responses:
+  InvalidRequest:
+    description: Invalid data.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Invalid request
+  NotFound:
+    description: Not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Progress note not found
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.

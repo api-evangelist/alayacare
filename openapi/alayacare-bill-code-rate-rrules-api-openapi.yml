@@ -1,0 +1,367 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Bill Code Rate RRules API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Bill Code Rate RRules
+paths:
+  /billcodes/{billcode_id}/rates/{billcode_rate_id}/rrules:
+    parameters:
+    - $ref: '#/components/parameters/billcodeId'
+    - $ref: '#/components/parameters/billcodeRateId'
+    - $ref: '#/components/parameters/page'
+    - $ref: '#/components/parameters/count'
+    get:
+      tags:
+      - Bill Code Rate RRules
+      summary: Get all Bill Code Rate Recurrence Rules
+      parameters:
+      - name: ids
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: billcode_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: billcode_rate_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Collection of Bill Code Rate Rrules
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedList'
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+        '404':
+          $ref: '#/components/responses/BillCodeRateNotFound'
+    post:
+      tags:
+      - Bill Code Rate RRules
+      summary: Create a Recurrence Rule for a Bill Code Rate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillCodeRateRRuleCreateSchema'
+      responses:
+        '201':
+          description: Collection create a Bill Code Rates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/BillCodeRateNotFound'
+  /billcodes/{billcode_id}/rates/{billcode_rate_id}/rrules/{billcode_rate_rrule_id}:
+    parameters:
+    - $ref: '#/components/parameters/billcodeId'
+    - $ref: '#/components/parameters/billcodeRateId'
+    - $ref: '#/components/parameters/billcodeRateRRuleId'
+    get:
+      parameters:
+      - name: rate
+        description: Filter by rate
+        in: query
+        required: false
+        schema:
+          type: number
+      - name: order
+        description: Filter by order
+        in: query
+        required: false
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      tags:
+      - Bill Code Rate RRules
+      summary: Get a Bill Code Rate Recurrence Rule
+      responses:
+        '200':
+          description: A Bill Code Rate Recurrence Rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+        '404':
+          $ref: '#/components/responses/BillCodeRateRRuleNotFound'
+    put:
+      tags:
+      - Bill Code Rate RRules
+      summary: Update a Bill Code Rate Recurrence Rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillCodeRateRRuleUpdateSchema'
+      responses:
+        '200':
+          description: A Bill Code Rate Recurrence Rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+        '404':
+          $ref: '#/components/responses/BillCodeRateRRuleNotFound'
+    delete:
+      tags:
+      - Bill Code Rate RRules
+      summary: Delete a Bill Code Rate Recurrence Rule
+      responses:
+        '204':
+          description: Bill Code Rate Recurrence Rule deleted successfully
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/BillCodeRateRRuleNotFound'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    BillCodeRateRRuleUpdateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Entity not found
+      required:
+      - code
+      - message
+    BillCodeRateRRuleBaseSchema:
+      type: object
+      properties:
+        rate:
+          type: number
+          example: 12.5
+        external_id:
+          type: string
+          pattern: (^$|^[0-9a-zA-Z\\-_]+$)
+          example: '123'
+        order:
+          type: integer
+          example: 1
+        override_holiday_multiplicator:
+          type: integer
+          description: effectively a boolean
+          enum:
+          - 0
+          - 1
+          example: 1
+        duration:
+          type: integer
+          example: 10
+        rrule:
+          $ref: '#/components/schemas/RRuleSchema'
+    BillCodeRateRRuleQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+        required:
+        - id
+        - rate
+        - external_id
+        - duration
+        - order
+        - override_holiday_multiplicator
+    BillCodeRateRRuleCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        required:
+        - rate
+        - order
+        - override_holiday_multiplicator
+    RRuleSchema:
+      type: object
+      description: A recurrence rule for a Bill Code Rate
+      properties:
+        duration:
+          type: integer
+        rrule:
+          type: string
+          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
+          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
+          description: A recurrence rule string following RFC-5545
+        start_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+        end_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    BillCodeRateNotFound:
+      description: The Bill Code Rate Recurrence Rule referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    BillCodeRateRRuleNotFound:
+      description: The Bill Code Rate Recurrence Rule referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+  parameters:
+    billcodeRateId:
+      name: billcode_rate_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    billcodeRateRRuleId:
+      name: billcode_rate_rrule_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    billcodeId:
+      name: billcode_id
+      in: path
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

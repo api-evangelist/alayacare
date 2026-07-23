@@ -1,0 +1,384 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Attachment File API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Attachment File
+paths:
+  /employees/{employee_id}/attachments/{file_path}:
+    parameters:
+    - name: employee_id
+      in: path
+      required: true
+      type: integer
+    - name: file_path
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - Attachment File
+      summary: Get the content of a file (download a file)
+      responses:
+        200:
+          description: Content of the file
+        400:
+          description: File not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+    post:
+      tags:
+      - Attachment File
+      summary: Upload a file
+      description: "Upload a file at the `path` location and create the underlying directory structure if it doesn't exist already.\n\n`path` **cannot** end with `/` in order to create a file based on the request body.\n\n**Note:** This consumes `multipart form-data` as defined in the parameters below. \n\n**Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.\n"
+      parameters:
+      - name: file
+        in: formData
+        type: file
+        description: The file to upload
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      responses:
+        201:
+          $ref: '#/responses/SuccessResponseFileUpload'
+        400:
+          $ref: '#/responses/ErrorResponseFileMissing'
+        409:
+          $ref: '#/responses/ErrorResponseFileAlreadyExists'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+    put:
+      tags:
+      - Attachment File
+      summary: Copy, move or rename a file
+      description: 'Copy, move or rename a file.
+
+
+        The url of the `PUT` request is the path to the source location.
+
+
+        The payload must indicate whether the intention of the action is to copy, move or rename the file.
+
+
+        If a file is being copied or moved, the destination is mandatory in the payload.
+
+
+        i.e., if we have the following directories:
+
+        - `dir1/child1/file1.txt`
+
+        - `dir2/child2/file2.txt`
+
+
+        and we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must be specified in the payload and must be: `dir2/child2/file1.txt`. The `source` URL request has to be `dir1/child1/file1.txt`.
+
+        '
+      parameters:
+      - name: body
+        description: Object with fields to be updated
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AttachmentAction'
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/responses/SuccessResponseAttachmentFileUpdate'
+        400:
+          $ref: '#/responses/ErrorResponseInvalidFileName'
+        404:
+          description: Source file not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+        409:
+          $ref: '#/responses/ErrorResponseFileAlreadyExists'
+    delete:
+      tags:
+      - Attachment File
+      summary: Delete a file
+      description: Delete a file.
+      produces:
+      - application/json
+      responses:
+        204:
+          description: File deleted
+        404:
+          description: File not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+  /employees/by_id/{external_employee_id}/attachments/{file_path}:
+    parameters:
+    - name: external_employee_id
+      in: path
+      required: true
+      type: string
+    - name: file_path
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - Attachment File
+      summary: Get the content of a file (download a file)
+      responses:
+        200:
+          description: Content of the file
+        400:
+          description: File not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+    post:
+      tags:
+      - Attachment File
+      summary: Upload a file
+      description: 'Upload a file at the `path` location and create the underlying directory structure if it doesn''t exist already.
+
+
+        `path` **cannot** end with `/` in order to create a file based on the request body.
+
+
+        **Note:** This consumes `multipart form-data` as defined in the parameters below.
+
+
+        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.
+
+        '
+      parameters:
+      - name: file
+        in: formData
+        type: file
+        description: The file to upload
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      responses:
+        201:
+          $ref: '#/responses/SuccessResponseFileUpload'
+        400:
+          $ref: '#/responses/ErrorResponseFileMissing'
+        409:
+          $ref: '#/responses/ErrorResponseFileAlreadyExists'
+        404:
+          $ref: '#/responses/ErrorResponseEmployeeNotFound'
+    put:
+      tags:
+      - Attachment File
+      summary: Copy, move or rename a file
+      description: 'Copy, move or rename a file.
+
+
+        The url of the `PUT` request is the path to the source location.
+
+
+        The payload must indicate whether the intention of the action is to copy, move or rename the file.
+
+
+        If a file is being copied or moved, the destination is mandatory in the payload.
+
+
+        i.e., if we have the following directories:
+
+        - `dir1/child1/file1.txt`
+
+        - `dir2/child2/file2.txt`
+
+
+        and we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must be specified in the payload and must be: `dir2/child2/file1.txt`. The `source` URL request has to be `dir1/child1/file1.txt`.
+
+        '
+      parameters:
+      - name: body
+        description: Object with fields to be updated
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AttachmentAction'
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/responses/SuccessResponseAttachmentFileUpdate'
+        400:
+          $ref: '#/responses/ErrorResponseInvalidFileName'
+        404:
+          description: Source file not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+        409:
+          $ref: '#/responses/ErrorResponseFileAlreadyExists'
+    delete:
+      tags:
+      - Attachment File
+      summary: Delete a file
+      description: Delete a file.
+      produces:
+      - application/json
+      responses:
+        204:
+          description: File deleted
+        404:
+          description: File not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  FileNotFoundSchema:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: http status response code
+        example: 404
+      message:
+        type: string
+        description: Detail on the error
+        example: File "/path/file.txt" not found
+  AttachmentAction:
+    description: Attachment actions
+    type: object
+    properties:
+      action:
+        type: string
+        example: move
+        enum:
+        - move
+        - copy
+        - rename
+      destination:
+        type: string
+        example: dir2/child1/
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+responses:
+  ErrorResponseFileAlreadyExists:
+    description: File already exists.
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 409
+        message:
+          type: string
+          description: Detail on the error
+          example: File "/path/file.txt" already exists
+  SuccessResponseFileUpload:
+    description: File uploaded
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 201
+        name:
+          type: string
+          description: Url to the file uploaded
+          example: Physician Order/file.pdf
+  ErrorResponseInvalidFileName:
+    description: The file name contains unsupported characters
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 400
+        message:
+          type: string
+          description: Detail on the error
+          example: Invalid file name
+  SuccessResponseAttachmentFileUpdate:
+    description: File copied, moved or renamed
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 200
+        name:
+          type: string
+          description: 'Url to the new location of the copied or move file
+
+            '
+          example: /new_location.txt
+  ErrorResponseFileMissing:
+    description: File missing
+    schema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 400
+        message:
+          type: string
+          description: Detail on the error
+          example: Could not find a file to upload
+  ErrorResponseEmployeeNotFound:
+    description: Employee not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Employee not found.

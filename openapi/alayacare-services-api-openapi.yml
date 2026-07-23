@@ -1,0 +1,1412 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Services API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Services
+paths:
+  /services:
+    get:
+      tags:
+      - Services
+      summary: Get list of services
+      description: '**Remarks**
+
+        - `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.
+
+        - `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.
+
+        - `funder_id` and `external_funder_id` are mutually exclusive, specifying both is an invalid request.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/alayacare_client_id'
+      - $ref: '#/components/parameters/employee_id'
+      - $ref: '#/components/parameters/alayacare_employee_id'
+      - $ref: '#/components/parameters/external_ids'
+      - name: funder_id
+        in: query
+        description: Filter by external funder ID
+        required: false
+        schema:
+          type: string
+      - name: alayacare_funder_id
+        in: query
+        description: Filter AlayaCare funder ID
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: status
+        in: query
+        description: Filter by service status
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - active
+          - on_hold
+          - waiting_list
+          - discharged
+          default: active
+      - name: alayacare_cost_centre_id
+        in: query
+        description: Filter by AlayaCare cost centre id
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      responses:
+        '200':
+          description: A list of services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceList'
+        '400':
+          $ref: '#/components/responses/ErrorResponseServiceInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+    post:
+      tags:
+      - Services
+      summary: Create a service
+      requestBody:
+        description: "- A new service can be created using a valid program type and/or funding methodology.\n\n- Program types are limited to:\n  - Cluster Billing\n  - COB (Coordination of benefits)\n  - Co-Contribution\n  - Co-Pay\n  - LTCI\n  - Medicaid\n  - Single Payor\n  - Split Percentage\n- Funder types are limited to:\n  - LHIN\n  - HCP\n  - Funder individual\n  - Client individual\n- Mutually Exclusive fields (specifying both of the following fields\nwill create an invalid request):\n  - `client_id` and `alayacare_client_id`\n  - `employee_id` and `alayacare_employee_id`\n  - `service_code_id` and `service_code_name`\n- At least one field of the following tuples is required (Not specifying\none will create an invalid request)\n  - `client_id` or `alayacare_client_id`\n  - `service_code_id` or `service_code_name`\n\n\n**Medicaid Services**\n\nWhen creating a medicaid service, you must set the `patient_id` property.\n\nThe `funding_methodology` property must be set to `medicaid`.\n\nYou must also provide at least one valid `guid_funder_breakdown` object with a valid `funder_id` set.\n\n**Important**: Only the first `guid_funder_breakdowns` object will be used.\n\nAlso, when creating medicaid services, you can provide a `program_creation_data` property with the `office_identification_set_id` property set to the ID of the office identification set that you wish to use.\n\n\n**Single Payor Services**\n\nWhen creating a single payor service, you must set the `patient_id` property.\n\nThe `funding_methodology` property must be set to `single_payor`.\n\nYou must also provide at least one valid `guid_funder_breakdowns` object with a valid `funder_id` set. If the `guid_funder_breakdowns` object has a `contact_id` set, that will set the billing contact for the service.\n\n**Important**: Only the first `guid_funder_breakdown` object will be used.\n\nA `program_creation_data` property `must` be included when creating single payor services. It `must` contain a valid `billing_cycle` property and `is_guarantor_taxable` property.\n\nAlso, when creating single payor services, you can set an `office_identification_set_id` property within the `program_creation_data` property the the office identification set that you wish to use.\n\n**Service Accounting**\n\nA `service accounting` property is required when creating a v2 service. A simple single payor program will require a minimal one. For example, `billable_using` is set to `null` and `is_taxable` is used to determine if the service is taxable:\n\n```\n{\n  ...\n  \"funding_methodology\": \"single_payor\",\n  ...\n  \"service_accounting\": {\n    \"billable_using\": null,\n    \"is_taxable\": false,\n    \"non_covered_amt\": null,\n    \"rating_rule_type\": null,\n    \"rating_rules\": null\n  }\n  ...\n}\n```\n\nThere are more complicated configurations that can be created. Here are some examples\n\nCreating a typical `multiple bill code` service with a `time increment` configuration.\n\nYou need to provide a `service_accounting` property the following minimal properties:\n- A `billable_using` property that is set to `multiple_bill_codes`\n- A `rating_rule_type` property that is set to `time_increment`\n- A `rating_rules` property that contains an object with bill code, funder, and taxable information\n- One rating rule object must have an `is_default` property set to `true` all others must be set to `false`\n- Every rating rule object must have a unique `rank` property starting with `1`, the next ones increasing by `1` and without skipping any intermediary numbers\n- Every rating rule object must have a `minutes` property that is an integer.\n\nHere's an example with two bill codes:\n\n```\n{\n  ...\n  \"funding_methodology\": \"single_payor\",\n  ...\n  \"service_accounting\": {\n    \"billable_using\": \"multiple_bill_codes\",\n    \"is_taxable\": null,\n    \"non_covered_amt\": null,\n    \"rating_rule_type\": \"time_increment\",\n    \"rating_rules\": [\n      {\n        \"bill_code_id\": 58,\n        \"cost_centre_id\": null,\n        \"funder_id\": null,\n        \"id\": 1,\n        \"is_default\": true,\n        \"is_taxable\": true,\n        \"minutes\": 60,\n        \"payor\": null,\n        \"program_id\": null,\n        \"rank\": 1\n      },\n      {\n        \"bill_code_id\": 59,\n        \"cost_centre_id\": null,\n        \"funder_id\": null,\n        \"id\": 2,\n        \"is_default\": false,\n        \"is_taxable\": true,\n        \"minutes\": 60,\n        \"payor\": null,\n        \"program_id\": null,\n        \"rank\": 2\n      }\n    ]\n  }\n  ...\n}\n```\n\nCreating a typical `multiple bill code` service with a `percentage` configuration.\n\nYou need to provide a `service_accounting` property the following minimal properties:\n- A `billable_using` property that is set to `multiple_bill_codes`\n- A `rating_rule_type` property that is set to `percentage`\n- A `rating_rules` property that contains an object with bill code, funder, and taxable information\n- One rating rule object must have an `is_default` property set to `true` all others must be set to `false`\n- Every rating rule object must have a unique `rank` property starting with `1`, the next ones increasing by `1` and without skipping any intermediary numbers\n- Every rating rule object must have a `percent` property that is an integer. All of the `percent` properties on bill codes\n  must sum to `100`.\n\nHere's an example with two bill codes:\n\n```\n{\n  ...\n  \"funding_methodology\": \"single_payor\",\n  ...\n  \"service_accounting\": {\n    \"billable_using\": \"multiple_bill_codes\",\n    \"is_taxable\": null,\n    \"non_covered_amt\": null,\n    \"rating_rule_type\": \"percentage\",\n    \"rating_rules\": [\n      {\n        \"bill_code_id\": 58,\n        \"cost_centre_id\": null,\n        \"funder_id\": null,\n        \"id\": 1,\n        \"is_default\": true,\n        \"is_taxable\": true,\n        \"minutes\": null,\n        \"percent\": 76,\n        \"program_id\": null,\n        \"rank\": 1\n      },\n      {\n        \"bill_code_id\": 103,\n        \"cost_centre_id\": null,\n        \"funder_id\": null,\n        \"id\": 2,\n        \"is_default\": false,\n        \"is_taxable\": true,\n        \"minutes\": null,\n        \"percent\": 24,\n        \"program_id\": null,\n        \"rank\": 2\n      }\n    ]\n  }\n  ...\n}\n```\n\nCreating a typical `multiple program` service with a `time increment` configuration.\n\nYou need to provide a `service_accounting` property the following minimal properties:\n- A `billable_using` property that is set to `multiple_bill_codes`\n- A `rating_rule_type` property that is set to `time_increment`\n- A `rating_rules` property that contains an object with bill code, funder, and taxable information\n- One rating rule object must have an `is_default` property set to `true` all others must be set to `false`\n- Every rating rule object must have a unique `rank` property starting with `1`, the next ones increasing by `1` and without skipping any intermediary numbers\n- Every rating rule object must have a `minutes` property that is an integer.\n- Every rating rule object must have a `payor` object.\n- Every rating rule object must have a `program_id` set to a valid program ID.\n- **Important**: the funding methodology must be set to `payor_invoicing` in this case.\n\nHere's an example with two bill codes:\n\n```\n{\n  ...\n  \"funding_methodology\": \"payor_invoicing\",\n  ...\n  \"service_accounting\": {\n    \"billable_using\": \"multiple_programs\",\n    \"is_taxable\": null,\n    \"non_covered_amt\": null,\n    \"rating_rule_type\": \"time_increment\",\n    \"rating_rules\": [\n      {\n        \"bill_code_id\": null,\n        \"cost_centre_id\": null,\n        \"funder_id\": 1,\n        \"id\": 1,\n        \"is_default\": false,\n        \"is_taxable\": true,\n        \"minutes\": 60,\n        \"program_id\": 2538,\n        \"rank\": 1\n      },\n      {\n        \"bill_code_id\": null,\n        \"cost_centre_id\": null,\n        \"funder_id\": 65,\n        \"id\": 2,\n        \"is_default\": true,\n        \"is_taxable\": true,\n        \"minutes\": 60,\n        \"program_id\": 2539,\n        \"rank\": 2\n      }\n    ]\n  }\n  ...\n}\n```\n"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceCreateSchema'
+            examples:
+              Single Program Single Payor Service:
+                value:
+                  activity_codes:
+                  - id: '1'
+                  add_to_associated_employees: true
+                  client:
+                    id: '1861'
+                  cost_centre_id: null
+                  funding_methodology: single_payor
+                  guid_funder_breakdowns:
+                  - contact_id: 3153
+                    funder_id: 1
+                    is_primary: 1
+                    percentage: 100
+                  import_id: ''
+                  instructions: ''
+                  is_address_overridden: false
+                  name: Single Program Single Payor Service
+                  notes: ''
+                  primary_employee:
+                    id: '100'
+                  program_creation_data:
+                    billing_cycle: 5
+                    is_guarantor_taxable: true
+                    office_identification_set_id: null
+                  program_id: null
+                  projected_end_date: '2025-04-30'
+                  reports:
+                  - id: 1
+                    is_required: 1
+                  - id: 2
+                    is_required: 0
+                  service_accounting:
+                    billable_using: null
+                    is_taxable: true
+                    non_covered_amt: null
+                    rating_rule_type: null
+                    rating_rules: null
+                  service_code:
+                    id: 159
+                  skills: []
+                  start_date: '2025-04-01'
+                  profile:
+                    form_context_fields:
+                    - name1: value 1
+                      name2: value 2
+                      name3: value 3
+              Multiple Programs Single Payor Service:
+                value:
+                  activity_codes: []
+                  add_to_associated_employees: true
+                  client:
+                    id: '1861'
+                  cost_centre_id: null
+                  funding_methodology: payor_invoicing
+                  guid_funder_breakdowns:
+                  - funder_id: 1
+                    is_primary: 1
+                    percentage: 100
+                  import_id: ''
+                  instructions: ''
+                  is_address_overridden: false
+                  name: Multiple Programs Single Payor Service
+                  notes: ''
+                  primary_employee:
+                    id: '100'
+                  program_creation_data: null
+                  program_id: null
+                  projected_end_date: '2025-04-30'
+                  reports: []
+                  service_accounting:
+                    billable_using: multiple_programs
+                    is_taxable: null
+                    non_covered_amt: null
+                    rating_rule_type: time_increment
+                    rating_rules:
+                    - bill_code_id: null
+                      cost_centre_id: 1
+                      funder_id: 1
+                      id: 1
+                      is_default: true
+                      is_taxable: true
+                      minutes: 720
+                      payor:
+                        client_billing_cycle: null
+                        cost_centre:
+                          label: 1 - cc-1
+                          value: 1
+                        cost_centre_id: 1
+                        funder_methodology: co-pay
+                        guarantor_billing_contact_id: null
+                        guarantor_funder:
+                          code: funder_1
+                          frequency: null
+                          guid: 50
+                          id: 1
+                          invoicingModel: individual_invoices
+                          label: Funder 1
+                          name: CI
+                          value: 1
+                        guarantor_funder_id: 1
+                        is_guarantor_taxable: true
+                        non_covered_amt: null
+                        office_identification_set_id: null
+                        program_id: 1583
+                      program_id: 1583
+                      rank: 1
+                    - bill_code_id: null
+                      cost_centre_id: 2
+                      funder_id: 1
+                      id: 2
+                      is_default: false
+                      is_taxable: true
+                      minutes: 840
+                      payor:
+                        client_billing_cycle: 5
+                        cost_centre:
+                          label: 2 - cost centre -2
+                          value: 2
+                        cost_centre_id: 2
+                        funder_methodology: single_payor
+                        guarantor_billing_contact_id: 3153
+                        guarantor_funder:
+                          code: funder_1
+                          frequency: null
+                          guid: 50
+                          id: 1
+                          invoicingModel: individual_invoices
+                          label: Funder 1
+                          name: CI
+                          value: 1
+                        guarantor_funder_id: 1
+                        is_guarantor_taxable: true
+                        non_covered_amt: null
+                        office_identification_set_id: null
+                        program_id: 2587
+                      program_id: 2587
+                      rank: 2
+                  service_code:
+                    id: 1
+                  skills:
+                  - id: '1'
+                  start_date: '2025-04-01'
+              Medicaid Service:
+                value:
+                  activity_codes: []
+                  client:
+                    id: '1861'
+                  cost_centre_id: null
+                  funding_methodology: medicaid
+                  guid_funder_breakdowns:
+                  - contact_id: null
+                    funder_id: 24
+                    is_primary: 1
+                    percentage: 100
+                  import_id: ''
+                  instructions: ''
+                  is_address_overridden: false
+                  name: Medicaid Service
+                  notes: ''
+                  primary_employee: {}
+                  program_creation_data:
+                    billing_cycle: 1
+                    is_guarantor_taxable: false
+                    office_identification_set_id: null
+                  program_id: null
+                  projected_end_date: '2025-04-30'
+                  reports: []
+                  service_accounting:
+                    billable_using: null
+                    is_taxable: true
+                    non_covered_amt: null
+                    rating_rule_type: null
+                    rating_rules: null
+                  service_code:
+                    id: 34
+                  skills: []
+                  start_date: '2025-04-01'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponseCreationService'
+        '400':
+          $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '409':
+          $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidEmployeeIds'
+  /services/{alayacare_service_id}:
+    parameters:
+    - $ref: '#/components/parameters/alayacare_service_id'
+    - name: with_upcoming_statuses
+      description: The upcoming status and status dates of the service. If there is no upcoming status for the service, `[]` will be returned.
+      in: query
+      required: false
+      schema:
+        type: boolean
+    get:
+      tags:
+      - Services
+      summary: Get service details using AlayaCare ID
+      responses:
+        '200':
+          description: Service details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDetails'
+        '401':
+          $ref: '#/components/responses/ErrorResponseServiceInvalidRequest'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceNotFound'
+    put:
+      tags:
+      - Services
+      summary: Update service details using AlayaCare ID
+      description: '**Remarks**
+
+        - Service status can''t be updated.
+
+        - `primary_employee_id` and `primary_employee_external_id` are mutually exclusive, specifying both is an invalid request.
+
+        - The branch of the employee must match the branch of the client, incompatible branches are an invalid request.
+
+        - Reports and forms can be updated through the `reports` field.
+
+        '
+      requestBody:
+        description: Service data in JSON format
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceUpdate'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponseUpdateService'
+        '400':
+          $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidEmployeeIds'
+  /services/by_id/{service_id}:
+    parameters:
+    - $ref: '#/components/parameters/service_id'
+    - name: with_upcoming_statuses
+      description: The upcoming status and status dates of the service. If there is no upcoming status for the service, `[]` will be returned.
+      in: query
+      required: false
+      schema:
+        type: boolean
+    get:
+      tags:
+      - Services
+      summary: Get service details using external ID
+      responses:
+        '200':
+          description: Service details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDetails'
+        '401':
+          $ref: '#/components/responses/ErrorResponseServiceInvalidRequest'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceNotFound'
+    put:
+      tags:
+      - Services
+      summary: Update service details using external ID
+      description: '**Remarks**
+
+        - Service status can''t be updated.
+
+        - primary_employee_id and primary_employee_external_id are mutually exclusive, specifying both is an invalid request.
+
+        - The branch of the employee must match the branch of the client, incompatible branches are an invalid request.
+
+        - Reports and forms can be updated through the `reports` field.
+
+        '
+      requestBody:
+        description: Service data in JSON format
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceUpdate'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponseUpdateService'
+        '400':
+          $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidEmployeeIds'
+components:
+  parameters:
+    client_id:
+      name: client_id
+      in: query
+      required: false
+      description: 'Filter by external client ID
+
+        External client ID is the client ID in the system of record.
+
+        Ex. CRM client identifier
+
+        '
+      schema:
+        type: string
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
+    external_ids:
+      name: external_ids
+      in: query
+      required: false
+      description: 'Filter by external IDs
+
+        External IDs are required to be unique.
+
+        No other assumptions are made regarding their format; they are treated as strings.
+
+        '
+      schema:
+        type: array
+        items:
+          type: string
+    service_id:
+      name: service_id
+      in: path
+      required: true
+      description: External service ID
+      schema:
+        type: string
+    alayacare_service_id:
+      name: alayacare_service_id
+      in: path
+      required: true
+      description: AlayaCare service ID
+      schema:
+        type: integer
+        minimum: 1
+    alayacare_client_id:
+      description: Filter by AlayaCare client ID
+      name: alayacare_client_id
+      in: query
+      required: false
+      schema:
+        type: string
+    employee_id:
+      name: employee_id
+      in: query
+      required: false
+      description: 'Filter by external employee ID
+
+        External employee ID is the employee ID in the system of record.
+
+        Ex. HR employee number
+
+        '
+      schema:
+        type: string
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    alayacare_employee_id:
+      name: alayacare_employee_id
+      in: query
+      required: false
+      description: Filter by AlayaCare employee ID
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    CostCentre:
+      description: Details of a cost centre
+      type: object
+      x-nullable: true
+      properties:
+        description:
+          type: string
+          description: Cost centre description
+          example: Montreal
+        id:
+          type: integer
+          minimum: 1
+          description: Cost centre ID
+          example: 2
+        number:
+          type: string
+          description: Cost centre number for display in-app
+          example: '5555'
+        status:
+          type: string
+          description: Cost centre status
+          example: enabled
+    ServiceDetails:
+      type: object
+      required:
+      - alayacare_service_id
+      - service_name
+      - service_status
+      properties:
+        alayacare_service_code_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare service code ID
+          example: 1
+        alayacare_service_id:
+          type: string
+          description: Alaycare service ID
+          example: 347
+        cost_centre:
+          $ref: '#/components/schemas/CostCentre'
+        employee:
+          $ref: '#/components/schemas/EmployeeDetails'
+        funders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceFunderDetails'
+        patient:
+          $ref: '#/components/schemas/ClientDetails'
+        profile:
+          $ref: '#/components/schemas/ServiceProfile'
+        provider_details:
+          $ref: '#/components/schemas/ServiceProviderDetails'
+        service_code_name:
+          type: string
+          description: Service code defined for service.
+          example: OTVISIT
+        service_id:
+          type: string
+          description: External service ID
+          example: 347
+          x-nullable: true
+        service_instructions:
+          description: Service instructions
+          type: string
+          example: Call in the morning to confirm each visit
+          x-nullable: true
+        service_name:
+          type: string
+          description: Name of client's service
+          example: OT Home Visit
+        service_start_date:
+          type: string
+          description: Date the service starts
+          example: '2021-03-19'
+        service_status:
+          $ref: '#/components/schemas/ServiceStatus'
+        start_date:
+          type: string
+          description: Service start datetime
+          example: '2018-01-01'
+        status_end_date:
+          type: string
+          description: The current service status end date
+          example: '2021-03-21T13:30:00+00:00'
+        status_reason:
+          type: string
+          description: The reason of the service status
+          example: Hospitalized
+        status_start_date:
+          type: string
+          description: The current service status date
+          example: '2021-03-19T13:30:00+00:00'
+        use_client_address:
+          type: boolean
+          description: whether or not to use the client address
+          example: true
+    GuidFunderBreakdownsSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: The id for the Guid Funder Breakdown
+          example: 1
+        contact_id:
+          type: integer
+          minimum: 1
+          description: 'The id of the billing contact
+
+            This field  is only accepted if the funder type sent is Client individual
+
+            '
+          example: 10
+        funder_id:
+          type: integer
+          minimum: 1
+          description: The id of the funder
+          example: 1
+        is_primary:
+          type: integer
+          minimum: 0
+          description: Whether or not this is the primary funder
+          example: 1
+        percentage:
+          type: integer
+          description: The percentage paid by this funder
+          example: 100
+    EmployeeDetails:
+      description: Visit employee details
+      type: object
+      x-nullable: true
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: AlayaCare employee ID
+          example: 1001
+        external_id:
+          type: string
+          description: External employee ID
+          example: sor_employee_id_1
+          x-nullable: true
+        profile_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare client profile ID
+          example: 7891
+        full_name:
+          type: string
+          description: Employee full name
+          example: Jane Smith
+        email:
+          type: string
+          description: Employee email
+          example: employee_1@workplace.com
+        timezone:
+          type: string
+          description: Time Zone name in IANA format (iana.org/time-zones)
+          example: America/Toronto
+      required:
+      - id
+      - full_name
+    Service:
+      type: object
+      required:
+      - alayacare_service_id
+      - service_name
+      - service_status
+      properties:
+        alayacare_service_code_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare service code ID
+          example: 1
+        alayacare_service_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare service ID
+          example: 1
+        service_code_name:
+          type: string
+          description: Service code defined for service
+          example: OTVISIT
+        service_id:
+          type: string
+          description: external service ID
+          example: sor_service_id_1
+          x-nullable: true
+        service_name:
+          type: string
+          description: Name of client's service
+          example: PSW Home Visit
+        service_start_date:
+          type: string
+          description: Date where the service began
+          example: '2021-03-19'
+        service_status:
+          $ref: '#/components/schemas/ServiceStatus'
+        service_reason:
+          type: string
+          description: the reason corresponding to service status
+          example: hospitalization
+    ServiceCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/ServiceSchema'
+      - $ref: '#/components/schemas/ServiceRelationSchema'
+      properties:
+        service_accounting:
+          $ref: '#/components/schemas/ServiceAccountingSchema'
+        program_creation_data:
+          $ref: '#/components/schemas/ProgramCreationDataSchema'
+      required:
+      - name
+      - client
+      - funding_methodology
+      - funder
+      - service_code_id
+    ServiceFunderBillingContact:
+      type: object
+      x-nullable: true
+      properties:
+        profile_id:
+          type: integer
+          minimum: 1
+          description: Billing contact profile ID
+          example: 1
+        name:
+          type: string
+          description: Billing contact full name.
+          example: Clark Kent
+    ServiceProviderDetails:
+      description: 'Collection of key/value pairs representing service details for the Service Provider.
+
+        All values are treated as strings.
+
+        Corresponds to the "Latest Referral Info" section of the service on the AlayaCare web application.
+
+        '
+      type: object
+      properties:
+        authorization_schedule_type_name:
+          type: string
+          description: Summary of provider's authorization for service
+          example: Patient is currently available for service
+        billing_code_1:
+          type: string
+          description: Bill code for the service. Additional bill codes will result in incrementing keys.
+          example: 1000 - Home nursing visit
+        brn:
+          type: string
+          description: Billing Reference Number of the service
+          example: '12345'
+        client_guid:
+          type: string
+          description: GUID of the client in funder's system of record
+          example: 11aaa11-22b2-c333-44d4-55555555e555
+        contract_code:
+          type: string
+          description: Provider's LHIN contract code
+          example: ALAYA-HOM-HME-V-NU
+        end_date_1:
+          type: string
+          description: Service end date. Subsequent frequency updates will result in incrementing keys.
+          example: '2018-01-31'
+        focus_intervention:
+          type: string
+          description: Summary of focus of intervention
+          example: Client requires nursing for wound care management.
+        geographic_area:
+          type: string
+          description: Geographic indicator of service area, e.g. postal code
+          example: H4C
+        notification_notes:
+          type: string
+          description: Provider notification notes
+          example: Scheduled 4 weeks of care
+        offer_id:
+          type: string
+          description: ID of the service offer
+          example: '12345'
+        organization_code:
+          type: string
+          description: Service provider's organization code
+          example: 10ALAYA
+        patient_available_date:
+          type: string
+          description: Date patient is available for service
+          example: '2018-01-31'
+        provider_assignment_id:
+          type: string
+          description: ID of the service provider
+          example: '12345'
+        quantity_of_service_1:
+          type: string
+          description: Quantity of service based on units of service
+          example: '1.00'
+        referral_caseload:
+          type: string
+          description: Client's referral caseload
+          example: ALAYA - MTL - Nursing
+        required_first_visit_date:
+          type: string
+          description: First visit of the service must be scheduled on or before this date
+          example: '2018-01-31'
+        service_assignment_id:
+          type: string
+          description: Unique ID of the service
+          example: 11aaa11-22b2-c333-44d4-55555555e555
+        service_delivery_location_code:
+          type: string
+          description: Code for service delivery location
+          example: Home
+        service_delivery_type:
+          type: string
+          description: Description of the type of service delivery
+          example: Visit nursing home
+        service_plan_goals:
+          type: string
+          description: Summary of service plan goals
+          example: Client will receive wound care
+        service_type_code:
+          type: string
+          description: Code for type of service
+          example: Nursing
+        start_date_1:
+          type: string
+          description: Service start date. Subsequent frequency updates will result in incrementing keys.
+          example: '2018-01-31'
+        summary_1:
+          type: string
+          description: Summary of scheduled service frequency. Subsequent frequency updates will result in incrementing keys.
+          example: 8.00 visit(s), starting 01-Jan-2018 and ending 31-Jan-2018
+        treatment_orders:
+          type: string
+          description: Treatment orders
+          example: Patient requires weekly deliveries of medical supplies
+        unit_of_service_1:
+          type: string
+          description: Unit of service
+          example: Visits
+    ClientDetails:
+      description: Visit client details
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: AlayaCare client ID
+          example: 1001
+        external_id:
+          type: string
+          description: External client ID
+          example: sor_client_id_1
+          x-nullable: true
+        profile_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare client profile ID
+          example: 7890
+        full_name:
+          type: string
+          description: Client full name
+          example: John Smith
+        timezone:
+          type: string
+          description: Time Zone name in IANA format (iana.org/time-zones)
+          example: America/Toronto
+      required:
+      - id
+      - full_name
+    ServiceSchema:
+      type: object
+      properties:
+        billable_rate:
+          type: number
+          description: The billable rate for a Service
+          example: 25
+        service_id:
+          type: string
+          description: The external id of this Service
+          example: ext_id_44
+        name:
+          type: string
+          description: The name of the Service
+          example: Personal Care
+        client:
+          type: object
+          properties:
+            alayacare_client_id:
+              type: integer
+              minimum: 1
+              description: The AlayaCare Client Id
+              example: 1001
+            client_id:
+              type: string
+              description: The external Client Id
+              example: sor_external_client_id
+        start_date:
+          type: string
+          description: The start date of the Service (ISO8601)
+          example: '2020-01-01'
+        projected_end_date:
+          type: string
+          description: The projected end date of the Service (ISO8601)
+          example: '2021-01-31'
+        notes:
+          type: string
+          description: Notes associated with the Service
+          example: Be kind
+        service_instructions:
+          type: string
+          description: Instructions associated with the Service
+          example: Please use buzz code 203
+        use_client_address:
+          type: boolean
+          description: Whether or not the client address is used
+          example: false
+        funder_details:
+          type: object
+          description: Funder details accepted as a dictionary. All values must be strings.
+        guid_funder_breakdowns:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuidFunderBreakdownsSchema'
+          description: The Guid Funder Breakdowns for this Service
+        funding_methodology:
+          type: string
+          description: The funding methodology / program type for this Service
+          enum:
+          - cluster_billing
+          - cob
+          - co_contribution
+          - co-pay
+          - ltci
+          - medicaid
+          - payor_invoicing
+          - single_funder
+          - single_payor
+          - split_funders
+          - split_percentage
+        service_code_name:
+          type: string
+          description: The unique name of the Service's Service Code
+          example: CODE
+        service_code_id:
+          type: integer
+          minimum: 1
+          description: The ID of the Service's Service Code
+          example: 1
+        employee:
+          type: object
+          description: 'The fields ''employee_id'' and ''alayacare_employee_id'' are mutually exclusive, specifying both is an invalid request.
+
+            '
+          properties:
+            alayacare_employee_id:
+              type: integer
+              minimum: 1
+              description: The id of the Service's primary employee
+              example: 101
+            employee_id:
+              type: string
+              description: The external id of the service's primary employee
+              example: ext_employee_id_123
+        profile:
+          $ref: '#/components/schemas/ServiceProfile'
+        import_id:
+          type: string
+          description: The import id for this Service
+          example: IMPORT_ID_A
+        add_to_associated_employees:
+          type: boolean
+          description: Whether or not to add the primary employee to the list of associated employees
+          example: true
+        reports:
+          type: array
+          description: List of Report IDs to be attached in the service. This field is mutually exclusive with the field `report_ids`.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: 1
+                description: Report ID
+                example: 1
+              is_required:
+                type: boolean
+                description: Whether or not the report is required
+                example: true
+        report_ids:
+          type: array
+          description: List of Report IDs to be attached in the service. This field is only accepted if the feature flag Forms 2.0 is deactivated.
+          example:
+          - 1
+          - 2
+          - 3
+          items:
+            type: integer
+            minimum: 1
+            description: Report ID
+        form_ids:
+          type: array
+          description: List of Form IDs to be attached in the service. This field is only accepted if the feature flag Forms 2.0 is activated.
+          example:
+          - 4
+          - 5
+          - 6
+          items:
+            type: integer
+            minimum: 1
+            description: Form ID
+        activity_code_ids:
+          type: array
+          description: List of activity code IDs to be attached to the service.
+          example:
+          - 10
+          - 11
+          - 12
+          items:
+            type: integer
+            minimum: 1
+            description: Activity codes IDs
+        service_tags:
+          type: array
+          description: List of service tags to be attached to the service.
+          example:
+          - Diabetes service
+          - Hospice care
+          items:
+            type: string
+            description: Service tags
+        cost_centre_id:
+          type: integer
+          minimum: 1
+          description: The ID of the cost centre of the service.
+          example: 10
+    ServiceStatus:
+      type: string
+      description: Current service status.
+      enum:
+      - active
+      - on_hold
+      - waiting_list
+      - discharged
+    ServiceRelationSchema:
+      type: object
+      properties:
+        skills:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: 1
+                description: The id of a skill
+                example: 5
+            required:
+            - id
+    ServiceAccountingSchema:
+      type: object
+      properties:
+        billable_using:
+          type: string
+          nullable: true
+          enum:
+          - null
+          - multiple_programs
+          - multiple_bill_codes
+          example: multiple_bill_codes
+        rating_rule_type:
+          type: string
+          enum:
+          - time_increment
+          - percentage
+          example: time_increment
+        service_id:
+          type: integer
+          minimum: 1
+          example: 1
+        bill_rate_id:
+          type: integer
+          minimum: 1
+          example: 1
+        is_taxable:
+          type: boolean
+          example: true
+        non_covered_amt:
+          type: boolean
+          default: false
+          example: true
+        rating_rules:
+          type: array
+          items:
+            type: object
+            properties:
+              program_id:
+                type: integer
+                minimum: 1
+              cost_centre_id:
+                type: integer
+                minimum: 1
+              funder_id:
+                type: integer
+                minimum: 1
+              minutes:
+                type: integer
+              is_default:
+                type: boolean
+              bill_code_id:
+                type: integer
+                minimum: 1
+              rank:
+                type: integer
+                minimum: 1
+              percent:
+                type: integer
+                minimum: 1
+              is_taxalbe:
+                type: boolean
+    ServiceProfile:
+      description: 'Collection of key/value pairs where keys are existing attributes in the service profile, defined through the AlayaCare web application.
+
+        On the example below default profile keys for the service are used.
+
+        Example profile attributes:
+
+        + `city`: string
+
+        + `state`: string
+
+        + `address`: string
+
+        + `country`: string
+
+        + `zip`: string
+
+        + `address_suite`: string
+
+        + `first_name`: string
+
+        + `last_name`: string
+
+        + `emergency_response_level`: string
+
+        + `form_context_fields`: object
+
+        '
+      type: object
+      example:
+        city: Montreal
+        state: QC
+        address: 4200 Blvd. St.-Laurent
+        country: Canada
+        zip: H2W2R2
+        address_suite: 800
+        form_context_fields:
+          context_field_name_1: context_field_value_1
+          context_field_name_2: context_field_value_2
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    ServiceUpdate:
+      description: AlayaCare service entity data for updating
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/ServiceProfile'
+        provider_details:
+          $ref: '#/components/schemas/ServiceProviderDetails'
+        service_id:
+          type: string
+          description: External service id
+          example: sor_external_service_id_1
+        service_instructions:
+          description: Service instructions
+          type: string
+          example: Call in the morning to confirm each visit
+          x-nullable: true
+        primary_employee_id:
+          description: The ID of the primary employee assigned to the service
+          type: integer
+          minimum: 1
+          example: 100
+          x-nullable: true
+        primary_employee_external_id:
+          description: The external ID of the primary employee assigned to the service
+          type: string
+          example: sor_employee_id_1
+          x-nullable: true
+        reports:
+          type: array
+          description: List of Report or Form IDs to be attached in the service.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: 1
+                description: Report ID
+                example: 1
+              is_required:
+                type: boolean
+                description: Whether or not the report or form is required
+                example: true
+        service_accounting:
+          $ref: '#/components/schemas/ServiceAccountingSchema'
+    SuccessResponse:
+      description: Success response.
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: AlayaCare ID
+          example: 1001
+        external_id:
+          type: string
+          description: External ID
+          example: entity_external_id
+      required:
+      - id
+      - external_id
+    ServiceList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of services
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+    ServiceFunderDetails:
+      type: object
+      properties:
+        id:
+          description: AlayaCare funder ID
+          type: integer
+          minimum: 1
+          example: 1
+        external_id:
+          description: External funder ID
+          type: string
+          example: sor_funder_id_1
+          x-nullable: true
+        name:
+          description: Funder name
+          type: string
+          example: Insurance Company
+        code:
+          description: Funder code
+          type: string
+          example: IC-1
+        organization:
+          description: Organization
+          type: string
+          example: Home Healthcare Agency
+        organization_code:
+          description: Organization code
+          type: string
+          example: HHC-0101
+        percentage:
+          type: integer
+          example: 100
+        billing_contact:
+          $ref: '#/components/schemas/ServiceFunderBillingContact'
+      required:
+      - id
+      - name
+    ProgramCreationDataSchema:
+      type: object
+      properties:
+        billing_cycle:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          minimum: 1
+          description: "The billing cylce for the program.\n\nValid values are:\n 1 - ONE_WEEK\n 2 - TWO_WEEKS\n 3 - FOUR_WEEKS\n 4 - CALENDAR_MONTH\n 5 - DAILY\n"
+          example: 1
+        is_guarantor_taxable:
+          type: boolean
+          description: Whether or not the guarantor is taxable
+        office_identification_set_id:
+          type: integer
+          minimum: 1
+          example: 1
+  responses:
+    ErrorResponseServiceUpdateInvalidEmployeeIds:
+      description: Employee ID and external ID are mutually exclusive
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 409
+            message: primary_employee_id and primary_employee_external_id are mutually exclusive
+    SuccessResponseUpdateService:
+      description: Service successfully updated
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          example:
+            id: 1
+            external_id: sor_service_external_id_1
+    ErrorResponseServiceInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: funder_id and alayacare_funder_id are mutually exclusive
+    SuccessResponseCreationService:
+      description: Service successfully created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          example:
+            id: 1
+            external_id: sor_service_external_id_1
+    ErrorResponseServiceUpdateInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+    ErrorResponseServiceNotFound:
+      description: Service not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Service not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

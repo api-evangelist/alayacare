@@ -1,0 +1,305 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Comments API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Comments
+paths:
+  /tasks/{task_id}/comments:
+    get:
+      summary: Retrieve all comments for a task
+      description: Retrieve all comments for a task.
+      tags:
+      - Comments
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCommentList'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    post:
+      summary: Add a comment to a task
+      description: Add a comment to a task.
+      tags:
+      - Comments
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskComment'
+        description: Task Comment
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCommentList'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+  /tasks/{task_id}/comments/{comment_id}:
+    get:
+      summary: Retrieve specific comment for a task
+      description: Retrieve a specific comment for a task.
+      tags:
+      - Comments
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/comment_id'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskComment'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    put:
+      summary: Update a specific comment for a task
+      description: Update a specific comment for a task.
+      tags:
+      - Comments
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/comment_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskComment'
+        description: Task Comment
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskComment'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    delete:
+      summary: Delete a specific comment for a task
+      description: Delete a comment for a task.
+      tags:
+      - Comments
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/comment_id'
+      responses:
+        '204':
+          description: success, no content
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+components:
+  responses:
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    404NotFound:
+      description: Entity not found
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    400BadRequest:
+      description: Bad request
+  parameters:
+    task_id:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The task identifier
+    comment_id:
+      name: comment_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The uniqut task comment identifier
+      example: 11111
+  schemas:
+    TaskCommentList:
+      type: object
+      items:
+        $ref: '#/components/schemas/TaskComment'
+    Person:
+      type: object
+      description: Encapsulates the bare details of a person
+      properties:
+        id:
+          type: integer
+          nullable: false
+          description: Primary ID (Employee ID, User ID etc.) of person
+        external_id:
+          type: string
+          nullable: true
+          description: External ID of person
+        guid:
+          type: integer
+          nullable: true
+          description: GUID
+        profile_id:
+          type: integer
+          nullable: true
+          description: Profile ID
+        last_name:
+          type: string
+          description: Last Name/Family Name
+        first_name:
+          type: string
+          description: First Name
+        full_name:
+          type: string
+          description: Full Name
+        status:
+          type: string
+          description: Status of person
+        deep_link:
+          type: string
+          description: Deep link to person
+        profile_photo_url:
+          type: string
+          description: URL to profile photo
+    ErrorResponse:
+      title: Error response
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              code:
+                type: string
+            required:
+            - message
+      required:
+      - message
+      - request_id
+    TaskComment:
+      type: object
+      description: Comments on a task.
+      title: Task Comment
+      properties:
+        comment_id:
+          type: integer
+          example: 1
+          description: Primary Key
+        comment:
+          type: string
+          example: Comment
+        created_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:45.000Z'
+          description: When the comment was created
+        created_by:
+          $ref: '#/components/schemas/Person'
+          description: Who created the comment.
+        updated_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:58.000Z'
+          description: When the comment was most recently updated.
+        updated_by:
+          $ref: '#/components/schemas/Person'
+          description: Who updated the comment
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

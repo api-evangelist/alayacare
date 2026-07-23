@@ -1,0 +1,407 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Client Risks API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Client Risks
+paths:
+  /clients/{client_id}/risks:
+    parameters:
+    - name: client_id
+      description: The AlayaCare ID of a client
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Client Risks
+      summary: Get a list of client risks by a client's AlayaCare ID
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        200:
+          description: A list of client risks
+          schema:
+            $ref: '#/definitions/RiskList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/ClientNotFound'
+    post:
+      tags:
+      - Client Risks
+      summary: Create a client risk
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RiskCreate'
+      description: ''
+      responses:
+        201:
+          description: A client risk
+          schema:
+            $ref: '#/definitions/RiskDetails'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/ClientRiskInvalidRequest'
+        404:
+          $ref: '#/responses/ClientNotFound'
+  /clients/{client_id}/risks/{risk_id}:
+    parameters:
+    - name: client_id
+      description: The AlayaCare ID of a client
+      in: path
+      type: integer
+      required: true
+    - name: risk_id
+      description: ID of the client risk
+      in: path
+      required: true
+      type: string
+    put:
+      tags:
+      - Client Risks
+      summary: Update client risks by a client's AlayaCare ID
+      parameters:
+      - name: risk
+        description: Client risk data for update in JSON format.
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RiskUpdate'
+      responses:
+        200:
+          description: Client's risk updated successfuly
+          schema:
+            $ref: '#/definitions/RiskUpdate'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/ClientRiskInvalidRequest'
+    delete:
+      tags:
+      - Client Risks
+      summary: Remove a client's risk by a client's AlayaCare ID
+      responses:
+        204:
+          description: Risk successfully deleted
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/ClientRiskNotFound'
+  /clients/by_id/{external_client_id}/risks:
+    parameters:
+    - name: external_client_id
+      description: The external ID of a client
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Client Risks
+      summary: Get client risks by external client ID
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        200:
+          description: A list of a client's risks
+          schema:
+            $ref: '#/definitions/RiskList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/ClientNotFound'
+    post:
+      tags:
+      - Client Risks
+      summary: Create a client risk by external client ID
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RiskCreate'
+      description: ''
+      responses:
+        201:
+          description: A client risk
+          schema:
+            $ref: '#/definitions/RiskDetails'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/ClientRiskInvalidRequest'
+        404:
+          $ref: '#/responses/ClientNotFound'
+  /clients/by_id/{external_client_id}/risks/{risk_id}:
+    parameters:
+    - name: external_client_id
+      description: External ID of a client
+      in: path
+      type: integer
+      required: true
+    - name: risk_id
+      description: ID of the client risk
+      in: path
+      required: true
+      type: string
+    put:
+      tags:
+      - Client Risks
+      summary: Update client risks by external client ID
+      parameters:
+      - name: risk
+        description: Client risk data for update in JSON format.
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RiskUpdate'
+      responses:
+        200:
+          description: Client's risk updated successfuly
+          schema:
+            $ref: '#/definitions/RiskUpdate'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/ClientRiskInvalidRequest'
+        404:
+          $ref: '#/responses/ClientNotFound'
+    delete:
+      tags:
+      - Client Risks
+      summary: Remove a client's risk by external client ID
+      responses:
+        204:
+          description: Risk successfully deleted
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/ClientRiskNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  RiskCreate:
+    description: Client risk data
+    type: object
+    required:
+    - category
+    - risk
+    - severity
+    properties:
+      category:
+        $ref: '#/definitions/RiskCategory'
+      risk:
+        type: string
+        description: Free text description of the client risk
+        example: Allergic to penicillin
+        minLength: 1
+      severity:
+        $ref: '#/definitions/RiskSeverity'
+  RiskUpdate:
+    description: Client risk data
+    type: object
+    properties:
+      category:
+        $ref: '#/definitions/RiskCategory'
+      risk:
+        type: string
+        description: Free text description of the client risk
+        example: Allergic to penicillin
+      severity:
+        $ref: '#/definitions/RiskSeverity'
+  RiskDetails:
+    description: Details of the client risk
+    type: object
+    properties:
+      risk_id:
+        type: string
+        description: Unique ID of the client risk
+        example: abc-123
+      client_id:
+        type: integer
+        description: AlayaCare ID of the client
+        example: 1957
+      external_client_id:
+        type: string
+        description: External client ID
+        example: sor_id_1
+      category:
+        type: string
+        description: Risk category (case-sensitive)
+        example: Allergy
+        enum:
+        - Allergy
+        - Environment
+        - Infectious Diseases
+        - Funder
+        - General
+        - Pets
+      risk:
+        type: string
+        description: Free text description of the client risk
+        example: Allergic to penicillin
+      severity:
+        $ref: '#/definitions/RiskSeverity'
+      created_by:
+        type: object
+        description: User who created the client risk entry
+        properties:
+          name:
+            type: string
+            description: Name of the employee who created the risk
+            example: John Smith
+      created_at:
+        type: string
+        format: date-time
+        description: Date client risk was created (ISO 8601) - Time saved at `T00:00:00+00:00`
+        example: '2017-07-08T00:00:00+00:00'
+  RiskCategory:
+    description: Risk category (case-sensitive)
+    type: string
+    example: Allergy
+    enum:
+    - Allergy
+    - Environment
+    - Infectious Diseases
+    - Funder
+    - General
+    - Pets
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  RiskSeverity:
+    description: Risk severity - 0 to 5
+    type: integer
+    example: 3
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+  RiskList:
+    description: A list of client risks
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/RiskDetails'
+parameters:
+  count:
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+    description: Number of items per page. If not specified will default to 100.
+  page:
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+    description: Filter by page number. If not specified will default to 1.
+responses:
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.
+  ClientNotFound:
+    description: Not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Client not found.
+  ClientRiskNotFound:
+    description: Client risk not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Client risk uid not found
+  ClientRiskInvalidRequest:
+    description: Invalid data submitted for client risk creation
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Invalid risk category

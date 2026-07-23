@@ -1,0 +1,512 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts EVV Export API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: EVV Export
+paths:
+  /evv_exports:
+    get:
+      tags:
+      - EVV Export
+      summary: Get a list of EVV exports created filter by `claim_destination_system`, `export_type` and `status_of_background_jobs`
+      parameters:
+      - name: claim_destination_system
+        in: query
+        description: Claim destination system associated with the EVV Export
+        schema:
+          type: string
+      - name: export_type
+        in: query
+        description: Type of EVV Export
+        schema:
+          type: string
+      - name: status_of_background_jobs[]
+        in: query
+        description: array of statuses ('FAILURE', 'STARTED', 'SUCCESS', 'NOT_SENT', 'PENDING')
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: A list of EVV Exports
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVVExportList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+    post:
+      tags:
+      - EVV Export
+      summary: Create an initial EVV export record for the `claim_destination_system` and `export_type` selected for a specific `branch_id` or default branch if none specified.  The returned schema's `created_at` date will be used as the end of the date range for visits retrieval.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                branch_id:
+                  type: integer
+                  description: Branch ID
+                  minimum: 1
+                claim_destination_system:
+                  type: string
+                  description: Claim destination system
+                  enum:
+                  - HHAeXchange
+                  - eMedNY
+                  - Tellus Rendered Services
+                  - Sandata
+                export_type:
+                  type: string
+                  description: Export type
+                  enum:
+                  - SCHEDULED
+                  - DELETED
+                  - MISSED
+                  - APPROVED
+                  - BILLED
+                state:
+                  type: string
+                  description: Export state
+                  example: NY
+                fetch_visits_until:
+                  type: string
+                  description: Export until when visits were processed in UTC
+                  example: 2020-01-01 00:00:00+00:00
+        description: Branch ID, claim destination system and export type required to create the initial EVV export record.
+        required: true
+      responses:
+        '200':
+          description: Created EVV export record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVVExport'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidEVVExportParams'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+  /evv_exports/{evv_export_id}:
+    parameters:
+    - in: path
+      name: evv_export_id
+      description: EVV export ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    get:
+      tags:
+      - EVV Export
+      summary: Get full EVV export record.  This can be called for a "retry export" event, in case of initial failure.
+      responses:
+        '200':
+          description: Full EVV export record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVVExport'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+    put:
+      tags:
+      - EVV Export
+      summary: Update EVV export record.  This will only be called once, after the EVV export is complete (either as success or failure), and will contain all the information about the export.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - status_of_background_job
+              properties:
+                date_sent_at:
+                  type: string
+                  description: Date and time the export was sent to the destination system in UTC format
+                  example: 2020-01-01 00:00:00+00:00
+                number_of_visits:
+                  type: integer
+                  description: Number of visits included in the export file
+                  example: 10
+                status_of_background_job:
+                  type: string
+                  description: Status of the EVV Export job
+                  example: SUCCESS
+                  enum:
+                  - STARTED
+                  - SUCCESS
+                  - FAILURE
+                url_file_location:
+                  type: string
+                  description: URL of file location if the export was successful
+                  example: https://
+                error_details:
+                  type: string
+                  description: EVV export error details
+                  example: File cannot be sent - connection issues
+                fetch_visits_from:
+                  type: string
+                  description: Date and time used to search visits
+                  example: 2020-01-01 00:00:00+00:00
+                on_demand_request_id:
+                  type: integer
+                  description: On-demand request_id created during POST /evv/exports/on_demand_export_request
+                  example: 4015
+        description: Object with fields to be updated
+      responses:
+        '200':
+          description: Updated EVV export record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVVExport'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidEVVExportParams'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+  /evv_exports/latest_export_date:
+    get:
+      tags:
+      - EVV Export
+      summary: Get the date and time of the latest EVV export for the `branch_id`, `claim_destination_system` and `export_type` selected, returned from the record of the most recent file that was exported, regardless of its status.  If no record is found a default date is returned instead.
+      parameters:
+      - in: query
+        name: branch_id
+        description: Branch ID
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: claim_destination_system
+        description: Claim destination system
+        required: true
+        schema:
+          type: string
+          enum:
+          - HHAeXchange
+          - eMedNY
+          - Tellus Rendered Services
+          - Sandata
+      - in: query
+        name: export_type
+        description: Export type
+        required: true
+        schema:
+          type: string
+          enum:
+          - SCHEDULED
+          - DELETED
+          - MISSED
+          - APPROVED
+          - BILLED
+      - in: query
+        name: evv_export_id
+        description: existing EVVExport record
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: state
+        description: Export state
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Latest EVV export date in UTC format for the specified `branch_id`, `claim_destination_system` and `export_type` regardless of its state, or default date if no record is found. If `evv_export_id` is specified, the date returned will be the end date of the previous EVV export record (to be used on retry).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVVExportLatestExportDate'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidEVVExportParams'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+  /evv_exports/latest_export_date/{evv_export_id}:
+    parameters:
+    - in: path
+      name: evv_export_id
+      description: existing EVVexport record
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    get:
+      tags:
+      - EVV Export
+      summary: Get the date and time of the latest EVV export using the Export ID
+      description: Returns the date and time from the record of the most recent file that was exported prior to `evv_export_id`, regardless of its status.  If no record is found the default date is returned.
+      responses:
+        '200':
+          description: End date of the latest EVV export record prior to `evv_export_id` in UTC format regardless of its state, or default date if no record is found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EVVExportLatestExportDate'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidEVVExportParams'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    EVVExportList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of EVV Export
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EVVExport'
+    EVVExport:
+      description: EVV Export
+      type: object
+      properties:
+        evv_export_id:
+          type: integer
+          description: ID of the EVV export record
+          example: 1
+        export_key:
+          type: string
+          description: Combined export record key; currently branch id, claim destination system and export type.
+          example: 1000.HHAeXCchange.SCHEDULED
+        branch_id:
+          type: integer
+          description: Branch ID
+          example: 1000
+          minimum: 1
+        claim_destination_system:
+          type: string
+          description: Claim destination system
+          example: Tellus Rendered Services
+          enum:
+          - HHAeXchange
+          - eMedNY
+          - Tellus Rendered Services
+          - Sandata
+        state:
+          type: string
+          description: Export state
+          example: NY
+        export_type:
+          type: string
+          description: Export type
+          example: BILLED
+          enum:
+          - SCHEDULED
+          - DELETED
+          - MISSED
+          - APPROVED
+          - BILLED
+        fetch_visits_from:
+          type: string
+          description: Start date and time of when visits were processed in UTC
+          example: 2020-01-01 00:00:00+00:00
+        fetch_visits_until:
+          type: string
+          description: End date and time of when visits were processed in UTC
+          example: 2020-01-01 00:00:00+00:00
+        date_sent_at:
+          type: string
+          description: Date and time the export was sent to the destination system in UTC format
+          example: 2020-01-01 00:00:00+00:00
+        number_of_visits:
+          type: integer
+          description: Number of visits included
+          example: 10
+        status_of_background_job:
+          type: string
+          description: Status of the EVV Export job
+          example: SUCCESS
+          enum:
+          - STARTED
+          - SUCCESS
+          - FAILURE
+          - NOT_SENT
+        url_file_location:
+          type: string
+          description: URL of file location if the export was successful
+          example: https://
+        error_details:
+          type: string
+          description: EVV export error details
+          example: File cannot be sent - connection issues
+        created_at:
+          type: string
+          description: Date and time in UTC format when the export record was created
+          example: 2020-01-01 00:00:00+00:00
+        is_custom:
+          type: boolean
+          description: indicates if it's a custom export or a regular One
+          example: false
+        on_demand_request_id:
+          type: integer
+          description: request_id associated with a custom export. Used for reprocessing and having a control about visits that should be inside
+          example: 998
+        is_activation:
+          type: boolean
+          description: if export is related to an is_activation
+          example: true
+    EVVExportLatestExportDate:
+      description: Latest EVV export date in UTC format for the specified branch ID, claim destination and export type regardless of its state or default date if no record is found
+      type: object
+      properties:
+        latest_export_date:
+          type: string
+          description: Date and time in UTC format of the last export
+          example: 2020-01-01 00:00:00+00:00
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorResponseEVVExportNotFound:
+      description: The EVV export record for the referenced `evv_export_id` param was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '404'
+                message: EVVExport record not found
+    ErrorResponseInvalidEVVExportParams:
+      description: Invalid Claim destination system or Export type parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Invalid request
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

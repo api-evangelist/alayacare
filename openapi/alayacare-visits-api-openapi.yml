@@ -1,0 +1,1630 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Visits API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Visits
+paths:
+  /submissions/visits:
+    get:
+      tags:
+      - Visits
+      summary: 'Get a list of visits and submissions given a client id.
+
+        '
+      description: "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n* `client_id` and `external_client_id` are mutually exclusive\n* `employee_id` and `external_employee_id` are mutually exclusive\n* Must specify either `client_id` or `external_client_id`\n* If the end_date is not specified, it will be defaulted to the end of today's date\n"
+      parameters:
+      - name: start_at
+        description: Filter by start date greater or equal than specified value
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: end_at
+        description: Filter by end date less or equal than specified value. If not specified, the default date will be defaulted to the end of today's date
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: client_id
+        description: Filter by client ID
+        in: query
+        schema:
+          type: integer
+      - name: external_client_id
+        description: Filter by external client ID
+        in: query
+        schema:
+          type: string
+      - name: employee_id
+        description: Filter by employee ID
+        in: query
+        schema:
+          type: integer
+      - name: external_employee_id
+        description: Filter by external employee ID
+        in: query
+        schema:
+          type: string
+      - name: work_session_id
+        description: Filter by work session ID
+        in: query
+        schema:
+          type: integer
+      - name: service_id
+        description: Filter by service ID
+        in: query
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      responses:
+        '200':
+          description: Visit information with form submissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitBySubmissionList'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidRequest'
+        '403':
+          $ref: '#/components/responses/PermissionError'
+  /cancelcodes:
+    get:
+      tags:
+      - Visits
+      summary: Get a list of cancel codes
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - $ref: '#/parameters/branch_id'
+      responses:
+        '200':
+          description: A list of cancel codes
+          schema:
+            $ref: '#/definitions/VisitCancelCodeList'
+  /visits:
+    get:
+      tags:
+      - Visits
+      summary: Get list of visits
+      description: '**Note:** This endpoint returns only patient/client visits (where the client is a patient). To retrieve facility visits, use the `/facility_visits` endpoint instead.
+
+        - `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.
+
+        - `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.
+
+        - `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.
+
+        - If the `start_date_from` filter is not specified, it will default to **now**.
+
+        - If the `start_date_to` filter is not specified, it will default to **7 days from now**.
+
+        '
+      parameters:
+      - name: tags
+        in: query
+        required: false
+        type: array
+        items:
+          type: string
+        description: 'Filter on a list of tags and return values for at least one matching tag. Filter by multiple tag names using **OR**.
+
+          '
+      - name: start_date_from
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: 'Filter by visit start date time greater or equal than specified value.
+
+          If not specified will default to now.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          `start_at` can be used as this filter name
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+      - name: start_date_to
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: 'Filter by visit start date time less than or equal than specified value.
+
+          If not specified will default to 7 days from now.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          `end_at` can be used as this filter name
+
+          Ex: `2019-02-18T08:00:00-05:00`
+
+          '
+      - name: end_date_from
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: 'Filter by visit end date time greater or equal than specified value.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          Ex: `2019-02-03T08:00:00-05:00`
+
+          '
+      - name: end_date_to
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: 'Filter by visit end date time less than or equal than specified value.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          Ex: `2018-02-18T08:00:00-05:00`
+
+          '
+      - name: is_cancelled
+        in: query
+        required: false
+        type: boolean
+        description: 'If true, returns only visits with a valid cancel code, not including ''On Hold''.
+
+          If false, returns only visits with ''On Hold'' codes or *no* cancel code.
+
+          '
+      - name: is_on_hold
+        in: query
+        required: false
+        type: boolean
+        description: 'If true, returns only visits with an ''On Hold'' cancel code.
+
+          If false, returns only visits with *no* cancel code or with a cancel code other than ''On Hold''.
+
+          '
+      - name: is_vacant
+        in: query
+        required: false
+        type: boolean
+        description: 'If true, returns only visits with *no* employee assigned.
+
+          If false, returns only visits with an employee assigned.
+
+          '
+      - name: status
+        in: query
+        required: false
+        type: string
+        description: Status of the visit based on status hierarchy from AlayaCare web application, one or more using **OR**.
+        enum:
+        - scheduled
+        - vacant
+        - on_hold
+        - cancelled
+        - offered
+        - clocked
+        - late
+        - completed
+        - missed
+        - approved
+      - $ref: '#/parameters/branch_id'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/alayacare_client_id'
+      - $ref: '#/parameters/employee_id'
+      - $ref: '#/parameters/alayacare_employee_id'
+      - $ref: '#/parameters/service_id'
+      - $ref: '#/parameters/alayacare_service_id'
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        '200':
+          description: A list of visits
+          schema:
+            $ref: '#/definitions/VisitList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+    post:
+      tags:
+      - Visits
+      summary: Create a new visit
+      description: '- `client_id` or `alayacare_client_id` is required, not specifying one is an invalid request.
+
+        - `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.
+
+        - `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request..
+
+        - `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request..
+
+        **Remarks**
+
+        A visit can be created without specifying the service if the client has a single **active** service.
+
+        If no employee is specified a vacant visit will be created.
+
+        A cancelled visit (`cancelled`= `true`) must include a cancel code ID.
+
+        '
+      parameters:
+      - name: body
+        description: Visit data in JSON format.
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitCreate'
+      responses:
+        '201':
+          description: Visit successfully created.
+          schema:
+            $ref: '#/definitions/Visit'
+        '400':
+          $ref: '#/responses/ErrorResponseVisitCreateInvalidRequest'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+  /visits/{alayacare_visit_id}:
+    parameters:
+    - name: alayacare_visit_id
+      description: AlayaCare visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visits
+      summary: Get visit details using AlayaCare ID
+      description: '**Note:** This endpoint returns only patient/client visits (where the client is a patient).
+
+        If the visit belongs to a facility, this endpoint will return a `404`. Use `GET /facility_visits/{alayacare_visit_id}` instead.
+
+        '
+      responses:
+        '200':
+          description: Visit details
+          schema:
+            $ref: '#/definitions/VisitDetails'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+    put:
+      tags:
+      - Visits
+      summary: Update visit details using AlayaCare ID
+      description: '**Note:** This endpoint only supports patient/client visits. To update a facility visit, use `PUT /facility_visits/{alayacare_visit_id}` instead.
+
+
+        A cancelled visit (`cancelled`= `true`) must include a cancel code ID.
+
+        '
+      parameters:
+      - name: body
+        description: Visit data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitUpdate'
+      responses:
+        '200':
+          description: Visit successfully updated
+          schema:
+            $ref: '#/definitions/Visit'
+        '400':
+          $ref: '#/responses/ErrorResponseVisitUpdateInvalidRequest'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+    delete:
+      tags:
+      - Visits
+      summary: Delete visit using AlayaCare ID
+      responses:
+        '204':
+          description: Visit successfully deleted
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /visits/by_id/{visit_id}:
+    parameters:
+    - name: visit_id
+      description: External visit ID
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Visits
+      summary: Get visit details using external ID
+      responses:
+        '200':
+          description: Visit details
+          schema:
+            $ref: '#/definitions/VisitDetails'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+    put:
+      tags:
+      - Visits
+      summary: Update visit details using external ID
+      description: A cancelled visit (`cancelled`= `true`) must include a cancel code ID.
+      parameters:
+      - name: body
+        description: Visit data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitUpdate'
+      responses:
+        '200':
+          description: Visit successfully updated
+          schema:
+            $ref: '#/definitions/Visit'
+        '400':
+          $ref: '#/responses/ErrorResponseVisitUpdateInvalidRequest'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+    delete:
+      tags:
+      - Visits
+      summary: Delete visit using external ID
+      responses:
+        '204':
+          description: Visit successfully deleted
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+  /visits/lock:
+    put:
+      tags:
+      - Visits
+      summary: Lock list of visits using Alayacare visit ID or external visit ID
+      description: '**Remarks**
+
+        - Only Approved visits can be locked using `alayacare_visit_id` or `visit_id`.
+
+        - Visits cannot be **unlocked**.
+
+        '
+      parameters:
+      - name: body
+        description: Visit data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/VisitIDList'
+      responses:
+        '200':
+          description: Visit successfully locked
+        '207':
+          $ref: '#/responses/ErrorResponsePartialVisitLock'
+        '400':
+          $ref: '#/responses/ErrorResponseVisitLockInvalidRequest'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+  /visits/{alayacare_visit_id}/delivery_date:
+    parameters:
+    - name: alayacare_visit_id
+      description: AlayaCare visit ID
+      in: path
+      type: integer
+      required: true
+    get:
+      tags:
+      - Visits
+      summary: Get the delivery date of a visit given the ID
+      responses:
+        '200':
+          description: Delivery date for visit
+          schema:
+            $ref: '#/definitions/DeliveryDateInformation'
+        '404':
+          $ref: '#/responses/ErrorResponseDeliveryDateNotFound'
+  /visits/{client_id}/next_visit_id:
+    parameters:
+    - name: client_id
+      description: Client ID
+      in: path
+      type: integer
+      required: true
+    - name: with_canceled
+      description: 'If false, get the next visit without a cancel code
+
+        '
+      in: query
+      required: false
+      default: true
+      type: boolean
+    - name: date_utc
+      description: Date to filter the next visit. If not specified, date is now.
+      in: query
+      required: false
+      type: string
+      format: date-time
+    get:
+      tags:
+      - Visits
+      summary: Get the next visit ID for a client
+      responses:
+        '200':
+          description: Next visit ID for client
+          schema:
+            $ref: '#/definitions/NextVisitId'
+        '404':
+          $ref: '#/responses/ErrorResponseVisitNotFound'
+components:
+  schemas:
+    VisitBySubmissionList:
+      description: A list of visits
+      type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items_per_page
+      - items
+      properties:
+        count:
+          description: Number of items in the response
+          type: integer
+          example: 1
+        page:
+          description: Current page number
+          type: integer
+          example: 1
+        total_pages:
+          description: Total number of pages available
+          type: integer
+          example: 1
+        items_per_page:
+          description: Maximum number of item per page
+          type: integer
+          example: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitBySubmission'
+    VisitBySubmission:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: visit ID
+          example: 1
+        service_id:
+          type: integer
+          description: service ID
+          example: 1
+        service_name:
+          type: string
+          description: Service description
+          example: Physiotherapy
+        start_at:
+          type: string
+          description: Start time of the visit
+          example: 1711154100
+        end_at:
+          type: string
+          description: End time of the visit
+          example: 1711157700
+        employee_id:
+          type: integer
+          description: ID of employee that is assigned to the visit
+          example: 101
+        submissions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Submission ID
+                example: 123
+              name:
+                type: string
+                description: Name of the form
+                example: Physiotherapy
+              schema_id:
+                type: string
+                description: Schema ID of the form
+                example: c3560f0e-7a72-41ea-9d2b-b4d9457e4339
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    PermissionError:
+      description: Permission error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseInvalidRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Only one of either `account_id` or `external_client_id` should be specified.
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+  parameters:
+    count:
+      name: count
+      description: Number of items per page. If not specified will default to 100
+      in: query
+      schema:
+        type: integer
+        default: 100
+    page:
+      name: page
+      description: Filter by page number. If not specified will default to 1
+      in: query
+      schema:
+        type: integer
+        default: 1
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  VisitActivityCode:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: AlayaCare activity code ID
+        example: 1
+      code:
+        type: string
+        description: Activity code
+        example: 01- Assessment
+      description:
+        type: string
+        description: Activity code description
+        example: New client assessment
+    required:
+    - id
+    - code
+  VisitListDetails:
+    allOf:
+    - $ref: '#/definitions/BaseVisit'
+    properties:
+      alayacare_client_id:
+        type: integer
+        description: AlayaCare client ID
+        example: 1001
+      client_id:
+        type: string
+        description: External client ID
+        example: sor_client_id_1
+        x-nullable: true
+      break_minutes:
+        type: integer
+        description: Break minutes for the visit
+        example: 10
+        x-nullable: true
+    required:
+    - alayacare_client_id
+  VisitTimekeeping:
+    description: The state of the verified start and end times
+    type: object
+    properties:
+      verified_start_time:
+        description: Datetime string referring to the time the first clock in happened, or one manually overwritten
+        type: string
+        format: date-time
+        example: '2017-07-08T13:30:00+00:00'
+      verified_end_time:
+        description: Datetime string referring to the time the last clock out happened, or one manually overwritten
+        type: string
+        format: date-time
+        example: '2017-07-08T13:40:00+00:00'
+      is_verified_start_time_overwritten:
+        description: This is true in case the verified_start_time was overwritten by the user and false if is the default from the work-sessions
+        type: boolean
+        example: false
+      is_verified_end_time_overwritten:
+        description: This is true in case the verified_end_time was overwritten by the user and false if is the default from the work-sessions
+        type: boolean
+        example: false
+  VisitIDList:
+    type: object
+    properties:
+      alayacare_visit_ids:
+        type: array
+        description: List of Alayacare visit IDs (visit IDs should be listed separated by a coma)
+        example:
+        - 1245
+        - 1246
+        items:
+          type: integer
+          description: Alayacare visit ID.
+          required:
+          - alayacare_visit_ids
+      visit_ids:
+        type: array
+        description: List of Alayacare external visit IDs
+        example:
+        - ext_visit_1245
+        - ext_visit_1246
+        items:
+          type: string
+          description: Alayacare external visit ID (External visit IDs should be listed separated by a coma).
+          required:
+          - visit_ids
+  VisitCancelCode:
+    description: Visit cancellation code
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare cancel code ID
+        example: 1
+      code:
+        type: string
+        description: Cancel code
+        example: CLNT_REQ_RESCHEDULE
+      description:
+        type: string
+        description: Cancel code description
+        example: Client requested reschedule
+        x-nullable: true
+    required:
+    - id
+    - code
+  VisitTag:
+    type: string
+    description: Name of tag.
+    example: First visit
+  Visit:
+    allOf:
+    - $ref: '#/definitions/BaseVisit'
+    properties:
+      alayacare_client_id:
+        type: integer
+        description: AlayaCare client ID
+        example: 1001
+      client_id:
+        type: string
+        description: External client ID
+        example: sor_client_id_1
+        x-nullable: true
+    required:
+    - alayacare_client_id
+  VisitList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of visits
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/VisitListDetails'
+  EmployeeDetails:
+    description: Visit employee details
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare employee ID
+        example: 1001
+      external_id:
+        type: string
+        description: External employee ID
+        example: sor_employee_id_1
+        x-nullable: true
+      profile_id:
+        type: integer
+        description: AlayaCare client profile ID
+        example: 7891
+      full_name:
+        type: string
+        description: Employee full name
+        example: Jane Smith
+      email:
+        type: string
+        description: Employee email
+        example: employee_1@workplace.com
+      timezone:
+        type: string
+        description: Time Zone name in IANA format (iana.org/time-zones)
+        example: America/Toronto
+    required:
+    - id
+    - full_name
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  BaseVisitUpdate:
+    description: AlayaCare visit entity data for updates
+    type: object
+    properties:
+      visit_id:
+        description: 'External visit ID
+
+          Allows correlating the visit in AlayaCare to visit data on an external system.
+
+          If not specified AlayaCare visit ID would be used as default value.
+
+          '
+        type: string
+        example: sor_visit_id_1
+        x-nullable: true
+      employee_id:
+        description: 'External employee ID
+
+          If no employee is specified a vacant visit will be created.
+
+          '
+        type: string
+        example: sor_employee_id_1
+        x-nullable: true
+      alayacare_employee_id:
+        description: 'AlayaCare employee ID
+
+          If no employee is specified a vacant visit will be created.
+
+          '
+        type: integer
+        example: 101
+      service_id:
+        description: 'External service ID
+
+          Can be omitted if the client has a single active service.
+
+          '
+        type: string
+        example: sor_service_record_1
+        x-nullable: true
+      alayacare_service_id:
+        description: 'AlayaCare service ID
+
+          Can be omitted if the client has a single active service.
+
+          '
+        type: integer
+        example: 1
+      start_at:
+        type: string
+        format: date-time
+        description: Visit start time (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      end_at:
+        type: string
+        format: date-time
+        description: Visit end time (ISO 8601)
+        example: '2017-07-08T14:00:00+00:00'
+      cancelled:
+        type: boolean
+        description: Indicates if visit is cancelled
+        default: false
+      cancel_code_id:
+        type: integer
+        description: 'AlayaCare ID of the cancel code.
+
+          Value must be `null` if visit is not cancelled.
+
+          '
+        example: 101
+        x-nullable: true
+      service_instructions:
+        description: Service instructions
+        type: string
+        example: Call in the morning to confirm each visit
+        x-nullable: true
+  VisitCancelCodeList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of cancel codes
+    properties:
+      items:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/VisitCancelCode'
+          properties:
+            branch:
+              $ref: '#/definitions/Branch'
+  VisitWorkSession:
+    type: object
+    description: Visit work session
+    properties:
+      clock_in:
+        description: Work session start time
+        type: string
+        format: date-time
+        example: '2017-07-08T13:30:00+00:00'
+      clock_out:
+        description: Work session end time
+        type: string
+        format: date-time
+        example: '2017-07-08T14:30:00+00:00'
+        x-nullable: true
+      employee_id:
+        description: Work session employee id
+        type: integer
+        example: 101
+      clock_in_location:
+        $ref: '#/definitions/Location'
+      clock_out_location:
+        $ref: '#/definitions/Location'
+  VisitFacilityDetails:
+    description: Visit facility
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare facility ID
+        example: 1
+      name:
+        type: string
+        description: Facility name
+        example: Clinic name
+      external_id:
+        type: string
+        description: External facility ID
+        example: sor_clinic_id_1
+        x-nullable: true
+      timezone:
+        type: string
+        description: Time Zone name in IANA format (iana.org/time-zones)
+        example: America/Toronto
+    required:
+    - id
+    - name
+  Location:
+    description: User location information
+    type: object
+    x-nullable: true
+    properties:
+      lat:
+        type: number
+        description: latitude
+        example: 45.518
+      lng:
+        type: number
+        description: longitude
+        example: -73.582
+  ClientBranchDetails:
+    description: Visit client details
+    type: object
+    properties:
+      id:
+        type: integer
+        description: AlayaCare client ID
+        example: 1001
+      external_id:
+        type: string
+        description: External client ID
+        example: sor_client_id_1
+        x-nullable: true
+      profile_id:
+        type: integer
+        description: AlayaCare client profile ID
+        example: 7890
+      full_name:
+        type: string
+        description: Client full name
+        example: John Smith
+      timezone:
+        type: string
+        description: Time Zone name in IANA format (iana.org/time-zones)
+        example: America/Toronto
+      branch_id:
+        type: integer
+        description: AlayaCare branch ID
+        example: 1000
+    required:
+    - id
+    - full_name
+  BaseVisit:
+    type: object
+    properties:
+      alayacare_employee_id:
+        type: integer
+        description: AlayaCare employee ID
+        example: 101
+        x-nullable: true
+      alayacare_service_id:
+        type: integer
+        description: AlayaCare service ID
+        example: 1
+      alayacare_visit_id:
+        type: integer
+        description: AlayaCare visit ID
+        example: 10001
+      employee_id:
+        type: string
+        description: External employee ID
+        example: sor_employee_id_1
+        x-nullable: true
+      service_id:
+        type: string
+        description: External service ID
+        example: sor_service_id_1
+        x-nullable: true
+      visit_id:
+        type: string
+        description: External visit ID
+        example: sor_visit_id_1
+        x-nullable: true
+      status:
+        type: string
+        description: Status of the visit based on status hierarchy from AlayaCare web application.
+        example: scheduled
+        enum:
+        - scheduled
+        - vacant
+        - on_hold
+        - cancelled
+        - offered
+        - clocked
+        - late
+        - completed
+        - missed
+        - approved
+      start_at:
+        type: string
+        format: date-time
+        description: Visit start time (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      end_at:
+        type: string
+        format: date-time
+        description: Visit end time (ISO 8601)
+        example: '2017-07-08T14:00:00+00:00'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/VisitNote'
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/VisitTag'
+      cancelled:
+        type: boolean
+        description: Indicates if visit is cancelled
+      cancel_code:
+        $ref: '#/definitions/VisitCancelCode'
+    required:
+    - alayacare_service_id
+    - alayacare_visit_id
+    - start_at
+    - end_at
+    - cancelled
+    - cancel_code
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 400
+        description: Response code
+      message:
+        type: string
+        example: Invalid request
+        description: Detailed error message
+    required:
+    - code
+    - message
+  VisitFunderDetails:
+    description: Visit funder details
+    type: object
+    properties:
+      id:
+        description: AlayaCare funder ID
+        type: integer
+        example: 1
+      external_id:
+        description: External funder ID
+        type: string
+        example: sor_funder_id_1
+        x-nullable: true
+      name:
+        description: Funder name
+        type: string
+        example: Insurance Company
+      code:
+        description: Funder code
+        type: string
+        example: IC-1
+      organization:
+        description: Organization
+        type: string
+        example: Home Healthcare Agency
+      organization_code:
+        description: Organization code
+        type: string
+        example: HHC-0101
+      percentage:
+        type: integer
+        example: 100
+    required:
+    - id
+    - name
+  VisitNoteCreate:
+    description: Visit note
+    type: object
+    properties:
+      text:
+        type: string
+        description: Content of the visit note
+        maxLength: 1000
+        example: A sample visit note.
+    required:
+    - text
+  Branch:
+    description: AlayaCare branch
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Branch ID
+        example: 1000
+      name:
+        type: string
+        description: Branch name
+        example: Toronto branch
+  Address:
+    type: object
+    properties:
+      order:
+        type: integer
+        description: Order of location in route
+        example: 1
+      is_home_address:
+        type: boolean
+        description: If address defined matches the client address from the client profile, this value is true. Otherwise, the value is false.
+        example: true
+      latitude:
+        type: number
+        description: Latitude of the address
+        example: 45.5017
+      longitude:
+        type: number
+        description: Longitude of the address
+        example: 73.5673
+      address_1:
+        type: string
+        description: First line of the address
+        example: 4200 St Laurent Blvd
+      address_2:
+        type: string
+        description: Second line of the address
+        example: '800'
+      city:
+        type: string
+        description: City
+        example: Montreal
+      state:
+        type: string
+        description: State or province
+        example: QC
+      zip_code:
+        type: string
+        description: ZIP or postal code
+        example: H2W 2R2
+      country:
+        type: string
+        description: Country
+        example: Canada
+  NextVisitId:
+    type: object
+    properties:
+      visit_id:
+        type: integer
+        description: Visit ID
+        example: 1000
+  VisitSkill:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: AlayaCare activity code ID
+        example: 1
+      description:
+        type: string
+        description: Skill description
+        example: Driver License
+    required:
+    - id
+  VisitServiceDetails:
+    description: Visit service details
+    type: object
+    properties:
+      id:
+        description: AlayaCare service ID
+        type: integer
+        example: 1
+      external_id:
+        description: External service ID
+        type: string
+        example: sor_service_record_1
+        x-nullable: true
+      name:
+        description: Service name
+        type: string
+        example: Wound Care
+      service_code_id:
+        description: AlayaCare service code id
+        type: integer
+        example: 1
+      service_code_name:
+        description: AlayaCare service code name
+        type: string
+        example: WOUND-CARE
+    required:
+    - id
+    - name
+    - service_code_id
+    - service_code_name
+  DeliveryDateInformation:
+    properties:
+      alayacare_visit_id:
+        type: integer
+        description: AlayaCare visit ID
+        example: 17432
+      delivery_date:
+        type: string
+        description: Delivery date for visit in UTC format
+        example: '2022-12-13'
+  VisitDetails:
+    allOf:
+    - $ref: '#/definitions/BaseVisitDetails'
+    properties:
+      alayacare_visit_guid:
+        type: integer
+        format: int64
+        description: AlayaCare visit GUID
+        example: 10002
+      alayacare_client_id:
+        type: integer
+        format: int64
+        description: AlayaCare client ID
+        example: 1001
+      client_id:
+        type: string
+        description: External client ID
+        example: sor_client_id_1
+        x-nullable: true
+      client:
+        $ref: '#/definitions/ClientBranchDetails'
+      facility:
+        $ref: '#/definitions/VisitFacilityDetails'
+      timekeeping:
+        $ref: '#/definitions/VisitTimekeeping'
+    required:
+    - alayacare_client_id
+    - client
+  VisitUpdatePartialSuccessResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 207
+        description: Response code
+      message:
+        type: string
+        example: Partial success when locking visits. Visits are not approved or could not be found
+        description: Detailed error message
+      alayacare_visit_ids:
+        type: array
+        description: List of Alayacare visit IDs
+        items:
+          type: integer
+          description: Alayacare visit ID.
+          example: 1245
+      visit_ids:
+        type: array
+        description: List of Alayacare external visit IDs
+        items:
+          type: string
+          description: Alayacare external visit ID.
+          example: ext_visit_1245
+  VisitUpdate:
+    allOf:
+    - $ref: '#/definitions/BaseVisitUpdate'
+    properties:
+      client_id:
+        description: External client ID
+        type: string
+        example: sor_client_id_1
+      alayacare_client_id:
+        description: AlayaCare client ID
+        type: integer
+        example: 1001
+  BaseVisitDetails:
+    type: object
+    properties:
+      alayacare_employee_id:
+        type: integer
+        format: int64
+        description: AlayaCare employee ID
+        example: 101
+        x-nullable: true
+      alayacare_service_id:
+        type: integer
+        format: int64
+        description: AlayaCare service ID
+        example: 1
+      alayacare_visit_id:
+        type: integer
+        format: int64
+        description: AlayaCare visit ID
+        example: 10001
+      employee_id:
+        type: string
+        description: External employee ID
+        example: sor_employee_id_1
+        x-nullable: true
+      service_id:
+        type: string
+        description: External service ID
+        example: sor_service_id_1
+        x-nullable: true
+      visit_id:
+        type: string
+        description: External visit ID
+        example: sor_visit_id_1
+        x-nullable: true
+      status:
+        type: string
+        description: Status of the visit based on status hierarchy from AlayaCare web application.
+        example: scheduled
+        enum:
+        - scheduled
+        - vacant
+        - on_hold
+        - cancelled
+        - offered
+        - clocked
+        - late
+        - completed
+        - missed
+        - approved
+      start_at:
+        type: string
+        format: date-time
+        description: Visit start time (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      end_at:
+        type: string
+        format: date-time
+        description: Visit end time (ISO 8601)
+        example: '2017-07-08T14:00:00+00:00'
+      cancelled:
+        type: boolean
+        description: Indicates if visit is cancelled
+      employee:
+        $ref: '#/definitions/EmployeeDetails'
+      service:
+        $ref: '#/definitions/VisitServiceDetails'
+      funders:
+        description: Visit funders
+        type: array
+        items:
+          $ref: '#/definitions/VisitFunderDetails'
+      work_sessions:
+        type: array
+        items:
+          $ref: '#/definitions/VisitWorkSession'
+      adls:
+        type: array
+        items:
+          $ref: '#/definitions/VisitDailyActivity'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/VisitNote'
+      cancel_code:
+        $ref: '#/definitions/VisitCancelCode'
+      activity_codes:
+        type: array
+        items:
+          $ref: '#/definitions/VisitActivityCode'
+      skills:
+        type: array
+        items:
+          $ref: '#/definitions/VisitSkill'
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/VisitTag'
+      service_instructions:
+        description: Service instructions
+        type: string
+        example: Call in the morning to confirm each visit
+        x-nullable: true
+      service_code_id:
+        description: Visit override service code id.
+        type: integer
+        example: 1
+        x-nullable: true
+      service_code_name:
+        description: Visit override service code name.
+        type: string
+        example: Default Appointment
+        x-nullable: true
+      route:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+    required:
+    - alayacare_service_id
+    - alayacare_visit_id
+    - start_at
+    - end_at
+    - cancelled
+    - employee
+    - service
+    - work_sessions
+    - adls
+    - notes
+    - cancel_code
+    - activity_codes
+    - tags
+    - service_instructions
+  VisitDailyActivity:
+    type: object
+    description: Activity of daily living
+    properties:
+      name:
+        type: string
+        description: ADL description
+        example: Take out the trash
+      completed:
+        type: boolean
+        description: Indicates if the ADL was completed during the visit
+        example: false
+      reason:
+        type: string
+        description: Reason why the ADL was not completed, in case it wasn't
+        example: Not a garbage day
+        x-nullable: true
+  VisitCreate:
+    allOf:
+    - $ref: '#/definitions/VisitUpdate'
+    description: AlayaCare visit entity data for creation
+    required:
+    - start_at
+    - end_at
+  VisitNote:
+    allOf:
+    - $ref: '#/definitions/VisitNoteCreate'
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: Creation time of the note
+        example: '2017-07-08T13:30:00+00:00'
+    required:
+    - created_at
+parameters:
+  client_id:
+    name: client_id
+    in: query
+    required: false
+    type: string
+    description: 'Filter by external client ID
+
+      External client ID is the client ID in the system of record.
+
+      Ex. CRM client identifier
+
+      '
+  alayacare_client_id:
+    name: alayacare_client_id
+    in: query
+    required: false
+    type: string
+    description: Filter by AlayaCare client ID
+  alayacare_employee_id:
+    name: alayacare_employee_id
+    in: query
+    required: false
+    type: integer
+    description: Filter by AlayaCare employee ID
+  branch_id:
+    description: 'Filter by branch ID `(default: current user branch)`
+
+      '
+    name: branch_id
+    in: query
+    required: false
+    type: integer
+  employee_id:
+    name: employee_id
+    in: query
+    required: false
+    type: string
+    description: 'Filter by external employee ID
+
+      External employee ID is the employee ID in the system of record.
+
+      Ex. HR employee number
+
+      '
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+  alayacare_service_id:
+    name: alayacare_service_id
+    in: query
+    required: false
+    type: integer
+    description: Filter by AlayaCare service ID
+  service_id:
+    name: service_id
+    in: query
+    required: false
+    type: string
+    description: Filter by external service ID
+responses:
+  ErrorResponsePartialVisitLock:
+    description: Partial success on locking visits
+    schema:
+      $ref: '#/definitions/VisitUpdatePartialSuccessResponse'
+    examples:
+      application/json:
+        code: 207
+        message: Partial success when locking visits. Visits are not approved or could not be found
+        visit_ids:
+        - ext_visit_1245
+        - ext_visit_1246
+        alayacare_visit_ids:
+        - 1245
+        - 1246
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.
+  ErrorResponseVisitLockInvalidRequest:
+    description: Invalid request
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: alayacare_visit_ids and/or visit_ids must be sent
+  ErrorResponseVisitUpdateInvalidRequest:
+    description: Invalid data submitted for visit creation
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: client_id and alayacare_client_id are mutually exclusive
+  ErrorResponseVisitCreateInvalidRequest:
+    description: Invalid data submitted for visit creation
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: client_id and alayacare_client_id are mutually exclusive
+  ErrorResponseVisitNotFound:
+    description: Visit not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Visit not found
+  ErrorResponseDeliveryDateNotFound:
+    description: Delivery date not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Delivery date not found

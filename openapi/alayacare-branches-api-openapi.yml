@@ -1,0 +1,222 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Branches API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Branches
+  description: Branch related endpoints.
+paths:
+  /branches:
+    get:
+      tags:
+      - Branches
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      summary: Get a list of branches
+      operationId: listBranches
+      description: Returns a paginated list of branches.
+      responses:
+        '200':
+          description: A list of branches
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    BranchList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of branches
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Branch'
+    Branch:
+      description: AlayaCare branch.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare branch ID
+          example: 1
+        name:
+          type: string
+          description: AlayaCare branch name
+          example: Toronto branch
+        profile:
+          $ref: '#/components/schemas/BranchProfile'
+      required:
+      - id
+      - name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    BranchProfile:
+      description: 'Collection of key/value pairs where keys are existing attributes in the agency profile, defined through
+
+        the AlayaCare web application.
+
+        On the example below default profile keys for the agency profile are used.
+
+
+        Example profile attributes:
+
+        + `first_name`: string
+
+        + `last_name`: string
+
+        + `city`: string
+
+        + `title`: string
+
+        + `state`: string
+
+        + `gender`: string
+
+        + `relationship`: string
+
+        + `contact_type`: string
+
+        + `fax`: string
+
+        + `company`: string
+
+        + `phone_other`: string
+
+        + `phone_main`: string
+
+        + `address`: string
+
+        + `country`: string
+
+        + `zip`: string
+
+        + `address_suite`: string
+
+        + `remarks`: string
+
+        '
+      type: object
+      properties:
+        name:
+          description: Branch company name
+          type: string
+          example: Alayacare
+        phone_main:
+          description: Branch main phone number
+          type: string
+          example: 514-999-9999
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

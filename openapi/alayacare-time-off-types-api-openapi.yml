@@ -1,0 +1,253 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Time Off Types API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Time Off Types
+paths:
+  /time_off_types:
+    get:
+      tags:
+      - Time Off Types
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/branchId'
+      - name: pay_schedule_time
+        description: Filter by time off type usable payable scheduled hours for payroll configuration
+        in: query
+        schema:
+          type: string
+          enum:
+          - false
+          - Time_Off_Pay_Code
+          - Visit_Pay_Code
+      - name: employee_role
+        description: 'Filter by employee role, one or more using **OR**
+
+          See resource `roles` in `employee-api-external` for a list of available employee roles
+
+          Refer to https://app.swaggerhub.com/apis/AlayaCare/employee-api-external for more information
+
+          '
+        in: query
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: employee_id
+        description: 'Filter by AlayaCare Employee ID
+
+          '
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: filter
+        description: Substring search on time off type `name` and `service_code_name`
+        in: query
+        required: false
+        schema:
+          type: string
+      summary: 'Get a list of time off types
+
+        '
+      responses:
+        '200':
+          description: A list of time off types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeOffList'
+        '401':
+          $ref: '#/components/responses/ErrorAuthentication'
+components:
+  schemas:
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    TimeOffList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: List of time off types
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/TimeOff'
+    ServiceCodeDetails:
+      description: Service details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the service code
+          example: 1
+          minimum: 1
+        service_code_name:
+          type: string
+          description: Name of the service code
+          example: SICKPAID
+    TimeOff:
+      description: Time off type details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the time off type
+          example: 1
+        name:
+          type: string
+          description: Name of the time off type
+          example: Sick Paid
+        pay_schedule_time:
+          type: string
+          description: Time off type usable payable scheduled hours for payroll configuration
+          example: false
+          enum:
+          - false
+          - Time_Off_Pay_Code
+          - Visit_Pay_Code
+        all_day_duration:
+          type: integer
+          description: All day duration in minutes.
+          example: 480
+        service:
+          $ref: '#/components/schemas/ServiceCodeDetails'
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  parameters:
+    branchId:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+  responses:
+    ErrorAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

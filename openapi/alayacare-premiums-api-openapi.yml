@@ -1,0 +1,447 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Premiums API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Premiums
+paths:
+  /premiums:
+    get:
+      parameters:
+      - in: query
+        name: name
+        required: false
+        description: Partial match on code
+        schema:
+          type: string
+      - in: query
+        name: branch_id
+        description: Filter by branch ID.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: excluded_ids
+        description: List of IDs for premiums to exclude from the results.
+        schema:
+          items:
+            type: integer
+          type: array
+      - in: query
+        name: page
+        description: Filter by page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+      - in: query
+        name: count
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - in: query
+        name: sort_by
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+      - in: query
+        name: order
+        description: Order to sort by
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      tags:
+      - Premiums
+      summary: Get a list of premiums
+      responses:
+        '200':
+          description: A list of premiums
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PremiumsList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+    post:
+      summary: Create a new Premium
+      tags:
+      - Premiums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PremiumCreateSchema'
+      responses:
+        '201':
+          description: Premium Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PremiumExtendedSchema'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+  /premiums/{premium_id}:
+    parameters:
+    - name: premium_id
+      description: The selected premium id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    get:
+      summary: Get a specific Premium
+      tags:
+      - Premiums
+      responses:
+        '200':
+          description: Premium
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PremiumExtendedSchema'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorPremiumNotFound'
+    put:
+      summary: Update a Premium
+      tags:
+      - Premiums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PremiumUpdateSchema'
+      responses:
+        '200':
+          description: GuidPremium
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PremiumExtendedSchema'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorPremiumNotFound'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    PayCode:
+      description: AlayaCare pay code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare pay code ID
+          example: 3
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare pay code name
+          example: 783
+    Premium:
+      description: A premium configured in AlayaCare Accounting Settings
+      type: object
+      properties:
+        code:
+          type: string
+          description: AlayaCare premium code name
+          example: MILEAGE
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          example: 643
+          minimum: 1
+        pay_code:
+          $ref: '#/components/schemas/PayCode'
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCode'
+        rule:
+          type: string
+          description: AlayaCare premium rule name
+          example: Weekends
+        branch:
+          $ref: '#/components/schemas/Branch'
+      required:
+      - code
+      - premium_id
+    PremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      type: object
+      description: Paginated list of premiums
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Premium'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    BillCodeQuerySchema:
+      properties:
+        branch:
+          $ref: '#/components/schemas/Branch'
+        code:
+          type: string
+        excluded_from_billing:
+          type: boolean
+        guid:
+          type: integer
+        id:
+          type: integer
+        is_disabled:
+          type: boolean
+        name:
+          type: string
+        units:
+          type: string
+      required:
+      - id
+      - code
+      - name
+      - excluded_from_billing
+      - is_disabled
+      - units
+      type: object
+    PayCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
+    BillCodeStub:
+      type: object
+      description: Only one of id or guid should be present
+      properties:
+        id:
+          type: integer
+          example: 3
+        guid:
+          type: integer
+          example: 3
+    PremiumExtendedSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 453
+        guid:
+          type: integer
+          example: 356689
+        code:
+          type: string
+          example: TESTCODE
+        pay_code:
+          $ref: '#/components/schemas/PayCodeSchema'
+        rule:
+          type: string
+          example: Evening
+        rule_data:
+          description: Not really supported but returned as is, the rule data is stored as a json
+          type: string
+          example: null
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeQuerySchema'
+    BillCode:
+      description: AlayaCare bill code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare bill code ID
+          example: 783
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare bill code name
+          example: MEDIBILL
+      required:
+      - id
+      - code
+    Branch:
+      description: AlayaCare branch
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Branch ID
+          example: 1000
+          minimum: 1
+        name:
+          type: string
+          description: Branch name
+          example: AlayaCare Health
+    PremiumCreateSchema:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          example: TESTCODE
+        pay_code_id:
+          type: integer
+          example: 1
+          minimum: 1
+        branch_id:
+          type: integer
+          example: 1
+          minimum: 1
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeStub'
+    PremiumUpdateSchema:
+      type: object
+      properties:
+        code:
+          type: string
+          example: TESTCODE
+        pay_code_id:
+          type: integer
+          example: 1
+          minimum: 1
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeStub'
+  responses:
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorPremiumNotFound:
+      description: The premium referenced by visit_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '404'
+                message: Premium not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

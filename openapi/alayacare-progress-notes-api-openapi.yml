@@ -1,0 +1,425 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Progress Notes API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Progress Notes
+paths:
+  /progress_notes/{client_id}:
+    parameters:
+    - name: client_id
+      description: AlayaCare ID of the client
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Progress Notes
+      summary: Get a list of progress notes by a client's AlayaCare ID
+      parameters:
+      - name: note_type
+        description: Filter on the note type category of the progress note
+        in: query
+        type: string
+      - name: is_hidden
+        description: Filter on hidden progress notes
+        in: query
+        type: boolean
+      - name: created_at
+        description: 'Filter progress notes by creation date greater or equal than specified value.
+
+          Expected format is ISO 8601.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+        type: string
+        format: date-time
+        in: query
+      - name: created_by
+        description: Filter by the AlayaCare ID of the employee who created the progress note
+        type: integer
+        in: query
+      - name: id
+        description: Filter on the id of the progress note
+        type: string
+        format: uuid
+        in: query
+      - name: include_textonly
+        description: Include notes content as simple text
+        type: boolean
+        in: query
+      responses:
+        200:
+          description: A list of progress notes
+          schema:
+            $ref: '#/definitions/ProgressNotesList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+    post:
+      summary: Create a progress note
+      tags:
+      - Progress Notes
+      description: "* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/ \n* `is_hidden` is optional, if omitted the progress note will be created with is_hidden set to `false`.\n"
+      parameters:
+      - name: body
+        description: Client data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ProgressNoteCreate'
+      responses:
+        201:
+          description: Progress note created successfully
+          schema:
+            $ref: '#/definitions/SuccessProgressNoteCreate'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/CreateNoteInvalidRequest'
+        404:
+          $ref: '#/responses/ClientNotFound'
+  /progress_notes/by_id/{external_client_id}:
+    parameters:
+    - name: external_client_id
+      description: External ID of the client
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Progress Notes
+      summary: Get a list of progress notes by client's external ID
+      parameters:
+      - name: note_type
+        description: Filter on the note type category of the progress note
+        in: query
+        type: string
+      - name: is_hidden
+        description: Filter on hidden progress notes
+        in: query
+        type: boolean
+      - name: created_at
+        description: 'Filter progress notes by creation date greater or equal than specified value.
+
+          Expected format is ISO 8601.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+        type: string
+        format: date-time
+        in: query
+      - name: created_by
+        description: Filter by the AlayaCare ID of the employee who created the progress note
+        type: integer
+        in: query
+      - name: id
+        description: Filter on the guid of the progress note
+        type: string
+        format: uuid
+        in: query
+      - name: include_textonly
+        description: Include notes content as simple text
+        type: boolean
+        in: query
+      responses:
+        200:
+          description: A list of progress notes
+          schema:
+            $ref: '#/definitions/ProgressNotesList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+    post:
+      summary: Create a progress note by external client ID
+      tags:
+      - Progress Notes
+      description: "* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/ \n* `is_hidden` is optional, if omitted the progress note will be created with is_hidden set to `false`.\n"
+      parameters:
+      - name: body
+        description: Client data in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ProgressNoteCreate'
+      responses:
+        201:
+          description: Progress note created successfully
+          schema:
+            $ref: '#/definitions/SuccessProgressNoteCreate'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/CreateNoteInvalidRequest'
+        404:
+          $ref: '#/responses/ClientNotFound'
+  /progress_note/{progress_note_id}:
+    parameters:
+    - name: progress_note_id
+      description: ID of a progress note
+      type: string
+      format: uuid
+      in: path
+      required: true
+    get:
+      summary: Get a single progress note by ID
+      tags:
+      - Progress Notes
+      parameters:
+      - name: include_textonly
+        description: Include notes content as simple text
+        type: boolean
+        in: query
+      responses:
+        200:
+          description: A single progress note
+          schema:
+            $ref: '#/definitions/ProgressNoteDetails'
+        400:
+          $ref: '#/responses/InvalidRequest'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        404:
+          $ref: '#/responses/NotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  ProgressNoteDetails:
+    description: A progress note
+    type: object
+    properties:
+      id:
+        type: string
+        description: uuid of the progress note
+        example: 5aea440b-7e10-4b5d-8b44-fda4efb2dc95
+      is_hidden:
+        type: boolean
+        default: false
+      note_type:
+        type: string
+        description: Note type category of the progress note
+        example: progress_nursing
+      content:
+        type: string
+        format: html
+        description: Content of the progress note. A subset of HTML is accepted.
+        example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+      created_at:
+        type: string
+        format: date-time
+        description: Date progress note was created (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      created_by:
+        type: integer
+        description: AlayaCare ID of the employee who created the progress note.
+        example: 1001
+      client_id:
+        type: integer
+        description: Alayacare ID of the client
+        example: 1010
+      external_client_id:
+        type: string
+        description: External ID of the client
+        example: client_101
+      textonly:
+        type: string
+        description: Content of the progress note as simple text (only if include_textonly is true)
+        example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+  ProgressNote:
+    description: A progress note
+    type: object
+    properties:
+      id:
+        type: string
+        description: uuid of the progress note
+        format: uuid
+        example: 5aea440b-7e10-4b5d-8b44-fda4efb2dc95
+      is_hidden:
+        type: boolean
+        default: false
+      note_type:
+        type: string
+        description: Note type category of the progress note
+        example: progress_nursing
+      content:
+        type: string
+        format: html
+        description: Content of the progress note. A subset of HTML is accepted.
+        example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+      created_at:
+        type: string
+        format: date-time
+        description: Date progress note was created (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      created_by:
+        type: integer
+        description: AlayaCare ID of the employee who created the progress note.
+        example: 1001
+      textonly:
+        type: string
+        description: Content of the progress note as simple text (only if include_textonly is true)
+        example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+  ProgressNoteCreate:
+    description: Progress note data required for creation.
+    type: object
+    required:
+    - note_type
+    - content
+    properties:
+      is_hidden:
+        type: boolean
+        default: false
+      note_type:
+        type: string
+        description: Note type category of the progress note
+        example: progress_nursing
+      content:
+        type: string
+        format: html
+        description: Content of the progress note.  A subset of HTML is accepted.
+        example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+  SuccessProgressNoteCreate:
+    type: object
+    description: Progress note created successfully
+    properties:
+      id:
+        type: string
+        description: The entity ID.
+        example: 70ad613a-376c-4389-bb45-78374dddd03e
+      type:
+        type: string
+        description: The clinical document type.
+        example: progress_note
+      uri:
+        type: string
+        description: The entity URI.
+        example: /progress_note/70ad613a-376c-4389-bb45-78374dddd03e
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  ProgressNotesList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of a client's progress notes
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/ProgressNote'
+responses:
+  InvalidRequest:
+    description: Invalid data.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Invalid request
+  NotFound:
+    description: Not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Progress note not found
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.
+  ClientNotFound:
+    description: Not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Client not found.
+  CreateNoteInvalidRequest:
+    description: Invalid data submitted for creation
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400,
+        message: Invalid note type

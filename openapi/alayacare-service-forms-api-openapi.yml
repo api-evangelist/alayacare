@@ -1,0 +1,197 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Service Forms API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Service Forms
+paths:
+  /services/forms:
+    parameters:
+    - name: name
+      description: Filter by the name of the form
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: branch_id
+      description: Filter by the branch_id of the form
+      in: query
+      required: false
+      schema:
+        type: string
+    - $ref: '#/components/parameters/page'
+    - $ref: '#/components/parameters/count'
+    get:
+      tags:
+      - Service Forms
+      summary: Get list of forms that can be attached to services
+      description: 'Get a list of forms
+
+        '
+      responses:
+        '200':
+          description: The list of forms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceFormList'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+components:
+  schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    ServiceForm:
+      description: Details of forms
+      type: object
+      properties:
+        branch:
+          $ref: '#/components/schemas/Branch'
+        id:
+          type: integer
+          minimum: 1
+          description: Service code id
+          example: 1
+        name:
+          type: string
+          description: Service Code name
+          example: SC1
+        status:
+          type: string
+          description: service form status
+          example: active
+        version:
+          type: string
+          description: service form version
+          example: 1
+    Branch:
+      description: AlayaCare branch
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: Branch ID
+          example: 1000
+        name:
+          type: string
+          description: Branch name
+          example: Toronto branch
+    ServiceFormList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of forms
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceForm'
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

@@ -1,0 +1,441 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Invoice Items API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Invoice Items
+paths:
+  /billing/cycles/invoice/{invoice_id}/details:
+    get:
+      tags:
+      - Invoice Items
+      summary: Fetch a specific invoice's invoice items
+      parameters:
+      - in: path
+        name: invoice_id
+        description: Invoice ID
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        '200':
+          description: the invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceQuerySchema'
+  /billing/periods/invoice/{invoice_id}/details:
+    get:
+      tags:
+      - Invoice Items
+      summary: Fetch multiple private pay invoices
+      parameters:
+      - $ref: '#/components/parameters/sortOrder'
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - policy_rank
+      responses:
+        '200':
+          description: the invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceQuerySchema'
+components:
+  schemas:
+    PayorSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
+    TaxesSchema:
+      type: object
+      properties:
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
+    InvoiceItemSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        invoice_id:
+          type: integer
+          example: 12
+          minimum: 1
+        source_id:
+          type: integer
+          example: 12
+        subtotal:
+          type: number
+          format: double
+          example: 10.0
+        total_cost:
+          type: number
+          format: double
+          example: 3.0
+        total_taxes:
+          type: number
+          format: double
+          example: 3.0
+        total:
+          type: number
+          format: double
+          example: 13.0
+        ajdustment_type:
+          type: string
+          example: adjustment
+        create_user_id:
+          type: integer
+          example: 2
+          minimum: 1
+        created_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        gl_asset_acc_account_id:
+          type: integer
+          example: 2
+          minimum: 1
+        gl_revenue_acc_account_id:
+          type: integer
+          example: 2
+          minimum: 1
+        item_end_at:
+          type: string
+          format: date
+          example: 2018-01-16T14:17:05-0500
+        item_start_at:
+          type: string
+          format: date
+          example: 2018-01-16T14:16:05-0500
+        memo:
+          type: string
+          example: memo
+        policy_version_id:
+          type: integer
+          example: 2
+          minimum: 1
+        quantity:
+          type: number
+          format: double
+          example: 2.0
+        quantity_units:
+          type: string
+          example: hours
+        receivables_cost_centre_id:
+          type: integer
+          example: 2
+          minimum: 1
+        taxable:
+          type: boolean
+          example: true
+        type:
+          type: string
+          example: visit
+        unitprice:
+          type: number
+          format: double
+          example: 2.0
+        updated_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        update_user_id:
+          type: integer
+          example: 2
+          minimum: 1
+        voided_by_id:
+          type: integer
+          example: 2
+          minimum: 1
+        payor:
+          $ref: '#/components/schemas/PayorSchema'
+    TaxTypesSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: HST
+        total:
+          type: number
+          example: 2
+    BillingContactSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 16
+        first_name:
+          type: string
+          example: Jane
+        last_name:
+          type: string
+          example: Jones
+        address:
+          type: string
+          example: 12 crescent street
+        address_suite:
+          type: string
+          example: app. 1B
+        city:
+          type: string
+          example: Cityville
+        state:
+          type: string
+          example: Quebec
+        zip:
+          type: string
+          example: H1H1H1
+        country:
+          type: string
+          example: Canada
+        phone_main:
+          type: string
+          example: '5141234567'
+    ClientSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 16
+          minimum: 1
+        first_name:
+          type: string
+          example: Jane
+        last_name:
+          type: string
+          example: Jones
+    InvoiceQuerySchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        status:
+          type: string
+          example: draft
+        invoice_number:
+          type: integer
+          example: 2348
+        invoice_version:
+          type: integer
+          example: 0
+        invoice_date:
+          type: string
+          format: date
+          example: 2018-01-16
+        updated_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        balance:
+          type: number
+          example: 5
+        total:
+          type: number
+          example: 10
+        can_be_written_off:
+          type: boolean
+          example: false
+        can_be_voided:
+          type: boolean
+          example: false
+        can_be_regenerated:
+          type: boolean
+          example: false
+        can_be_paid:
+          type: boolean
+          example: false
+        can_be_deleted:
+          type: boolean
+          example: false
+        can_add_transaction:
+          type: boolean
+          example: false
+        is_ccac_funder:
+          type: boolean
+          example: false
+        is_funder_batched_funder:
+          type: boolean
+          example: false
+        total_visits:
+          type: integer
+          example: 2
+        total_premiums:
+          type: integer
+          example: 3
+        total_supplies:
+          type: integer
+          example: 4
+        total_client_premiums:
+          type: integer
+          example: 5
+        total_income_items:
+          type: integer
+          example: 6
+        visits_and_premiums_subtotal:
+          type: number
+          example: 10
+        supplies_subtotal:
+          type: number
+          example: 0
+        client_premiums_subtotal:
+          type: number
+          example: 5
+        income_items_subtotal:
+          type: number
+          example: 6
+        client_id:
+          type: integer
+          example: 2
+          minimum: 1
+        crn:
+          type: string
+          example: '10009'
+          description: Has value only if BPAY FF is ON and is already generated
+        taxes:
+          $ref: '#/components/schemas/TaxesSchema'
+        bill_to:
+          $ref: '#/components/schemas/BillToSchema'
+        pdf_url:
+          type: string
+          example: /path/to/file.pdf
+        invoice_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemSchema'
+    FunderStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+          minimum: 1
+        code:
+          type: string
+          example: Some Funder
+        name:
+          type: string
+          example: Some Funder
+        description:
+          type: string
+          example: Some Funder
+        invoicing_model:
+          type: string
+          example: funder_individual
+    BillToSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: Funder
+        guid:
+          type: string
+          example: '27990'
+        guid_to:
+          type: string
+          example: '27991'
+        is_active:
+          type: boolean
+          example: true
+        import_id:
+          type: integer
+          example: 123
+        remarks:
+          type: string
+          example: falls prevention program
+        contact_type:
+          type: string
+          example: Referral Contact
+        lang:
+          type: string
+          example: english
+        list:
+          type: string
+          example: Funder List (System)
+  parameters:
+    sortOrder:
+      in: query
+      name: sort_order
+      description: Order to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: ASC
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

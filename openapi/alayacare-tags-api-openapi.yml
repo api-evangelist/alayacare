@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Tags API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Tags
+paths:
+  /careplans/tags:
+    get:
+      tags:
+      - Tags
+      summary: Get a list of all care plan tags
+      description: "- Care plan tags are configured \n"
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        '200':
+          description: The list of care plan tags
+          schema:
+            $ref: '#/definitions/CarePlanTags'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseInvalidTagId'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  CarePlanTagList:
+    description: List of care plan tags
+    type: object
+    properties:
+      id:
+        description: Tag ID
+        type: integer
+        example: 2
+      name:
+        description: Tag name
+        type: string
+        example: Review care plan
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  CarePlanTags:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of care plan tags
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/CarePlanTagList'
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      status_code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+parameters:
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+responses:
+  ErrorResponseInvalidTagId:
+    description: Field 'tag_id' is invalid
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Field 'tag_id' is invalid
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 401
+        message: Please verify your access level for this url.
+  ErrorInsufficientAccess:
+    description: You do not have the required permissions to perform this action
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 403
+        message: Access required

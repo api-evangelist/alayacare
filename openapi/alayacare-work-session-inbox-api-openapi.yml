@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts work session inbox API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: work session inbox
+paths:
+  /v1/inbox/work_sessions/start:
+    post:
+      tags:
+      - work session inbox
+      description: '# Authorization
+
+        Required role: `org_admin` assigned to the associated referral.
+
+
+        # Description
+
+        Start a Work Session for a given visit.
+
+
+        One of `visit_id` or `visit_inbox_id` must be provided.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxWorkSessionStartRequest'
+      responses:
+        201:
+          description: Successfully started a Work Session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxWorkSessionStartResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+  /v1/inbox/work_sessions/end:
+    post:
+      tags:
+      - work session inbox
+      description: '# Authorization
+
+        Required role: `org_admin` who started the Work Session.
+
+
+        # Description
+
+        End a Work Session.
+
+
+        * One of `work_session_id` or `inbox_id` must be provided, AND
+
+        * One of `visit_id` or `visit_inbox_id` must be provided.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxWorkSessionEndRequest'
+      responses:
+        204:
+          description: Successfully ended a Work Session.
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  schemas:
+    InboxWorkSessionStartResponse:
+      allOf:
+      - $ref: '#/components/schemas/InboxWorkSessionStartRequest'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Work Session ID.
+      required:
+      - id
+    InboxWorkSessionEndRequest:
+      type: object
+      properties:
+        end_at:
+          type: string
+          format: date-time
+        work_session_id:
+          type: string
+          format: uuid
+        end_latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        end_longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+        visit_id:
+          type: string
+          format: uuid
+        visit_inbox_id:
+          type: string
+        inbox_id:
+          type: string
+      required:
+      - end_at
+    InboxWorkSessionStartRequest:
+      type: object
+      properties:
+        start_at:
+          type: string
+          format: date-time
+        start_latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        start_longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+        visit_id:
+          type: string
+          format: uuid
+        visit_inbox_id:
+          type: string
+        inbox_id:
+          type: string
+          minLength: 1
+      required:
+      - start_at
+      - inbox_id
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

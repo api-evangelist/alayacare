@@ -1,0 +1,211 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Client Cost Centres API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Client Cost Centres
+paths:
+  /cost_centres/{cost_centre_id}/clients:
+    parameters:
+    - in: path
+      name: cost_centre_id
+      description: Cost centre ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    post:
+      tags:
+      - Client Cost Centres
+      summary: Add a cost centre to a client
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CostCentreClientCreate'
+        description: '`client_id` and `client_external_id` are mutually exclusive, specifying both is an invalid request.
+
+          '
+        required: true
+      responses:
+        '200':
+          description: Cost centre added to client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCentreClientResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCostCentreDisabled'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+  /cost_centres/{cost_centre_id}/clients/{client_id}:
+    parameters:
+    - in: path
+      name: cost_centre_id
+      description: Cost centre ID
+      required: true
+      schema:
+        type: integer
+    - in: path
+      name: client_id
+      description: Client ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    delete:
+      tags:
+      - Client Cost Centres
+      summary: Delete a cost centre from a client
+      responses:
+        '204':
+          description: Cost centre deleted from client
+        '400':
+          $ref: '#/components/responses/ErrorResponseClientCostCentreNotFound'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+  /cost_centres/{cost_centre_id}/clients/by_id/{client_external_id}:
+    parameters:
+    - in: path
+      name: cost_centre_id
+      description: Cost centre ID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    - in: path
+      name: client_external_id
+      description: Client external ID
+      required: true
+      schema:
+        type: string
+    delete:
+      tags:
+      - Client Cost Centres
+      summary: Delete a cost centre from a client using external ID
+      responses:
+        '204':
+          description: Cost centre deleted from client
+        '400':
+          $ref: '#/components/responses/ErrorResponseClientCostCentreNotFound'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+components:
+  schemas:
+    CostCentreClientCreate:
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        client_external_id:
+          type: string
+          description: client external ID
+          example: john.1010
+    CostCentreClientResponse:
+      description: Client to cost centre link
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        cost_centre_id:
+          type: integer
+          description: Cost centre ID
+          example: 10
+          minimum: 1
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorResponseCostCentreDisabled:
+      description: The cost centre referenced by cost_centre_id is disabled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Cost centre is disabled
+    ErrorResponseClientCostCentreNotFound:
+      description: The client with the referenced cost_centre_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Client with ID 1010 and Cost Centre ID 10 not found
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

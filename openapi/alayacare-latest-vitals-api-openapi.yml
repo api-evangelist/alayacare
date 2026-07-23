@@ -1,0 +1,265 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Latest Vitals API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Latest Vitals
+paths:
+  /vitals/client/{client_id}/latest:
+    parameters:
+    - description: Client ID
+      name: client_id
+      in: path
+      required: true
+      type: integer
+    get:
+      tags:
+      - Latest Vitals
+      summary: Get a list of the latest vital recordings by the client's AlayaCare ID
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        200:
+          description: A list of vitals
+          schema:
+            $ref: '#/definitions/VitalLatestList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+  /vitals/client/by_id/{external_client_id}/latest:
+    parameters:
+    - description: External client ID
+      name: external_client_id
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - Latest Vitals
+      summary: Get a list of the latest vital recordings by the client's external ID
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      responses:
+        200:
+          description: A list of vitals
+          schema:
+            $ref: '#/definitions/VitalLatestList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        400:
+          $ref: '#/responses/InvalidRequest'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  VitalLatestList:
+    type: object
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: A list of the latest vital for each type.
+    properties:
+      items:
+        type: object
+        description: The vital details for each vital type.
+        properties:
+          presure_max:
+            $ref: '#/definitions/VitalLatest'
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  VitalUnits:
+    type: string
+    description: The unit used to record the vital.
+    enum:
+    - c
+    - f
+    - kgs
+    - lb
+    - bpm
+    - breaths_pm
+    - mmhg
+    - cm
+    - in
+    - mmol_l
+    - mg_dl
+    - kg_m2
+    - '%'
+    example: mmhg
+  VitalName:
+    type: string
+    description: The name identifying the vital type.
+    enum:
+    - blood_glucose
+    - bmi
+    - height
+    - pulse
+    - pressure_min
+    - pressure_max
+    - weight
+    - respiratory_rate
+    - spo2
+    - temperature
+    example: pressure_max
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  VitalLatest:
+    type: object
+    description: Latest vital details
+    required:
+    - name
+    - group
+    - date
+    - value
+    - unit
+    properties:
+      comments:
+        type: string
+        description: A comment.
+        example: No unexpected results
+      date:
+        type: string
+        description: The created date using ISO 8601 date-time formatting.
+        example: '2018-01-01T00:30:00+00:00'
+      group:
+        type: string
+        description: The vital group. This is used to group together separate vitals that are measured together like low and high blood pressure. If no group, this should default to `name`.
+        example: blood_pressure
+      name:
+        $ref: '#/definitions/VitalName'
+      session_guid:
+        type: string
+        description: A unique identifier to group vitals recorded together within the same `group`.
+        example: 97a3e055-2fd1-469d-a058-b173499e37ff
+      source:
+        type: string
+        description: A description of how the vital was recorded. This may be set if the client recorded the vital themselves.
+        example: default
+      threshold_level:
+        type: string
+        description: The level of threshold that was reached. This will be `null` if no threshold was reached.
+        enum:
+        - low
+        - medium
+        - high
+        example: high
+      threshold_reached:
+        type: string
+        description: The threshold that was reached.
+        enum:
+        - min
+        - max
+        example: max
+      unit:
+        $ref: '#/definitions/VitalUnits'
+      value:
+        type: number
+        description: The value of the recorded vital.
+        example: 38.4
+parameters:
+  count:
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+    description: Number of items per page. If not specified will default to 100.
+  page:
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+    description: Filter by page number. If not specified will default to 1.
+responses:
+  InvalidRequest:
+    description: Invalid data.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Invalid request
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.

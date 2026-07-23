@@ -1,0 +1,1469 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Care plan API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Care plan
+paths:
+  /client/{client_id}/careplans:
+    parameters:
+    - description: Send request using the client Alayacare ID
+      name: client_id
+      type: integer
+      in: path
+      required: true
+    get:
+      tags:
+      - Care plan
+      summary: Get a list of care plan base information using the client Alayacare ID
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - description: Filter by careplan status
+        name: status
+        type: string
+        enum:
+        - active
+        - completed
+        - archived
+        in: query
+      - name: start_date_from
+        in: query
+        required: false
+        type: string
+        format: date-time
+        default: utcnow()
+        description: 'Filter by care plan start date time greater or equal than specified value.
+
+          If not specified will default to now.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          `start_date_from` can be used as this filter name.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+      - name: start_date_to
+        in: query
+        required: false
+        type: string
+        format: date-time
+        default: utcnow() + 7 days
+        description: 'Filter by care plan start date time less than or equal than specified value.
+
+          If not specified will default to 7 days from now.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          `start_date_to` can be used as this filter name
+
+          Ex: `2019-02-18T08:00:00-05:00`
+
+          '
+      - name: end_date_from
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: "Filter by care plan end date time greater or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2019-02-03T08:00:00-05:00`\n"
+      - name: end_date_to
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: "Filter by care plan date time less than or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2018-02-18T08:00:00-05:00`            \n"
+      - description: Filter by careplan name
+        name: name
+        type: string
+        in: query
+      - description: Define the field for sorting
+        name: sort_by
+        type: string
+        in: query
+      - description: Define the type of sorting (asc/desc)
+        name: order
+        type: string
+        in: query
+      responses:
+        '200':
+          description: A list of care plans
+          schema:
+            $ref: '#/definitions/CarePlanList'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+    post:
+      tags:
+      - Care plan
+      summary: Create a care plan using the client Alayacare ID
+      parameters:
+      - description: Care plan
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CarePlanCreate'
+      responses:
+        '201':
+          description: Success response
+          schema:
+            $ref: '#/definitions/CarePlanSummary'
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidRequest'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+  /client/by_id/{external_client_id}/careplans:
+    parameters:
+    - description: Send request using the client external ID
+      name: external_client_id
+      type: integer
+      in: path
+      required: true
+    get:
+      tags:
+      - Care plan
+      summary: Get a list of care plan base information using the client external ID
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - description: Filter by careplan status
+        name: status
+        type: string
+        enum:
+        - active
+        - completed
+        - archived
+        in: query
+      - name: start_date_from
+        in: query
+        required: false
+        type: string
+        format: date-time
+        default: utcnow()
+        description: 'Filter by careplan start date time greater or equal than specified value.
+
+          If not specified will default to now.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          `start_at` can be used as this filter name.
+
+          Ex: `2018-02-03T08:00:00-05:00`
+
+          '
+      - name: start_date_to
+        in: query
+        required: false
+        type: string
+        format: date-time
+        default: utcnow() + 7 days
+        description: 'Filter by careplan start date time less than or equal than specified value.
+
+          If not specified will default to 7 days from now.
+
+          Expected format is ISO 8601 converted to UTC timezone.
+
+          `end_at` can be used as this filter name
+
+          Ex: `2019-02-18T08:00:00-05:00`
+
+          '
+      - name: end_date_from
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: "Filter by visit end date time greater or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2019-02-03T08:00:00-05:00`\n"
+      - name: end_date_to
+        in: query
+        required: false
+        type: string
+        format: date-time
+        description: "Filter by visit end date time less than or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2018-02-18T08:00:00-05:00`            \n"
+      - description: Filter by careplan name
+        name: name
+        type: string
+        in: query
+      - description: Define the field for sorting
+        name: sort_by
+        type: string
+        in: query
+      - description: Define the type of sorting (asc/desc)
+        name: order
+        type: string
+        in: query
+      responses:
+        '200':
+          description: A list of care plans
+          schema:
+            $ref: '#/definitions/CarePlanList'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+    post:
+      tags:
+      - Care plan
+      summary: Create a care plan using the client external ID
+      parameters:
+      - description: Care plan
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CarePlanCreate'
+      responses:
+        '201':
+          description: Success response
+          schema:
+            $ref: '#/definitions/CarePlanSummary'
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidRequest'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+  /client/{client_id}/careplans/active:
+    parameters:
+    - description: Send request using Alayacare client DB ID
+      name: client_id
+      type: integer
+      in: path
+      required: true
+    get:
+      deprecated: true
+      tags:
+      - Care plan
+      summary: Get the detailed information of the active care plan using Alayacare client ID
+      description: "Deprecated. Use /careplans/currently-active instead.\nReturns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned when filtering on the type `diagnosis`  and the specific `diagnosis_id` \n"
+      parameters:
+      - description: 'Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)
+
+          '
+        name: root_item_id
+        in: query
+        type: integer
+      - description: Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)
+        name: root_item_type
+        in: query
+        type: string
+        enum:
+        - diagnosis
+        - goal
+        - intervention
+      - description: Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: from
+        in: query
+        type: string
+      - description: Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: to
+        in: query
+        type: string
+      - description: Filter root items by tags
+        name: tags
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by services
+        name: services
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by departments
+        name: departments
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by status
+        name: statuses
+        in: query
+        type: array
+        items:
+          type: string
+          enum:
+          - active
+          - completed
+          - archived
+      responses:
+        '200':
+          description: The care plan
+          schema:
+            $ref: '#/definitions/CarePlanDetails'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+  /client/{client_id}/careplans/currently-active:
+    parameters:
+    - description: Send request using Alayacare client DB ID
+      name: client_id
+      type: integer
+      in: path
+      required: true
+    get:
+      tags:
+      - Care plan
+      summary: Get the detailed information of the active care plan using Alayacare client ID
+      description: "Returns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned when filtering on the type `diagnosis`  and the specific `diagnosis_id` \n"
+      parameters:
+      - description: 'Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)
+
+          '
+        name: root_item_id
+        in: query
+        type: integer
+      - description: Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)
+        name: root_item_type
+        in: query
+        type: string
+        enum:
+        - diagnosis
+        - goal
+        - intervention
+      - description: Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: from
+        in: query
+        type: string
+      - description: Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: to
+        in: query
+        type: string
+      - description: Filter root items by tags
+        name: tags
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by services
+        name: services
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by departments
+        name: departments
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by status
+        name: statuses
+        in: query
+        type: array
+        items:
+          type: string
+          enum:
+          - active
+          - completed
+          - archived
+      responses:
+        '200':
+          description: The care plan
+          schema:
+            $ref: '#/definitions/CarePlanDetails'
+        '204':
+          description: No active care plan
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+  /client/by_id/{external_client_id}/careplans/active:
+    parameters:
+    - description: Send request using Alayacare client external ID
+      name: external_client_id
+      type: integer
+      in: path
+      required: true
+    get:
+      deprecated: true
+      tags:
+      - Care plan
+      summary: Get the detailed information of the active care plan using client external ID
+      description: "Deprecated. Use /careplans/currently-active instead.\nReturns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned when filtering on the type `diagnosis`  and the specific `diagnosis_id` \n"
+      parameters:
+      - description: 'Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)
+
+          '
+        name: root_item_id
+        in: query
+        type: integer
+      - description: Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)
+        name: root_item_type
+        in: query
+        type: string
+        enum:
+        - diagnosis
+        - goal
+        - intervention
+      - description: Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: from
+        in: query
+        type: string
+      - description: Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: to
+        in: query
+        type: string
+      - description: Filter root items by tags
+        name: tags
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by services
+        name: services
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by departments
+        name: departments
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by status
+        name: statuses
+        in: query
+        type: array
+        items:
+          type: string
+          enum:
+          - active
+          - completed
+          - archived
+      responses:
+        '200':
+          description: The care plan
+          schema:
+            $ref: '#/definitions/CarePlanDetails'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+  /client/by_id/{external_client_id}/careplans/currently-active:
+    parameters:
+    - description: Send request using Alayacare client external ID
+      name: external_client_id
+      type: integer
+      in: path
+      required: true
+    get:
+      tags:
+      - Care plan
+      summary: Get the detailed information of the active care plan using client external ID
+      description: "Returns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned when filtering on the type `diagnosis`  and the specific `diagnosis_id` \n"
+      parameters:
+      - description: 'Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)
+
+          '
+        name: root_item_id
+        in: query
+        type: integer
+      - description: Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)
+        name: root_item_type
+        in: query
+        type: string
+        enum:
+        - diagnosis
+        - goal
+        - intervention
+      - description: Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: from
+        in: query
+        type: string
+      - description: Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: to
+        in: query
+        type: string
+      - description: Filter root items by tags
+        name: tags
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by services
+        name: services
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by departments
+        name: departments
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by status
+        name: statuses
+        in: query
+        type: array
+        items:
+          type: string
+          enum:
+          - active
+          - completed
+          - archived
+      responses:
+        '200':
+          description: The care plan
+          schema:
+            $ref: '#/definitions/CarePlanDetails'
+        '204':
+          description: No active care plan
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+  /careplans/{plan_id}:
+    parameters:
+    - description: ID of care plan
+      name: plan_id
+      in: path
+      required: true
+      type: integer
+    get:
+      tags:
+      - Care plan
+      summary: Get detailed information about a care plan using the care plan ID
+      description: 'Returns the detailed information of the careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)
+
+        '
+      parameters:
+      - description: 'Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)
+
+          '
+        name: root_item_id
+        in: query
+        type: integer
+      - description: Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)
+        name: root_item_type
+        in: query
+        type: string
+        enum:
+        - diagnosis
+        - goal
+        - intervention
+      - description: Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: from
+        in: query
+        type: string
+      - description: Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)
+        name: to
+        in: query
+        type: string
+      - description: Filter root items by tags
+        name: tags
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by services
+        name: services
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by departments
+        name: departments
+        in: query
+        type: array
+        items:
+          type: integer
+      - description: Filter root items by status
+        name: statuses
+        in: query
+        type: array
+        items:
+          type: string
+          enum:
+          - active
+          - completed
+          - archived
+      responses:
+        '200':
+          description: The care plan
+          schema:
+            $ref: '#/definitions/CarePlanDetails'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+    put:
+      tags:
+      - Care plan
+      summary: Update care plan base information using the care plan ID
+      parameters:
+      - description: Updated care plan
+        name: plan
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CarePlanUpdate'
+      responses:
+        '204':
+          description: Careplan updated
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidRequest'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+  /careplans/{plan_id}/status/active:
+    parameters:
+    - description: ID of care plan
+      name: plan_id
+      in: path
+      required: true
+      type: integer
+    put:
+      tags:
+      - Care plan
+      summary: Change status of care plan to active using the care plan ID
+      description: '- If a care plan is in `completed` or `archived` status, then the care plan cannot be re-activated again.
+
+        - Only `one` care plan can be active at a time.
+
+        - If an existing care plan is currently active, and you wish to create and activate a new care plan, then the `start_date` of the new care plan must be `after` the `start _date` of the currently active care plan.
+
+        '
+      responses:
+        '204':
+          description: Status of Careplan was updated to active
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidStatusUpdate'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+  /careplans/{plan_id}/status/archived:
+    parameters:
+    - description: ID of care plan
+      name: plan_id
+      in: path
+      required: true
+      type: integer
+    put:
+      tags:
+      - Care plan
+      summary: Change status of care plan to archived using the care plan ID
+      description: '- Care plans in active status must be completed before they can be archived.
+
+        '
+      responses:
+        '204':
+          description: Status of Careplan was updated to archived
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidStatusUpdate'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+  /careplans/{plan_id}/status/completed:
+    parameters:
+    - description: ID of care plan
+      name: plan_id
+      in: path
+      required: true
+      type: integer
+    - description: Related information
+      name: related_info
+      in: body
+      schema:
+        type: object
+        properties:
+          end_date:
+            type: string
+            example: '2020-02-01'
+    put:
+      tags:
+      - Care plan
+      summary: Change status of care plan to completed using the care plan ID
+      responses:
+        '204':
+          description: Status of Careplan was updated to completed
+        '400':
+          $ref: '#/responses/ErrorResponseInvalidStatusUpdate'
+        '401':
+          $ref: '#/responses/AuthChallenge'
+        '403':
+          $ref: '#/responses/ErrorInsufficientAccess'
+        '404':
+          $ref: '#/responses/ErrorResponseCarePlanNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  CareplanItemStatus:
+    type: string
+    enum:
+    - active
+    - completed
+    - archived
+  GoalProgress:
+    description: Goal progress information
+    properties:
+      comment:
+        type: string
+      percentage:
+        type: integer
+      completed:
+        type: boolean
+    example:
+      comment: That was hard
+      completed: false
+  Intervention:
+    description: Careplan intervention
+    type: object
+    required:
+    - updated_at
+    - updated_by
+    - created_at
+    - created_by
+    - id
+    - name
+    - status
+    - recurrence_type
+    - start_date
+    - intervention_type
+    - is_required
+    - has_duration
+    - include_485
+    - rank
+    - completed_at
+    - completed_by
+    - completion_note
+    properties:
+      careplan_id:
+        description: Identifier for the careplan
+        type: integer
+        example: 52
+      client_id:
+        description: Identifier for the client
+        type: integer
+        example: 1043
+      id:
+        description: Identifier for the intervention
+        type: integer
+        example: 1
+      name:
+        description: Name of the intervention
+        type: string
+        example: Walking Exercizes
+      status:
+        $ref: '#/definitions/CareplanItemStatus'
+      recurrence:
+        $ref: '#/definitions/DeconstructedFrequency'
+      start_date:
+        type: string
+      end_date:
+        type: string
+      external_client_id:
+        type: string
+        description: external identifier of the client associated to this intervention
+        example: NS001
+      intervention_type:
+        type: string
+        description: Intervention type
+        example: Nursing
+      updated_at:
+        description: Datetime for the last update for this intervention
+        type: string
+        example: '2018-01-23T23:56:13+00:00'
+      updated_by:
+        $ref: '#/definitions/User'
+      created_at:
+        description: Datetime for the creation of this intervention
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+      created_by:
+        $ref: '#/definitions/User'
+      department:
+        $ref: '#/definitions/EntitySummary'
+      goals:
+        type: array
+        items:
+          $ref: '#/definitions/EntitySummary'
+      services:
+        $ref: '#/definitions/ServiceList'
+      tags:
+        $ref: '#/definitions/EntitySummaryList'
+      external_link:
+        $ref: '#/definitions/ExternalLink'
+      module:
+        $ref: '#/definitions/InterventionModule'
+      description:
+        description: Description of the care plan intervention
+        type: string
+        example: Try walk short distances. Increase the distance each time.
+      is_required:
+        description: Defines if the intervention is required to be completed or commented on to be able to clock out from a visit. If not set will be defaulted to false.
+        type: boolean
+        example: true
+      has_duration:
+        description: Captures time spent on the visit intervention. If not set will be defaulted to false.
+        type: boolean
+        example: true
+      include_485:
+        description: Include the intervention in 485 report. Is not set will be defaulted to false.
+        type: boolean
+        example: true
+      rank:
+        type: integer
+        example: 0
+      completed_at:
+        description: Datetime when the intervention was completed
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+        x-nullable: true
+      completed_by:
+        $ref: '#/definitions/User'
+        x-nullable: true
+      completion_note:
+        description: Completion note of the intervention
+        type: string
+        x-nullable: true
+  DeconstructedFrequency:
+    description: "Definition of the intervention frequency. \n- Is only required if `recurrence_type` is set to `custom`\n- `available_from` and `available_to` allow to define the Time of day when the intervention is available. Only present for `daily`, `weekly` and `monthly` frequencies. if not set will be defaulted to `any time of the day`.\n"
+    type: object
+    required:
+    - frequency
+    - interval
+    properties:
+      frequency:
+        description: The frequency type of the intervention. Additionnal information are required for `daily`, `weekly` and `monthly` frequencies.
+        type: string
+        enum:
+        - daily
+        - weekly
+        - monthly
+      count:
+        description: The number of time the intervention must be executed. Only required for `daily`, `weekly` and `monthly` frequencies.
+        type: integer
+        example: 3
+      interval:
+        description: Only required for `daily`, `weekly` and `monthly` frequencies
+        type: integer
+        example: 2
+      weekdays:
+        description: Only present when the 'frequency' field is set to 'weekly'
+        type: array
+        items:
+          type: string
+          enum:
+          - monday
+          - tuesday
+          - wednesday
+          - thursday
+          - friday
+          - saturday
+          - sunday
+      monthday:
+        description: Only present when the 'frequency' field is set to 'monthly'
+        type: integer
+        example: 25
+      available_from:
+        type: string
+        example: '13:00:00'
+      available_to:
+        type: string
+        example: '15:00:00'
+  ExternalLink:
+    type: object
+    required:
+    - label
+    - url
+    properties:
+      label:
+        type: string
+        example: How to use a catheter
+      url:
+        type: string
+        example: www.youtube.com/catheter
+  ServiceList:
+    type: array
+    items:
+      $ref: '#/definitions/ServiceDetails'
+  CarePlanCreate:
+    description: Create a Care Plan
+    type: object
+    required:
+    - name
+    - start_date
+    properties:
+      name:
+        description: The title of the care plan
+        type: string
+        example: Test care plan
+      start_date:
+        description: The start date of the care plan
+        type: string
+        example: '2018-01-10'
+      end_date:
+        description: The end date of the care plan
+        type: string
+        example: '2018-01-10'
+  CarePlanList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: A list of Care Plans
+    type: object
+    properties:
+      total_pages:
+        description: Totalnumber of pages available
+        type: integer
+        example: 10
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/CarePlanSummary'
+  CarePlanDiagnosis:
+    description: Care plan diagnosis
+    type: object
+    properties:
+      id:
+        description: Care Plan Diagnosis ID
+        type: integer
+        example: 100
+      plan_id:
+        description: Care Plan ID
+        type: integer
+        example: 345
+      plan_name:
+        description: Care plan name
+        type: string
+        example: 'Episode #4'
+      name:
+        description: A title of care plan diagnosis
+        type: string
+        example: Title example
+      start_date:
+        description: A start date of diagnosis
+        type: string
+        example: '2018-01-10'
+      end_date:
+        description: A end date of diagnosis
+        type: string
+        example: '2018-01-10'
+      description:
+        description: A description of care plan diagnosis
+        type: string
+        example: Description of diagnosis
+      is_primary:
+        description: Define that this diagnosis is primary
+        type: boolean
+        example: true
+      rank:
+        description: Used for ordering of diagnoses in list. The smaller, the higher ranked will the diagnosis be returned
+        type: integer
+        example: 0
+      status:
+        $ref: '#/definitions/CareplanItemStatus'
+      department:
+        $ref: '#/definitions/EntitySummary'
+      updated_at:
+        description: Datetime for the last update of the diagnosis
+        type: string
+        example: '2018-01-23T23:56:13+00:00'
+      updated_by:
+        $ref: '#/definitions/User'
+      created_at:
+        description: Datetime of the creation of the diagnosis
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+      created_by:
+        $ref: '#/definitions/User'
+      completed_at:
+        description: Datetime when the diagnosis was completed
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+        x-nullable: true
+      completed_by:
+        $ref: '#/definitions/User'
+        x-nullable: true
+      completion_note:
+        description: Completion note of the diagnosis
+        type: string
+        x-nullable: true
+      service:
+        description: The list of services that are linked to a diagnosis
+        $ref: '#/definitions/ServiceList'
+      tag:
+        description: The list of tags that are linked to a diagnosis
+        $ref: '#/definitions/EntitySummaryList'
+  EntitySummaryList:
+    type: array
+    items:
+      $ref: '#/definitions/EntitySummary'
+  EntitySummary:
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: integer
+        description: AlayaCare entity ID
+        example: 1001
+      name:
+        type: string
+        description: Alayacare entity name
+        example: entity name
+  InterventionModule:
+    description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
+    type: object
+    properties:
+      name:
+        description: Alayacare module name linked to the intervention
+        type: string
+        x-nullable: true
+        enum:
+        - form
+        - medication
+        - vital
+      id:
+        description: '`id` is the ID on the entity selected in the module and assigned to the client
+
+          - Form ID of the linked form. Is required to be set if `form` module is selected.
+
+          - vital ID of the linked vital. Can only be set if `vital` module is selected. Will be defaulted to `all` if no `vital_id` is sent.
+
+          - Medication ID of the linked medication. Can only be set if `medication` module is selected. Will be defaulted to `all` if no `medication_id` is sent.
+
+          '
+        type: string
+        example: 3948
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      status_code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  CarePlanDetails:
+    description: Care plan including all root items (`diagnoses`, `goals`, `interventions`)
+    type: object
+    properties:
+      id:
+        description: Care Plan ID
+        type: integer
+        example: 100
+      created_at:
+        description: Date of care plan creation (ISO Date format)
+        type: string
+        example: '2018-01-01T23:56:13+00:00'
+      updated_at:
+        description: Date of the last update thi care plan (ISO Date format)
+        type: string
+        example: '2018-01-23T23:56:13+00:00'
+      status:
+        $ref: '#/definitions/CareplanStatus'
+      name:
+        description: The title of care plan
+        type: string
+        example: Test care plan
+      start_date:
+        description: A start date of care plan
+        type: string
+        example: '2018-01-10'
+      end_date:
+        description: A end date of care plan
+        type: string
+        example: '2018-01-10'
+      client:
+        description: The client details
+        $ref: '#/definitions/ClientDetails'
+      diagnoses:
+        description: The list of diagnoses in the care plan
+        type: array
+        items:
+          $ref: '#/definitions/CarePlanDiagnosis'
+      goals:
+        description: The list of goals in the care plan
+        type: array
+        items:
+          $ref: '#/definitions/CarePlanGoal'
+      interventions:
+        description: the list of interventions in the care plan
+        type: array
+        items:
+          $ref: '#/definitions/Intervention'
+      created_by:
+        description: User that create this plan
+        $ref: '#/definitions/User'
+      updated_by:
+        description: User that modified this plan
+        $ref: '#/definitions/User'
+      completed_at:
+        description: Datetime when the diagnosis was completed
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+        x-nullable: true
+      completed_by:
+        $ref: '#/definitions/User'
+        x-nullable: true
+  CarePlanGoal:
+    description: Care plan goal
+    type: object
+    properties:
+      id:
+        description: Care Plan Goal ID
+        type: integer
+        example: 100
+      plan_id:
+        description: Care Plan ID
+        type: integer
+        example: 345
+      plan_name:
+        description: Care plan name
+        type: string
+        example: 'Episode #4'
+      name:
+        description: A title of care plan goal
+        type: string
+        example: Title example
+      start_date:
+        description: A start date of goal
+        type: string
+        example: '2018-01-10'
+      target_end_date:
+        description: A end date of goal
+        type: string
+        example: '2018-01-10'
+      description:
+        description: A description of care plan goal
+        type: string
+        example: Description of goal
+      is_primary:
+        description: Define that this goal is primary
+        type: boolean
+        example: true
+      rank:
+        description: Used for ordering of goals in the list. The smaller, the higher ranked will the diagnosis be returned.
+        type: integer
+        example: 0
+      department:
+        $ref: '#/definitions/EntitySummary'
+      type:
+        type: string
+        description: Goal Type
+        example: Desires/Motivations
+      progress_type:
+        $ref: '#/definitions/GoalMethod'
+      last_updated_progress:
+        $ref: '#/definitions/GoalProgress'
+      status:
+        $ref: '#/definitions/CareplanItemStatus'
+      services:
+        description: The list of services that are linked to the goal
+        $ref: '#/definitions/ServiceList'
+      tags:
+        description: The list of tags that are linked to the goal
+        $ref: '#/definitions/EntitySummaryList'
+      diagnoses:
+        description: The list of diagnoses that are linked to the goal
+        $ref: '#/definitions/EntitySummaryList'
+      updated_at:
+        description: Datetime for the last update for this goal
+        type: string
+        example: '2018-01-23T23:56:13+00:00'
+      updated_by:
+        $ref: '#/definitions/User'
+      created_at:
+        description: Datetime for the creation of this goal
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+      created_by:
+        $ref: '#/definitions/User'
+      completed_at:
+        description: Datetime when the goal was completed
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+        x-nullable: true
+      completed_by:
+        $ref: '#/definitions/User'
+        x-nullable: true
+      completion_note:
+        description: Completion note of the goal
+        type: string
+        x-nullable: true
+  User:
+    description: User id, first and last names
+    type: object
+    properties:
+      id:
+        description: The id of user
+        type: integer
+        example: 5
+      external_id:
+        description: The id of user
+        type: string
+        example: sor_external_id_1
+  ClientDetails:
+    description: Careplan client details
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare client ID
+        example: 1001
+      external_id:
+        type: string
+        description: External client ID
+        example: sor_employee_id_1
+        x-nullable: true
+      branch_id:
+        type: integer
+        description: AlayaCare branch ID
+        example: 1000
+  CarePlanUpdate:
+    description: Create a Care Plan
+    type: object
+    properties:
+      name:
+        description: The title of care plan
+        type: string
+        example: Test care plan
+      start_date:
+        description: A start date of care plan
+        type: string
+        example: '2018-01-10'
+      end_date:
+        description: A end date of care plan
+        type: string
+        example: '2018-01-10'
+  GoalMethod:
+    description: Progress tracking method of goal
+    type: string
+    enum:
+    - none
+    - per_visits
+    - percentage
+    example: percentage
+  CarePlanSummary:
+    description: Describe care plan without inner objects (diagnoses, goals, etc)
+    type: object
+    properties:
+      id:
+        description: Care PlanID
+        type: integer
+        example: 100
+      created_at:
+        description: Care plan creation date (ISO date format)
+        type: string
+        example: '2018-01-01T23:56:13+00:00'
+      updated_at:
+        description: Last Careplan updated date (ISO date format)
+        type: string
+        example: '2018-01-23T23:56:13+00:00'
+      status:
+        $ref: '#/definitions/CareplanStatus'
+      name:
+        description: The title of care plan
+        type: string
+        example: Test care plan
+      start_date:
+        description: The start date of the care plan
+        type: string
+        example: '2018-01-10'
+      end_date:
+        description: The end date of the care plan
+        type: string
+        example: '2018-01-10'
+      client:
+        description: The client details
+        $ref: '#/definitions/ClientDetails'
+      created_by:
+        description: Alayacare user that created the care plan
+        $ref: '#/definitions/User'
+      updated_by:
+        description: Alayacare user that last modified the care plan
+        $ref: '#/definitions/User'
+      completed_at:
+        description: Careplan completion datetime (ISO date format)
+        type: string
+        example: '2017-12-20T23:56:13+00:00'
+        x-nullable: true
+      completed_by:
+        description: Alayacare user that completed the care plan
+        $ref: '#/definitions/User'
+        x-nullable: true
+  CareplanStatus:
+    type: string
+    enum:
+    - draft
+    - active
+    - completed
+    - archived
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ServiceDetails:
+    description: Service details
+    type: object
+    x-nullable: true
+    properties:
+      id:
+        type: integer
+        description: AlayaCare service ID
+        example: 1001
+      external_id:
+        type: string
+        description: External service ID
+        example: sor_service_id_1
+        x-nullable: true
+parameters:
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+responses:
+  ErrorResponseClientNotFound:
+    description: Client not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Client not found
+  ErrorInsufficientAccess:
+    description: You do not have the required permissions to perform this action
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 403
+        message: Access required
+  ErrorResponseCarePlanNotFound:
+    description: Care plan not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Care plan not found
+  ErrorResponseInvalidStatusUpdate:
+    description: Invalid status update
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 400
+        message: Invalid status update
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 401
+        message: Please verify your access level for this url.
+  ErrorResponseInvalidRequest:
+    description: Invalid data submitted for item creation.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 400
+        message: The field 'start_date' is required.

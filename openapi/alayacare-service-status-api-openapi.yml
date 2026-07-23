@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Service Status API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Service Status
+  description: Service status related endpoints.
+paths:
+  /service/{service_id}/status:
+    post:
+      tags:
+      - Service Status
+      summary: Create a service status
+      operationId: createServiceStatus
+      description: Creates a service status for a service by service ID.
+      parameters:
+      - name: service_id
+        description: ID of the service
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ServiceStatusCreate'
+      responses:
+        '201':
+          description: Service status created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatusCreate'
+        '400':
+          $ref: '#/components/responses/ErrorResponseClientStatusInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+  /service/by_id/{external_service_id}/status:
+    post:
+      tags:
+      - Service Status
+      summary: Create a service status using external client id
+      operationId: createServiceStatusByExt
+      description: Creates a service status for a service by external service ID.
+      parameters:
+      - name: external_service_id
+        description: External ID of the service
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ServiceStatusCreate'
+      responses:
+        '201':
+          description: Service status created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatusCreate'
+        '400':
+          $ref: '#/components/responses/ErrorResponseClientStatusInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseClientStatusInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                idstatus:
+                - Not a valid choice.
+                message: Validation error.
+  requestBodies:
+    ServiceStatusCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServiceStatusCreate'
+      required: true
+  schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    ServiceStatusCreate:
+      type: object
+      properties:
+        status_id:
+          type: string
+          description: ID of the status
+          enum:
+          - active
+          - on_hold
+          - waiting_list
+          - discharged
+        upcoming_status_id:
+          type: integer
+          description: ID of the upcoming status
+          nullable: true
+        status_reason:
+          type: string
+          description: Reason for the status
+          nullable: true
+        status_date:
+          type: string
+          format: date-time
+          example: '2025-02-26T04:32:10.000Z'
+          description: Date of the status, set to now if not provided.
+        status_end_date:
+          type: string
+          format: date-time
+          description: End date of the status
+          nullable: true
+      required:
+      - status_id
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

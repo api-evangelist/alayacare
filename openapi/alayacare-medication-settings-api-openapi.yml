@@ -1,0 +1,563 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Medication settings API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Medication settings
+paths:
+  /medication_settings/{branch_id}:
+    get:
+      tags:
+      - Medication settings
+      summary: Fetch the list of medication settings for a given branch_id
+      responses:
+        '200':
+          $ref: '#/components/responses/MedicationSettingList'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+      parameters:
+      - $ref: '#/components/parameters/branch_id'
+      - $ref: '#/components/parameters/lang'
+      - $ref: '#/components/parameters/code_term'
+      - $ref: '#/components/parameters/default_label'
+      - $ref: '#/components/parameters/label'
+      - $ref: '#/components/parameters/code_collection_term'
+      - $ref: '#/components/parameters/is_enabled'
+      - $ref: '#/components/parameters/is_infusion'
+      - $ref: '#/components/parameters/is_ingredient_strength'
+      - $ref: '#/components/parameters/is_dosage_form'
+      - $ref: '#/components/parameters/is_dosage_quantity'
+      - $ref: '#/components/parameters/is_override'
+      - $ref: '#/components/parameters/settings_sort_by'
+      - $ref: '#/components/parameters/sort_order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+  /medication_settings/{branch_id}/{type}:
+    get:
+      tags:
+      - Medication settings
+      summary: Fetch a list of medication settings for given branch_id and type
+      responses:
+        '200':
+          $ref: '#/components/responses/MedicationSettingList'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+      parameters:
+      - $ref: '#/components/parameters/branch_id'
+      - name: type
+        in: path
+        required: true
+        description: setting type
+        schema:
+          type: string
+          enum:
+          - medication_administration_reason_setting
+          - medication_administration_site_details_setting
+          - medication_administration_status_setting
+          - medication_administration_type_setting
+          - medication_delivery_mode_setting
+          - medication_discrepancy_status_setting
+          - medication_discrepancy_type_setting
+          - medication_drug_family_setting
+          - medication_frequency_setting
+          - medication_information_source_setting
+          - medication_medication_route_setting
+          - medication_medication_status_setting
+          - medication_medication_type_setting
+          - medication_unit_infusion_setting
+          - medication_unit_setting
+      - name: include
+        in: query
+        description: include field in the response
+        schema:
+          type: string
+          enum:
+          - _links
+      - $ref: '#/components/parameters/lang'
+      - $ref: '#/components/parameters/code_term'
+      - $ref: '#/components/parameters/default_label'
+      - $ref: '#/components/parameters/label'
+      - $ref: '#/components/parameters/code_collection_term'
+      - $ref: '#/components/parameters/is_enabled'
+      - $ref: '#/components/parameters/is_infusion'
+      - $ref: '#/components/parameters/is_ingredient_strength'
+      - $ref: '#/components/parameters/is_dosage_form'
+      - $ref: '#/components/parameters/is_dosage_quantity'
+      - $ref: '#/components/parameters/is_override'
+      - $ref: '#/components/parameters/settings_sort_by'
+      - $ref: '#/components/parameters/sort_order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+  /medication_settings/{branch_id}/{type}/{name}:
+    get:
+      tags:
+      - Medication settings
+      summary: Fetch a medication setting by branch_id, type and name
+      responses:
+        '200':
+          $ref: '#/components/responses/MedicationSetting'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/AuthChallenge'
+      parameters:
+      - $ref: '#/components/parameters/branch_id'
+      - name: type
+        in: path
+        required: true
+        description: setting type
+        schema:
+          type: string
+          enum:
+          - medication_administration_reason_setting
+          - medication_administration_site_details_setting
+          - medication_administration_status_setting
+          - medication_administration_type_setting
+          - medication_delivery_mode_setting
+          - medication_discrepancy_status_setting
+          - medication_discrepancy_type_setting
+          - medication_drug_family_setting
+          - medication_frequency_setting
+          - medication_information_source_setting
+          - medication_medication_route_setting
+          - medication_medication_status_setting
+          - medication_medication_type_setting
+          - medication_unit_infusion_setting
+          - medication_unit_setting
+      - name: name
+        in: path
+        required: true
+        description: name of medication setting
+        schema:
+          type: string
+      - $ref: '#/components/parameters/lang'
+components:
+  examples:
+    AuthChallenge:
+      value:
+        code: '401'
+        message: Please verify your access level for this url.
+      summary: Authentication required.
+    MedicationSettingList:
+      value:
+        count: 745
+        items:
+        - branch_id: 1000
+          codes:
+          - code: a
+            collection: FHIR
+          is_enabled: true
+          is_override: false
+          labels:
+          - default_label: None
+            label: None
+            lang: en
+          name: none
+          type: medication_administration_reason_setting
+        items_per_page: 15
+        page: 1
+        total_pages: 745
+    InvalidRequest:
+      value:
+        code: '400'
+        message: There was a problem with your request.
+      summary: Invalid data.
+    MedicationSettings:
+      value:
+        name: Setting name
+  parameters:
+    is_override:
+      name: is_override
+      in: query
+      schema:
+        type: boolean
+    is_ingredient_strength:
+      name: is_ingredient_strength
+      in: query
+      schema:
+        type: boolean
+    sort_order:
+      name: sort_order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      in: query
+      required: false
+      description: 'Order in which the items should be sorted by. Ex: asc, desc'
+    default_label:
+      name: default_label
+      in: query
+      schema:
+        type: string
+    is_enabled:
+      name: is_enabled
+      in: query
+      schema:
+        type: boolean
+    count:
+      name: count
+      schema:
+        type: integer
+        default: 10
+      in: query
+      required: false
+      description: Max number of items to filter by
+    label:
+      name: label
+      in: query
+      schema:
+        type: string
+    page:
+      name: page
+      schema:
+        type: integer
+        default: 1
+      in: query
+      required: false
+      description: Page number to filter by
+    is_infusion:
+      name: is_infusion
+      schema:
+        type: boolean
+      in: query
+    is_dosage_form:
+      name: is_dosage_form
+      in: query
+      schema:
+        type: boolean
+    code_term:
+      name: code_term
+      in: query
+      schema:
+        type: string
+    branch_id:
+      name: branch_id
+      in: path
+      required: true
+      description: ID of the branch
+      schema:
+        type: integer
+    lang:
+      name: lang
+      in: query
+      description: Current UI language
+      schema:
+        type: string
+        default: en
+        enum:
+        - en
+        - fr
+        - es
+    is_dosage_quantity:
+      name: is_dosage_quantity
+      in: query
+      schema:
+        type: boolean
+    settings_sort_by:
+      name: sort_by
+      schema:
+        type: string
+        enum:
+        - is_enabled
+        - is_ingredient_strength
+        - is_dosage_form
+        - is_dosage_quantity
+        - default_label
+        - label
+      in: query
+      required: false
+      description: Parameter to sort items by
+    code_collection_term:
+      name: code_collection_term
+      in: query
+      schema:
+        type: string
+  responses:
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequestExample:
+              $ref: '#/components/examples/InvalidRequest'
+    MedicationSetting:
+      description: Medication setting objectF
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettings'
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequest:
+              $ref: '#/components/examples/AuthChallenge'
+    MedicationSettingList:
+      description: Medication settings list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettingList'
+  schemas:
+    APIError:
+      type: object
+      description: Error returned from the API
+      properties:
+        code:
+          type: string
+          description: The error code
+          example: '500'
+        message:
+          type: string
+          example: An error occurred
+          description: The error description
+      required:
+      - code
+      - message
+    MedicationSettingList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicationSettings'
+        page:
+          type: integer
+          description: Current page number
+        total_pages:
+          type: integer
+          description: Total number of pages available
+    MedicationSettings:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        branch_id:
+          type: integer
+        is_enabled:
+          type: boolean
+        is_override:
+          type: boolean
+        is_ingredient_strength:
+          type: boolean
+        is_dosage_form:
+          type: boolean
+        is_dosage_quantity:
+          type: boolean
+        is_infusion:
+          type: boolean
+        labels:
+          type: array
+          items:
+            type: object
+            properties:
+              default_label:
+                type: string
+                description: standard label
+              label:
+                type: string
+                description: organization label
+              lang:
+                type: string
+                description: language
+        frequency:
+          type: integer
+        frequency_max:
+          type: integer
+        period:
+          type: integer
+        period_max:
+          type: integer
+        period_unit:
+          type: string
+        duration:
+          type: integer
+        duration_unit:
+          type: string
+        timings:
+          type: array
+          items:
+            type: string
+          example:
+          - 07:00
+          - '10:00'
+        weekdays:
+          type: array
+          items:
+            type: string
+          example:
+          - MO
+          - TU
+        count:
+          type: integer
+        time_of_day:
+          type: string
+        days_of_month:
+          type: array
+          items:
+            type: integer
+          example:
+          - 15
+          - 25
+        when:
+          type: string
+        min_timings_count:
+          type: integer
+        max_timings_count:
+          type: integer
+        min_weekdays_count:
+          type: integer
+        max_weekdays_count:
+          type: integer
+        min_days_of_month_count:
+          type: integer
+        max_days_of_month_count:
+          type: integer
+        strict:
+          type: boolean
+          example: false
+          description: If true, each timing must contain the expected interval of hours between each other.
+        interval:
+          type: integer
+        interval_max:
+          type: integer
+        infusion_fluid_section:
+          description: Defines validation of infusion fluid section
+          type: string
+          x-nullable: true
+          enum:
+          - required
+          - not_allowed
+          example: required
+        pre_infusion_flush_section:
+          description: Defines validation of pre infusion flush section
+          type: string
+          x-nullable: true
+          enum:
+          - recommended
+          example: recommended
+        post_infusion_flush_section:
+          description: Defines validation of post infusion flush section
+          type: string
+          x-nullable: true
+          enum:
+          - recommended
+          example: recommended
+        basal_rate_section:
+          description: Defines validation of basal rate section
+          type: string
+          x-nullable: true
+          enum:
+          - recommended
+          - not_allowed
+          example: recommended
+        bolus_section:
+          description: Defines validation of bolus section
+          type: string
+          x-nullable: true
+          enum:
+          - recommended
+          - not_allowed
+          example: recommended
+        admin_primary_section:
+          description: Defines whether primary section is available in administration or not
+          type: string
+          enum:
+          - allowed
+          - only_main
+          - without_reservoir
+          - forbidden
+          example: allowed
+          x-nullable: false
+          default: allowed
+        admin_pca_section:
+          description: Defines whether pca section is available in administration or not
+          type: string
+          enum:
+          - allowed
+          - forbidden
+          example: allowed
+          x-nullable: false
+          default: allowed
+        admin_insulin_section:
+          description: Defines whether insulin section is available in administration or not
+          type: string
+          enum:
+          - allowed
+          - forbidden
+          example: allowed
+          x-nullable: false
+          default: allowed
+        admin_bolus_section:
+          description: Defines whether bolus section is available in administration or not
+          type: string
+          enum:
+          - allowed
+          - forbidden
+          example: allowed
+          x-nullable: false
+          default: allowed
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

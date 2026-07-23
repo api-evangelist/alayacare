@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts form submission inbox API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: form submission inbox
+paths:
+  /v1/inbox/form_submissions:
+    post:
+      tags:
+      - form submission inbox
+      description: '# Authorization
+
+        Required role: supply `org_admin` assigned to the associated referral.
+
+
+        # Description
+
+        Save a form submission.
+
+
+        One of `service_id` or `visit_id` must be provided.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxFormSubmissionCreationRequest'
+      responses:
+        201:
+          description: Successfully created form submission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxFormSubmissionCreationResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  schemas:
+    InboxFormSubmissionCreationRequest:
+      type: object
+      properties:
+        form_template_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        visit_id:
+          type: string
+          format: uuid
+        work_session_id:
+          type: string
+          format: uuid
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxFormSubmissionFieldCore'
+          minItems: 1
+        hidden_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
+      required:
+      - form_template_id
+      - fields
+    InboxFormSubmissionCreationResponse:
+      type: object
+      properties:
+        form_template_id:
+          type: string
+          format: uuid
+        id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        visit_id:
+          type: string
+          format: uuid
+        work_session_id:
+          type: string
+          format: uuid
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxFormSubmissionFieldCore'
+          minItems: 1
+        hidden_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
+      required:
+      - id
+      - form_template_id
+      - fields
+    FormSubmissionHiddenFieldCore:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+      required:
+      - field_id
+    InboxFormSubmissionFieldCore:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+        value_type:
+          type: string
+          enum:
+          - attachment
+          - boolean
+          - decimal
+          - json
+          - string
+        value:
+          type: string
+      required:
+      - field_id
+      - value_type
+      - value
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

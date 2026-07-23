@@ -1,0 +1,397 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Skills API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Skills
+paths:
+  /skills:
+    get:
+      tags:
+      - Skills
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      - $ref: '#/parameters/branch_id'
+      - $ref: '#/parameters/filter'
+      - $ref: '#/parameters/category_id'
+      summary: Get a list of skills
+      responses:
+        '200':
+          description: A list of skills
+          schema:
+            $ref: '#/definitions/SkillList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+    post:
+      tags:
+      - Skills
+      summary: 'Create a skill
+
+        '
+      description: '- `branch_id` is optional, if omitted the skill will be created in the default branch.
+
+        - `branch_id` can only be set at creation.
+
+        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) are optional depending on business needs.
+
+        '
+      parameters:
+      - name: body
+        description: Skill definition in JSON format
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SkillCreate'
+      responses:
+        '201':
+          description: An employee specific skill
+          schema:
+            $ref: '#/definitions/SkillDetails'
+        '400':
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: Field category_id is required
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+  /skills/{skill_id}:
+    parameters:
+    - name: skill_id
+      description: AlayaCare ID of the skill
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Skills
+      summary: Get skill details using its AlayaCare Skill ID
+      responses:
+        '200':
+          description: Skill details
+          schema:
+            $ref: '#/definitions/SkillDetails'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseSkillNotFound'
+    put:
+      tags:
+      - Skills
+      summary: Modify skill details using its AlayaCare Skill ID
+      description: '- Changing the `branch_id` of a skill is not supported by this API. Any `branch_id` sent will be ignored.
+
+        - Skill fields sent in the payload will overwrite existing fields on the skill.
+
+        '
+      parameters:
+      - name: body
+        description: Object with fields to be updated
+        in: body
+        schema:
+          $ref: '#/definitions/SkillUpdate'
+      responses:
+        '200':
+          description: Skill updated successfuly
+          schema:
+            $ref: '#/definitions/SkillDetails'
+        '400':
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+              code: 400
+              message: Custom field name invalid.
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseSkillNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  SkillCreate:
+    properties:
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category_id:
+        type: integer
+        description: 'Set the skill category.
+
+          '
+        example: 4
+      branch_id:
+        type: integer
+        description: 'Set skill branch. If not specified, will default to branch of the user creating the employee.
+
+          '
+        example: 1
+      fields:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillFieldCreate'
+    required:
+    - name
+    - category_id
+  SkillList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: 'List of skills
+
+      '
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillDetails'
+  SkillField:
+    description: Skill custom field attributes
+    type: object
+    required:
+    - name
+    - type
+    - label
+    properties:
+      name:
+        type: string
+        description: Name of the customizable field
+        example: acquired_date
+        enum:
+        - acquired_date
+        - expired_date
+        - label_1
+        - label_2
+      label:
+        type: string
+        description: Label of the customizable field
+        example: Acquired date
+      type:
+        type: string
+        description: Type of the customizable field
+        example: Date
+        enum:
+        - date
+        - text
+  BranchSummary:
+    description: Branch summary
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the branch
+        example: 1
+      name:
+        type: string
+        description: Name of the branch
+        example: Headquarters
+  SkillFieldCreate:
+    description: Skill custom field attributes
+    type: object
+    required:
+    - name
+    - label
+    properties:
+      name:
+        type: string
+        description: Name of the customizable field
+        example: acquired_date
+        enum:
+        - acquired_date
+        - expired_date
+        - label_1
+        - label_2
+      label:
+        type: string
+        description: Label of the customizable field
+        example: Acquired date
+  SkillUpdate:
+    properties:
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category_id:
+        type: integer
+        description: 'Set the skill category.
+
+          '
+        example: 4
+      fields:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillFieldCreate'
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  SkillDetails:
+    description: AlayaCare skill entity
+    type: object
+    required:
+    - id
+    - name
+    - category
+    - branch
+    properties:
+      id:
+        type: integer
+        description: Skill ID
+        example: 1
+      name:
+        type: string
+        description: Skill Name
+        example: Hoyer lift
+      category:
+        $ref: '#/definitions/SkillCategory'
+      branch:
+        $ref: '#/definitions/BranchSummary'
+      fields:
+        type: array
+        items:
+          allOf:
+          - $ref: '#/definitions/SkillField'
+  SkillCategory:
+    description: Skill Category
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: integer
+        description: ID of the skill category
+        example: 1
+      name:
+        type: string
+        description: Name of the skill category
+        example: Languages
+parameters:
+  filter:
+    description: Substring search on skill category and name
+    name: filter
+    in: query
+    required: false
+    type: string
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  branch_id:
+    description: Filter by branch ID
+    name: branch_id
+    in: query
+    required: false
+    type: integer
+  category_id:
+    description: Filter skills by category ID, one or more using **OR**
+    name: category_id
+    in: query
+    required: false
+    type: integer
+responses:
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.
+  ErrorResponseSkillNotFound:
+    description: Skill not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Skill not found.

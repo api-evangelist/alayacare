@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Employment Types API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Employment Types
+paths:
+  /employment_types:
+    get:
+      tags:
+      - Employment Types
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/count'
+      summary: Get a list of employment types
+      responses:
+        '200':
+          description: A list of employment types
+          schema:
+            $ref: '#/definitions/EmploymentTypeDetailsList'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  EmploymentTypeDetailsList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of employment types
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/EmploymentTypeDetails'
+  BranchSummary:
+    description: Branch summary
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the branch
+        example: 1
+      name:
+        type: string
+        description: Name of the branch
+        example: Headquarters
+  EmploymentTypeDetails:
+    description: Employment Type Details
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the employment type
+        example: 1
+      name:
+        type: string
+        description: Name of employment type
+        example: Full time
+      branch:
+        $ref: '#/definitions/BranchSummary'
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages availbale
+        example: 1
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+parameters:
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+responses:
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.

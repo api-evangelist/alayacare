@@ -1,0 +1,686 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Care Provider Notes API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Care Provider Notes
+  description: Care provider note related endpoints.
+paths:
+  /clients/{client_id}/care-provider-notes:
+    post:
+      tags:
+      - Care Provider Notes
+      summary: Create a care provider note
+      operationId: createCareProviderNote
+      description: Creates a care provider note for a client by AlayaCare client ID.
+      parameters:
+      - name: client_id
+        description: ID of the client
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/CareProviderNoteCreate'
+      responses:
+        '201':
+          description: Care provider note created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteDetail'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '500':
+          description: Internal server error.
+    get:
+      tags:
+      - Care Provider Notes
+      summary: List care provider notes
+      operationId: listCareProviderNotes
+      parameters:
+      - name: client_id
+        description: ID of the client
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: is_archived
+        in: query
+        description: Filter notes by archived status
+        required: false
+        schema:
+          type: boolean
+      - name: sort_by
+        in: query
+        description: Field to sort by
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - is_archived
+          default: id
+      - name: sort_order
+        in: query
+        description: Sort order
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: cursor
+        in: query
+        description: Cursor to the next page
+        required: false
+        schema:
+          type: string
+      - name: count
+        in: query
+        description: 'Number of items per page (min: 1, max: 100)'
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Cursor-based paginated list of care provider notes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteCursorList'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '500':
+          description: Internal server error.
+  /clients/by_id/{external_client_id}/care-provider-notes:
+    post:
+      tags:
+      - Care Provider Notes
+      summary: Create a care provider note using external client id
+      operationId: createCareProviderNoteByExt
+      description: Creates a care provider note for a client by external client ID.
+      parameters:
+      - name: external_client_id
+        description: External ID of the client
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/CareProviderNoteCreate'
+      responses:
+        '201':
+          description: Care provider note created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteDetail'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '500':
+          description: Internal server error.
+    get:
+      tags:
+      - Care Provider Notes
+      summary: List care provider notes
+      operationId: listCareProviderNotesByExt
+      parameters:
+      - name: external_client_id
+        description: External ID of the client
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: is_archived
+        in: query
+        description: Filter notes by archived status
+        required: false
+        schema:
+          type: boolean
+      - name: sort_by
+        in: query
+        description: Field to sort by
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - is_archived
+          default: id
+      - name: sort_order
+        in: query
+        description: Sort order
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: cursor
+        in: query
+        description: Cursor to the next page
+        required: false
+        schema:
+          type: string
+      - name: count
+        in: query
+        description: 'Number of items per page (min: 1, max: 100)'
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Cursor-based paginated list of care provider notes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteCursorList'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '500':
+          description: Internal server error.
+  /clients/{client_id}/care-provider-notes/categories:
+    get:
+      tags:
+      - Care Provider Notes
+      summary: List care provider note categories
+      operationId: listCareProviderNoteCategories
+      parameters:
+      - name: client_id
+        description: ID of the client
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: description_search
+        in: query
+        description: Filter categories by description (substring match)
+        required: false
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        description: Cursor to the next page
+        required: false
+        schema:
+          type: string
+      - name: count
+        in: query
+        description: 'Number of items per page (min: 1, max: 100)'
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Cursor-based paginated list of care provider note categories ordered by description
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteCategoryCursorList'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '500':
+          description: Internal server error.
+  /clients/by_id/{external_client_id}/care-provider-notes/categories:
+    get:
+      tags:
+      - Care Provider Notes
+      summary: List care provider note categories
+      operationId: listCareProviderNoteCategoriesByExt
+      parameters:
+      - name: external_client_id
+        description: External ID of the client
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: description_search
+        in: query
+        description: Filter categories by description (substring match)
+        required: false
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        description: Cursor to the next page
+        required: false
+        schema:
+          type: string
+      - name: count
+        in: query
+        description: 'Number of items per page (min: 1, max: 100)'
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Cursor-based paginated list of care provider note categories ordered by description
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteCategoryCursorList'
+        '400':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteInvalidRequest'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseClientNotFound'
+        '500':
+          description: Internal server error.
+  /care-provider-notes/{note_id}:
+    get:
+      tags:
+      - Care Provider Notes
+      summary: Get a care provider note
+      operationId: detailCareProviderNote
+      description: Get a care provider note.
+      parameters:
+      - name: note_id
+        in: path
+        description: ID of the care provider note
+        required: true
+        schema:
+          type: integer
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Care provider note.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteDetail'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteNotFound'
+        '500':
+          description: Internal server error.
+  /care-provider-notes/{note_id}/archive:
+    post:
+      tags:
+      - Care Provider Notes
+      summary: Archive a care provider note
+      operationId: archiveCareProviderNote
+      description: Archives a care provider note by note ID.
+      parameters:
+      - name: note_id
+        in: path
+        description: ID of the care provider note to archive
+        required: true
+        schema:
+          type: integer
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Care provider note was archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteDetail'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteNotFound'
+        '409':
+          description: The note is already archived.
+        '500':
+          description: Internal server error.
+  /care-provider-notes/{note_id}/unarchive:
+    post:
+      tags:
+      - Care Provider Notes
+      summary: Unarchive a care provider note
+      operationId: unarchiveCareProviderNote
+      description: Unarchives a care provider note by note ID.
+      parameters:
+      - name: note_id
+        in: path
+        description: ID of the care provider note to unarchive
+        required: true
+        schema:
+          type: integer
+      - name: include
+        in: query
+        description: List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted.
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Care provider note was unarchived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareProviderNoteDetail'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          description: "The access denied code is returned unless user meets any of the following requirements:\n  - User is admin\n  - User meets the following criteria:\n    - Has ACL_COORDINATION_CARE_PROVIDER_NOTES\n    - Has ACL_EXT_API_PATIENTS\n"
+        '404':
+          $ref: '#/components/responses/ErrorResponseCareProviderNoteNotFound'
+        '409':
+          description: The note is not archived.
+        '500':
+          description: Internal server error.
+components:
+  requestBodies:
+    CareProviderNoteCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CareProviderNoteCreate'
+      description: Care provider note data in JSON format
+      required: true
+  schemas:
+    CareProviderNoteCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the category
+        description:
+          type: string
+          description: Description of the category
+    CareProviderNoteDetail:
+      type: object
+      description: 'Details about the care provider note.
+
+        The category object is only present if include=category is provided.
+
+        '
+      properties:
+        id:
+          type: integer
+          description: ID of the note
+        patient_id:
+          type: integer
+          description: ID of the patient
+        patient_external_id:
+          type: string
+          description: External ID of the patient
+        category_id:
+          type: integer
+          description: ID of the category
+        category:
+          $ref: '#/components/schemas/CareProviderNoteCategory'
+        content:
+          type: string
+          description: Content of the note
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time the note was created
+        create_user_id:
+          type: integer
+          description: ID of the user who created the note
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time the note was updated
+        update_user_id:
+          type: integer
+          description: ID of the user who updated the note
+        is_archived:
+          type: boolean
+          description: Whether the note is archived
+    CareProviderNoteCategoryCursorList:
+      type: object
+      description: Cursor-based paginated list of care provider note categories
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareProviderNoteCategory'
+        next_cursor:
+          type: string
+          description: Cursor to the next page. Will be null when there are no more items.
+          nullable: true
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    CareProviderNoteCreate:
+      type: object
+      properties:
+        category_id:
+          type: integer
+          description: 'ID of the category.
+
+            Either category_id or category_description is required.
+
+            '
+        category_description:
+          type: string
+          description: 'Description of the category.
+
+            Either category_id or category_description is required.
+
+            '
+        content:
+          type: string
+          description: Content of the note
+        share_category_with_branch:
+          type: boolean
+          description: 'Whether the new category should be shared with the branch or specific to the client.
+
+            Only applicable if category_description is provided with a new string.
+
+            '
+          default: true
+      required:
+      - content
+    CareProviderNoteCursorList:
+      type: object
+      description: Cursor-based paginated list of care provider notes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareProviderNoteDetail'
+        next_cursor:
+          type: string
+          description: Cursor to the next page. Will be null when there are no more items.
+          nullable: true
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseCareProviderNoteNotFound:
+      description: Care provider note not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Note with id 1 was not found
+    ErrorResponseCareProviderNoteInvalidRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: Validation error.
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client not found.
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

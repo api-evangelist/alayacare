@@ -1,0 +1,671 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Service Codes API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Service Codes
+paths:
+  /service_codes:
+    parameters:
+    - name: client_id
+      description: Filter by client id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    - name: alayacare_client_id
+      description: Filter by external client id
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: funder_id
+      description: Filter by funder id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    - name: alayacare_funder_id
+      description: Filter by external funder id
+      in: query
+      required: false
+      schema:
+        type: string
+    - $ref: '#/components/parameters/page'
+    - $ref: '#/components/parameters/count'
+    - $ref: '#/components/parameters/branch_id'
+    get:
+      tags:
+      - Service Codes
+      summary: Get a list of service codes
+      description: 'Get a list of service codes
+
+        '
+      parameters:
+      - name: query
+        description: 'A query string to filter service codes. The query string can be used to filter by service code name, or description.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: strict
+        description: 'If true, return only those service codes with bill codes related to the specified funders. If false, the search will find service codes not specifically related to the funders provided if any.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: funder
+        description: 'A comma separated list of funder IDs to filter service codes by. If `strict` is true, only service codes with bill codes related to the specified funders will be returned. If `strict` is false, the search will find service codes not specifically related to the funders provided if any.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: client_id
+        description: 'A client ID to filter service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: branch_id
+        description: 'A branch ID to filter service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: department_id
+        description: 'A department ID to filter service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      - name: is_disabled
+        description: 'A boolean to filter service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: sort_by
+        description: 'A field to sort service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - name
+          - description
+          - branch_id
+      - name: sort_order
+        description: 'A field to order service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - name: related_branches
+        description: 'A boolean to filter service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: ancestor_branches_only
+        description: 'A boolean to filter service codes by.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: The list of service codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCodeListSchema'
+        '400':
+          $ref: '#/components/responses/ErrorResponseMutuallyExclusive'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+    post:
+      tags:
+      - Service Codes
+      summary: Create a service code
+      description: 'Create a service code
+
+        '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceCodeCreateSchema'
+      responses:
+        '200':
+          description: The created service code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCodeSchema'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidServiceCodeParams'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceCodeNotFound'
+  /service_codes/{service_code_id}:
+    get:
+      tags:
+      - Service Codes
+      summary: Get a service code
+      description: 'Get a service code
+
+        '
+      parameters:
+      - name: service_code_id
+        description: Service code id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        '200':
+          description: The service code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCodeScalarSchema'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceCodeNotFound'
+    put:
+      tags:
+      - Service Codes
+      summary: Update a service code
+      description: 'Update a service code
+
+        '
+      parameters:
+      - name: service_code_id
+        description: Service code id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceCodeEditSchema'
+      responses:
+        '200':
+          description: The updated service code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCodeSchema'
+        '400':
+          $ref: '#/components/responses/ErrorResponseInvalidServiceCodeParams'
+        '401':
+          $ref: '#/components/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/components/responses/ErrorResponseAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResponseServiceCodeNotFound'
+components:
+  schemas:
+    ServiceCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        description:
+          type: string
+          example: Sick Paid
+        name:
+          type: string
+          example: Sick Paid
+        label:
+          type: string
+          example: Sick Paid
+        is_disabled:
+          type: boolean
+          example: false
+        rating_methodology_type:
+          type: string
+          example: funder_driven
+        branch:
+          $ref: '#/components/schemas/BranchSchema'
+        department:
+          $ref: '#/components/schemas/DepartmentSchema'
+        pay_code_regular:
+          $ref: '#/components/schemas/PayCodeSchema'
+        pay_code_overtime:
+          $ref: '#/components/schemas/PayCodeSchema'
+        pay_code_holiday:
+          $ref: '#/components/schemas/PayCodeSchema'
+        expense_code:
+          $ref: '#/components/schemas/PayCodeSchema'
+        billcodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeSchema'
+    BillCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
+        name:
+          type: string
+          example: Sick Paid
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        is_disabled:
+          type: boolean
+          example: false
+    ServiceCodeRatingMethodologyData:
+      type: object
+      properties:
+        bill_code_ids:
+          type: array
+          items:
+            type: integer
+            example: 1
+    DepartmentSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          example: AlayaCare Health
+    ServiceCodeCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/ServiceCodeEditSchema'
+      - type: object
+        properties:
+          rating_methodology_type:
+            type: string
+            enum:
+            - funder_driven
+            - non_billable
+            example: funder_driven
+          branch_id:
+            type: integer
+            description: Branch ID
+            minimum: 1
+          rating_methodology_data:
+            $ref: '#/components/schemas/ServiceCodeRatingMethodologyData'
+    ServiceCodeScalarSchema:
+      allOf:
+      - $ref: '#/components/schemas/ServiceCodeSchema'
+      - type: object
+        properties:
+          guid:
+            type: integer
+            example: 1
+          branch_id:
+            type: integer
+            example: 1
+            minimum: 1
+          pay_code_id:
+            type: integer
+            example: 1
+            minimum: 1
+          paycoderegular_id:
+            type: integer
+            example: 1
+          paycodeovertime_id:
+            type: integer
+            example: 1
+          paycodeholiday_id:
+            type: integer
+            example: 1
+          expense_code_id:
+            type: integer
+            example: 1
+          visits_can_overlap:
+            type: boolean
+            example: true
+          is_cancelled:
+            type: boolean
+            example: false
+          allow_virtual_care:
+            type: boolean
+            example: true
+          duration:
+            type: integer
+            example: 10
+          care_duration:
+            type: integer
+            example: 10
+          department_id:
+            type: integer
+            example: 1
+            minimum: 1
+          disregard_employee_capacity:
+            type: boolean
+            example: true
+          matching_shift_late_start:
+            type: integer
+            example: 10
+          matching_shift_coverage:
+            type: number
+            example: 10.0
+          disregard_start_time:
+            type: boolean
+            example: true
+          disregard_shift_coverage:
+            type: boolean
+            example: true
+          ot_exempt:
+            type: boolean
+            example: true
+          bill_codes:
+            type: array
+            items:
+              $ref: '#/components/schemas/BillCodeSchema'
+    ServiceCodeListSchema:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      type: object
+      description: Paginated list of service codes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceCodeSchema'
+    PayCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
+    BranchSchema:
+      description: The branch associated with the Billcode
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          example: AlayaCare Health
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    ServiceCodeEditSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Sick Paid
+        description:
+          type: string
+          example: Sick Paid
+        paycoderegular_id:
+          type: integer
+          example: 1
+        paycodeovertime_id:
+          type: integer
+          example: 1
+        paycodeholiday_id:
+          type: integer
+          example: 1
+        expense_code_id:
+          type: integer
+          example: 1
+        department_id:
+          type: integer
+          example: 1
+          minimum: 1
+        duration:
+          type: integer
+          example: 10
+        care_duration:
+          type: integer
+          example: 10
+        visits_can_overlap:
+          type: boolean
+          example: true
+        disregard_employee_capacity:
+          type: boolean
+          example: true
+        allow_virtual_care:
+          type: boolean
+          example: true
+        matching_shift_late_start:
+          type: integer
+          example: 10
+        matching_shift_coverage:
+          type: number
+          example: 10.0
+        disregard_start_time:
+          type: boolean
+          example: true
+        disregard_shift_coverage:
+          type: boolean
+          example: true
+        ot_exempt:
+          type: boolean
+          example: true
+    FunderStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+          minimum: 1
+        code:
+          type: string
+          example: Some Funder
+        name:
+          type: string
+          example: Some Funder
+        description:
+          type: string
+          example: Some Funder
+        invoicing_model:
+          type: string
+          example: funder_individual
+  responses:
+    ErrorResponseServiceCodeNotFound:
+      description: The service code referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ErrorResponseInvalidServiceCodeParams:
+      description: Invalid service code parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseMutuallyExclusive:
+      description: Mutually exclusive
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: funder_id and alayacare_funder_id are mutually exclusive
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
+    branch_id:
+      description: 'Filter by branch ID `(default: current user branch)`
+
+        '
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

@@ -1,0 +1,134 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts organization settings sys_admin API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: organization settings sys_admin
+paths:
+  /v1/sys_admin/demand_personas/{demand_persona_id}/settings/assignment:
+    parameters:
+    - in: path
+      name: demand_persona_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of an organization.
+    post:
+      tags:
+      - organization settings sys_admin
+      description: '# Authorization
+
+        Required role: `sys_admin`
+
+
+        # Description
+
+        Set offer assignment setting for an organization.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutboxOfferAssignmentSettingUpdateRequest'
+      responses:
+        204:
+          description: Setting succesfully saved.
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+    get:
+      tags:
+      - organization settings sys_admin
+      description: '# Authorization
+
+        Required role: `sys_admin`
+
+
+        # Description
+
+        Get offer assignment setting for an organization.
+
+        '
+      responses:
+        200:
+          description: Offer assignment setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboxOfferAssignmentSettingUpdateResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  schemas:
+    OutboxOfferAssignmentSettingUpdateRequest:
+      type: object
+      properties:
+        offer_assignment:
+          type: string
+          enum:
+          - auto
+          - manual
+      required:
+      - offer_assignment
+    OutboxOfferAssignmentSettingUpdateResponse:
+      type: object
+      properties:
+        offer_assignment:
+          type: string
+          enum:
+          - auto
+          - manual
+      required:
+      - offer_assignment
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

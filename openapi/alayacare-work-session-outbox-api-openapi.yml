@@ -1,0 +1,145 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts work session outbox API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: work session outbox
+paths:
+  /v1/outbox/work_sessions:
+    parameters:
+    - in: query
+      name: visit_id
+      schema:
+        type: string
+      description: ID of a visit.
+      required: false
+    - in: query
+      name: visit_outbox_id
+      schema:
+        type: string
+      description: ID of a visit in the demand system.
+      required: false
+    get:
+      tags:
+      - work session outbox
+      description: '# Authorization
+
+        Required role: demand `org_admin` who created the associated referral.
+
+
+        # Description
+
+        Get a collection of Work Sessions for a given visit.
+
+
+        One of `visit_id` or `visit_outbox_id` must be provided.
+
+        '
+      responses:
+        200:
+          description: Successfully retrieved a collection of Work Sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboxWorkSessionPageResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OfferApiFunctionV2.Arn}:live/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+components:
+  schemas:
+    OutboxWorkSessionPageResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxWorkSessionCollectionResponse'
+      required:
+      - items
+    OutboxWorkSessionCollectionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        visit_id:
+          type: string
+          format: uuid
+        visit_outbox_id:
+          type: string
+          description: ID of the visit provided by the demand organization.
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        start_latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        start_longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+        end_latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        end_longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+      required:
+      - id
+      - visit_id
+      - start_at
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

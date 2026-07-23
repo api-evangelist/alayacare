@@ -1,0 +1,221 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts File API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: File
+paths:
+  /client/{id}/{path}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: integer
+    - name: path
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - File
+      summary: Get the content of a file (download a file)
+      responses:
+        200:
+          description: Content of the file
+        400:
+          description: File not found
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 404
+              message:
+                type: string
+                description: Detail on the error
+                example: File "file.pdf" to delete not found
+    post:
+      tags:
+      - File
+      summary: Upload a file
+      description: 'Upload a file at the `path` location and create the underlying folder structure if it doesn''t exist already.
+
+
+        `path` **cannot** end with `/` in order to create a file based on the request body.
+
+
+        **Note:** This consumes `multipart form-data` as defined in the parameters below.
+
+
+        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file.
+
+        '
+      parameters:
+      - name: file
+        in: formData
+        type: file
+        description: The file to upload
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      responses:
+        201:
+          description: File uploaded
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 201
+              name:
+                type: string
+                description: Url to the file uploaded
+                example: client/1002/file.pdf
+        400:
+          description: 'Bad Request: File missing
+
+            '
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Could not find a file to upload
+    put:
+      tags:
+      - File
+      summary: Copy or move a file
+      description: 'Copy or move a directory and create the underlying folder structure of the new location if it doesn''t already exist.
+
+
+        Whether the directory is moved or simply copied is defined by a `move` header that can be set to `true` (if the header is not provided, its value defaults to `false` and the `source` directory will remain).
+
+
+        The url of the `PUT` request is the path to the destination location.
+
+        i.e., if we have the following directories:
+
+        - `dir1/child1/`
+
+        - `dir2/child2/`
+
+
+        and we want to copy `child1/` inside `dir2/` (the goal is to have `dir2/child1/`), the `path` in the url of the `PUT` request has to be: `dir2/child1/`. The `source` header of the request has to be `dir1/child1/`.
+
+
+        A 400 response will be returned for a request to move a folder in one of its own subfolders.
+
+        '
+      produces:
+      - application/json
+      responses:
+        200:
+          description: File copied or moved
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response
+                example: 200
+              name:
+                type: integer
+                description: 'Url to the new location of the copied or moved file
+
+                  '
+                example: client/1002/new_location.txt
+        400:
+          description: 'Bad Request: Missing `source` header
+
+            '
+          schema:
+            type: object
+            properties:
+              message:
+                type: object
+                properties:
+                  source:
+                    type: string
+                    description: Detail on the error
+                    example: The request cannot be processed without the source variable
+        404:
+          description: Source file not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+    delete:
+      tags:
+      - File
+      summary: Delete a file
+      description: Delete a file. As opposed to deleting a directory, the forced-delete header is not required to delete a single file.
+      produces:
+      - application/json
+      responses:
+        204:
+          description: File deleted
+        404:
+          description: File not found
+          schema:
+            $ref: '#/definitions/FileNotFoundSchema'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  FileNotFoundSchema:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: http status response code
+        example: 404
+      message:
+        type: string
+        description: Detail on the error
+        example: File "file.pdf" not found

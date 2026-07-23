@@ -1,0 +1,512 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Subtasks API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Subtasks
+paths:
+  /tasks/{task_id}/sub_tasks:
+    get:
+      summary: Retrieve sub tasks
+      description: Retrieve sub tasks for a task.
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/count'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSubTaskList'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    post:
+      summary: Add a sub task
+      description: Add a sub task to a task.
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubTask'
+        description: Sub Task
+        required: true
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubTask'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+  /tasks/{task_id}/sub_tasks/{subtask_id}:
+    delete:
+      summary: Delete a sub task
+      description: Delete a sub task for a task.
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/subtask_id'
+      responses:
+        '200':
+          description: success
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    get:
+      summary: Retrieve a single sub task
+      description: Retrieve a single sub task for a task.
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/subtask_id'
+      responses:
+        '204':
+          description: success, no content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubTask'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      summary: Patch a sub task
+      description: 'Patch a sub task, only replacing those fields that are specified and retaining
+
+        the existing value for fields that are not specified.'
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/subtask_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubTaskPatchRequest'
+        description: Fields to patch
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubTask'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    put:
+      summary: Update a sub task
+      description: Update a sub task for a task.
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/subtask_id'
+      - $ref: '#/components/parameters/update_contexts'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubTask'
+        description: Sub Task
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubTask'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+  /tasks/{task_id}/sub_tasks/{subtask_id}/status/{status}:
+    patch:
+      summary: Change the status of a sub task
+      description: Change the status of a sub task
+      tags:
+      - Subtasks
+      parameters:
+      - $ref: '#/components/parameters/task_id'
+      - $ref: '#/components/parameters/subtask_id'
+      - $ref: '#/components/parameters/status_in_path'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubTask'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+components:
+  schemas:
+    TaskContext:
+      type: object
+      description: Context to which a task applies.
+      title: Task Context
+      properties:
+        type:
+          type: string
+          example: api.patients.client
+          description: 'Type of the context. Domain services define their contexts and provide
+
+            instructions on how to connect to them through the component registry.'
+          nullable: false
+        primary_id:
+          type: string
+          example: 27
+          description: Identifies the referenced context.
+          nullable: false
+        display_name:
+          type: string
+          example: John Doe
+          description: Display name of the context.
+          nullable: true
+        deep_link:
+          type: string
+          example: /#/employees/2s/overview
+          description: 'Deep link to the context. Domain services define their deep links and
+
+            provide instructions on how to connect to them through the component
+
+            registry.'
+          nullable: true
+        is_visible:
+          type: boolean
+          example: true
+          description: 'Indicates whether the context is visible. If set to False, the context
+
+            will not be displayed in the frontend.'
+        props:
+          type: object
+          additionalProperties: true
+          description: 'Contents are context-dependent. Has the most important fields from a context.
+
+            For examples, a Client context may contain `first_name` and `last_name`.
+
+            Depending on the context type, this field may be two-way.'
+          example:
+            name.last: Doe
+            name.first: John
+    SubTaskPatchRequest:
+      type: object
+      description: 'Request body for patching a sub task. The request contains one or more fields to update in a sub task. The fields are optional, but at least one field must be provided.
+
+        It should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the sub task will retain its current value. If a field is set to `null`, the value will be blanked out in the sub task object.'
+      title: Sub Task Patch Request
+      properties:
+        name:
+          type: string
+          example: Check vitals for Mrs. Doe
+          nullable: false
+          description: Free-form name of the task as entered by the user.
+        due_at:
+          type: string
+          format: date-time
+          example: '2023-01-31T22:00:00.000Z'
+          nullable: true
+          description: When the task is due.
+        status:
+          $ref: '#/components/schemas/Status'
+        details:
+          type: string
+          example: 'Check Blood Pressure and Heart Rate.
+
+            Recent readings were out of range.
+
+            If readings are out of range again, alert nursing staff.'
+          description: Free text entered by user to provide more detail.
+        contexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskContext'
+          description: Applicable contexts.
+    SubTask:
+      type: object
+      description: 'Tasks can have 0 or more sub tasks. Progress on a parent task is tracked by
+
+        reviewing the status of sub tasks.'
+      title: Sub Task
+      properties:
+        subtask_id:
+          type: integer
+          example: 12
+        due_at:
+          nullable: true
+          type: string
+          format: datetime
+          example: '2023-02-27T10:00:00.000Z'
+          description: When the sub task is due.
+        name:
+          type: string
+          example: Update chart with results
+          nullable: false
+          description: Free-form entered by user
+        details:
+          type: string
+          example: '- Validate results.
+
+            - Update most recent chart with new results.'
+        created_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:45.000Z'
+          description: When the sub task was created
+        created_by:
+          $ref: '#/components/schemas/Person'
+          description: Who created the sub task.
+        updated_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:58.000Z'
+          description: When the task was most recently updated.
+        updated_by:
+          $ref: '#/components/schemas/Person'
+          description: Who updated the sub task.
+        status:
+          $ref: '#/components/schemas/Status'
+          nullable: false
+          description: Status of the Sub Task
+        contexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskContext'
+          description: Applicable contexts.
+    Person:
+      type: object
+      description: Encapsulates the bare details of a person
+      properties:
+        id:
+          type: integer
+          nullable: false
+          description: Primary ID (Employee ID, User ID etc.) of person
+        external_id:
+          type: string
+          nullable: true
+          description: External ID of person
+        guid:
+          type: integer
+          nullable: true
+          description: GUID
+        profile_id:
+          type: integer
+          nullable: true
+          description: Profile ID
+        last_name:
+          type: string
+          description: Last Name/Family Name
+        first_name:
+          type: string
+          description: First Name
+        full_name:
+          type: string
+          description: Full Name
+        status:
+          type: string
+          description: Status of person
+        deep_link:
+          type: string
+          description: Deep link to person
+        profile_photo_url:
+          type: string
+          description: URL to profile photo
+    PaginatedSubTaskList:
+      $reg: '#/components/schemas/PaginatedResults'
+      properties:
+        items:
+          $ref: '#/components/schemas/SubTask'
+    Status:
+      type: integer
+      oneOf:
+      - title: Open
+        const: 1
+      - title: In Progress
+        const: 3
+      - title: Completed
+        const: 5
+      - title: Closed
+        const: 7
+      example: 1
+      description: Status of a Task or Sub Task
+    ErrorResponse:
+      title: Error response
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              code:
+                type: string
+            required:
+            - message
+      required:
+      - message
+      - request_id
+  parameters:
+    task_id:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The task identifier
+    subtask_id:
+      name: subtask_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The sub task identifier
+    status_in_path:
+      name: status
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Status'
+    count:
+      name: count
+      in: query
+      schema:
+        type: integer
+        maxLength: 100
+        minLength: 1
+      description: Number of items per page to return
+      example: 50
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      example: 1
+    update_contexts:
+      name: update_contexts
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Whether to update contexts from the payload
+  responses:
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    404NotFound:
+      description: Entity not found
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    400BadRequest:
+      description: Bad request
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic

@@ -1,0 +1,193 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Forms API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Forms
+paths:
+  /forms:
+    parameters:
+    - $ref: '#/parameters/page'
+    - $ref: '#/parameters/count'
+    - description: Search for a form using the form name. This will return all forms containing the search string.
+      name: filter
+      type: string
+      in: query
+    - description: Filter by branch ID.
+      name: branch_id
+      type: integer
+      in: query
+      required: false
+    get:
+      tags:
+      - Forms
+      summary: Get a list of report forms to attach to an intervention.
+      description: '- Only forms that the current user can view will be returned.
+
+        - Disabled forms will be excluded.
+
+        - Results are ordered alphabetically by the form description.
+
+        '
+      responses:
+        200:
+          description: A list of report forms
+          schema:
+            $ref: '#/definitions/FormList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+        403:
+          $ref: '#/responses/ErrorInsufficientAccess'
+        404:
+          $ref: '#/responses/ErrorResponseFormNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  Branch:
+    description: AlayaCare Branch
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Branch ID
+        example: 1000
+      name:
+        type: string
+        description: Branch name
+        example: AlayaCare Health
+  Form:
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: integer
+        description: Report form ID of the task.
+        example: 1604
+      name:
+        type: string
+        description: 'Name of the report form. Limited to 256 chars.
+
+          '
+        example: New Client Assessment
+      branch:
+        $ref: '#/definitions/Branch'
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      status_code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  FormList:
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: null
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Form'
+parameters:
+  page:
+    description: Filter by page number.
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+  count:
+    description: Number of items per page.
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+responses:
+  ErrorInsufficientAccess:
+    description: You do not have the required permissions to perform this action
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 403
+        message: Access required
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 401
+        message: Please verify your access level for this url.
+  ErrorResponseFormNotFound:
+    description: Form not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        status_code: 404
+        message: Form not found

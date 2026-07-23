@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  version: 1.0.19-oas3
+  title: AlayaCare Accounting Accounts Activities of Daily Living (ADL) API
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - visit_id
+
+    - premium_id
+
+    - visit_premium_id
+
+    - employee_id
+
+    - cost_centre_id
+
+    - client_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - employee_external_id
+
+    - client_external_id
+
+
+    External IDs are required to be unique.
+
+    No other assumptions are made regarding their format they are treated as strings.
+
+    '
+servers:
+- url: https://example.alayacare.com/ext/api/v2/accounting
+security:
+- basic_auth: []
+tags:
+- name: Activities of Daily Living (ADL)
+paths:
+  /adls/client/{alayacare_client_id}:
+    parameters:
+    - name: alayacare_client_id
+      in: path
+      required: true
+      type: string
+      description: AlayaCare client ID
+    get:
+      tags:
+      - Activities of Daily Living (ADL)
+      summary: Get a list of a client's ADLs using AlayaCare client ID
+      description: '- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.
+
+        '
+      parameters:
+      - $ref: '#/parameters/service_id'
+      - $ref: '#/parameters/alayacare_service_id'
+      responses:
+        '200':
+          description: A list of ADLs for a client
+          schema:
+            $ref: '#/definitions/DailyActivityList'
+        '400':
+          $ref: '#/responses/ErrorResponseAdlsInvalidRequest'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '403':
+          $ref: '#/responses/ErrorResponseCareplanFeatureFlagState'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+  /adls/client/by_id/{client_id}:
+    parameters:
+    - name: client_id
+      in: path
+      required: true
+      type: string
+      description: External client ID
+    get:
+      tags:
+      - Activities of Daily Living (ADL)
+      summary: Get a list of a client's ADLs using external client ID
+      description: '- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.
+
+        '
+      parameters:
+      - $ref: '#/parameters/service_id'
+      - $ref: '#/parameters/alayacare_service_id'
+      responses:
+        '200':
+          description: A list of ADLs for a client
+          schema:
+            $ref: '#/definitions/DailyActivityList'
+        '400':
+          $ref: '#/responses/ErrorResponseAdlsInvalidRequest'
+        '403':
+          $ref: '#/responses/ErrorResponseCareplanFeatureFlagState'
+        '401':
+          $ref: '#/responses/ErrorResponseAuthentication'
+        '404':
+          $ref: '#/responses/ErrorResponseClientNotFound'
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      description: Basic HTTP auth over https
+      scheme: basic
+definitions:
+  DailyActivity:
+    type: object
+    properties:
+      category:
+        $ref: '#/definitions/DailyActivityCategory'
+      name:
+        type: string
+        description: Activity name.
+        example: brush teeth
+      rrule:
+        type: string
+        description: Recurrence rule applied to the daily activity.
+        example: FREQ=WEEKLY;DTSTART=20180204T180000Z;UNTIL=20180304T180000Z;WKST=MO;BYDAY=MO,WE,FR
+      services:
+        type: array
+        items:
+          $ref: '#/definitions/DailyActivityService'
+    required:
+    - category
+    - name
+  DailyActivityService:
+    description: Daily activity service
+    type: object
+    properties:
+      id:
+        type: string
+        description: External service ID
+        example: sor_service_external_id_1
+        x-nullable: true
+      alayacare_id:
+        type: integer
+        description: AlayaCare service ID
+        example: 1
+  DailyActivityList:
+    allOf:
+    - $ref: '#/definitions/PaginatedList'
+    description: Paginated list of ADLs
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/DailyActivity'
+  PaginatedList:
+    description: Base model of all paginated lists
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          type: object
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 400
+        description: Response code
+      message:
+        type: string
+        example: Invalid request
+        description: Detailed error message
+    required:
+    - code
+    - message
+  DailyActivityCategory:
+    description: Daily activity category
+    type: string
+    enum:
+    - adl_personal_care
+    - adl_mobility
+    - adl_equipment
+    - adl_nutrition
+    - adl_household_management
+    - adl_support
+    - adl_medication
+parameters:
+  alayacare_service_id:
+    name: alayacare_service_id
+    in: query
+    required: false
+    type: integer
+    description: Filter by AlayaCare service ID
+  service_id:
+    name: service_id
+    in: query
+    required: false
+    type: string
+    description: Filter by external service ID
+responses:
+  ErrorResponseCareplanFeatureFlagState:
+    description: Authorization required due to feature flag state.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 403
+        message: You do not have the required permissions to perform this action.
+  ErrorResponseAdlsInvalidRequest:
+    description: Invalid request
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: service_id and alayacare_service_id are mutually exclusive
+  ErrorResponseClientNotFound:
+    description: Client not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Client not found
+  ErrorResponseAuthentication:
+    description: Authorization required
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Authorization required.
