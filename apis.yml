@@ -10,7 +10,20 @@ description: >
   AlayaCare also offers AlayaMarket, a staffing marketplace API for matching supply and
   demand organizations, and AlayaCare Residential for residential aged care settings.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/alayacare.png
 url: https://raw.githubusercontent.com/api-evangelist/alayacare/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -27,169 +40,1402 @@ tags:
   - Aged Care
   - Workforce Management
 apis:
-  - name: AlayaCare Client API
-    description: >
-      REST API for managing client (patient) profiles in AlayaCare, including demographics,
-      contact information, care groups, and client-level metadata. Supports creating,
-      retrieving, and updating patient records. Authenticated via HTTP Basic Auth using
-      tenant-specific public/private key pairs provisioned by AlayaCare.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
-    tags:
-      - Clients
-      - Patients
-      - Demographics
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-      - type: OpenAPI
-        url: https://app.swaggerhub.com/apis/AlayaCare/client-api-external
-  - name: AlayaCare Employee API
-    description: >
-      REST API for managing employee records including staff information, designations,
-      departments, and employee-level attributes. Enables HR and workforce management
-      integrations. Supports pagination and date-range filtering. Authentication uses
-      HTTP Basic Auth with tenant-specific credentials.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/employees/
-    tags:
-      - Employees
-      - Workforce
-      - HR
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaCare Scheduler API
-    description: >
-      REST API for accessing and managing visit scheduling data, including visit details,
-      facility information, and service delivery records. Supports filtering by date range
-      and pagination. Critical for building scheduling integrations, rostering tools, and
-      payroll system connectors.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/scheduler/
-    tags:
-      - Scheduling
-      - Visits
-      - Rostering
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaCare Clinical API
-    description: >
-      REST API for accessing clinical documentation including progress notes, medications,
-      vital signs, and clinical observations recorded during care visits. Supports
-      integration with EMR/EHR systems and clinical data warehouses. Authenticated via
-      HTTP Basic Auth with tenant-scoped credentials.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/clinical/
-    tags:
-      - Clinical
-      - Progress Notes
-      - Vitals
-      - Medications
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaCare Tasks API
-    description: >
-      REST API (v1 and v2) for managing care tasks assigned to clients and employees within
-      AlayaCare. Supports creating, retrieving, and updating task records. Tasks v2 adds
-      expanded capabilities. Used for workflow automation and care coordination integrations.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/tasks/
-    tags:
-      - Tasks
-      - Care Coordination
-      - Workflow
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaCare Forms API
-    description: >
-      REST API for accessing digital form submissions captured during care delivery, including
-      assessment forms, intake forms, and clinical documentation forms. Updated November 2024
-      with Forms v2 support. Enables reporting, compliance, and quality assurance integrations.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/tasks/forms20
-    tags:
-      - Forms
-      - Assessments
-      - Documentation
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaCare Accounting API
-    description: >
-      REST API for financial operations within AlayaCare, including billing records, invoices,
-      and accounting data. Supports integration with payroll systems, financial reporting
-      tools, and ERP platforms. Authenticated via HTTP Basic Auth with tenant credentials.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/
-    tags:
-      - Billing
-      - Accounting
-      - Finance
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaCare Medication API
-    description: >
-      REST API for managing medication records associated with client care plans in AlayaCare.
-      Supports retrieval of medication lists, dosage information, and administration records
-      for integration with pharmacy systems and medication management platforms.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-    baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/
-    tags:
-      - Medications
-      - Pharmacy
-      - Clinical
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
-  - name: AlayaMarket Marketplace API
-    description: >
-      REST API for the AlayaMarket staffing marketplace enabling supply and demand
-      organizations to exchange shift offers and staffing requests. Demand organizations
-      use Outbox APIs to publish staffing needs; supply organizations use Inbox APIs to
-      respond. Supports both synchronous REST and asynchronous AWS SNS event notifications.
-      Available in three regions: Australia, Canada, and USA with sandbox environments.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/
-    baseURL: https://api.prod.alayacare.com
-    tags:
-      - Marketplace
-      - Staffing
-      - Workforce
-      - Shift Management
-    properties:
-      - type: Documentation
-        url: https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/
-      - type: GitHub
-        url: https://github.com/AlayaCare/alayamarket-external-docs
-  - name: AlayaCare Residential (Resi) API
-    description: >
-      REST API for AlayaCare's residential aged care product, supporting client extensions,
-      resident management, and care documentation specific to residential facility settings.
-      Separate from the home care APIs; hosted at residential.alayacare.com.au with
-      dedicated API documentation.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://acresi-api-docs.residential.alayacare.com/
-    baseURL: https://residential.alayacare.com.au/api/
-    tags:
-      - Residential
-      - Aged Care
-      - Client Extensions
-    properties:
-      - type: Documentation
-        url: https://acresi-api-docs.residential.alayacare.com/
+- name: AlayaCare Employee API
+  description: >
+    REST API for managing employee records including staff information, designations, departments, and
+    employee-level attributes. Enables HR and workforce management integrations. Supports pagination and
+    date-range filtering. Authentication uses HTTP Basic Auth with tenant-specific credentials.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/employees/
+  tags:
+  - Employees
+  - Workforce
+  - HR
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaCare Scheduler API
+  description: >
+    REST API for accessing and managing visit scheduling data, including visit details, facility information,
+    and service delivery records. Supports filtering by date range and pagination. Critical for building
+    scheduling integrations, rostering tools, and payroll system connectors.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/scheduler/
+  tags:
+  - Scheduling
+  - Visits
+  - Rostering
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaCare Clinical API
+  description: >
+    REST API for accessing clinical documentation including progress notes, medications, vital signs,
+    and clinical observations recorded during care visits. Supports integration with EMR/EHR systems and
+    clinical data warehouses. Authenticated via HTTP Basic Auth with tenant-scoped credentials.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/clinical/
+  tags:
+  - Clinical
+  - Progress Notes
+  - Vitals
+  - Medications
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaCare Tasks API
+  description: >
+    REST API (v1 and v2) for managing care tasks assigned to clients and employees within AlayaCare. Supports
+    creating, retrieving, and updating task records. Tasks v2 adds expanded capabilities. Used for workflow
+    automation and care coordination integrations.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/tasks/
+  tags:
+  - Tasks
+  - Care Coordination
+  - Workflow
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaCare Forms API
+  description: >
+    REST API for accessing digital form submissions captured during care delivery, including assessment
+    forms, intake forms, and clinical documentation forms. Updated November 2024 with Forms v2 support.
+    Enables reporting, compliance, and quality assurance integrations.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/tasks/forms20
+  tags:
+  - Forms
+  - Assessments
+  - Documentation
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaCare Accounting API
+  description: >
+    REST API for financial operations within AlayaCare, including billing records, invoices, and accounting
+    data. Supports integration with payroll systems, financial reporting tools, and ERP platforms. Authenticated
+    via HTTP Basic Auth with tenant credentials.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/
+  tags:
+  - Billing
+  - Accounting
+  - Finance
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaCare Medication API
+  description: >
+    REST API for managing medication records associated with client care plans in AlayaCare. Supports
+    retrieval of medication lists, dosage information, and administration records for integration with
+    pharmacy systems and medication management platforms.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/
+  tags:
+  - Medications
+  - Pharmacy
+  - Clinical
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- name: AlayaMarket Marketplace API
+  description: >
+    REST API for the AlayaMarket staffing marketplace enabling supply and demand organizations to exchange
+    shift offers and staffing requests. Demand organizations use Outbox APIs to publish staffing needs;
+    supply organizations use Inbox APIs to respond. Supports both synchronous REST and asynchronous AWS
+    SNS event notifications. Available in three regions: Australia, Canada, and USA with sandbox environments.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/
+  baseURL: https://api.prod.alayacare.com
+  tags:
+  - Marketplace
+  - Staffing
+  - Workforce
+  - Shift Management
+  properties:
+  - type: Documentation
+    url: https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/
+  - type: GitHub
+    url: https://github.com/AlayaCare/alayamarket-external-docs
+- name: AlayaCare Residential (Resi) API
+  description: >
+    REST API for AlayaCare's residential aged care product, supporting client extensions, resident management,
+    and care documentation specific to residential facility settings. Separate from the home care APIs;
+    hosted at residential.alayacare.com.au with dedicated API documentation.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://acresi-api-docs.residential.alayacare.com/
+  baseURL: https://residential.alayacare.com.au/api/
+  tags:
+  - Residential
+  - Aged Care
+  - Client Extensions
+  properties:
+  - type: Documentation
+    url: https://acresi-api-docs.residential.alayacare.com/
+- aid: alayacare:alayacare-accounts-api
+  name: AlayaCare Accounts API
+  description: The Accounts API from AlayaCare — 2 operation(s) for accounts.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-activities-of-daily-living-adl-api
+  name: AlayaCare Activities of Daily Living (ADL) API
+  description: >-
+    The Activities of Daily Living (ADL) API from AlayaCare — 2 operation(s) for activities of daily living
+    (adl).
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Activities of Daily Living (ADL)
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-activities-of-daily-living-adl-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-activity-codes-api
+  name: AlayaCare Activity Codes API
+  description: The Activity Codes API from AlayaCare — 1 operation(s) for activity codes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Activity Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-activity-codes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-attachment-directory-api
+  name: AlayaCare Attachment Directory API
+  description: The Attachment Directory API from AlayaCare — 2 operation(s) for attachment directory.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Attachment Directory
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-attachment-directory-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-attachment-file-api
+  name: AlayaCare Attachment File API
+  description: The Attachment File API from AlayaCare — 2 operation(s) for attachment file.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Attachment File
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-attachment-file-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-bill-code-rate-rrules-api
+  name: AlayaCare Bill Code Rate RRules API
+  description: The Bill Code Rate RRules API from AlayaCare — 2 operation(s) for bill code rate rrules.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Bill Code Rate RRules
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-bill-code-rate-rrules-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-bill-code-rates-api
+  name: AlayaCare Bill Code Rates API
+  description: The Bill Code Rates API from AlayaCare — 2 operation(s) for bill code rates.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Bill Code Rates
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-bill-code-rates-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-bill-codes-api
+  name: AlayaCare Bill Codes API
+  description: The Bill Codes API from AlayaCare — 4 operation(s) for bill codes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Bill Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-bill-codes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-billing-cycles-api
+  name: AlayaCare Billing Cycles API
+  description: The Billing Cycles API from AlayaCare — 5 operation(s) for billing cycles.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Billing Cycles
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-billing-cycles-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-billing-periods-api
+  name: AlayaCare Billing Periods API
+  description: The Billing Periods API from AlayaCare — 4 operation(s) for billing periods.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Billing Periods
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-billing-periods-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-branches-api
+  name: AlayaCare Branches API
+  description: Branch related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Branches
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-branches-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-bulk-actions-api
+  name: AlayaCare Bulk Actions API
+  description: The Bulk Actions API from AlayaCare — 2 operation(s) for bulk actions.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Bulk Actions
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-bulk-actions-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-care-plan-api
+  name: AlayaCare Care plan API
+  description: The Care plan API from AlayaCare — 10 operation(s) for care plan.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Care plan
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-care-plan-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-care-plan-interventions-api
+  name: AlayaCare Care Plan Interventions API
+  description: >-
+    The Care Plan Interventions API from AlayaCare — 2 operation(s) for care plan interventions.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Care Plan Interventions
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-care-plan-interventions-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-care-provider-notes-api
+  name: AlayaCare Care Provider Notes API
+  description: Care provider note related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Care Provider Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-care-provider-notes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-client-contacts-api
+  name: AlayaCare Client Contacts API
+  description: Client contact related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Client Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-client-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-client-cost-centres-api
+  name: AlayaCare Client Cost Centres API
+  description: The Client Cost Centres API from AlayaCare — 3 operation(s) for client cost centres.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Client Cost Centres
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-client-cost-centres-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-client-risks-api
+  name: AlayaCare Client Risks API
+  description: The Client Risks API from AlayaCare — 4 operation(s) for client risks.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Client Risks
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-client-risks-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-client-status-api
+  name: AlayaCare Client Status API
+  description: Client status related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Client Status
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-client-status-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-clients-api
+  name: AlayaCare Clients API
+  description: Client related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Clients
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-clients-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-comments-api
+  name: AlayaCare Comments API
+  description: The Comments API from AlayaCare — 2 operation(s) for comments.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-comments-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-configured-vitals-api
+  name: AlayaCare Configured Vitals API
+  description: The Configured Vitals API from AlayaCare — 1 operation(s) for configured vitals.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Configured Vitals
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-configured-vitals-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-cost-centres-api
+  name: AlayaCare Cost Centres API
+  description: The Cost Centres API from AlayaCare — 1 operation(s) for cost centres.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Cost Centres
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-cost-centres-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-departments-api
+  name: AlayaCare Departments API
+  description: The Departments API from AlayaCare — 1 operation(s) for departments.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Departments
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-departments-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-designations-api
+  name: AlayaCare Designations API
+  description: The Designations API from AlayaCare — 1 operation(s) for designations.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Designations
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-designations-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-diagnoses-api
+  name: AlayaCare Diagnoses API
+  description: The Diagnoses API from AlayaCare — 4 operation(s) for diagnoses.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Diagnoses
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-diagnoses-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-directory-api
+  name: AlayaCare Directory API
+  description: The Directory API from AlayaCare — 1 operation(s) for directory.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Directory
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-directory-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employee-contacts-api
+  name: AlayaCare Employee Contacts API
+  description: The Employee Contacts API from AlayaCare — 3 operation(s) for employee contacts.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employee Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employee-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employee-cost-centres-api
+  name: AlayaCare Employee Cost Centres API
+  description: The Employee Cost Centres API from AlayaCare — 3 operation(s) for employee cost centres.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employee Cost Centres
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employee-cost-centres-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employee-notes-api
+  name: AlayaCare Employee Notes API
+  description: The Employee Notes API from AlayaCare — 2 operation(s) for employee notes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employee Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employee-notes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employee-skills-api
+  name: AlayaCare Employee Skills API
+  description: The Employee Skills API from AlayaCare — 4 operation(s) for employee skills.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employee Skills
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employee-skills-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employee-unavailabilities-api
+  name: AlayaCare Employee Unavailabilities API
+  description: >-
+    The Employee Unavailabilities API from AlayaCare — 2 operation(s) for employee unavailabilities.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employee Unavailabilities
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employee-unavailabilities-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employees-api
+  name: AlayaCare Employees API
+  description: The Employees API from AlayaCare — 7 operation(s) for employees.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employees
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employees-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-employment-types-api
+  name: AlayaCare Employment Types API
+  description: The Employment Types API from AlayaCare — 1 operation(s) for employment types.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Employment Types
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-employment-types-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-evv-api
+  name: AlayaCare EVV API
+  description: The EVV API from AlayaCare — 1 operation(s) for evv.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - EVV
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-evv-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-evv-export-api
+  name: AlayaCare EVV Export API
+  description: The EVV Export API from AlayaCare — 4 operation(s) for evv export.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - EVV Export
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-evv-export-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-facilities-api
+  name: AlayaCare Facilities API
+  description: The Facilities API from AlayaCare — 4 operation(s) for facilities.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Facilities
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-facilities-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-file-api
+  name: AlayaCare File API
+  description: The File API from AlayaCare — 1 operation(s) for file.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - File
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-file-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-form-submission-inbox-api
+  name: AlayaCare form submission inbox API
+  description: The form submission inbox API from AlayaCare — 1 operation(s) for form submission inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - form submission inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-form-submission-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-form-submission-outbox-api
+  name: AlayaCare form submission outbox API
+  description: >-
+    The form submission outbox API from AlayaCare — 2 operation(s) for form submission outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - form submission outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-form-submission-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-form-submissions-api
+  name: AlayaCare Form Submissions API
+  description: The Form Submissions API from AlayaCare — 4 operation(s) for form submissions.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Form Submissions
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-form-submissions-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-form-template-inbox-api
+  name: AlayaCare form template inbox API
+  description: The form template inbox API from AlayaCare — 1 operation(s) for form template inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - form template inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-form-template-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-forms-api
+  name: AlayaCare Forms API
+  description: The Forms API from AlayaCare — 1 operation(s) for forms.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Forms
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-forms-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-funders-api
+  name: AlayaCare Funders API
+  description: The Funders API from AlayaCare — 2 operation(s) for funders.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Funders
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-funders-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-goals-api
+  name: AlayaCare Goals API
+  description: The Goals API from AlayaCare — 5 operation(s) for goals.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Goals
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-goals-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-groups-api
+  name: AlayaCare Groups API
+  description: Client group related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-groups-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-interventions-api
+  name: AlayaCare Interventions API
+  description: The Interventions API from AlayaCare — 5 operation(s) for interventions.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Interventions
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-interventions-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-invoice-items-api
+  name: AlayaCare Invoice Items API
+  description: The Invoice Items API from AlayaCare — 2 operation(s) for invoice items.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Invoice Items
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-invoice-items-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-invoices-api
+  name: AlayaCare Invoices API
+  description: The Invoices API from AlayaCare — 5 operation(s) for invoices.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-latest-vitals-api
+  name: AlayaCare Latest Vitals API
+  description: The Latest Vitals API from AlayaCare — 2 operation(s) for latest vitals.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Latest Vitals
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-latest-vitals-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-medication-administration-api
+  name: AlayaCare Medication Administration API
+  description: >-
+    The Medication Administration API from AlayaCare — 2 operation(s) for medication administration.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Medication Administration
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-medication-administration-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-medication-api
+  name: AlayaCare Medication API
+  description: The Medication API from AlayaCare — 5 operation(s) for medication.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Medication
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-medication-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-medication-settings-api
+  name: AlayaCare Medication settings API
+  description: The Medication settings API from AlayaCare — 3 operation(s) for medication settings.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Medication settings
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-medication-settings-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-message-inbox-api
+  name: AlayaCare message inbox API
+  description: The message inbox API from AlayaCare — 4 operation(s) for message inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - message inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-message-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-message-outbox-api
+  name: AlayaCare message outbox API
+  description: The message outbox API from AlayaCare — 4 operation(s) for message outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - message outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-message-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-message-sys-admin-api
+  name: AlayaCare message sys_admin API
+  description: The message sys_admin API from AlayaCare — 2 operation(s) for message sys_admin.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - message sys_admin
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-message-sys-admin-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-note-types-api
+  name: AlayaCare Note Types API
+  description: The Note Types API from AlayaCare — 1 operation(s) for note types.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Note Types
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-note-types-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-offer-inbox-api
+  name: AlayaCare offer inbox API
+  description: The offer inbox API from AlayaCare — 4 operation(s) for offer inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - offer inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-offer-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-offer-outbox-api
+  name: AlayaCare offer outbox API
+  description: The offer outbox API from AlayaCare — 5 operation(s) for offer outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - offer outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-offer-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-offer-outbox-bundle-api
+  name: AlayaCare offer outbox bundle API
+  description: The offer outbox bundle API from AlayaCare — 2 operation(s) for offer outbox bundle.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - offer outbox bundle
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-offer-outbox-bundle-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-offer-status-api
+  name: AlayaCare offer status API
+  description: The offer status API from AlayaCare — 1 operation(s) for offer status.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - offer status
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-offer-status-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-offer-sys-admin-api
+  name: AlayaCare offer sys_admin API
+  description: The offer sys_admin API from AlayaCare — 3 operation(s) for offer sys_admin.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - offer sys_admin
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-offer-sys-admin-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-organization-settings-api
+  name: AlayaCare organization settings API
+  description: The organization settings API from AlayaCare — 1 operation(s) for organization settings.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - organization settings
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-organization-settings-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-organization-settings-sys-admin-api
+  name: AlayaCare organization settings sys_admin API
+  description: >-
+    The organization settings sys_admin API from AlayaCare — 1 operation(s) for organization settings
+    sys_admin.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - organization settings sys_admin
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-organization-settings-sys-admin-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-premium-bill-codes-api
+  name: AlayaCare Premium Bill Codes API
+  description: The Premium Bill Codes API from AlayaCare — 1 operation(s) for premium bill codes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Premium Bill Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-premium-bill-codes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-premiums-api
+  name: AlayaCare Premiums API
+  description: The Premiums API from AlayaCare — 2 operation(s) for premiums.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Premiums
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-premiums-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-profile-api
+  name: AlayaCare Profile API
+  description: Profile attribute related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Profile
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-profile-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-progress-notes-api
+  name: AlayaCare Progress Notes API
+  description: The Progress Notes API from AlayaCare — 3 operation(s) for progress notes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Progress Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-progress-notes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-referral-inbox-api
+  name: AlayaCare referral inbox API
+  description: The referral inbox API from AlayaCare — 5 operation(s) for referral inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - referral inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-referral-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-referral-outbox-api
+  name: AlayaCare referral outbox API
+  description: The referral outbox API from AlayaCare — 4 operation(s) for referral outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - referral outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-referral-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-referral-sys-admin-api
+  name: AlayaCare referral sys_admin API
+  description: The referral sys_admin API from AlayaCare — 2 operation(s) for referral sys_admin.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - referral sys_admin
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-referral-sys-admin-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-roles-api
+  name: AlayaCare Roles API
+  description: The Roles API from AlayaCare — 1 operation(s) for roles.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-roles-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-sequence-inbox-api
+  name: AlayaCare sequence inbox API
+  description: The sequence inbox API from AlayaCare — 1 operation(s) for sequence inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - sequence inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-sequence-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-sequence-outbox-api
+  name: AlayaCare sequence outbox API
+  description: The sequence outbox API from AlayaCare — 1 operation(s) for sequence outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - sequence outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-sequence-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-sequence-sys-admin-api
+  name: AlayaCare sequence sys_admin API
+  description: The sequence sys_admin API from AlayaCare — 1 operation(s) for sequence sys_admin.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - sequence sys_admin
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-sequence-sys-admin-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-service-codes-api
+  name: AlayaCare Service Codes API
+  description: The Service Codes API from AlayaCare — 2 operation(s) for service codes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Service Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-service-codes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-service-forms-api
+  name: AlayaCare Service Forms API
+  description: The Service Forms API from AlayaCare — 1 operation(s) for service forms.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Service Forms
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-service-forms-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-service-status-api
+  name: AlayaCare Service Status API
+  description: Service status related endpoints.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Service Status
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-service-status-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-service-tags-api
+  name: AlayaCare Service Tags API
+  description: The Service Tags API from AlayaCare — 1 operation(s) for service tags.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Service Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-service-tags-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-services-api
+  name: AlayaCare Services API
+  description: The Services API from AlayaCare — 3 operation(s) for services.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Services
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-services-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-skill-categories-api
+  name: AlayaCare Skill Categories API
+  description: The Skill Categories API from AlayaCare — 1 operation(s) for skill categories.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Skill Categories
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-skill-categories-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-skills-api
+  name: AlayaCare Skills API
+  description: The Skills API from AlayaCare — 2 operation(s) for skills.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Skills
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-skills-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-status-reasons-api
+  name: AlayaCare Status Reasons API
+  description: The Status Reasons API from AlayaCare — 1 operation(s) for status reasons.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Status Reasons
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-status-reasons-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-subtasks-api
+  name: AlayaCare Subtasks API
+  description: The Subtasks API from AlayaCare — 3 operation(s) for subtasks.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Subtasks
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-subtasks-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-tags-api
+  name: AlayaCare Tags API
+  description: The Tags API from AlayaCare — 1 operation(s) for tags.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-tags-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-take-rates-api
+  name: AlayaCare take rates API
+  description: The take rates API from AlayaCare — 3 operation(s) for take rates.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - take rates
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-take-rates-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-tasks-api
+  name: AlayaCare Tasks API
+  description: The Tasks API from AlayaCare — 10 operation(s) for tasks.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-time-off-types-api
+  name: AlayaCare Time Off Types API
+  description: The Time Off Types API from AlayaCare — 1 operation(s) for time off types.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Time Off Types
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-time-off-types-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-transactions-api
+  name: AlayaCare Transactions API
+  description: The Transactions API from AlayaCare — 2 operation(s) for transactions.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-unavailabilities-api
+  name: AlayaCare Unavailabilities API
+  description: The Unavailabilities API from AlayaCare — 1 operation(s) for unavailabilities.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Unavailabilities
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-unavailabilities-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-accounting-api
+  name: AlayaCare Visit accounting API
+  description: The Visit accounting API from AlayaCare — 4 operation(s) for visit accounting.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visit accounting
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-accounting-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-inbox-api
+  name: AlayaCare visit inbox API
+  description: The visit inbox API from AlayaCare — 14 operation(s) for visit inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - visit inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-interventions-api
+  name: AlayaCare Visit interventions API
+  description: The Visit interventions API from AlayaCare — 3 operation(s) for visit interventions.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visit interventions
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-interventions-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-notes-api
+  name: AlayaCare Visit notes API
+  description: The Visit notes API from AlayaCare — 2 operation(s) for visit notes.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visit notes
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-notes-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-outbox-api
+  name: AlayaCare visit outbox API
+  description: The visit outbox API from AlayaCare — 2 operation(s) for visit outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - visit outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-premiums-api
+  name: AlayaCare Visit Premiums API
+  description: The Visit Premiums API from AlayaCare — 2 operation(s) for visit premiums.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visit Premiums
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-premiums-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-sys-admin-api
+  name: AlayaCare visit sys_admin API
+  description: The visit sys_admin API from AlayaCare — 2 operation(s) for visit sys_admin.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - visit sys_admin
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-sys-admin-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-tags-api
+  name: AlayaCare Visit tags API
+  description: The Visit tags API from AlayaCare — 5 operation(s) for visit tags.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visit tags
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-tags-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visit-verification-api
+  name: AlayaCare Visit Verification API
+  description: The Visit Verification API from AlayaCare — 1 operation(s) for visit verification.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visit Verification
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visit-verification-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-visits-api
+  name: AlayaCare Visits API
+  description: The Visits API from AlayaCare — 8 operation(s) for visits.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Visits
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-visits-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-vital-metadata-api
+  name: AlayaCare Vital Metadata API
+  description: The Vital Metadata API from AlayaCare — 2 operation(s) for vital metadata.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Vital Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-vital-metadata-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-vitals-api
+  name: AlayaCare Vitals API
+  description: The Vitals API from AlayaCare — 3 operation(s) for vitals.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - Vitals
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-vitals-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-work-session-inbox-api
+  name: AlayaCare work session inbox API
+  description: The work session inbox API from AlayaCare — 2 operation(s) for work session inbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - work session inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-work-session-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+- aid: alayacare:alayacare-work-session-outbox-api
+  name: AlayaCare work session outbox API
+  description: The work session outbox API from AlayaCare — 1 operation(s) for work session outbox.
+  humanURL: https://alayacare.github.io/external-integration-docs/external-api-guide.html
+  baseURL: https://[tenant].[environment].alayacare.[domain]/ext/api/v2/patients/
+  tags:
+  - work session outbox
+  properties:
+  - type: OpenAPI
+    url: openapi/alayacare-work-session-outbox-api-openapi.yml
+  - type: Documentation
+    url: https://alayacare.github.io/external-integration-docs/external-api-guide.html
 common:
   - type: AgenticAccess
     url: agentic-access/alayacare-agentic-access.yml
