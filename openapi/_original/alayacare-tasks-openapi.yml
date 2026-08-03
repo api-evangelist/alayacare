@@ -1,0 +1,711 @@
+swagger: '2.0'
+info:
+  version: '1.0.1'
+  title: 'Tasks API'
+  description: |
+    **Internal IDs:**
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+    - client_id
+    - employee_id
+
+    **External IDs**
+    External IDs are required to be unique.
+    No other assumptions are made regarding their form; they are treated as strings.
+
+    The following terms are used to reference IDs that identify resources in systems external to AlayaCare:
+    - external_client_id
+    - external_employee_id
+
+    **Remarks**
+    - All dates must be in ISO 8601 format.
+    - Required fields marked with `*` cannot be null.
+    - For multi-office tenants, the branch of the client and employee must be the same if both are set. They must also be descendants of the branch that the form is associated to, if a form is provided. The branch of the task is set to the branch of the client/employee if provided, otherwise the branch of the current user is used. The task branch is set on creation only.
+    - Currently filtering by date is timezone-naive and will assume any filters to be provided in the timezone of branch associated to the task.
+
+host: homecare.alayacare.ca
+basePath: /ext/api/v2/tasks
+securityDefinitions:
+  basic_auth:
+    type: basic
+    description: Basic HTTP auth over https
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /forms:
+    get:
+      tags: [Forms]
+      summary: Get a list of report forms to attach to a task.
+      description: |
+        - Only forms that the current user can view will be returned.
+        - Disabled forms will be excluded.
+        - Results are ordered alphabetically by the form description.
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/count'
+        - description: Search for a forms based on their name. This will return all forms containing the search string.
+          name: filter
+          type: string
+          in: query
+        - description: 'Filter by branch ID.'
+          name: branch_id
+          type: integer
+          in: query
+          required: false
+      responses:
+        200:
+          description: A list of report forms
+          schema:
+            $ref: '#/definitions/FormList'
+        401:
+          $ref: '#/responses/AuthChallenge'
+  /tasks:
+    get:
+      tags: [Tasks]
+      summary: Get a list of tasks.
+      description: |
+        - Requires permission `View all tasks` to view tasks for any employee.
+        - Requires permission `View employee tasks` to view tasks for the current employee.
+        - `client_id` and `external_client_id` are mutually exclusive, specifying both is an invalid request.
+        - `employee_id` and `external_employee_id` are mutually exclusive, specifying both is an invalid request.
+        - `include_unassigned` is ignored unless `employee_id` is specified.
+        - Results are ordered by the due date and created date, in descending order.
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/count'
+        - description: Filter tasks by type of report form.
+          name: form_id
+          type: integer
+          in: query
+        - description: |
+            Filter tasks by creation date greater or equal than specified value.
+            Expected format is ISO 8601.
+            Note that the timezone will be ignored and will be assumed to be equal to that of the branch associated to the task.
+            Ex: `2018-02-03T08:00:00-05:00`
+          name: created_at
+          type: string
+          format: 'date-time'
+          in: query
+        - description: |
+            Filter tasks by due date greater or equal than specified value.
+            Expected format is ISO 8601.
+            Note that the timezone will be ignored and will be assumed to be equal to that of the branch associated to the task.
+            Ex: `2018-02-03T08:00:00-05:00`
+          name: due_date
+          type: string
+          format: 'date-time'
+          in: query
+        - description: Filter tasks by priority
+          name: priority
+          type: string
+          in: query
+        - description: Filter tasks by status
+          name: status
+          type: string
+          in: query
+        - description: |
+            Filter tasks by assigned employee.
+            This will also include tasks indirectly associated to the employee (e.g. Vital Alerts).
+          name: employee_id
+          type: integer
+          in: query
+        - description: Filter tasks by assigned employee's external ID
+          name: external_employee_id
+          type: string
+          in: query
+        - description: Filter tasks by assigned client
+          name: client_id
+          type: integer
+          in: query
+        - description: Filter tasks by assigned client's external ID
+          name: external_client_id
+          type: string
+          in: query
+        - description: Filter tasks to include tasks that are not assigned to an employee. This is ignored unless employee_id is specified.
+          name: include_unassigned
+          type: boolean
+          in: query
+      responses:
+        200:
+          description: A list of tasks
+          schema:
+            $ref: '#/definitions/TaskList'
+        400:
+          $ref: '#/responses/ErrorResponseTaskIdInvalidRequest'
+        401:
+          $ref: '#/responses/AuthChallenge'
+    post:
+      tags: [Tasks]
+      summary: Create a task.
+      description: |
+        - Requires permission `Create Tasks`.
+        - If `employee_id` and `form_id` are provided, requires that the employee has permission to submit the form.
+        - If `form_id` is provided, then `client_id` must be provided.
+        - If `priority` is not defined, default value is `low`.
+        - Value of task `status` will be `open` upon creation.
+        - `client_id` and `external_client_id` are mutually exclusive, specifying both is an invalid request.
+        - `employee_id` and `external_employee_id` are mutually exclusive, specifying both is an invalid request.
+      parameters:
+        - description: New task data
+          name: task
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TaskCreate'
+      responses:
+        201:
+          description: Task successfully created.
+          schema:
+            $ref: '#/definitions/Task'
+        400:
+          $ref: '#/responses/InvalidRequest'
+  /tasks/{id}:
+    parameters:
+      - description: Task ID
+        name: id
+        in: path
+        required: true
+        type: integer
+    get:
+      tags: [Tasks]
+      summary: Get task details by task ID.
+      description: |
+        - Requires permission `View all tasks` to view the task if not assigned to the current user.
+        - Requires permission `View employee tasks` to view the task if assigned to the current user.
+      responses:
+        200:
+          description: Task details
+          schema:
+            $ref: '#/definitions/Task'
+        404:
+          $ref: '#/responses/ErrorResponseTaskNotFound'
+    put:
+      tags: [Tasks]
+      summary: Update a task.
+      description: |
+        - Requires permission `Edit Tasks`.
+        - If `form_id` is already set, then it cannot be changed. This means that if `form_id` is set, then `client_id` cannot be changed.
+        - `client_id` and `external_client_id` are mutually exclusive, specifying both is an invalid request.
+        - `employee_id` and `external_employee_id` are mutually exclusive, specifying both is an invalid request.
+      parameters:
+      - description: Task data
+        name: task
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TaskUpdate'
+      responses:
+        200:
+          description: Task successfully updated.
+          schema:
+            $ref: '#/definitions/Task'
+        400:
+          $ref: '#/responses/InvalidRequest'
+        404:
+          $ref: '#/responses/ErrorResponseTaskNotFound'
+  /tasks/{id}/change_status:
+    parameters:
+      - description: Task ID
+        name: id
+        in: path
+        required: true
+        type: integer
+      - description: Task Status
+        name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: closed
+
+    post:
+      tags: [Tasks]
+      summary: Update a task status.
+      description: |
+        - Requires permission `Edit Tasks` for all statuses other than `rejected`.
+        - Requires permission `Reject Tasks` if the status is `rejected`.
+      responses:
+        200:
+          description: Task successfully updated.
+        400:
+          $ref: '#/responses/InvalidRequest'
+        404:
+          $ref: '#/responses/ErrorResponseTaskNotFound'
+
+
+
+responses:
+  AuthChallenge:
+    description: Authentication required.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 401
+        message: Please verify your access level for this url.
+
+  InvalidRequest:
+    description: Invalid data submitted for task creation.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Task description is required.
+
+  ErrorResponseTaskNotFound:
+    description: Task not found.
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 404
+        message: Task not found.
+
+  ErrorResponseTaskIdInvalidRequest:
+    description: Invalid request
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+    examples:
+      application/json:
+        code: 400
+        message: Only one of either `client_id` or `external_client_id` should be specified.
+
+parameters:
+  client_id:
+    name: client_id
+    in: query
+    required: false
+    type: integer
+    description: Filter by client ID.
+  external_client_id:
+    name: external_client_id
+    in: query
+    required: false
+    type: string
+    description: External client ID.
+  page:
+    name: page
+    default: 1
+    in: query
+    required: false
+    type: integer
+    description: Filter by page number. If not specified will default to 1.
+  count:
+    name: count
+    default: 100
+    in: query
+    required: false
+    type: integer
+    description: Number of items per page. If not specified will default to 100.
+
+
+definitions:
+  ErrorResponse:
+    description: Error response
+    type: object
+    properties:
+      code:
+        type: integer
+        description: Response code
+      message:
+        type: string
+        description: Detailed error message
+    required:
+    - code
+    - message
+  Branch:
+    description: AlayaCare Branch
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Branch ID
+        example: 1000
+      name:
+        type: string
+        description: Branch name
+        example: AlayaCare Health
+  FormField:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        description: The form field identifier.
+        example: 1234
+      name:
+        type: string
+        description: The form field identifier.
+        example: field_1234
+      label:
+        type: string
+        description: The form field label.
+        example: Enter the client pain levels.
+      type:
+        type: string
+        description: The form field type. This should exclude any types associated to file uploads (e.g. `picture`, `signature`, etc).
+        example: list
+      list:
+        type: array
+        description: A list of options if the form field type is `list` or `ist_multiple`.
+        items:
+          type: string
+          example: Moderate pain
+  FormRead:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        description: Report form ID of the task.
+        example: 1604
+      name:
+        type: string
+        description: |
+          Name of the report form. Limited to 256 chars.
+        example: New Client Assessment
+  Form:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        description: Report form ID of the task.
+        example: 1604
+      name:
+        type: string
+        description: |
+          Name of the report form. Limited to 256 chars.
+        example: New Client Assessment
+      dispatch_fields:
+        type: array
+        description: The dispatch fields associated to the report form.
+        items:
+          $ref: '#/definitions/FormField'
+      branch:
+        $ref: '#/definitions/Branch'
+  FormCreate:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        description: Report form ID of the task.
+        example: 1604
+  FormList:
+    required:
+    - count
+    - page
+    - total_pages
+    - items
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example:
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Form'
+  ReportFieldCreate:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: The form field identifier.
+        example: field_1234
+      value:
+        type: string
+        description: The form field value.
+        example: Client input data.
+  ReportField:
+    type: object
+    required:
+      - id
+      - field_id
+      - name
+      - type
+      - label
+    properties:
+      id:
+        type: integer
+        description: The report field identifier.
+        example: 321
+      field_id:
+        type: integer
+        description: The form field identifier.
+        example: 1234
+      name:
+        type: string
+        description: The form field identifier name.
+        example: field_1234
+      type:
+        type: string
+        description: The form field type.
+        example: text
+      label:
+        type: string
+        description: The form field label describing the field.
+        example: Record the client condition
+      value:
+        type: string
+        description: The form field value entered by the user.
+        example: Client condition has improved
+  ReportRead:
+    type: object
+    required:
+      - id
+      - form_id
+      - fields
+    properties:
+      id:
+        type: integer
+        description: The Report ID.
+        example: 1234
+      form_id:
+        type: integer
+        description: The ID of the Report Form field.
+        example: 4567
+      fields:
+        type: array
+        description: The Report field values.
+        items:
+          $ref: '#/definitions/ReportField'
+  ReportCreate:
+    type: object
+    required:
+      - fields
+    properties:
+      fields:
+        type: array
+        description: The Report fied values.
+        items:
+          $ref: '#/definitions/ReportFieldCreate'
+  TaskStatus:
+    type: string
+    description: Task status.
+    enum:
+      - open
+      - on_hold
+      - pending
+      - closed
+      - rejected
+  TaskPriority:
+    type: string
+    description: Task priority. Not a required field; default value is `low`.
+    enum:
+      - low
+      - normal
+      - important
+      - urgent
+  TaskList:
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of items in the response
+        example: 1
+      page:
+        type: integer
+        description: Current page number
+        example: 1
+      total_pages:
+        type: integer
+        description: Total number of pages available
+        example: 1
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Task'
+  Task:
+    type: object
+    required:
+      - branch_id
+      - description
+      - created_at
+      - create_user_id
+      - update_user_id
+      - updated_by
+      - priority
+      - status
+    properties:
+      id:
+        type: integer
+        description: ID of the task.
+        example: 1718
+      form:
+        $ref: '#/definitions/FormRead'
+      report:
+        $ref: '#/definitions/ReportRead'
+      description:
+        type: string
+        description: Task description.
+        example: Call client for assessment.
+      created_at:
+        type: string
+        format: 'date-time'
+        description: Date task was created (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      create_user_id:
+        type: integer
+        description: AlayaCare ID of the employee who created the task.
+        example: 100
+      create_user_name:
+        type: string
+        description: Name of the employee that created the task.
+        example: "Amanda Atkins"
+      updated_at:
+        type: string
+        format: 'date-time'
+        description: Date task was updated (ISO 8601)
+        example: '2017-07-08T13:30:00+00:00'
+      update_user_id:
+        type: integer
+        description: AlayaCare ID of the employee who updated the task.
+        example: 100
+      update_user_name:
+        type: string
+        description: Name of the employee that updated the task.
+        example: "Amanda Atkins"
+      due_date:
+        type: string
+        format: 'date-time'
+        description: Date and/or time when task is due. (ISO 8601)
+        example: '2017-07-08T14:00:00+00:00'
+      priority:
+        $ref: '#/definitions/TaskPriority'
+      status:
+        $ref: '#/definitions/TaskStatus'
+      employee_id:
+        type: integer
+        description: ID of the employee assigned to the task.
+        example: 104
+      employee_name:
+        type: string
+        description: Name of the employee assigned to the task.
+        example: "Amanda Atkins"
+      external_employee_id:
+        type: string
+        description: External ID of the employee assigned to the task.
+        example: sor_id_1
+      client_id:
+        type: integer
+        description: AlayaCare ID of the client assigned to the task.
+        example: 5432
+      client_name:
+        type: string
+        description: Name of the client assigned to the task.
+        example: "Steve Rogers"
+      external_client_id:
+        type: string
+        description: External client ID.
+        example: sor_id_1
+      details:
+        type: string
+        description: Details of the task.
+        example: Client prefers mobile phone after 4pm.
+      branch_id:
+        type: integer
+        description: ID of the task branch.
+        example: 1000
+  TaskCreate:
+    type: object
+    required:
+      - description
+    properties:
+      form:
+        $ref: '#/definitions/FormCreate'
+      report:
+        $ref: '#/definitions/ReportCreate'
+      description:
+        type: string
+        description: |
+          Task description. Limited to 256 chars.
+        example: Call client for assessment.
+      due_date:
+        type: string
+        format: 'date-time'
+        description: Date and/or time when task is due. (ISO 8601).
+        example: '2017-07-08T14:00:00+00:00'
+      priority:
+        $ref: '#/definitions/TaskPriority'
+      employee_id:
+        type: integer
+        description: ID of the employee assigned to the task.
+        example: 104
+      external_employee_id:
+        type: string
+        description: External ID of the employee assigned to the task.
+        example: sor_id_1
+      client_id:
+        type: integer
+        description: AlayaCare ID of the client assigned to the task.
+        example: 5432
+      external_client_id:
+        type: string
+        description: External client ID.
+        example: sor_id_1
+      details:
+        type: string
+        description: Details of the task.
+        example: Client prefers mobile phone after 4pm.
+  TaskUpdate:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Task description.
+        example: Call client for assessment.
+      due_date:
+        type: string
+        format: 'date-time'
+        description: Date and/or time when task is due. (ISO 8601).
+        example: '2017-07-08T14:00:00+00:00'
+      priority:
+        $ref: '#/definitions/TaskPriority'
+      employee_id:
+        type: integer
+        description: ID of the employee assigned to the task.
+        example: 104
+      external_employee_id:
+        type: string
+        description: External ID of the employee assigned to the task.
+        example: sor_id_1
+      client_id:
+        type: integer
+        description: AlayaCare ID of the client assigned to the task.
+        example: 5432
+      external_client_id:
+        type: string
+        description: External client ID.
+        example: sor_id_1
+      details:
+        type: string
+        description: Details of the task.
+        example: Client prefers mobile phone after 4pm.
