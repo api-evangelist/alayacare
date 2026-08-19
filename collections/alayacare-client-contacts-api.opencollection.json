@@ -1,0 +1,148 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Client Contacts API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Client Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create client contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "- Contact created with status `enabled` if not specified\n- Only `client_id` or `external_client_id` can be specified\n- If `profile_id` is specified, all data in `demographics` will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "Get client contact details using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client contact"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by client ID, one or more using **OR**. Default format is comma-separated (`?client_id=1,2`). Repeated params (`?client_id=1&client_id=2`) are also accepted."
+              },
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external client ID, one or more using **OR**. Default format is comma-separated (`?external_client_id=a,b`). Repeated params (`?external_client_id=a&external_client_id=b`) are also accepted."
+              }
+            ]
+          },
+          "docs": "If the contact is shared by **more** than one client, the\nproperties which are tied to the relation between a given client\nand its contact will be left empty on the `ClientContact`\nobject of the response schema. These properties include:\n- `contact_type`\n- `relationship`\n- `status`\n- `eb_medicaid_employee_relationship`\n- `eb_medicaid_provider_type`\n- `eb_medicaid_npi`\nThe relationship properties will be specified in the `clients` array\nof the response schema.\n"
+        },
+        {
+          "info": {
+            "name": "Update client contact details using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client contact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given client and their contact. These properties include:\n- `contact_type`\n- `relationship`\n\nFor backward compatibility, the client ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nnot shared, therefore ensuring the client ID is unambiguous.\n"
+        },
+        {
+          "info": {
+            "name": "Get client contact details using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/by_id/:external_contact_id",
+            "params": [
+              {
+                "name": "external_contact_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client contact"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by client ID, one or more using **OR**. Default format is comma-separated (`?client_id=1,2`). Repeated params (`?client_id=1&client_id=2`) are also accepted."
+              },
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external client ID, one or more using **OR**. Default format is comma-separated (`?external_client_id=a,b`). Repeated params (`?external_client_id=a&external_client_id=b`) are also accepted."
+              }
+            ]
+          },
+          "docs": "If the contact is shared by **more** than one client, the\nproperties which are tied to the relation between a given client\nand its contact will be left empty on the `ClientContact`\nobject of the response schema. These properties include:\n- `contact_type`\n- `relationship`\n- `status`\n- `eb_medicaid_employee_relationship`\n- `eb_medicaid_provider_type`\n- `eb_medicaid_npi\nThe relationship properties will be specified in the `clients` array\nof the response schema.\n"
+        },
+        {
+          "info": {
+            "name": "Update client contact details using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/by_id/:external_contact_id",
+            "params": [
+              {
+                "name": "external_contact_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client contact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given client and their contact. These properties include:\n- `contact_type`\n- `relationship`\n\nFor backward compatibility, the client ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nnot shared, therefore ensuring the client ID is unambiguous.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

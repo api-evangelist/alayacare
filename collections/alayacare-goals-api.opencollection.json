@@ -1,0 +1,169 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Goals API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Goals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of available goal types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/goal_types"
+          },
+          "docs": "Get a list of available goal types"
+        },
+        {
+          "info": {
+            "name": "Get the list of goals within a care plan using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/goals",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the Alayacare care plan ID"
+              }
+            ]
+          },
+          "docs": "- Goals must be enabled in the UI at the tenant System Setting level.\n"
+        },
+        {
+          "info": {
+            "name": "Create a goal in a care plan using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/goals",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the Alayacare care plan ID"
+              }
+            ]
+          },
+          "docs": "Create goal attached to a careplan\n- Goals must be enabled in the UI at the tenant System Setting level\n- `rank` will automatically be set to next available rank\n- Only services assigned to the client can be linked to the goal\n- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.\n- Will be applied to all services defined on the client if none is selected\n- All departments will be applied if `department_id` is set to `null`\n"
+        },
+        {
+          "info": {
+            "name": "Get a specific goal by goal ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/goals/:goal_id",
+            "params": [
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of goal"
+              }
+            ]
+          },
+          "docs": "Get a specific goal by goal ID"
+        },
+        {
+          "info": {
+            "name": "Update a specific goal using the goal ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/goals/:goal_id",
+            "params": [
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of goal"
+              }
+            ]
+          },
+          "docs": "Update a goal attached to a careplan\n- Only services assigned to the client can be linked to the goal.\n- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a specific goal using the goal ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/goals/:goal_id",
+            "params": [
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of goal"
+              }
+            ]
+          },
+          "docs": "- Only goals in `draft` status can be deleted\n"
+        },
+        {
+          "info": {
+            "name": "Change the status of a specific goal to archived",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/goals/:goal_id/status/archived",
+            "params": [
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of goal with changed status"
+              }
+            ]
+          },
+          "docs": "- A goal can only be archived if the care plan is in active status.\n"
+        },
+        {
+          "info": {
+            "name": "Change the status of a specific goal to completed",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/goals/:goal_id/status/completed",
+            "params": [
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of goal with changed status"
+              }
+            ]
+          },
+          "docs": "- A goal can only be completed if the care plan is in active status.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

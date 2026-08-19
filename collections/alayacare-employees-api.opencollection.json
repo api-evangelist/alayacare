@@ -1,0 +1,261 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Employees API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Employees",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of employees.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by employee status, one or more using **OR**"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on profile attributes"
+              },
+              {
+                "name": "group",
+                "value": "",
+                "type": "query",
+                "description": "Filter by group ID, one or more using **OR**"
+              },
+              {
+                "name": "department",
+                "value": "",
+                "type": "query",
+                "description": "Filter by department ID. For available departments\nsee resource `/departments`\n"
+              },
+              {
+                "name": "designation",
+                "value": "",
+                "type": "query",
+                "description": "Filter by designation. For available designations\nsee resource `/designations`\n"
+              }
+            ]
+          },
+          "docs": "Get a list of employees.\n"
+        },
+        {
+          "info": {
+            "name": "Create an employee.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees"
+          },
+          "docs": "- `branch_id` is optional, if omitted employee will be created in the default branch.\n- `status` is optional, if omitted employee will be created with an `active` status.\n- `branch_id` and `status` can only be set at creation.\n- Only one of `profile_id` or a `demographics` object can be specified.\n- Adding a `comment` when creating an employee with a `status` set to `terminated` is not supported by this endpoint. Any `comment` sent will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "Get employee details using its AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              }
+            ]
+          },
+          "docs": "Get employee details using its AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Modify employee details using its AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              }
+            ]
+          },
+          "docs": "* Changing the `branch_id` of an employee is not supported by this API. Any `branch_id` sent will be ignored.\n* Changing the `status` of an employee is not supported by this endpoint. Any `status` sent will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "Get employee using an external ID provided on creation\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee to retrieve"
+              }
+            ]
+          },
+          "docs": "Get employee using an external ID provided on creation\n"
+        },
+        {
+          "info": {
+            "name": "Modify employee details using an external ID provided on creation\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee to retrieve"
+              }
+            ]
+          },
+          "docs": "* Changing the `branch_id` of an employee is not supported by this API. Any `branch_id` sent will be ignored.\n* Changing the `status` of an employee is not supported by this endpoint. Any `status` sent will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "Update employee status using its AlayaCare ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/status",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              }
+            ]
+          },
+          "docs": "* A `comment` can only be set when updating an employee status to `terminated`.\n"
+        },
+        {
+          "info": {
+            "name": "Update employee status using an external ID provided on creation\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/status",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee"
+              }
+            ]
+          },
+          "docs": "* A `comment` can only be set when updating an employee status to `terminated`.\n"
+        },
+        {
+          "info": {
+            "name": "Get employee profile picture pre-authorized URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/picture",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              },
+              {
+                "name": "ttl",
+                "value": "",
+                "type": "query",
+                "description": "Pre-authorized URL time to live in seconds. `(default: 86400)`"
+              }
+            ]
+          },
+          "docs": "Get employee profile picture pre-authorized URL."
+        },
+        {
+          "info": {
+            "name": "Get employee profile picture pre-authorized URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/picture",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee"
+              },
+              {
+                "name": "ttl",
+                "value": "",
+                "type": "query",
+                "description": "Pre-authorized URL time to live in seconds. `(default: 86400)`"
+              }
+            ]
+          },
+          "docs": "Get employee profile picture pre-authorized URL."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

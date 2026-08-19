@@ -1,0 +1,221 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Employee Unavailabilities API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Employee Unavailabilities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of an employee unavailabilities using its AlayaCare ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee/:employee_id/unavailabilities",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "start_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability start date greater or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-03`\n"
+              },
+              {
+                "name": "start_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability start date less than or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-18`\n"
+              },
+              {
+                "name": "end_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability end date greater or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-03`\n"
+              },
+              {
+                "name": "end_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability end date less than or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-18`\n"
+              },
+              {
+                "name": "time_off_type_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare time off type ID."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on unavailability `description` and `rrule`."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Order `items` in **ascending** or **descending** order. By default, `items` are ordered by `id` of the unavailability in ascending order.\nFor example:\n-`order=asc` will order `items` in ascending order\n-`order=desc` will order `items` in descending order\n"
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Order `items` by unavailability **start date** or **end date**. By default, `items` are ordered by `id` of the unavailability in ascending order.\nFor example:\n-`order_by=start_at` will order `items` by start date in ascending order\n-`order_by=end_at&order=desc` will order `items` by end date in descending order\n"
+              }
+            ]
+          },
+          "docs": "Get a list of an employee unavailabilities using its AlayaCare ID\n"
+        },
+        {
+          "info": {
+            "name": "Create an employee unavailability using its AlayaCare ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee/:employee_id/unavailabilities",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              }
+            ]
+          },
+          "docs": "* `duration_paid_per_day` can only be set when the Time Off Type `pay_schedule_time` is set to `No` and the unavailability `all_day` is set to `true`\n* `duration_paid_per_day` is optional, if omitted the unavailability will be created with the Time Off Type `all_day_duration`\n* `time_off_type_id` is optional, if omitted the unavailability will be created with a Time Off Type set as `Unavailable`\n* `duration` can only be set when when `all_day` is set to `false`\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of an employee unavailabilities using its External Employee ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee/by_id/:external_employee_id/unavailabilities",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "start_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability start date greater or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-03`\n"
+              },
+              {
+                "name": "start_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability start date less than or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-18`\n"
+              },
+              {
+                "name": "end_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability end date greater or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-03`\n"
+              },
+              {
+                "name": "end_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by unavailability end date less than or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2020-02-18`\n"
+              },
+              {
+                "name": "time_off_type_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare time off type ID."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on unavailability `description` and `rrule`."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Order `items` in **ascending** or **descending** order. By default, `items` are ordered by `id` of the unavailability in ascending order.\nFor example:\n-`order=asc` will order `items` in ascending order\n-`order=desc` will order `items` in descending order\n"
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Order `items` by unavailability **start date** or **end date**. By default, `items` are ordered by `id` of the unavailability in ascending order.\nFor example:\n-`order_by=start_at` will order `items` by start date in ascending order\n-`order_by=end_at&order=desc` will order `items` by end date in descending order\n"
+              }
+            ]
+          },
+          "docs": "Get a list of an employee unavailabilities using its External Employee ID\n"
+        },
+        {
+          "info": {
+            "name": "Create an employee unavailability using its External Employee ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee/by_id/:external_employee_id/unavailabilities",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee"
+              }
+            ]
+          },
+          "docs": "* `duration_paid_per_day` can only be set when the Time Off Type `pay_schedule_time` is set to `No` and the unavailability `all_day` is set to `true`\n* `duration_paid_per_day` is optional, if omitted the unavailability will be created with the Time Off Type `all_day_duration`\n* `time_off_type_id` is optional, if omitted the unavailability will be created with a Time Off Type set as `Unavailable`\n* `duration` can only be set when when `all_day` is set to `false`\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

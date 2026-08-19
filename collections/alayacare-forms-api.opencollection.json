@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Forms API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Forms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of report forms to attach to an intervention.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/forms",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Search for a form using the form name. This will return all forms containing the search string."
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID."
+              }
+            ]
+          },
+          "docs": "- Only forms that the current user can view will be returned.\n- Disabled forms will be excluded.\n- Results are ordered alphabetically by the form description.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

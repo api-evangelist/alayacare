@@ -1,0 +1,239 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts offer outbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "offer outbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/outbox/offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/offers",
+            "params": [
+              {
+                "name": "care_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offer_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "client_outbox_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "visit_outbox_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "is_accepted",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "expires_after",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "expires_before",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "shift_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "demand_label",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Offers created by the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/offers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate an Offer by the Demand organization.  \nMultiple open or assigned offers with offer_type: `visit` are not permitted for the same visit. This is to prevent conflicting acceptances and assignations.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/offers/{offer_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/offers/:offer_id",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              }
+            ]
+          },
+          "docs": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the details of an Offer created by the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/offers/{offer_id}/matches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/offers/:offer_id/matches",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              },
+              {
+                "name": "response",
+                "value": "",
+                "type": "query",
+                "description": "Response of an Offer Match to filter on. <br>\nMultiple values are supported (in an `OR` fashion). <br>\n"
+              },
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "query",
+                "description": "Sequence ID of the Offer Match to filter on.\nMultiple values are supported (in an `OR` fashion).\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the Offer Matches of an Offer created by the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/offers/{offer_id}/close",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/offers/:offer_id/close",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\nRequired offer state: `sent`\n\n\n# Description\nClose an Offer created by the Demand organization that has not yet been assigned.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/offers/{offer_id}/assign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/offers/:offer_id/assign",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`.\n\nRequired offer state: `accepted`.\n\n# Description\nAssign an Offer created by the Demand Organization to a\nSupply Organization that accepted the Offer.  \nThe offer assignment setting of the Demand organization must be set to `manual`, otherwise this action is forbidden.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

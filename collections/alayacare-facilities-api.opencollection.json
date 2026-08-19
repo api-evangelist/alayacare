@@ -1,0 +1,234 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Facilities API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Facilities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of facilities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facilities",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by facility name"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID `(default: current user branch)`\n"
+              }
+            ]
+          },
+          "docs": "Get a list of facilities"
+        },
+        {
+          "info": {
+            "name": "Get a list of facility visits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facility_visits",
+            "params": [
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter on a list of tags and return values for at least one matching tag. Filter by multiple tags using **OR**.\n"
+              },
+              {
+                "name": "start_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit start time greater or equal than specified value.\nIf not specified will default to now.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit start time less than or equal than specified value.\nIf not specified will default to 7 days from now.\nEx: `2018-02-18T08:00:00-05:00`\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Status of the visit based on status hierarchy from AlayaCare web application, one or more using **OR**."
+              },
+              {
+                "name": "facility_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external facility ID\nExternal facility ID is the facility ID in the system of record.\nEx. CRM facility identifier\n"
+              },
+              {
+                "name": "alayacare_facility_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare facility ID"
+              },
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external employee ID\nExternal employee ID is the employee ID in the system of record.\nEx. HR employee number\n"
+              },
+              {
+                "name": "alayacare_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare employee ID"
+              },
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external service ID"
+              },
+              {
+                "name": "alayacare_service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare service ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              }
+            ]
+          },
+          "docs": "Returns visits where the client is a facility. For patient/client visits, use the `/visits` endpoint instead.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new facility visit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facility_visits"
+          },
+          "docs": "- `facility_id` or `alayacare_facility_id` is required, not specifying one is an invalid request.\n- `facility_id` and `alayacare_facility_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.\n- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.\n**Remarks**\nA visit can be created without specifying the service if the facility h"
+        },
+        {
+          "info": {
+            "name": "Get facility visit details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facility_visits/:alayacare_visit_id",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "Returns details of a visit where the client is a facility. For patient/client visits, use `GET /visits/{alayacare_visit_id}` instead.\n"
+        },
+        {
+          "info": {
+            "name": "Update facility visit details",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facility_visits/:alayacare_visit_id",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "Updates a visit where the client is a facility. For patient/client visits, use `PUT /visits/{alayacare_visit_id}` instead.\n\nA cancelled visit (`cancelled` = `true`) must include a cancel code ID.\n"
+        },
+        {
+          "info": {
+            "name": "Get facility visit details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facility_visits/by_id/:visit_id",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "External visit ID"
+              }
+            ]
+          },
+          "docs": "Get facility visit details"
+        },
+        {
+          "info": {
+            "name": "Update facility visit details",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/facility_visits/by_id/:visit_id",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "External visit ID"
+              }
+            ]
+          },
+          "docs": "A cancelled visit (`cancelled` = `true`) must include a cancel code ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

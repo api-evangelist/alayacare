@@ -1,0 +1,134 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts offer inbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "offer inbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/inbox/offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/offers",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter on an Offer Match status. Filtering on multiple statuses is not supported.\n"
+              },
+              {
+                "name": "shift_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Offers matched to the Supply Organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/inbox/offers/{offer_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/offers/:offer_id",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the anonamyzed details of Offers matched to the Supply\norganization. This must contain no PHI.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/offers/{offer_id}/accept",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/offers/:offer_id/accept",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\nRequired offer state: `sent`\n\n# Description\nAccept an Offer matched to the Supply organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/offers/{offer_id}/decline",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/offers/:offer_id/decline",
+            "params": [
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an offer"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\nRequired offer state: `sent`\n\n# Description\nDecline an Offer matched to the Supply organization.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

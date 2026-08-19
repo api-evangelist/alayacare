@@ -1,0 +1,87 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Latest Vitals API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Latest Vitals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of the latest vital recordings by the client's AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/vitals/client/:client_id/latest",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Client ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100."
+              }
+            ]
+          },
+          "docs": "Get a list of the latest vital recordings by the client's AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Get a list of the latest vital recordings by the client's external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/vitals/client/by_id/:external_client_id/latest",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External client ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100."
+              }
+            ]
+          },
+          "docs": "Get a list of the latest vital recordings by the client's external ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

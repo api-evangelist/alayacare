@@ -1,0 +1,99 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Care Plan Interventions API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Care Plan Interventions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of a client's care plan interventions using AlayaCare client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/interventions/client/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare client ID"
+              },
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by alayacare service ID"
+              },
+              {
+                "name": "external_service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external service ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status of the intervention"
+              }
+            ]
+          },
+          "docs": "- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of a client's interventions using external client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/interventions/client/by_id/:external_client_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External client ID"
+              },
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by alayacare service ID"
+              },
+              {
+                "name": "external_service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external service ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status of the intervention"
+              }
+            ]
+          },
+          "docs": "- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

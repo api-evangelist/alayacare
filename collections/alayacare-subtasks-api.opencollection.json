@@ -1,0 +1,222 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Subtasks API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subtasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve sub tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query"
+              },
+              {
+                "name": "count",
+                "value": "50",
+                "type": "query",
+                "description": "Number of items per page to return"
+              }
+            ]
+          },
+          "docs": "Retrieve sub tasks for a task."
+        },
+        {
+          "info": {
+            "name": "Add a sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a sub task to a task."
+        },
+        {
+          "info": {
+            "name": "Retrieve a single sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks/:subtask_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "subtask_id",
+                "value": "",
+                "type": "path",
+                "description": "The sub task identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve a single sub task for a task."
+        },
+        {
+          "info": {
+            "name": "Update a sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks/:subtask_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "subtask_id",
+                "value": "",
+                "type": "path",
+                "description": "The sub task identifier"
+              },
+              {
+                "name": "update_contexts",
+                "value": "",
+                "type": "query",
+                "description": "Whether to update contexts from the payload"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a sub task for a task."
+        },
+        {
+          "info": {
+            "name": "Patch a sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks/:subtask_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "subtask_id",
+                "value": "",
+                "type": "path",
+                "description": "The sub task identifier"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Patch a sub task, only replacing those fields that are specified and retaining\nthe existing value for fields that are not specified."
+        },
+        {
+          "info": {
+            "name": "Delete a sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks/:subtask_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "subtask_id",
+                "value": "",
+                "type": "path",
+                "description": "The sub task identifier"
+              }
+            ]
+          },
+          "docs": "Delete a sub task for a task."
+        },
+        {
+          "info": {
+            "name": "Change the status of a sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks/:subtask_id/status/:status",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "subtask_id",
+                "value": "",
+                "type": "path",
+                "description": "The sub task identifier"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Change the status of a sub task"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

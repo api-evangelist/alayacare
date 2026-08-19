@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts offer outbox bundle API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "offer outbox bundle",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "POST /v1/outbox/bundle/offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/bundle/offers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate a Bundle Offer by the Demand organization.\nThis will generate multiple offers with type: `service` linked with a common\n`bundle_id`.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/shift/offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/shift/offers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate a Shift Offer by the Demand organization. \nThis will generate multiple offers with type: `visit` linked with a common `shift_id`. \nMultiple open or assigned offers with offer_type: `visit` are not permitted for the same visit. This is to prevent conflicting acceptances and assignations.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

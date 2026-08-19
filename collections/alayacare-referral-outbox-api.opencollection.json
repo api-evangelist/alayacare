@@ -1,0 +1,195 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts referral outbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "referral outbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/outbox/referrals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/referrals",
+            "params": [
+              {
+                "name": "supply_persona_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "shift_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "care_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "referral_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "client_outbox_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "demand_label",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "has_alayacare_authorization",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "revisions",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "revision_group_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Referrals created by the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/referrals",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/referrals",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate a Referral by the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/referrals/{referral_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/referrals/:referral_id",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the details of a Referral created by the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/referrals/{referral_id}/cancel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/referrals/:referral_id/cancel",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCancel a Referral created by the Demand Organization.  \nA Referral can only be Cancelled if the status is `assigned` or `processed`.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/referrals/{referral_id}/update",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/referrals/:referral_id/update",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nUpdate a Referral created by the Demand Organization.\n\nA Referral can only be updated if\n* It's of type: `service`, and\n* It's the latest revision, and\n* Its status is `assigned` or `processed`.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

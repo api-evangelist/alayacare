@@ -1,0 +1,444 @@
+{
+  "item": [
+    {
+      "id": "89e75423-8eed-4b69-92ac-7c82a298fdd8",
+      "name": "take rates",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "be54462a-e7f6-4d2f-8875-dcb3ed2cd25c",
+          "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a collection of take rates specific to demand organizations.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a collection of take rates specific to demand organizations.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a collection of take rates specific to demand organizations.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sys_admin",
+                "take_rates",
+                "demand_take_rates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "demand_persona_id",
+                  "value": "<uuid>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2807dca5-85c8-4ed3-8980-fe8ed31585d7",
+              "name": "Successfully returned demand take rates collection",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sys_admin",
+                    "take_rates",
+                    "demand_take_rates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "demand_persona_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"demand_persona_id\": \"60420bac-39ac-2d8a-d7c1-093cebb96575\",\n      \"rate\": 0.5365221832416307\n    },\n    {\n      \"demand_persona_id\": \"b923592e-9d3b-1cd9-0522-7facf4869f50\",\n      \"rate\": 0.38472435910348113\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0cf4905b-a18c-461c-85e4-b307f92742c5",
+          "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the take rate specific to a demand organization.\n\nNote: a null take rate means the system will clear the demand-specific take rate\nand apply the next available take rate (e.g., the regional take rate).\n\nA take rate of 0 is a take rate of 0%.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the take rate specific to a demand organization.\n\nNote: a null take rate means the system will clear the demand-specific take rate\nand apply the next available take rate (e.g., the regional take rate).\n\nA take rate of 0 is a take rate of 0%.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the take rate specific to a demand organization.\n\nNote: a null take rate means the system will clear the demand-specific take rate\nand apply the next available take rate (e.g., the regional take rate).\n\nA take rate of 0 is a take rate of 0%.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sys_admin",
+                "take_rates",
+                "demand_take_rates",
+                ":demand_persona_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "demand_persona_id",
+                  "description": "(Required) ID of an organization."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rate\": \"<decimal>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "00506a36-fb79-47f1-9577-c40c36b0ee2e",
+              "name": "Successfully set the demand-specific take rate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sys_admin",
+                    "take_rates",
+                    "demand_take_rates",
+                    ":demand_persona_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "demand_persona_id",
+                      "description": "(Required) ID of an organization."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rate\": \"<decimal>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2a4ddeb6-490a-4a5c-a602-65dfda781fb0",
+          "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a regional take rate.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a regional take rate.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a regional take rate.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sys_admin",
+                "take_rates",
+                "regional_take_rate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "12ccfb42-3b3c-45df-b4e3-6934d1d4563c",
+              "name": "Successfully returned regional take rate",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sys_admin",
+                    "take_rates",
+                    "regional_take_rate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"rate\": \"<decimal>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f6275916-97f8-407b-b525-149f834d7ab8",
+          "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the regional take rate.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the regional take rate.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the regional take rate.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sys_admin",
+                "take_rates",
+                "regional_take_rate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rate\": \"<decimal>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "39bcaff7-110e-4910-8bc8-6dd6573d9f5a",
+              "name": "Successfully returned regional take rate",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sys_admin",
+                    "take_rates",
+                    "regional_take_rate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rate\": \"<decimal>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"rate\": \"<decimal>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9813a82b-6e23-4c92-8bc2-1e3c6ee0449b",
+    "name": "AlayaCare Accounting Accounts take rates API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

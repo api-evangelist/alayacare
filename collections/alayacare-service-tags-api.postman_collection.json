@@ -1,0 +1,200 @@
+{
+  "item": [
+    {
+      "id": "9aa45ee3-c40d-4cd9-a0db-bcab06cbc60e",
+      "name": "Service Tags",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a1aa7013-96d4-4b8a-81f7-7bfa14739ae2",
+          "name": "Get list of service tags",
+          "request": {
+            "name": "Get list of service tags",
+            "description": {
+              "content": "Get a list of service tags\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "services",
+                "tags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Filter by page number."
+                },
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "100",
+                  "description": "Number of items per page."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f79936f0-2a94-4cc5-92fd-b8acbb0b55d8",
+              "name": "The list of service tags",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "services",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b8eb77b-e552-4d90-a59f-48d80ffe8d63",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "services",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "61c8ded5-5d4f-4a84-9507-8ef63d5c4e37",
+    "name": "AlayaCare Accounting Accounts Service Tags API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

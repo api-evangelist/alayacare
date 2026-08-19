@@ -1,0 +1,331 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts visit inbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "visit inbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/inbox/visits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin` who was assigned the associated referral or service.\n\n# Description\nGet a collection of Visits for a given referral or service.\n\nOne of `referral_id` or `service_id` must be provided.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/inbox/visits/{visit_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin` who created or was assigned the visit.\n\n# Description\nGet the details of a Visit for a given Visit ID.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/inbox/visits/by_inbox_id/{visit_inbox_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/by_inbox_id/:visit_inbox_id",
+            "params": [
+              {
+                "name": "visit_inbox_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit in the supply system."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin` who created or was assigned the visit.\n\n# Description\nGet the details of a Visit for a given inbox Visit ID.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/schedule",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nSchedule a visit by the Supply organization for an associated service or\nreferral.\n\nOne of `referral_id` or `service_id` must be provided.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/assign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/assign",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nAssign an employee to a visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/unassign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/unassign",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nUnassign an employee from a visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/delete",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/delete",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nDelete a visit of a service referral. The supply organization deleting the visit\nmust be identical to the one that scheduled the original visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/hold",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/hold",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nHold a visit of a service referral. The supply organization holding the visit\nmust be identical to the one that scheduled the original visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/cancel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/cancel",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nCancel a visit of a service referral. The supply organization cancelling the visit\nmust be identical to the one that scheduled the original visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/reactivate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/reactivate",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nReactivates a visit of a service referral. The supply organization ractivating the visit\nmust be identical to the one that scheduled the original visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/adjust_timekeeping",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/adjust_timekeeping",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nAdjust the timekeeping metadata of a visit. The supply organization holding the visit\nmust be identical to the one that scheduled the original visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/reschedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/reschedule",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nReschedule a visit of a service referral. The supply organization rescheduling\nthe visit must be identical to the one that scheduled the original visit.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/tasks",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nCreate visit tasks for a visit scheduled by supply from a service referral.\nEach inbox task id must correspond to a referral task's inbox_id.\nInbox task ids that don't have corresponding referral tasks will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/visits/{visit_id}/tasks/complete",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/visits/:visit_id/tasks/complete",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a visit."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin`.\n\n# Description\nComplete one (or more) visit task for the specified visit.<br><br>\nSubsequent posts for the same task id updates the task.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts form template inbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "form template inbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/inbox/form_templates/by_demand_persona_id/{demand_persona_id}/by_schema_id/{schema_id}/latest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/form_templates/by_demand_persona_id/:demand_persona_id/by_schema_id/:schema_id/latest",
+            "params": [
+              {
+                "name": "demand_persona_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a demand organization."
+              },
+              {
+                "name": "schema_id",
+                "value": "",
+                "type": "path",
+                "description": "Schema id of a form."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin` in the trusted network\nof the demand organization of the form.\n\n# Description\nReturns the latest form version available for a given schema_id within a demand organization.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

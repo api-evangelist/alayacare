@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts take rates API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "take rates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/sys_admin/take_rates/demand_take_rates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/sys_admin/take_rates/demand_take_rates",
+            "params": [
+              {
+                "name": "demand_persona_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a collection of take rates specific to demand organizations.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/sys_admin/take_rates/demand_take_rates/{demand_persona_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/sys_admin/take_rates/demand_take_rates/:demand_persona_id",
+            "params": [
+              {
+                "name": "demand_persona_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of an organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the take rate specific to a demand organization.\n\nNote: a null take rate means the system will clear the demand-specific take rate\nand apply the next available take rate (e.g., the regional take rate).\n\nA take rate of 0 is a take rate of 0%.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/sys_admin/take_rates/regional_take_rate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/sys_admin/take_rates/regional_take_rate"
+          },
+          "docs": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a regional take rate.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/sys_admin/take_rates/regional_take_rate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/sys_admin/take_rates/regional_take_rate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nSet the regional take rate.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

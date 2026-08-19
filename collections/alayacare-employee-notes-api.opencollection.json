@@ -1,0 +1,149 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Employee Notes API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Employee Notes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of employee notes by the employee's AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee_notes/:employee_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "note_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter on the employee note type category"
+              },
+              {
+                "name": "created_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter employee notes by creation date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              }
+            ]
+          },
+          "docs": "Get a list of employee notes by the employee's AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Create an employee note by the employee's AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee_notes/:employee_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee"
+              }
+            ]
+          },
+          "docs": "* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/\n* Note `status` is optional, if omitted the employee note will be created with status set to `Active`.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of employee notes by the employee's external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee_notes/by_id/:external_employee_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "note_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter on the employee note type category"
+              },
+              {
+                "name": "created_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter employee notes by creation date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              }
+            ]
+          },
+          "docs": "Get a list of employee notes by the employee's external ID"
+        },
+        {
+          "info": {
+            "name": "Create an employee note by the employee's external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employee_notes/by_id/:external_employee_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee"
+              }
+            ]
+          },
+          "docs": "* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/\n* Note `status` is optional, if omitted the employee note will be created with status set to `Active`.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,162 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Visit interventions API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Visit interventions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of interventions for a visit using it's Alayacare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id/interventions",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the visit"
+              },
+              {
+                "name": "is_required",
+                "value": "",
+                "type": "query",
+                "description": "Filter for interventions that are required to finish a visit"
+              },
+              {
+                "name": "has_comment",
+                "value": "",
+                "type": "query",
+                "description": "Filter for interventions that have a comment or not_completed_reason_name"
+              },
+              {
+                "name": "is_completed",
+                "value": "",
+                "type": "query",
+                "description": "Filter for interventions that have been completed"
+              }
+            ]
+          },
+          "docs": "Get a list of interventions for a visit using it's Alayacare ID"
+        },
+        {
+          "info": {
+            "name": "Link Interventions to a visit",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id/interventions",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the visit"
+              }
+            ]
+          },
+          "docs": "- The full list of Interventions must be provided in the request body, it will override the previously available list.\n- Only active `interventions` on the patient active Careplan can be added\n- Only the admin user can update the visit interventions when the work session is not open.\n"
+        },
+        {
+          "info": {
+            "name": "Update interventions in a visit using it's Alayacare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id/interventions/ivr",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the visit"
+              },
+              {
+                "name": "completions_by",
+                "value": "",
+                "type": "query",
+                "description": "Employee internal id"
+              }
+            ]
+          },
+          "docs": "- The full list of Interventions must be provided in the request body, it will override the previously available list.\n- User credentials MUST have an admin role.\n- (Employee internal id) MUST be informed on the url path as a param, like this: '?completions_by={employee_internal_id}'.\n- Position should be always 0. It does not cover the interventions tries.\n- The Employee '?completions_by={employee_internal_id} must be clocked-in to the visit.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of interventions for a visit using it's Alayacare external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/by_id/:visit_id/interventions",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the visit"
+              },
+              {
+                "name": "is_required",
+                "value": "",
+                "type": "query",
+                "description": "Filter for interventions that are required to finish a visit"
+              },
+              {
+                "name": "has_comment",
+                "value": "",
+                "type": "query",
+                "description": "Filter for interventions that have a comment"
+              },
+              {
+                "name": "is_completed",
+                "value": "",
+                "type": "query",
+                "description": "Filter for interventions that have been completed"
+              }
+            ]
+          },
+          "docs": "Get a list of interventions for a visit using it's Alayacare external ID"
+        },
+        {
+          "info": {
+            "name": "Update interventions in a visit using it's Alayacare external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/by_id/:visit_id/interventions",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the visit"
+              }
+            ]
+          },
+          "docs": "- The full list of Interventions must be provided in the request body, it will override the previously available list.\n- Only active `interventions` on the patient active careplan can be added\n- Only the admin user can update the visit interventions when the work session is not open..\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

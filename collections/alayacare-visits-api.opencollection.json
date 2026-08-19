@@ -1,0 +1,436 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Visits API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Visits",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of visits and submissions given a client id.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/submissions/visits",
+            "params": [
+              {
+                "name": "start_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter by start date greater or equal than specified value"
+              },
+              {
+                "name": "end_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter by end date less or equal than specified value. If not specified, the default date will be defaulted to the end of today's date"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by client ID"
+              },
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external client ID"
+              },
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by employee ID"
+              },
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external employee ID"
+              },
+              {
+                "name": "work_session_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by work session ID"
+              },
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by service ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100"
+              }
+            ]
+          },
+          "docs": "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n* `client_id` and `external_client_id` are mutually exclusive\n* `employee_id` and `external_employee_id` are mutually exclusive\n* Must specify either `client_id` or `external_client_id`\n* If the end_date is not specified, it will be defaulted to the end of today's date\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of cancel codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/cancelcodes",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID `(default: current user branch)`\n"
+              }
+            ]
+          },
+          "docs": "Get a list of cancel codes"
+        },
+        {
+          "info": {
+            "name": "Get list of visits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits",
+            "params": [
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter on a list of tags and return values for at least one matching tag. Filter by multiple tag names using **OR**.\n"
+              },
+              {
+                "name": "start_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit start date time greater or equal than specified value.\nIf not specified will default to now.\nExpected format is ISO 8601 converted to UTC timezone.\n`start_at` can be used as this filter name\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "start_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit start date time less than or equal than specified value.\nIf not specified will default to 7 days from now.\nExpected format is ISO 8601 converted to UTC timezone.\n`end_at` can be used as this filter name\nEx: `2019-02-18T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit end date time greater or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2019-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit end date time less than or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2018-02-18T08:00:00-05:00`\n"
+              },
+              {
+                "name": "is_cancelled",
+                "value": "",
+                "type": "query",
+                "description": "If true, returns only visits with a valid cancel code, not including 'On Hold'.\nIf false, returns only visits with 'On Hold' codes or *no* cancel code.\n"
+              },
+              {
+                "name": "is_on_hold",
+                "value": "",
+                "type": "query",
+                "description": "If true, returns only visits with an 'On Hold' cancel code.\nIf false, returns only visits with *no* cancel code or with a cancel code other than 'On Hold'.\n"
+              },
+              {
+                "name": "is_vacant",
+                "value": "",
+                "type": "query",
+                "description": "If true, returns only visits with *no* employee assigned.\nIf false, returns only visits with an employee assigned.\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Status of the visit based on status hierarchy from AlayaCare web application, one or more using **OR**."
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID `(default: current user branch)`\n"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external client ID\nExternal client ID is the client ID in the system of record.\nEx. CRM client identifier\n"
+              },
+              {
+                "name": "alayacare_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare client ID"
+              },
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external employee ID\nExternal employee ID is the employee ID in the system of record.\nEx. HR employee number\n"
+              },
+              {
+                "name": "alayacare_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare employee ID"
+              },
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external service ID"
+              },
+              {
+                "name": "alayacare_service_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare service ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              }
+            ]
+          },
+          "docs": "**Note:** This endpoint returns only patient/client visits (where the client is a patient). To retrieve facility visits, use the `/facility_visits` endpoint instead.\n- `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.\n- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.\n- If the `start_dat"
+        },
+        {
+          "info": {
+            "name": "Create a new visit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits"
+          },
+          "docs": "- `client_id` or `alayacare_client_id` is required, not specifying one is an invalid request.\n- `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request..\n- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request..\n**Remarks**\nA visit can be created without specifying the service if the client has a sin"
+        },
+        {
+          "info": {
+            "name": "Get visit details using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "**Note:** This endpoint returns only patient/client visits (where the client is a patient).\nIf the visit belongs to a facility, this endpoint will return a `404`. Use `GET /facility_visits/{alayacare_visit_id}` instead.\n"
+        },
+        {
+          "info": {
+            "name": "Update visit details using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "**Note:** This endpoint only supports patient/client visits. To update a facility visit, use `PUT /facility_visits/{alayacare_visit_id}` instead.\n\nA cancelled visit (`cancelled`= `true`) must include a cancel code ID.\n"
+        },
+        {
+          "info": {
+            "name": "Delete visit using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "Delete visit using AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Get visit details using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/by_id/:visit_id",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "External visit ID"
+              }
+            ]
+          },
+          "docs": "Get visit details using external ID"
+        },
+        {
+          "info": {
+            "name": "Update visit details using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/by_id/:visit_id",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "External visit ID"
+              }
+            ]
+          },
+          "docs": "A cancelled visit (`cancelled`= `true`) must include a cancel code ID."
+        },
+        {
+          "info": {
+            "name": "Delete visit using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/by_id/:visit_id",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "External visit ID"
+              }
+            ]
+          },
+          "docs": "Delete visit using external ID"
+        },
+        {
+          "info": {
+            "name": "Lock list of visits using Alayacare visit ID or external visit ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/lock"
+          },
+          "docs": "**Remarks**\n- Only Approved visits can be locked using `alayacare_visit_id` or `visit_id`.\n- Visits cannot be **unlocked**.\n"
+        },
+        {
+          "info": {
+            "name": "Get the delivery date of a visit given the ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id/delivery_date",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "Get the delivery date of a visit given the ID"
+        },
+        {
+          "info": {
+            "name": "Get the next visit ID for a client",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:client_id/next_visit_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Client ID"
+              },
+              {
+                "name": "with_canceled",
+                "value": "",
+                "type": "query",
+                "description": "If false, get the next visit without a cancel code\n"
+              },
+              {
+                "name": "date_utc",
+                "value": "",
+                "type": "query",
+                "description": "Date to filter the next visit. If not specified, date is now."
+              }
+            ]
+          },
+          "docs": "Get the next visit ID for a client"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

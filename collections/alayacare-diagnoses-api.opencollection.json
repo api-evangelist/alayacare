@@ -1,0 +1,158 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Diagnoses API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Diagnoses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of diagnoses within a care plan using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/diagnoses",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the Alayacare care plan ID"
+              }
+            ]
+          },
+          "docs": "Get a list of diagnoses within a care plan using the care plan ID"
+        },
+        {
+          "info": {
+            "name": "Create a diagnosis in a care plan using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/diagnoses",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the Alayacare care plan ID"
+              }
+            ]
+          },
+          "docs": "Create dignosis attached to a careplan\n- `rank` will automatically be set to next available rank\n- Only services assigned to the client can be linked to the diagnosis.\n- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.\n- Will be applied to all services defined on the client if none is selected\n- All departments will be applied if `department_id` set to `null`\n"
+        },
+        {
+          "info": {
+            "name": "Get a specific diagnosis by diagnosis ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/diagnoses/:diagnosis_id",
+            "params": [
+              {
+                "name": "diagnosis_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the careplan diagnosis"
+              }
+            ]
+          },
+          "docs": "Get a specific diagnosis by diagnosis ID"
+        },
+        {
+          "info": {
+            "name": "Update a specific diagnosis using the diagnosis ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/diagnoses/:diagnosis_id",
+            "params": [
+              {
+                "name": "diagnosis_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the careplan diagnosis"
+              }
+            ]
+          },
+          "docs": "Update a diagnosis attached to a careplan\n- Only services assigned to the client can be linked to the diagnosis.\n- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a specific diagnosis using the diagnosis ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/diagnoses/:diagnosis_id",
+            "params": [
+              {
+                "name": "diagnosis_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the careplan diagnosis"
+              }
+            ]
+          },
+          "docs": "- A diagnosis can only be in `draft` status to be deleted\n"
+        },
+        {
+          "info": {
+            "name": "Update a specific diagnosis status to archived",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/diagnoses/:diagnosis_id/status/archived",
+            "params": [
+              {
+                "name": "diagnosis_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the careplan diagnosis"
+              }
+            ]
+          },
+          "docs": "- A diagnosis can only be archived if the care plan is in active status.\n"
+        },
+        {
+          "info": {
+            "name": "Update a specific diagnosis status to completed",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/diagnoses/:diagnosis_id/status/completed",
+            "params": [
+              {
+                "name": "diagnosis_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the careplan diagnosis"
+              }
+            ]
+          },
+          "docs": "- A diagnosis can only be completed if the care plan is in active status.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

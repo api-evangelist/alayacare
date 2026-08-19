@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Unavailabilities API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Unavailabilities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an employee unavailability details using its Alayacare Unavailability ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/unavailabilities/:unavailability_id",
+            "params": [
+              {
+                "name": "unavailability_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the unavailability"
+              }
+            ]
+          },
+          "docs": "Get an employee unavailability details using its Alayacare Unavailability ID\n"
+        },
+        {
+          "info": {
+            "name": "Update an employee unavailability details using its AlayaCare Unavailability ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/unavailabilities/:unavailability_id",
+            "params": [
+              {
+                "name": "unavailability_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the unavailability"
+              }
+            ]
+          },
+          "docs": "* `duration_paid_per_day` can only be updated when the Time Off Type `pay_schedule_time` is set to `No` and the unavailability `all_day` is set to `true`\n* `duration` can only be updated when when `all_day` is set to `false`\n"
+        },
+        {
+          "info": {
+            "name": "Remove an employee unavailability details using its AlayaCare Unavailability ID\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/unavailabilities/:unavailability_id",
+            "params": [
+              {
+                "name": "unavailability_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the unavailability"
+              }
+            ]
+          },
+          "docs": "* Any unavailability can be deleted using this endpoint, regardless if the unavailability was included or not in a **payroll period**\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

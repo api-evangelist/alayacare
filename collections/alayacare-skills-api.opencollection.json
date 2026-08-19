@@ -1,0 +1,117 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Skills API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Skills",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of skills",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/skills",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on skill category and name"
+              },
+              {
+                "name": "category_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter skills by category ID, one or more using **OR**"
+              }
+            ]
+          },
+          "docs": "Get a list of skills"
+        },
+        {
+          "info": {
+            "name": "Create a skill\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/skills"
+          },
+          "docs": "- `branch_id` is optional, if omitted the skill will be created in the default branch.\n- `branch_id` can only be set at creation.\n- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) are optional depending on business needs.\n"
+        },
+        {
+          "info": {
+            "name": "Get skill details using its AlayaCare Skill ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/skills/:skill_id",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the skill"
+              }
+            ]
+          },
+          "docs": "Get skill details using its AlayaCare Skill ID"
+        },
+        {
+          "info": {
+            "name": "Modify skill details using its AlayaCare Skill ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/skills/:skill_id",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the skill"
+              }
+            ]
+          },
+          "docs": "- Changing the `branch_id` of a skill is not supported by this API. Any `branch_id` sent will be ignored.\n- Skill fields sent in the payload will overwrite existing fields on the skill.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

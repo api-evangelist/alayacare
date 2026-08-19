@@ -1,0 +1,264 @@
+{
+  "item": [
+    {
+      "id": "a8455a20-3208-47b6-95ac-b25c8652816c",
+      "name": "Invoice Items",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1bb7450f-fb9f-4f04-b10e-070cdaadbc3e",
+          "name": "Fetch a specific invoice's invoice items",
+          "request": {
+            "name": "Fetch a specific invoice's invoice items",
+            "description": {},
+            "url": {
+              "path": [
+                "billing",
+                "cycles",
+                "invoice",
+                ":invoice_id",
+                "details"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "invoice_id",
+                  "description": "(Required) Invoice ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "78ef8d20-86aa-4c54-ab6f-b74798f54ef5",
+              "name": "the invoice",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "cycles",
+                    "invoice",
+                    ":invoice_id",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "invoice_id",
+                      "description": "(Required) Invoice ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 12,\n  \"status\": \"draft\",\n  \"invoice_number\": 2348,\n  \"invoice_version\": 0,\n  \"invoice_date\": \"2018-01-16\",\n  \"updated_at\": \"2018-01-16T14:17:05-0500\",\n  \"balance\": 5,\n  \"total\": 10,\n  \"can_be_written_off\": false,\n  \"can_be_voided\": false,\n  \"can_be_regenerated\": false,\n  \"can_be_paid\": false,\n  \"can_be_deleted\": false,\n  \"can_add_transaction\": false,\n  \"is_ccac_funder\": false,\n  \"is_funder_batched_funder\": false,\n  \"total_visits\": 2,\n  \"total_premiums\": 3,\n  \"total_supplies\": 4,\n  \"total_client_premiums\": 5,\n  \"total_income_items\": 6,\n  \"visits_and_premiums_subtotal\": 10,\n  \"supplies_subtotal\": 0,\n  \"client_premiums_subtotal\": 5,\n  \"income_items_subtotal\": 6,\n  \"client_id\": 2,\n  \"crn\": \"10009\",\n  \"taxes\": {\n    \"taxtotal\": 2,\n    \"types\": {\n      \"name\": \"HST\",\n      \"total\": 2\n    }\n  },\n  \"bill_to\": {\n    \"id\": 12,\n    \"name\": \"Funder\",\n    \"guid\": \"27990\",\n    \"guid_to\": \"27991\",\n    \"is_active\": true,\n    \"import_id\": 123,\n    \"remarks\": \"falls prevention program\",\n    \"contact_type\": \"Referral Contact\",\n    \"lang\": \"english\",\n    \"list\": \"Funder List (System)\"\n  },\n  \"pdf_url\": \"/path/to/file.pdf\",\n  \"invoice_items\": [\n    {\n      \"id\": 12,\n      \"invoice_id\": 12,\n      \"source_id\": 12,\n      \"subtotal\": 10,\n      \"total_cost\": 3,\n      \"total_taxes\": 3,\n      \"total\": 13,\n      \"ajdustment_type\": \"adjustment\",\n      \"create_user_id\": 2,\n      \"created_at\": \"2018-01-16T14:17:05-0500\",\n      \"gl_asset_acc_account_id\": 2,\n      \"gl_revenue_acc_account_id\": 2,\n      \"item_end_at\": \"1956-09-12\",\n      \"item_start_at\": \"1997-03-17\",\n      \"memo\": \"memo\",\n      \"policy_version_id\": 2,\n      \"quantity\": 2,\n      \"quantity_units\": \"hours\",\n      \"receivables_cost_centre_id\": 2,\n      \"taxable\": true,\n      \"type\": \"visit\",\n      \"unitprice\": 2,\n      \"updated_at\": \"2018-01-16T14:17:05-0500\",\n      \"update_user_id\": 2,\n      \"voided_by_id\": 2,\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    },\n    {\n      \"id\": 12,\n      \"invoice_id\": 12,\n      \"source_id\": 12,\n      \"subtotal\": 10,\n      \"total_cost\": 3,\n      \"total_taxes\": 3,\n      \"total\": 13,\n      \"ajdustment_type\": \"adjustment\",\n      \"create_user_id\": 2,\n      \"created_at\": \"2018-01-16T14:17:05-0500\",\n      \"gl_asset_acc_account_id\": 2,\n      \"gl_revenue_acc_account_id\": 2,\n      \"item_end_at\": \"1958-08-29\",\n      \"item_start_at\": \"1990-03-31\",\n      \"memo\": \"memo\",\n      \"policy_version_id\": 2,\n      \"quantity\": 2,\n      \"quantity_units\": \"hours\",\n      \"receivables_cost_centre_id\": 2,\n      \"taxable\": true,\n      \"type\": \"visit\",\n      \"unitprice\": 2,\n      \"updated_at\": \"2018-01-16T14:17:05-0500\",\n      \"update_user_id\": 2,\n      \"voided_by_id\": 2,\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e81172cd-dfea-4cf1-ae3f-22fbb54b5b46",
+          "name": "Fetch multiple private pay invoices",
+          "request": {
+            "name": "Fetch multiple private pay invoices",
+            "description": {},
+            "url": {
+              "path": [
+                "billing",
+                "periods",
+                "invoice",
+                ":invoice_id",
+                "details"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "ASC",
+                  "description": "Order to sort by"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "<string>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "invoice_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "03b3cc7d-ac39-465e-83ce-829168367657",
+              "name": "the invoice",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "periods",
+                    "invoice",
+                    ":invoice_id",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort_order",
+                      "value": "ASC"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "invoice_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 12,\n  \"status\": \"draft\",\n  \"invoice_number\": 2348,\n  \"invoice_version\": 0,\n  \"invoice_date\": \"2018-01-16\",\n  \"updated_at\": \"2018-01-16T14:17:05-0500\",\n  \"balance\": 5,\n  \"total\": 10,\n  \"can_be_written_off\": false,\n  \"can_be_voided\": false,\n  \"can_be_regenerated\": false,\n  \"can_be_paid\": false,\n  \"can_be_deleted\": false,\n  \"can_add_transaction\": false,\n  \"is_ccac_funder\": false,\n  \"is_funder_batched_funder\": false,\n  \"total_visits\": 2,\n  \"total_premiums\": 3,\n  \"total_supplies\": 4,\n  \"total_client_premiums\": 5,\n  \"total_income_items\": 6,\n  \"visits_and_premiums_subtotal\": 10,\n  \"supplies_subtotal\": 0,\n  \"client_premiums_subtotal\": 5,\n  \"income_items_subtotal\": 6,\n  \"client_id\": 2,\n  \"crn\": \"10009\",\n  \"taxes\": {\n    \"taxtotal\": 2,\n    \"types\": {\n      \"name\": \"HST\",\n      \"total\": 2\n    }\n  },\n  \"bill_to\": {\n    \"id\": 12,\n    \"name\": \"Funder\",\n    \"guid\": \"27990\",\n    \"guid_to\": \"27991\",\n    \"is_active\": true,\n    \"import_id\": 123,\n    \"remarks\": \"falls prevention program\",\n    \"contact_type\": \"Referral Contact\",\n    \"lang\": \"english\",\n    \"list\": \"Funder List (System)\"\n  },\n  \"pdf_url\": \"/path/to/file.pdf\",\n  \"invoice_items\": [\n    {\n      \"id\": 12,\n      \"invoice_id\": 12,\n      \"source_id\": 12,\n      \"subtotal\": 10,\n      \"total_cost\": 3,\n      \"total_taxes\": 3,\n      \"total\": 13,\n      \"ajdustment_type\": \"adjustment\",\n      \"create_user_id\": 2,\n      \"created_at\": \"2018-01-16T14:17:05-0500\",\n      \"gl_asset_acc_account_id\": 2,\n      \"gl_revenue_acc_account_id\": 2,\n      \"item_end_at\": \"1989-12-13\",\n      \"item_start_at\": \"1949-06-04\",\n      \"memo\": \"memo\",\n      \"policy_version_id\": 2,\n      \"quantity\": 2,\n      \"quantity_units\": \"hours\",\n      \"receivables_cost_centre_id\": 2,\n      \"taxable\": true,\n      \"type\": \"visit\",\n      \"unitprice\": 2,\n      \"updated_at\": \"2018-01-16T14:17:05-0500\",\n      \"update_user_id\": 2,\n      \"voided_by_id\": 2,\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    },\n    {\n      \"id\": 12,\n      \"invoice_id\": 12,\n      \"source_id\": 12,\n      \"subtotal\": 10,\n      \"total_cost\": 3,\n      \"total_taxes\": 3,\n      \"total\": 13,\n      \"ajdustment_type\": \"adjustment\",\n      \"create_user_id\": 2,\n      \"created_at\": \"2018-01-16T14:17:05-0500\",\n      \"gl_asset_acc_account_id\": 2,\n      \"gl_revenue_acc_account_id\": 2,\n      \"item_end_at\": \"1984-05-25\",\n      \"item_start_at\": \"1995-07-18\",\n      \"memo\": \"memo\",\n      \"policy_version_id\": 2,\n      \"quantity\": 2,\n      \"quantity_units\": \"hours\",\n      \"receivables_cost_centre_id\": 2,\n      \"taxable\": true,\n      \"type\": \"visit\",\n      \"unitprice\": 2,\n      \"updated_at\": \"2018-01-16T14:17:05-0500\",\n      \"update_user_id\": 2,\n      \"voided_by_id\": 2,\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "dc3bcf15-1a6b-4273-827b-0d0127e9f2af",
+    "name": "AlayaCare Accounting Accounts Invoice Items API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

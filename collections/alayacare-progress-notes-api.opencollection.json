@@ -1,0 +1,198 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Progress Notes API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Progress Notes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of progress notes by a client's AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/progress_notes/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "note_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter on the note type category of the progress note"
+              },
+              {
+                "name": "is_hidden",
+                "value": "",
+                "type": "query",
+                "description": "Filter on hidden progress notes"
+              },
+              {
+                "name": "created_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter progress notes by creation date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "created_by",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the AlayaCare ID of the employee who created the progress note"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Filter on the id of the progress note"
+              },
+              {
+                "name": "include_textonly",
+                "value": "",
+                "type": "query",
+                "description": "Include notes content as simple text"
+              }
+            ]
+          },
+          "docs": "Get a list of progress notes by a client's AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Create a progress note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/progress_notes/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              }
+            ]
+          },
+          "docs": "* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/ \n* `is_hidden` is optional, if omitted the progress note will be created with is_hidden set to `false`.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of progress notes by client's external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/progress_notes/by_id/:external_client_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "note_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter on the note type category of the progress note"
+              },
+              {
+                "name": "is_hidden",
+                "value": "",
+                "type": "query",
+                "description": "Filter on hidden progress notes"
+              },
+              {
+                "name": "created_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter progress notes by creation date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "created_by",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the AlayaCare ID of the employee who created the progress note"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Filter on the guid of the progress note"
+              },
+              {
+                "name": "include_textonly",
+                "value": "",
+                "type": "query",
+                "description": "Include notes content as simple text"
+              }
+            ]
+          },
+          "docs": "Get a list of progress notes by client's external ID"
+        },
+        {
+          "info": {
+            "name": "Create a progress note by external client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/progress_notes/by_id/:external_client_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              }
+            ]
+          },
+          "docs": "* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/ \n* `is_hidden` is optional, if omitted the progress note will be created with is_hidden set to `false`.\n"
+        },
+        {
+          "info": {
+            "name": "Get a single progress note by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/progress_note/:progress_note_id",
+            "params": [
+              {
+                "name": "progress_note_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a progress note"
+              },
+              {
+                "name": "include_textonly",
+                "value": "",
+                "type": "query",
+                "description": "Include notes content as simple text"
+              }
+            ]
+          },
+          "docs": "Get a single progress note by ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

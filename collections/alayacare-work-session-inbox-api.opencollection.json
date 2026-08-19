@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts work session inbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "work session inbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "POST /v1/inbox/work_sessions/start",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/work_sessions/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin` assigned to the associated referral.\n\n# Description\nStart a Work Session for a given visit.\n\nOne of `visit_id` or `visit_inbox_id` must be provided.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/work_sessions/end",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/work_sessions/end",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin` who started the Work Session.\n\n# Description\nEnd a Work Session.\n\n* One of `work_session_id` or `inbox_id` must be provided, AND\n* One of `visit_id` or `visit_inbox_id` must be provided.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

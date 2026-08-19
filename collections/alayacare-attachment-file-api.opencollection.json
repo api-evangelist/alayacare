@@ -1,0 +1,209 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Attachment File API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Attachment File",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the content of a file (download a file)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the content of a file (download a file)"
+        },
+        {
+          "info": {
+            "name": "Upload a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Upload a file at the `path` location and create the underlying directory structure if it doesn't exist already.\n\n`path` **cannot** end with `/` in order to create a file based on the request body.\n\n**Note:** This consumes `multipart form-data` as defined in the parameters below. \n\n**Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.\n"
+        },
+        {
+          "info": {
+            "name": "Copy, move or rename a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Copy, move or rename a file.\n\nThe url of the `PUT` request is the path to the source location.\n\nThe payload must indicate whether the intention of the action is to copy, move or rename the file.\n\nIf a file is being copied or moved, the destination is mandatory in the payload.\n\ni.e., if we have the following directories:\n- `dir1/child1/file1.txt`\n- `dir2/child2/file2.txt`\n\nand we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must "
+        },
+        {
+          "info": {
+            "name": "Delete a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a file."
+        },
+        {
+          "info": {
+            "name": "Get the content of a file (download a file)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the content of a file (download a file)"
+        },
+        {
+          "info": {
+            "name": "Upload a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Upload a file at the `path` location and create the underlying directory structure if it doesn't exist already.\n\n`path` **cannot** end with `/` in order to create a file based on the request body.\n\n**Note:** This consumes `multipart form-data` as defined in the parameters below.\n\n**Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.\n"
+        },
+        {
+          "info": {
+            "name": "Copy, move or rename a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Copy, move or rename a file.\n\nThe url of the `PUT` request is the path to the source location.\n\nThe payload must indicate whether the intention of the action is to copy, move or rename the file.\n\nIf a file is being copied or moved, the destination is mandatory in the payload.\n\ni.e., if we have the following directories:\n- `dir1/child1/file1.txt`\n- `dir2/child2/file2.txt`\n\nand we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must "
+        },
+        {
+          "info": {
+            "name": "Delete a file",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:file_path",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a file."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

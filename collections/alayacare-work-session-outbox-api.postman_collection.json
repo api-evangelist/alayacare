@@ -1,0 +1,149 @@
+{
+  "item": [
+    {
+      "id": "9da7d126-511e-4580-b267-1d3d7ab7795f",
+      "name": "work session outbox",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "67e5aad6-ca98-4775-ac6f-afb4b57cff4e",
+          "name": "# Authorization\nRequired role: demand `org_admin` who created the associated referral.\n\n# Description\nGet a collection of Work Sessions for a given visit.\n\nOne of `visit_id` or `visit_outbox_id` must be provided.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: demand `org_admin` who created the associated referral.\n\n# Description\nGet a collection of Work Sessions for a given visit.\n\nOne of `visit_id` or `visit_outbox_id` must be provided.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: demand `org_admin` who created the associated referral.\n\n# Description\nGet a collection of Work Sessions for a given visit.\n\nOne of `visit_id` or `visit_outbox_id` must be provided.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "work_sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "visit_id",
+                  "value": "<string>",
+                  "description": "ID of a visit."
+                },
+                {
+                  "disabled": false,
+                  "key": "visit_outbox_id",
+                  "value": "<string>",
+                  "description": "ID of a visit in the demand system."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "61620355-d420-4a77-a1a1-6cfa88538b8f",
+              "name": "Successfully retrieved a collection of Work Sessions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "work_sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "visit_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "visit_outbox_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"be509a35-8f79-a7f1-63d2-08b1f5bce43e\",\n      \"visit_id\": \"489049e4-541e-4039-6a7e-2d67bd0da6d9\",\n      \"start_at\": \"1951-09-20T12:00:28.736Z\",\n      \"visit_outbox_id\": \"string\",\n      \"end_at\": \"1976-03-30T04:47:29.683Z\",\n      \"start_latitude\": 15.502444994384277,\n      \"start_longitude\": 38.070536577212664,\n      \"end_latitude\": -79.9784848493819,\n      \"end_longitude\": 91.72115648333084\n    },\n    {\n      \"id\": \"0ac64e16-868d-9c17-0133-72f10204576d\",\n      \"visit_id\": \"a8b5402c-0fd1-239d-544f-d8c15daca005\",\n      \"start_at\": \"2016-04-25T07:52:35.916Z\",\n      \"visit_outbox_id\": \"string\",\n      \"end_at\": \"1968-04-24T12:39:41.191Z\",\n      \"start_latitude\": -64.68281498273618,\n      \"start_longitude\": 14.76871609481384,\n      \"end_latitude\": -80.066087538866,\n      \"end_longitude\": -36.955919912613666\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "21753b70-95c7-460e-8129-29d6443a5c6c",
+    "name": "AlayaCare Accounting Accounts work session outbox API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

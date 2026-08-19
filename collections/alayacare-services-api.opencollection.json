@@ -1,0 +1,227 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Services API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of services",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/services",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external client ID\nExternal client ID is the client ID in the system of record.\nEx. CRM client identifier\n"
+              },
+              {
+                "name": "alayacare_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare client ID"
+              },
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external employee ID\nExternal employee ID is the employee ID in the system of record.\nEx. HR employee number\n"
+              },
+              {
+                "name": "alayacare_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare employee ID"
+              },
+              {
+                "name": "external_ids",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external IDs\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format; they are treated as strings.\n"
+              },
+              {
+                "name": "funder_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external funder ID"
+              },
+              {
+                "name": "alayacare_funder_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter AlayaCare funder ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by service status"
+              },
+              {
+                "name": "alayacare_cost_centre_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare cost centre id"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              }
+            ]
+          },
+          "docs": "**Remarks**\n- `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.\n- `funder_id` and `external_funder_id` are mutually exclusive, specifying both is an invalid request.\n"
+        },
+        {
+          "info": {
+            "name": "Create a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/services",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a service"
+        },
+        {
+          "info": {
+            "name": "Get service details using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/services/:alayacare_service_id",
+            "params": [
+              {
+                "name": "alayacare_service_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare service ID"
+              },
+              {
+                "name": "with_upcoming_statuses",
+                "value": "",
+                "type": "query",
+                "description": "The upcoming status and status dates of the service. If there is no upcoming status for the service, `[]` will be returned."
+              }
+            ]
+          },
+          "docs": "Get service details using AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Update service details using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/services/:alayacare_service_id",
+            "params": [
+              {
+                "name": "alayacare_service_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare service ID"
+              },
+              {
+                "name": "with_upcoming_statuses",
+                "value": "",
+                "type": "query",
+                "description": "The upcoming status and status dates of the service. If there is no upcoming status for the service, `[]` will be returned."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**Remarks**\n- Service status can't be updated.\n- `primary_employee_id` and `primary_employee_external_id` are mutually exclusive, specifying both is an invalid request.\n- The branch of the employee must match the branch of the client, incompatible branches are an invalid request.\n- Reports and forms can be updated through the `reports` field.\n"
+        },
+        {
+          "info": {
+            "name": "Get service details using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/services/by_id/:service_id",
+            "params": [
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "path",
+                "description": "External service ID"
+              },
+              {
+                "name": "with_upcoming_statuses",
+                "value": "",
+                "type": "query",
+                "description": "The upcoming status and status dates of the service. If there is no upcoming status for the service, `[]` will be returned."
+              }
+            ]
+          },
+          "docs": "Get service details using external ID"
+        },
+        {
+          "info": {
+            "name": "Update service details using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/services/by_id/:service_id",
+            "params": [
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "path",
+                "description": "External service ID"
+              },
+              {
+                "name": "with_upcoming_statuses",
+                "value": "",
+                "type": "query",
+                "description": "The upcoming status and status dates of the service. If there is no upcoming status for the service, `[]` will be returned."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**Remarks**\n- Service status can't be updated.\n- primary_employee_id and primary_employee_external_id are mutually exclusive, specifying both is an invalid request.\n- The branch of the employee must match the branch of the client, incompatible branches are an invalid request.\n- Reports and forms can be updated through the `reports` field.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

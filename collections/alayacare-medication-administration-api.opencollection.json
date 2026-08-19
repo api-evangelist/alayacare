@@ -1,0 +1,100 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Medication Administration API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Medication Administration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of medication administrations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications/:medication_id/administrations",
+            "params": [
+              {
+                "name": "medication_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100."
+              }
+            ]
+          },
+          "docs": "The fields that are populated on the when administering a medication depend on the medication `delivery_mode`."
+        },
+        {
+          "info": {
+            "name": "Create a medication administration.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications/:medication_id/administrations",
+            "params": [
+              {
+                "name": "medication_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication ID"
+              }
+            ]
+          },
+          "docs": "Create a medication administration."
+        },
+        {
+          "info": {
+            "name": "Get details of a medication administration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications/:medication_id/administrations/:admin_id",
+            "params": [
+              {
+                "name": "medication_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication ID"
+              },
+              {
+                "name": "admin_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication Administration ID"
+              }
+            ]
+          },
+          "docs": "Get details of a medication administration"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

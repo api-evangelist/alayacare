@@ -1,0 +1,3170 @@
+{
+  "item": [
+    {
+      "id": "2dfd5e63-042c-4f79-8d3f-9e072173d86d",
+      "name": "Client Status",
+      "description": {
+        "content": "Client status related endpoints.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b678c267-f09d-4e92-8336-3a3ba8fe0189",
+          "name": "Get client status details using its AlayaCare Client ID",
+          "request": {
+            "name": "Get client status details using its AlayaCare Client ID",
+            "description": {
+              "content": "Returns a paginated list of client status records for a client by AlayaCare client ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                ":client_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by a single client status."
+                },
+                {
+                  "disabled": false,
+                  "key": "effective_date",
+                  "value": "<dateTime>",
+                  "description": "Filter for client status that are effective on a date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter",
+                  "value": "<string>",
+                  "description": "Substring search on client status `note` and reason `name`"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "client_id",
+                  "description": "(Required) AlayaCare ID of the client"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "843eda83-6d36-45b1-9080-7d9a8c981a73",
+              "name": "List of client status details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 1,\n  \"page\": 1,\n  \"total_pages\": 1,\n  \"items\": [\n    {\n      \"id\": 1001,\n      \"effective_date\": \"2018-07-08T00:00:00+00:00\",\n      \"status\": \"on_hold\",\n      \"reason\": {\n        \"id\": 1,\n        \"name\": \"Vacation\"\n      },\n      \"note\": \"On hold due to hospitalization.\",\n      \"created_at\": \"2019-07-08T00:00:00+00:00\",\n      \"updated_at\": \"2020-07-08T00:00:00+00:00\",\n      \"created_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      },\n      \"updated_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      }\n    },\n    {\n      \"id\": 1001,\n      \"effective_date\": \"2018-07-08T00:00:00+00:00\",\n      \"status\": \"on_hold\",\n      \"reason\": {\n        \"id\": 1,\n        \"name\": \"Vacation\"\n      },\n      \"note\": \"On hold due to hospitalization.\",\n      \"created_at\": \"2019-07-08T00:00:00+00:00\",\n      \"updated_at\": \"2020-07-08T00:00:00+00:00\",\n      \"created_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      },\n      \"updated_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "82740909-63ae-4356-aa1c-e2f487c615c7",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ddfd11d1-bb61-4244-bfdc-c22b7587c28a",
+              "name": "Client not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4959fdad-dc12-4af2-be49-6c81eef673a2",
+          "name": "Create a client status using its AlayaCare Client ID",
+          "request": {
+            "name": "Create a client status using its AlayaCare Client ID",
+            "description": {
+              "content": "* `reason_id` can only be set and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* `end_date` can only be set for `on_hold` status\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                ":client_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "client_id",
+                  "description": "(Required) AlayaCare ID of the client"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"effective_date\": \"<dateTime>\",\n  \"status\": \"<string>\",\n  \"reason_id\": \"<integer>\",\n  \"note\": \"<string>\",\n  \"end_date\": \"<dateTime>\",\n  \"services\": {\n    \"update_services\": \"<boolean>\",\n    \"service_status\": \"<string>\",\n    \"service_status_reason\": \"<integer>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "24859794-32ce-4daa-9545-5b0b82c5e7f8",
+              "name": "Client status created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "427b737a-3fc4-4c70-ac3e-ce4cf88d3f16",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Field 'status' is required\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a9ba3686-9ce9-4367-a175-d937c643a814",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c512702-cf90-466b-93e2-d5cf9c0eda65",
+              "name": "Client not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "15a22d1c-03a9-4bc0-b656-1cbd4f5f8637",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Branch conflict: Reason cannot be assigned to the client\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "92c2a010-6d27-404d-95b3-58071c9cdda5",
+          "name": "Get a client status details using its AlayaCare Client and Status ID",
+          "request": {
+            "name": "Get a client status details using its AlayaCare Client and Status ID",
+            "description": {
+              "content": "Returns details for a client status by AlayaCare client ID and status ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                ":client_id",
+                "status",
+                ":status_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "client_id",
+                  "description": "(Required) AlayaCare ID of the client"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "status_id",
+                  "description": "(Required) AlayaCare ID of the status"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a5d42ee0-a5a0-431c-b386-97b5dccfb0ab",
+              "name": "Client status details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001,\n  \"effective_date\": \"2018-07-08T00:00:00+00:00\",\n  \"status\": \"on_hold\",\n  \"reason\": {\n    \"id\": 1,\n    \"name\": \"Vacation\"\n  },\n  \"note\": \"On hold due to hospitalization.\",\n  \"created_at\": \"2019-07-08T00:00:00+00:00\",\n  \"updated_at\": \"2020-07-08T00:00:00+00:00\",\n  \"created_by\": {\n    \"id\": 284,\n    \"external_id\": \"450\",\n    \"name\": \"John Smith\"\n  },\n  \"updated_by\": {\n    \"id\": 284,\n    \"external_id\": \"450\",\n    \"name\": \"John Smith\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "86b28587-0d96-4304-92b5-760ff1aff1a2",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88b98b51-464e-4a1f-a35a-7fae4bef7bec",
+              "name": "Client status relationship not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client status relationship not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1be2af0a-3e47-4eb7-9485-80abe70e4d05",
+          "name": "Update a client status using its AlayaCare Client and Status ID",
+          "request": {
+            "name": "Update a client status using its AlayaCare Client and Status ID",
+            "description": {
+              "content": "* `end_date` can only be edited for `on_hold` and `pending` status\n* `effective_date` can only be edited for `on_hold`, `discharged` and `pending` status\n* `reason_id` can only be edited and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                ":client_id",
+                "status",
+                ":status_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "client_id",
+                  "description": "(Required) AlayaCare ID of the client"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "status_id",
+                  "description": "(Required) AlayaCare ID of the status"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"effective_date\": \"<dateTime>\",\n  \"reason_id\": \"<string>\",\n  \"note\": \"<string>\",\n  \"end_date\": \"<dateTime>\",\n  \"services\": {\n    \"update_services\": \"<boolean>\",\n    \"service_status\": \"<string>\",\n    \"service_status_reason\": \"<integer>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "666e19c6-2692-4a75-aca0-95bc5ab3dc02",
+              "name": "Client status updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d67c3d90-8d8f-4af0-8b97-8f765933f6b1",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Field 'reason_id' is invalid\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0d05678b-9b91-450b-9d02-af745c21c9a5",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "30035e2b-ad84-4d4b-8002-97edce1389a5",
+              "name": "Client status relationship not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client status relationship not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a6153c6a-c2e5-43f8-b528-d8639063f3f3",
+          "name": "Remove a client status using its AlayaCare Client and Status ID",
+          "request": {
+            "name": "Remove a client status using its AlayaCare Client and Status ID",
+            "description": {
+              "content": "* Only `on_hold`, `waiting_list` and `discharged` status can be deleted\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                ":client_id",
+                "status",
+                ":status_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "client_id",
+                  "description": "(Required) AlayaCare ID of the client"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "status_id",
+                  "description": "(Required) AlayaCare ID of the status"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "41a40df7-f517-41e4-aa60-2553b2310d99",
+              "name": "Client status successfully deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b14a79ec-95bc-4b41-8b37-c3ccedfe8d9c",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Status cannot be deleted\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc0b6180-800f-4e64-861e-6cd9b6e516a4",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fc7d3f85-3645-4e6c-ab30-0a3dd59996c1",
+              "name": "Client status relationship not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    ":client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "client_id",
+                      "description": "(Required) AlayaCare ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client status relationship not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d2b51c2b-bf80-4d50-953f-68398908a093",
+          "name": "Get client status details using External Client ID",
+          "request": {
+            "name": "Get client status details using External Client ID",
+            "description": {
+              "content": "Returns a paginated list of client status records for a client by external client ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                "by_id",
+                ":external_client_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by a single client status."
+                },
+                {
+                  "disabled": false,
+                  "key": "effective_date",
+                  "value": "<dateTime>",
+                  "description": "Filter for client status that are effective on a date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter",
+                  "value": "<string>",
+                  "description": "Substring search on client status `note` and reason `name`"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_client_id",
+                  "description": "(Required) External ID of the client"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0f37501e-2456-4067-bfff-d3201648e227",
+              "name": "List of client status details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 1,\n  \"page\": 1,\n  \"total_pages\": 1,\n  \"items\": [\n    {\n      \"id\": 1001,\n      \"effective_date\": \"2018-07-08T00:00:00+00:00\",\n      \"status\": \"on_hold\",\n      \"reason\": {\n        \"id\": 1,\n        \"name\": \"Vacation\"\n      },\n      \"note\": \"On hold due to hospitalization.\",\n      \"created_at\": \"2019-07-08T00:00:00+00:00\",\n      \"updated_at\": \"2020-07-08T00:00:00+00:00\",\n      \"created_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      },\n      \"updated_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      }\n    },\n    {\n      \"id\": 1001,\n      \"effective_date\": \"2018-07-08T00:00:00+00:00\",\n      \"status\": \"on_hold\",\n      \"reason\": {\n        \"id\": 1,\n        \"name\": \"Vacation\"\n      },\n      \"note\": \"On hold due to hospitalization.\",\n      \"created_at\": \"2019-07-08T00:00:00+00:00\",\n      \"updated_at\": \"2020-07-08T00:00:00+00:00\",\n      \"created_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      },\n      \"updated_by\": {\n        \"id\": 284,\n        \"external_id\": \"450\",\n        \"name\": \"John Smith\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c95395bd-0798-45c8-9073-26b915e20102",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aac18575-ba53-41a6-9899-2068627ed374",
+              "name": "Client not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d455d637-5e6b-461e-895b-73fc73c7d50c",
+              "name": "Conflict. Multiple clients share the external ID given in the path and they should be merged",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "effective_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Multiple clients found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8accd721-b893-4b38-8e7e-cdc1ffae0750",
+          "name": "Create a client status using External Client ID",
+          "request": {
+            "name": "Create a client status using External Client ID",
+            "description": {
+              "content": "* `reason_id` can only be set and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* `end_date` can only be set for `on_hold` status\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                "by_id",
+                ":external_client_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_client_id",
+                  "description": "(Required) External ID of the client"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"effective_date\": \"<dateTime>\",\n  \"status\": \"<string>\",\n  \"reason_id\": \"<integer>\",\n  \"note\": \"<string>\",\n  \"end_date\": \"<dateTime>\",\n  \"services\": {\n    \"update_services\": \"<boolean>\",\n    \"service_status\": \"<string>\",\n    \"service_status_reason\": \"<integer>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b6f1bfa7-9b11-461b-970d-8b146c3e202e",
+              "name": "Client status created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f7cda945-dd67-4a98-9465-7002663c697c",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Field 'status' is required\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "25f5dd7b-244d-4e4a-becb-19a3a3482ff3",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27b91723-ca4c-4096-8fa6-b43dd676bf4a",
+              "name": "Client not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5f0b5630-05ed-474e-9ade-8b6c1cf8f983",
+              "name": "Conflict. Possible causes:\n  1. the reason ID given in the body cannot by assigned to the client;\n  2. multiple clients share the external ID given in the path and they should be merged\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Branch conflict: Reason cannot be assigned to the client\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e3a1fa74-97b4-4627-ae79-838bda647fd6",
+          "name": "Get a client status details using External Client ID and Status ID",
+          "request": {
+            "name": "Get a client status details using External Client ID and Status ID",
+            "description": {
+              "content": "Returns details for a client status by external client ID and status ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                "by_id",
+                ":external_client_id",
+                "status",
+                ":status_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_client_id",
+                  "description": "(Required) External ID of the client"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "status_id",
+                  "description": "(Required) AlayaCare ID of the status"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b4a3e72d-fe36-4aa6-9efe-bf3d780eece4",
+              "name": "Client status details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001,\n  \"effective_date\": \"2018-07-08T00:00:00+00:00\",\n  \"status\": \"on_hold\",\n  \"reason\": {\n    \"id\": 1,\n    \"name\": \"Vacation\"\n  },\n  \"note\": \"On hold due to hospitalization.\",\n  \"created_at\": \"2019-07-08T00:00:00+00:00\",\n  \"updated_at\": \"2020-07-08T00:00:00+00:00\",\n  \"created_by\": {\n    \"id\": 284,\n    \"external_id\": \"450\",\n    \"name\": \"John Smith\"\n  },\n  \"updated_by\": {\n    \"id\": 284,\n    \"external_id\": \"450\",\n    \"name\": \"John Smith\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5a4f3bbf-9229-4ecc-bf61-0a3209cda968",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f57a0f3f-4435-4864-85d7-8b4b30c92039",
+              "name": "Client status relationship not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client status relationship not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ca0edfa9-a772-4cc0-9c69-f848a67945ad",
+              "name": "Conflict. Multiple clients share the external ID given in the path and they should be merged",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Multiple clients found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "74423d00-68d3-4e96-bc15-e8cbd1bfa7f9",
+          "name": "Update a client status using External Client ID and Status ID",
+          "request": {
+            "name": "Update a client status using External Client ID and Status ID",
+            "description": {
+              "content": "* `end_date` can only be edited for `on_hold` and `pending` status\n* `effective_date` can only be edited for `on_hold`, `discharged` and `pending` status\n* `reason_id` can only be edited and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                "by_id",
+                ":external_client_id",
+                "status",
+                ":status_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_client_id",
+                  "description": "(Required) External ID of the client"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "status_id",
+                  "description": "(Required) AlayaCare ID of the status"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"effective_date\": \"<dateTime>\",\n  \"reason_id\": \"<string>\",\n  \"note\": \"<string>\",\n  \"end_date\": \"<dateTime>\",\n  \"services\": {\n    \"update_services\": \"<boolean>\",\n    \"service_status\": \"<string>\",\n    \"service_status_reason\": \"<integer>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "03a620eb-b9c7-4f88-8137-e3c0f7139700",
+              "name": "Client status updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b344427-9447-47ab-9479-5eafcaade139",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Field 'reason_id' is invalid\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5874060-f31c-4a20-82ab-61abe7fa2ae1",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b37fba26-292a-4e3a-85ab-dba1337c7e3c",
+              "name": "Client status relationship not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client status relationship not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "935eb07e-1c0c-4ec9-8bb6-9d98c2d51932",
+              "name": "Conflict. Multiple clients share the external ID given in the path and they should be merged",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Multiple clients found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "59a15994-71bc-4f0b-802a-4e9e29c86cb5",
+          "name": "Remove a client status using External Client ID and Status ID",
+          "request": {
+            "name": "Remove a client status using External Client ID and Status ID",
+            "description": {
+              "content": "* Only `on_hold`, `waiting_list` and `discharged` status can be deleted\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "clients",
+                "by_id",
+                ":external_client_id",
+                "status",
+                ":status_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_client_id",
+                  "description": "(Required) External ID of the client"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "status_id",
+                  "description": "(Required) AlayaCare ID of the status"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f0809e6f-bafa-43c9-b1d5-b399759424e3",
+              "name": "Client status successfully deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7716031f-6763-4813-a8c9-28c7d6603abd",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Status cannot be deleted\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d4dc1e16-caf4-4660-89f0-56451bcd60df",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0d24696b-0273-4447-9940-3ed6d917ffc8",
+              "name": "Client status relationship not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client status relationship not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6e3ca6d-13e7-4446-82f0-8265a84d067a",
+              "name": "Conflict. Multiple clients share the external ID given in the path and they should be merged",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "clients",
+                    "by_id",
+                    ":external_client_id",
+                    "status",
+                    ":status_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_client_id",
+                      "description": "(Required) External ID of the client"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "status_id",
+                      "description": "(Required) AlayaCare ID of the status"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Multiple clients found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a75d8355-21f7-4cc7-b5f4-58710a1de198",
+    "name": "AlayaCare Accounting Accounts Client Status API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

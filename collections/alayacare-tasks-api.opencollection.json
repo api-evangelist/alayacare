@@ -1,0 +1,613 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Tasks API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of tasks.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100."
+              },
+              {
+                "name": "form_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by type of report form."
+              },
+              {
+                "name": "created_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by creation date greater or equal than specified value.\nExpected format is ISO 8601.\nNote that the timezone will be ignored and will be assumed to be equal to that of the branch associated to the task.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "due_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by due date greater or equal than specified value.\nExpected format is ISO 8601.\nNote that the timezone will be ignored and will be assumed to be equal to that of the branch associated to the task.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "priority",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by priority"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by status"
+              },
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by assigned employee.\nThis will also include tasks indirectly associated to the employee (e.g. Vital Alerts).\n"
+              },
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by assigned employee's external ID"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by assigned client"
+              },
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by assigned client's external ID"
+              },
+              {
+                "name": "include_unassigned",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks to include tasks that are not assigned to an employee. This is ignored unless employee_id is specified."
+              }
+            ]
+          },
+          "docs": "- Requires permission `View all tasks` to view tasks for any employee.\n- Requires permission `View employee tasks` to view tasks for the current employee.\n- `client_id` and `external_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `external_employee_id` are mutually exclusive, specifying both is an invalid request.\n- `include_unassigned` is ignored unless `employee_id` is specified.\n- Results are ordered by the due date and created date, in descendin"
+        },
+        {
+          "info": {
+            "name": "Create a task.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks"
+          },
+          "docs": "- Requires permission `Create Tasks`.\n- If `employee_id` and `form_id` are provided, requires that the employee has permission to submit the form.\n- If `form_id` is provided, then `client_id` must be provided.\n- If `priority` is not defined, default value is `low`.\n- Value of task `status` will be `open` upon creation.\n- `client_id` and `external_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `external_employee_id` are mutually exclusive, specifying"
+        },
+        {
+          "info": {
+            "name": "Get task details by task ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Task ID"
+              }
+            ]
+          },
+          "docs": "- Requires permission `View all tasks` to view the task if not assigned to the current user.\n- Requires permission `View employee tasks` to view the task if assigned to the current user.\n"
+        },
+        {
+          "info": {
+            "name": "Update a task.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Task ID"
+              }
+            ]
+          },
+          "docs": "- Requires permission `Edit Tasks`.\n- If `form_id` is already set, then it cannot be changed. This means that if `form_id` is set, then `client_id` cannot be changed.\n- `client_id` and `external_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `external_employee_id` are mutually exclusive, specifying both is an invalid request.\n"
+        },
+        {
+          "info": {
+            "name": "Update a task status.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:id/change_status",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Task ID"
+              }
+            ]
+          },
+          "docs": "- Requires permission `Edit Tasks` for all statuses other than `rejected`.\n- Requires permission `Reject Tasks` if the status is `rejected`.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve total number of tasks by various criteria",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/count",
+            "params": [
+              {
+                "name": "branches",
+                "value": "headquarter",
+                "type": "query",
+                "description": "Branch identifiers to filter on. Please refer to the external employee API for more information on branches."
+              },
+              {
+                "name": "branch_id",
+                "value": "100",
+                "type": "query",
+                "description": "The branch identifier to filter on. Please refer to the external employee API for more information on branches."
+              },
+              {
+                "name": "created_at_min",
+                "value": "2023-01-31T22:00:00.000Z",
+                "type": "query",
+                "description": "Minimum created date"
+              },
+              {
+                "name": "created_at_max",
+                "value": "2023-01-31T22:00:00.000Z",
+                "type": "query",
+                "description": "Maximum created date"
+              },
+              {
+                "name": "created_by",
+                "value": "1123",
+                "type": "query",
+                "description": "The user identifier of the user who created the task. Please refer to the external employee API for more information on employee id."
+              },
+              {
+                "name": "due_at_min",
+                "value": "2023-01-31T22:00:00.000Z",
+                "type": "query",
+                "description": "Minimum due date"
+              },
+              {
+                "name": "due_at_max",
+                "value": "2023-01-31T22:00:00.000Z",
+                "type": "query",
+                "description": "Maximum due date"
+              },
+              {
+                "name": "no_due_at",
+                "value": "true",
+                "type": "query",
+                "description": "Set to true to filter on tasks without a due date"
+              },
+              {
+                "name": "assigned_to_group_id",
+                "value": "123",
+                "type": "query",
+                "description": "The group identifier of the group which is assigned the task. Please refer to the external employee API for more information on groups."
+              },
+              {
+                "name": "assigned_to_user_ids",
+                "value": "1234",
+                "type": "query",
+                "description": "The user identifiers of the user who is assigned the task. Please refer to the external employee API for more information on employee id."
+              },
+              {
+                "name": "assigned_to_external_employee_ids",
+                "value": "abc_123",
+                "type": "query",
+                "description": "The external employee identifiers of the employee who is assigned the task. Please refer to the external employee API for more information on external employee id."
+              },
+              {
+                "name": "assigned_to_user_id_groups",
+                "value": "100,355,150",
+                "type": "query",
+                "description": "Include tasks that are assigned to members of the specified groups. Depending on the value of `assigned_to_user_id_groups_mode`, tasks will be returned that are assigned to a user in any of the specified groups or all of the specified groups. Please refer to the external employee API for more information on groups."
+              },
+              {
+                "name": "assigned_to_user_id_groups_mode",
+                "value": "all",
+                "type": "query",
+                "description": "When set to 'all', only tasks that are assigned to a user in all of the specified groups will be returned. When set to 'any', tasks that are assigned to a user in any of the specified groups will be returned. To be used in conjunction with `assigned_to_user_id_groups`"
+              },
+              {
+                "name": "priorities",
+                "value": "null",
+                "type": "query",
+                "description": "Priorities to include."
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Tags to include in results"
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Statuses to include."
+              },
+              {
+                "name": "is_assigned",
+                "value": "true",
+                "type": "query",
+                "description": "When set, only tasks that are assigned to a user or group will be included."
+              },
+              {
+                "name": "is_assigned_to_user",
+                "value": "true",
+                "type": "query",
+                "description": "When set, only tasks that are assigned to a user will be included."
+              },
+              {
+                "name": "contexts",
+                "value": "(include,client,27),(include,form,123)",
+                "type": "query",
+                "description": "Search criteria for context. Each element is a comma separated list of context operator, context type, and context primary id. For example, `include,client,27` will return tasks that include the client context with client id 27. The context primary id may be omitted, in which case all tasks that have a context of the specified context type will be included. The context operator may be 'include' or 'exclude'. When set to 'include', tasks that are associated with the specified context will be included. When set to 'exclude', tasks that are not associated with the specified context will be included."
+              },
+              {
+                "name": "context_external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "The external client identifier of the client to filter on when searching for\ntasks associated with a client context. When set, a context search will be\nincluded for the specified client."
+              },
+              {
+                "name": "client_group_ids",
+                "value": "100,101,102",
+                "type": "query",
+                "description": "Return tasks that have a client context that is associated with one of the specified client groups or all of the specified client groups (depending on the `client_group_ids_mode` parameter). Please refer to the external client API for more information on client groups."
+              },
+              {
+                "name": "client_group_ids_mode",
+                "value": "any",
+                "type": "query",
+                "description": "When set to 'all', only tasks that have a client context that is associated with all of the specified client groups will be returned. When set to 'any', tasks that have a client context that is associated with any of the specified client groups will be returned. To be used in conjunction with `client_groups_ids`"
+              },
+              {
+                "name": "context_external_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "The external employee identifier of the employee to filter on when searching\nfor tasks associated with an employee context. When set, a context search\nwill be included for the specified employee.   "
+              },
+              {
+                "name": "employee_group_ids",
+                "value": "100,101,102",
+                "type": "query",
+                "description": "Return tasks that have an employee context that is associated with one of the specified employee groups or all of the specified employee groups (depending on the `employee_group_ids_mode` parameter)."
+              },
+              {
+                "name": "employee_group_ids_mode",
+                "value": "all",
+                "type": "query",
+                "description": "When set to 'all', only tasks that have a employee context that is associated with all of the specified employee groups will be returned. When set to 'any', tasks that have a employee context that is associated with any of the specified employee groups will be returned."
+              },
+              {
+                "name": "sources",
+                "value": "",
+                "type": "query",
+                "description": "Sources to include in results."
+              },
+              {
+                "name": "text",
+                "value": "",
+                "type": "query",
+                "description": "Search for text in tasks. The `name` and `details` fields are searched."
+              }
+            ]
+          },
+          "docs": "Retrieve number of tasks by using various criteria."
+        },
+        {
+          "info": {
+            "name": "Retrieve a task by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              }
+            ]
+          },
+          "docs": "Get the full details of a task by using the `task_id` column."
+        },
+        {
+          "info": {
+            "name": "Update a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "update_contexts",
+                "value": "",
+                "type": "query",
+                "description": "Whether to update contexts from the payload"
+              },
+              {
+                "name": "update_escalation_dates",
+                "value": "",
+                "type": "query",
+                "description": "Whether to update escalation dates from the payload"
+              },
+              {
+                "name": "update_extensions",
+                "value": "",
+                "type": "query",
+                "description": "Whether to update extensions from the payload"
+              },
+              {
+                "name": "update_tags",
+                "value": "",
+                "type": "query",
+                "description": "Whether to update tags from the payload"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Task"
+        },
+        {
+          "info": {
+            "name": "Patch a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Patch a task, only replacing those fields that are specified and retaining\nthe existing value for fields that are not specified."
+        },
+        {
+          "info": {
+            "name": "Delete a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              }
+            ]
+          },
+          "docs": "Delete a task"
+        },
+        {
+          "info": {
+            "name": "Change the status of a task by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/status/:status",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Change the status of a task by id"
+        },
+        {
+          "info": {
+            "name": "Clone a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/clone",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Clone a task, creating a new task with the same details as the original task, including all sub tasks. Some fields, such as creator, created_at, assigned user and group, and status will be set to defaults instead."
+        },
+        {
+          "info": {
+            "name": "Retrieve sub tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              },
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query"
+              },
+              {
+                "name": "count",
+                "value": "50",
+                "type": "query",
+                "description": "Number of items per page to return"
+              }
+            ]
+          },
+          "docs": "Retrieve sub tasks for a task."
+        },
+        {
+          "info": {
+            "name": "Add a sub task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/:task_id/sub_tasks",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "The task identifier"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a sub task to a task."
+        },
+        {
+          "info": {
+            "name": "Update multiple tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/bulk_action",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update multiple tasks at once. All tasks specified in the payload will be updated.\nThis operation either succeeds as a whole or fails as a whole. If any of the\ntasks does not exist or is inaccessible, the entire operation will fail."
+        },
+        {
+          "info": {
+            "name": "Update multiple tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/bulk_action",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update multiple tasks at once, changing only the values that are specified.\nAll tasks specified in the payload will be updated. This operation either\nsucceeds as a whole or fails as a whole. If any of the tasks does not exist or\nis inaccessible, the entire operation will fail."
+        },
+        {
+          "info": {
+            "name": "Delete multiple tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/bulk_action",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete multiple tasks at once. All tasks specified in the payload will be deleted.\nThis operation either succeeds as a whole or fails as a whole. If any of the\ntasks does not exist or is inaccessible, the entire operation will fail."
+        },
+        {
+          "info": {
+            "name": "Change the status of multiple tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/tasks/bulk_action/status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change the status of multiple tasks at once. All tasks specified in the payload\nwill be updated. This operation either succeeds as a whole or fails as a whole.\nIf any of the tasks does not exist or is inaccessible, the entire operation\nwill fail."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,444 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Medication API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Medication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of medications",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100."
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of a client."
+              },
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "The external ID of a client."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of a medication."
+              },
+              {
+                "name": "with_last_administration",
+                "value": "",
+                "type": "query",
+                "description": "The fields `count_administered_today` and `last_administered_at` will be populated."
+              }
+            ]
+          },
+          "docs": "The fields `count_administered_today` and `last_administered_at` will NOT be populated.\n"
+        },
+        {
+          "info": {
+            "name": "Create a medication",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications"
+          },
+          "docs": "Create a medication"
+        },
+        {
+          "info": {
+            "name": "Get details of a medication",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications/:medication_id",
+            "params": [
+              {
+                "name": "medication_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication ID"
+              },
+              {
+                "name": "with_last_administration",
+                "value": "",
+                "type": "query",
+                "description": "The fields `count_administered_today` and `last_administered_at` will be populated."
+              }
+            ]
+          },
+          "docs": "Get details of a medication"
+        },
+        {
+          "info": {
+            "name": "Update a medication",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications/:medication_id",
+            "params": [
+              {
+                "name": "medication_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication ID"
+              }
+            ]
+          },
+          "docs": "Update a medication"
+        },
+        {
+          "info": {
+            "name": "Fetch a list of medications by client",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:client_id/medications",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Client ID to fetch the medications from"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Parameter used to include extra information in the request. Options: \"status_reason\" and \"cms_485_status\""
+              },
+              {
+                "name": "medications",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by term"
+              },
+              {
+                "name": "medication_ids",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by id"
+              },
+              {
+                "name": "exclude_medication_ids",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications that do not contain specified id"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by status. Options are the response of GET \"/medication_settings/{branch_id}/medication_medication_status_setting\""
+              },
+              {
+                "name": "frequency_setting",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by frequency. Options are the response of GET \"/medication_settings/{branch_id}/medication_frequency_setting\""
+              },
+              {
+                "name": "administration_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by administration type. Options are the response of GET \"/medication_settings/{branch_id}/medication_administration_type_setting\""
+              },
+              {
+                "name": "discrepancy_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by discrepancy type. Options are the response of GET \"/medication_settings/{branch_id}/medication_discrepancy_type_setting\""
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by start datetime. Format: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by end datetime. Format: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "name": "is_archived",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "is_high_alert",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by high_alert"
+              },
+              {
+                "name": "is_narcotic",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by narcotic"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number to filter by"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to filter by"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Parameter to sort items by"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Order in which the items should be sorted by. Ex: asc, desc"
+              }
+            ]
+          },
+          "docs": "Fetch a list of medications by client"
+        },
+        {
+          "info": {
+            "name": "Create a new medication for a specific client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:client_id/medications",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Client ID to save the medications"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new medication for a specific client"
+        },
+        {
+          "info": {
+            "name": "Fetch a medication by external client id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/by_id/:external_client_id/medications",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External client ID to fetch the medications from"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Parameter used to include extra information in the request. Options: \"status_reason\" and \"cms_485_status\""
+              },
+              {
+                "name": "medications",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by term"
+              },
+              {
+                "name": "medication_ids",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by id"
+              },
+              {
+                "name": "exclude_medication_ids",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications that do not contain specified id"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by status. Options are the response of GET \"/medication_settings/{branch_id}/medication_medication_status_setting\""
+              },
+              {
+                "name": "frequency_setting",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by frequency. Options are the response of GET \"/medication_settings/{branch_id}/medication_frequency_setting\""
+              },
+              {
+                "name": "administration_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by administration type. Options are the response of GET \"/medication_settings/{branch_id}/medication_administration_type_setting\""
+              },
+              {
+                "name": "discrepancy_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by discrepancy type. Options are the response of GET \"/medication_settings/{branch_id}/medication_discrepancy_type_setting\""
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by start datetime. Format: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by end datetime. Format: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "name": "is_archived",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "is_high_alert",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by high_alert"
+              },
+              {
+                "name": "is_narcotic",
+                "value": "",
+                "type": "query",
+                "description": "Filter medications by narcotic"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number to filter by"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Max number of items to filter by"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Parameter to sort items by"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Order in which the items should be sorted by. Ex: asc, desc"
+              }
+            ]
+          },
+          "docs": "Fetch a medication by external client id"
+        },
+        {
+          "info": {
+            "name": "Create a new medication for a specific client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/by_id/:external_client_id/medications",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "Client external ID to save the medications"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new medication for a specific client"
+        },
+        {
+          "info": {
+            "name": "Update a medication status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/medications/:medication_id/change_status/:new_status",
+            "params": [
+              {
+                "name": "medication_id",
+                "value": "",
+                "type": "path",
+                "description": "Medication id"
+              },
+              {
+                "name": "new_status",
+                "value": "",
+                "type": "path",
+                "description": "New medication status"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a medication status"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

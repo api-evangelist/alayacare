@@ -1,0 +1,1657 @@
+{
+  "item": [
+    {
+      "id": "e10aa517-432c-4b04-bf75-d565c8e575ef",
+      "name": "Client Contacts",
+      "description": {
+        "content": "Client contact related endpoints.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "995617fb-3908-435f-96b7-eb97d513a5e6",
+          "name": "Create client contact",
+          "request": {
+            "name": "Create client contact",
+            "description": {
+              "content": "- Contact created with status `enabled` if not specified\n- Only `client_id` or `external_client_id` can be specified\n- If `profile_id` is specified, all data in `demographics` will be ignored.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "contacts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profile_id\": \"<integer>\",\n  \"external_id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"<string>\",\n  \"relationship\": \"<string>\",\n  \"client_id\": \"<integer>\",\n  \"external_client_id\": \"<string>\",\n  \"is_billing_contact\": \"<boolean>\",\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"gender\": \"<string>\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"<string>\",\n  \"eb_medicaid_npi\": \"<string>\",\n  \"eb_medicaid_employee_relationship\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "47fac49a-6297-4e7f-b57d-beae54797f5d",
+              "name": "Contact created successfuly",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"profile_id\": 100,\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"client_id\": 1001,\n  \"external_client_id\": \"sor_client_external_id_1\",\n  \"is_billing_contact\": false,\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"1234567\",\n  \"eb_medicaid_employee_relationship\": \"Spouse\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001,\n  \"external_id\": \"crm_client_contact_external_id_1\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9187d213-e802-49ec-a79e-31e87eef99ad",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"profile_id\": 100,\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"client_id\": 1001,\n  \"external_client_id\": \"sor_client_external_id_1\",\n  \"is_billing_contact\": false,\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"1234567\",\n  \"eb_medicaid_employee_relationship\": \"Spouse\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Field first_name is required in demographics.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "784ada87-fa49-4855-a095-9fb1eaa7dbf1",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"profile_id\": 100,\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"client_id\": 1001,\n  \"external_client_id\": \"sor_client_external_id_1\",\n  \"is_billing_contact\": false,\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"1234567\",\n  \"eb_medicaid_employee_relationship\": \"Spouse\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0a8a481c-60e7-4865-8ade-8a6aada87458",
+              "name": "Client not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"profile_id\": 100,\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"client_id\": 1001,\n  \"external_client_id\": \"sor_client_external_id_1\",\n  \"is_billing_contact\": false,\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"1234567\",\n  \"eb_medicaid_employee_relationship\": \"Spouse\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e800ccc8-d293-40e0-8264-16946d2d2de7",
+              "name": "Conflict. Possible causes:\n  1. the external ID given in the body is already used by another contact;\n  2. multiple clients share the external ID given in the body and they should be merged\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"profile_id\": 100,\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"client_id\": 1001,\n  \"external_client_id\": \"sor_client_external_id_1\",\n  \"is_billing_contact\": false,\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"1234567\",\n  \"eb_medicaid_employee_relationship\": \"Spouse\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Contact already exists with external ID: contact_external_id_1\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a2faff95-e79b-4977-aab7-680ae18d1c3c",
+          "name": "Get client contact details using its AlayaCare Client ID",
+          "request": {
+            "name": "Get client contact details using its AlayaCare Client ID",
+            "description": {
+              "content": "If the contact is shared by **more** than one client, the\nproperties which are tied to the relation between a given client\nand its contact will be left empty on the `ClientContact`\nobject of the response schema. These properties include:\n- `contact_type`\n- `relationship`\n- `status`\n- `eb_medicaid_employee_relationship`\n- `eb_medicaid_provider_type`\n- `eb_medicaid_npi`\nThe relationship properties will be specified in the `clients` array\nof the response schema.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<integer>,<integer>",
+                  "description": "Filter by client ID, one or more using **OR**. Default format is comma-separated (`?client_id=1,2`). Repeated params (`?client_id=1&client_id=2`) are also accepted."
+                },
+                {
+                  "disabled": false,
+                  "key": "external_client_id",
+                  "value": "<string>,<string>",
+                  "description": "Filter by external client ID, one or more using **OR**. Default format is comma-separated (`?external_client_id=a,b`). Repeated params (`?external_client_id=a&external_client_id=b`) are also accepted."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contact_id",
+                  "description": "(Required) AlayaCare ID of the client contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d42ffe16-f27a-4ab5-8625-3dffeb9c72d3",
+              "name": "Contact details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"ac_id\": \"AC000000024\",\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"branch\": {\n    \"id\": 1000,\n    \"name\": \"Toronto branch\"\n  },\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"language\": \"<string>\",\n  \"emergency\": false,\n  \"is_billing_contact\": false,\n  \"eb_medicaid_employee_relationship\": \"Spouse\",\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"12345678\",\n  \"clients\": [\n    {\n      \"id\": 1000,\n      \"ac_id\": \"AC000000024\",\n      \"branch\": {\n        \"id\": 1000,\n        \"name\": \"Toronto branch\"\n      },\n      \"external_id\": \"sor_client_external_id_1\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"status\": \"discharged\",\n      \"contact_relationship\": {\n        \"contact_type\": \"Medical\",\n        \"relationship\": \"Doctor\",\n        \"status\": \"<string>\",\n        \"eb_medicaid_employee_relationship\": \"Spouse\",\n        \"eb_medicaid_provider_type\": \"Attending provider\",\n        \"eb_medicaid_npi\": \"12345678\"\n      },\n      \"_link\": \"https://demo3.alayacare.ca/permalink/client/b1\"\n    },\n    {\n      \"id\": 1000,\n      \"ac_id\": \"AC000000024\",\n      \"branch\": {\n        \"id\": 1000,\n        \"name\": \"Toronto branch\"\n      },\n      \"external_id\": \"sor_client_external_id_1\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"status\": \"active\",\n      \"contact_relationship\": {\n        \"contact_type\": \"Medical\",\n        \"relationship\": \"Doctor\",\n        \"status\": \"<string>\",\n        \"eb_medicaid_employee_relationship\": \"Spouse\",\n        \"eb_medicaid_provider_type\": \"Attending provider\",\n        \"eb_medicaid_npi\": \"12345678\"\n      },\n      \"_link\": \"https://demo3.alayacare.ca/permalink/client/b1\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f1127fcf-c26e-4de6-b667-2d007f03b739",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Only client_id or external_client_id can be specified\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a5eeb71-5b82-45c3-b382-eb2770ce32c7",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f98afeb4-394b-4fe5-90cc-d01ae4bacf0e",
+              "name": "Client contact not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client contact not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "705c96de-b944-4bab-ba68-f903c8c42622",
+          "name": "Update client contact details using its AlayaCare Client ID",
+          "request": {
+            "name": "Update client contact details using its AlayaCare Client ID",
+            "description": {
+              "content": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given client and their contact. These properties include:\n- `contact_type`\n- `relationship`\n\nFor backward compatibility, the client ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nnot shared, therefore ensuring the client ID is unambiguous.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contact_id",
+                  "description": "(Required) AlayaCare ID of the client contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"external_id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"<string>\",\n  \"relationship\": \"<string>\",\n  \"client_id\": \"<integer>\",\n  \"external_client_id\": \"<string>\",\n  \"is_billing_contact\": \"<boolean>\",\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"gender\": \"<string>\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"<string>\",\n  \"eb_medicaid_npi\": \"<string>\",\n  \"eb_medicaid_employee_relationship\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "97252a6b-211c-4dcc-8bd1-36dafabe2dbf",
+              "name": "Client updated successfuly",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001,\n  \"external_id\": \"crm_client_contact_external_id_1\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c09bebb-4347-4514-bd9a-914c5325e42b",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Only client_id or external_client_id can be specified\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fbc56cd8-c885-4f69-ae14-0a41133c378c",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "697ce3bc-71df-423f-bd26-70d810870c44",
+              "name": "Client contact not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client contact not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a175cc91-58b6-4131-af96-0ad1482fbe6f",
+              "name": "Conflict. Possible causes:\n  1. the external ID given in the body is already used by another contact;\n  2. multiple clients share the external ID given in the body and they should be merged\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contact_id",
+                      "description": "(Required) AlayaCare ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Contact already exists with external ID: contact_external_id_1\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f98cc025-29c9-4063-b508-0bb9eb2f2f0d",
+          "name": "Get client contact details using External Client ID",
+          "request": {
+            "name": "Get client contact details using External Client ID",
+            "description": {
+              "content": "If the contact is shared by **more** than one client, the\nproperties which are tied to the relation between a given client\nand its contact will be left empty on the `ClientContact`\nobject of the response schema. These properties include:\n- `contact_type`\n- `relationship`\n- `status`\n- `eb_medicaid_employee_relationship`\n- `eb_medicaid_provider_type`\n- `eb_medicaid_npi\nThe relationship properties will be specified in the `clients` array\nof the response schema.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "contacts",
+                "by_id",
+                ":external_contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<integer>,<integer>",
+                  "description": "Filter by client ID, one or more using **OR**. Default format is comma-separated (`?client_id=1,2`). Repeated params (`?client_id=1&client_id=2`) are also accepted."
+                },
+                {
+                  "disabled": false,
+                  "key": "external_client_id",
+                  "value": "<string>,<string>",
+                  "description": "Filter by external client ID, one or more using **OR**. Default format is comma-separated (`?external_client_id=a,b`). Repeated params (`?external_client_id=a&external_client_id=b`) are also accepted."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_contact_id",
+                  "description": "(Required) External ID of the client contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "55f6f6b9-80b8-4b39-a940-942b0ff409de",
+              "name": "Contact details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"ac_id\": \"AC000000024\",\n  \"external_id\": \"crm_client_contact_external_id_1\",\n  \"status\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"gender\": \"M\"\n  },\n  \"branch\": {\n    \"id\": 1000,\n    \"name\": \"Toronto branch\"\n  },\n  \"contact_type\": \"Medical\",\n  \"relationship\": \"Doctor\",\n  \"language\": \"<string>\",\n  \"emergency\": false,\n  \"is_billing_contact\": false,\n  \"eb_medicaid_employee_relationship\": \"Spouse\",\n  \"eb_medicaid_provider_type\": \"Attending provider\",\n  \"eb_medicaid_npi\": \"12345678\",\n  \"clients\": [\n    {\n      \"id\": 1000,\n      \"ac_id\": \"AC000000024\",\n      \"branch\": {\n        \"id\": 1000,\n        \"name\": \"Toronto branch\"\n      },\n      \"external_id\": \"sor_client_external_id_1\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"status\": \"active\",\n      \"contact_relationship\": {\n        \"contact_type\": \"Medical\",\n        \"relationship\": \"Doctor\",\n        \"status\": \"<string>\",\n        \"eb_medicaid_employee_relationship\": \"Spouse\",\n        \"eb_medicaid_provider_type\": \"Attending provider\",\n        \"eb_medicaid_npi\": \"12345678\"\n      },\n      \"_link\": \"https://demo3.alayacare.ca/permalink/client/b1\"\n    },\n    {\n      \"id\": 1000,\n      \"ac_id\": \"AC000000024\",\n      \"branch\": {\n        \"id\": 1000,\n        \"name\": \"Toronto branch\"\n      },\n      \"external_id\": \"sor_client_external_id_1\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"status\": \"pending\",\n      \"contact_relationship\": {\n        \"contact_type\": \"Medical\",\n        \"relationship\": \"Doctor\",\n        \"status\": \"<string>\",\n        \"eb_medicaid_employee_relationship\": \"Spouse\",\n        \"eb_medicaid_provider_type\": \"Attending provider\",\n        \"eb_medicaid_npi\": \"12345678\"\n      },\n      \"_link\": \"https://demo3.alayacare.ca/permalink/client/b1\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b5bf7808-6e46-4124-ae74-826622612bcb",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Only client_id or external_client_id can be specified\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "145fc51e-5107-46eb-bb0a-67f1240c2743",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "013464a8-43f8-4f49-8e95-d202df05b986",
+              "name": "Client contact not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client contact not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c7dd9175-bd51-4abe-b3aa-5a4b27ba6802",
+              "name": "Conflict: multiple contacts share the external ID given in the body and they should be merged\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "<integer>,<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Multiple contacts found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "359ca69a-bf89-4877-9d97-849bb69411d1",
+          "name": "Update client contact details using External Client ID",
+          "request": {
+            "name": "Update client contact details using External Client ID",
+            "description": {
+              "content": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given client and their contact. These properties include:\n- `contact_type`\n- `relationship`\n\nFor backward compatibility, the client ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nnot shared, therefore ensuring the client ID is unambiguous.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "contacts",
+                "by_id",
+                ":external_contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "external_contact_id",
+                  "description": "(Required) External ID of the client contact"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"external_id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"contact_type\": \"<string>\",\n  \"relationship\": \"<string>\",\n  \"client_id\": \"<integer>\",\n  \"external_client_id\": \"<string>\",\n  \"is_billing_contact\": \"<boolean>\",\n  \"emergency\": false,\n  \"language\": \"<string>\",\n  \"demographics\": {\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"gender\": \"<string>\"\n  },\n  \"roles\": [\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"is_active\": \"<boolean>\",\n      \"effective_from\": \"<dateTime>\",\n      \"effective_to\": \"<dateTime>\"\n    }\n  ],\n  \"eb_medicaid_provider_type\": \"<string>\",\n  \"eb_medicaid_npi\": \"<string>\",\n  \"eb_medicaid_employee_relationship\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "45f82a9d-9131-4184-84b4-ce92fa5569bb",
+              "name": "Client updated successfuly",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1001,\n  \"external_id\": \"crm_client_contact_external_id_1\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3132f051-c615-44c6-a7f7-084d4f3ef19f",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Invalid request\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3783fbe-5073-4a9d-9ece-2cb66d25d88c",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1676c434-a4a6-4ac6-8897-7c0a3aacba3d",
+              "name": "Client contact not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"message\": \"Client contact not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "54b597c1-4ed4-4f3f-bd28-7e1da3510f08",
+              "name": "Conflict. Possible causes:\n  1. the external ID given in the body is already used by another contact;\n  2. multiple clients share the external ID given in the body and they should be merged;\n  3. multiple contacts share the external ID given in the path and they should be merged\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "contacts",
+                    "by_id",
+                    ":external_contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "external_contact_id",
+                      "description": "(Required) External ID of the client contact"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"Contact already exists with external ID: contact_external_id_1\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5481a82e-4dc8-47c9-8b55-6ab3afb88554",
+    "name": "AlayaCare Accounting Accounts Client Contacts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

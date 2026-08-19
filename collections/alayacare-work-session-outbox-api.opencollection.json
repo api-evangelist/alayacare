@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts work session outbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "work session outbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/outbox/work_sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/work_sessions",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of a visit."
+              },
+              {
+                "name": "visit_outbox_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of a visit in the demand system."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: demand `org_admin` who created the associated referral.\n\n# Description\nGet a collection of Work Sessions for a given visit.\n\nOne of `visit_id` or `visit_outbox_id` must be provided.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

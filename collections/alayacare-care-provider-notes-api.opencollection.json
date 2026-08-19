@@ -1,0 +1,342 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Care Provider Notes API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Care Provider Notes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List care provider notes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/care-provider-notes",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the client"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              },
+              {
+                "name": "is_archived",
+                "value": "",
+                "type": "query",
+                "description": "Filter notes by archived status"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort by"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Cursor to the next page"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (min: 1, max: 100)"
+              }
+            ]
+          },
+          "docs": "List care provider notes"
+        },
+        {
+          "info": {
+            "name": "Create a care provider note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/care-provider-notes",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the client"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a care provider note for a client by AlayaCare client ID."
+        },
+        {
+          "info": {
+            "name": "List care provider notes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/care-provider-notes",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              },
+              {
+                "name": "is_archived",
+                "value": "",
+                "type": "query",
+                "description": "Filter notes by archived status"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort by"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Cursor to the next page"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (min: 1, max: 100)"
+              }
+            ]
+          },
+          "docs": "List care provider notes"
+        },
+        {
+          "info": {
+            "name": "Create a care provider note using external client id",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/care-provider-notes",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a care provider note for a client by external client ID."
+        },
+        {
+          "info": {
+            "name": "List care provider note categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/care-provider-notes/categories",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the client"
+              },
+              {
+                "name": "description_search",
+                "value": "",
+                "type": "query",
+                "description": "Filter categories by description (substring match)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Cursor to the next page"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (min: 1, max: 100)"
+              }
+            ]
+          },
+          "docs": "List care provider note categories"
+        },
+        {
+          "info": {
+            "name": "List care provider note categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/care-provider-notes/categories",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "description_search",
+                "value": "",
+                "type": "query",
+                "description": "Filter categories by description (substring match)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Cursor to the next page"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (min: 1, max: 100)"
+              }
+            ]
+          },
+          "docs": "List care provider note categories"
+        },
+        {
+          "info": {
+            "name": "Get a care provider note",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/care-provider-notes/:note_id",
+            "params": [
+              {
+                "name": "note_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the care provider note"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              }
+            ]
+          },
+          "docs": "Get a care provider note."
+        },
+        {
+          "info": {
+            "name": "Archive a care provider note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/care-provider-notes/:note_id/archive",
+            "params": [
+              {
+                "name": "note_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the care provider note to archive"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              }
+            ]
+          },
+          "docs": "Archives a care provider note by note ID."
+        },
+        {
+          "info": {
+            "name": "Unarchive a care provider note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/care-provider-notes/:note_id/unarchive",
+            "params": [
+              {
+                "name": "note_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the care provider note to unarchive"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "List of fields to include in the response (valid values are 'category'). Default format is comma-separated. Repeated params are also accepted."
+              }
+            ]
+          },
+          "docs": "Unarchives a care provider note by note ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

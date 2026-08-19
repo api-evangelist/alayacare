@@ -1,0 +1,136 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Premiums API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Premiums",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of premiums",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/premiums",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Partial match on code"
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch ID."
+              },
+              {
+                "name": "excluded_ids",
+                "value": "",
+                "type": "query",
+                "description": "List of IDs for premiums to exclude from the results."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Order to sort by"
+              }
+            ]
+          },
+          "docs": "Get a list of premiums"
+        },
+        {
+          "info": {
+            "name": "Create a new Premium",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/premiums",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new Premium"
+        },
+        {
+          "info": {
+            "name": "Get a specific Premium",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/premiums/:premium_id",
+            "params": [
+              {
+                "name": "premium_id",
+                "value": "",
+                "type": "path",
+                "description": "The selected premium id"
+              }
+            ]
+          },
+          "docs": "Get a specific Premium"
+        },
+        {
+          "info": {
+            "name": "Update a Premium",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/premiums/:premium_id",
+            "params": [
+              {
+                "name": "premium_id",
+                "value": "",
+                "type": "path",
+                "description": "The selected premium id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Premium"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

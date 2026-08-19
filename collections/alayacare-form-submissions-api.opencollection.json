@@ -1,0 +1,215 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Form Submissions API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Form Submissions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of submissions.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/submissions",
+            "params": [
+              {
+                "name": "create_user_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by create user ID"
+              },
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external employee ID"
+              },
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare client or facility ID"
+              },
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by external client ID"
+              },
+              {
+                "name": "submitted_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date greater or equal than specified value. If not specified, the default date will be today."
+              },
+              {
+                "name": "submitted_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date less or equal than specified value. If not specified, the default date will be 2 weeks from the start date"
+              },
+              {
+                "name": "form_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by form ID"
+              },
+              {
+                "name": "schema_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the `schema_id` to get submissions of all versions of the same form"
+              },
+              {
+                "name": "with_fields",
+                "value": "",
+                "type": "query",
+                "description": "Include the submission fields in the response. By default fields are not included"
+              },
+              {
+                "name": "work_session_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by work session ID"
+              },
+              {
+                "name": "client_group_id[]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by client's group ID"
+              },
+              {
+                "name": "client_group_id_mode",
+                "value": "",
+                "type": "query",
+                "description": "The logical mode to use for client_group_id.\n'all' results in a logical 'and'\n'any' results in a logical 'or'\n"
+              },
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit ID"
+              },
+              {
+                "name": "form_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by form type"
+              },
+              {
+                "name": "asc",
+                "value": "",
+                "type": "query",
+                "description": "Order for sorting"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number. If not specified will default to 1"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page. If not specified will default to 100"
+              }
+            ]
+          },
+          "docs": "* Only form submissions that the current user can view will be returned.\n* Results are ordered by the form submission ID in ascending order by default.\n* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n* `account_id` and `external_client_id` are mutually exclusive.\n* `create_user_id` and `external_employee_id` are mutually exclusive.\n* Can return only up to 2 weeks da"
+        },
+        {
+          "info": {
+            "name": "Get form submission details by form submission ID.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/submissions/:submission_id",
+            "params": [
+              {
+                "name": "submission_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the submission"
+              }
+            ]
+          },
+          "docs": "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n"
+        },
+        {
+          "info": {
+            "name": "Get the count of approved form submissions and the total count of form submissions by work session.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/submissions/count_visit_submissions",
+            "params": [
+              {
+                "name": "work_session_id",
+                "value": "",
+                "type": "query",
+                "description": "One or more work_session_ids. Use parameter multiple times for multiple work_session_ids"
+              },
+              {
+                "name": "include_admin",
+                "value": "",
+                "type": "query",
+                "description": "Include in the count all submissions linked with a form that has the flag `admin_eye_only` set"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "Include in the count only submissions that have the `created_user_id` match the `user_id` argument"
+              },
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "query",
+                "description": "Include in the count only submissions created by an employee matching the external employee id"
+              }
+            ]
+          },
+          "docs": "* Requires one of the following ACLs:\n  - `ACL_PATROL_REPORT_VISIT_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n* `user_id` and `external_employee_id` are mutually exclusive.\n"
+        },
+        {
+          "info": {
+            "name": "Get form submission change logs.\n",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/submissions/:submission_id/submission_revision",
+            "params": [
+              {
+                "name": "submission_id",
+                "value": "",
+                "type": "path",
+                "description": "Form submission ID"
+              }
+            ]
+          },
+          "docs": "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

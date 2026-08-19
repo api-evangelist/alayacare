@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts form submission outbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "form submission outbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/outbox/form_submissions/{form_submission_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/form_submissions/:form_submission_id",
+            "params": [
+              {
+                "name": "form_submission_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a form submission."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: demand `org_admin` assigned to the referral \nassociated to the form submission.\n\n# Description\nRead a form submission.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/form_submissions/fields/{form_submission_field_id}/attachment/presigned",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/form_submissions/fields/:form_submission_field_id/attachment/presigned",
+            "params": [
+              {
+                "name": "form_submission_field_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a form submission field."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: demand `org_admin` assigned to the referral \nassociated to the form submission.\n\n# Description\nGet the pre-signed URL for the file attached to a form submission field as\na demand organization.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

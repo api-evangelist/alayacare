@@ -1,0 +1,145 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts message outbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "message outbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/outbox/messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/messages",
+            "params": [
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sender_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a paginated collection of messages for a sequence as a demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/outbox/messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/messages",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nSend a message for a sequence as a demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/messages/{message_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/messages/:message_id",
+            "params": [
+              {
+                "name": "message_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a message."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the details of a message for a sequence as a demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/messages/files/{file_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/messages/files/:file_id",
+            "params": [
+              {
+                "name": "file_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a file."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the file attached to a message as a demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/outbox/messages/files/{file_id}/presigned",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/outbox/messages/files/:file_id/presigned",
+            "params": [
+              {
+                "name": "file_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a file."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the pre-signed URL for the file attached to a message as a demand\norganization.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

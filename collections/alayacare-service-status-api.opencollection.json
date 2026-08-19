@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Service Status API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Service Status",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a service status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/service/:service_id/status",
+            "params": [
+              {
+                "name": "service_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the service"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a service status for a service by service ID."
+        },
+        {
+          "info": {
+            "name": "Create a service status using external client id",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/service/by_id/:external_service_id/status",
+            "params": [
+              {
+                "name": "external_service_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the service"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a service status for a service by external service ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

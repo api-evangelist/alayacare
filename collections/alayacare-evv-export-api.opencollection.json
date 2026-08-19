@@ -1,0 +1,175 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts EVV Export API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "EVV Export",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of EVV exports created filter by `claim_destination_system`, `export_type` and `status_of_background_jobs`",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/evv_exports",
+            "params": [
+              {
+                "name": "claim_destination_system",
+                "value": "",
+                "type": "query",
+                "description": "Claim destination system associated with the EVV Export"
+              },
+              {
+                "name": "export_type",
+                "value": "",
+                "type": "query",
+                "description": "Type of EVV Export"
+              },
+              {
+                "name": "status_of_background_jobs[]",
+                "value": "",
+                "type": "query",
+                "description": "array of statuses ('FAILURE', 'STARTED', 'SUCCESS', 'NOT_SENT', 'PENDING')"
+              }
+            ]
+          },
+          "docs": "Get a list of EVV exports created filter by `claim_destination_system`, `export_type` and `status_of_background_jobs`"
+        },
+        {
+          "info": {
+            "name": "Create an initial EVV export record for the `claim_destination_system` and `export_type` selected for a specific `branch_id` or default branch if none specified.  The returned schema's `created_at` date will be used as the end of the date range for visits retrieval.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/evv_exports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an initial EVV export record for the `claim_destination_system` and `export_type` selected for a specific `branch_id` or default branch if none specified.  The returned schema's `created_at` date will be used as the end of the date range for visits retrieval."
+        },
+        {
+          "info": {
+            "name": "Get full EVV export record.  This can be called for a \"retry export\" event, in case of initial failure.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/evv_exports/:evv_export_id",
+            "params": [
+              {
+                "name": "evv_export_id",
+                "value": "",
+                "type": "path",
+                "description": "EVV export ID"
+              }
+            ]
+          },
+          "docs": "Get full EVV export record.  This can be called for a \"retry export\" event, in case of initial failure."
+        },
+        {
+          "info": {
+            "name": "Update EVV export record.  This will only be called once, after the EVV export is complete (either as success or failure), and will contain all the information about the export.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/evv_exports/:evv_export_id",
+            "params": [
+              {
+                "name": "evv_export_id",
+                "value": "",
+                "type": "path",
+                "description": "EVV export ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update EVV export record.  This will only be called once, after the EVV export is complete (either as success or failure), and will contain all the information about the export."
+        },
+        {
+          "info": {
+            "name": "Get the date and time of the latest EVV export for the `branch_id`, `claim_destination_system` and `export_type` selected, returned from the record of the most recent file that was exported, regardless of its status.  If no record is found a default date is returned instead.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/evv_exports/latest_export_date",
+            "params": [
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Branch ID"
+              },
+              {
+                "name": "claim_destination_system",
+                "value": "",
+                "type": "query",
+                "description": "Claim destination system"
+              },
+              {
+                "name": "export_type",
+                "value": "",
+                "type": "query",
+                "description": "Export type"
+              },
+              {
+                "name": "evv_export_id",
+                "value": "",
+                "type": "query",
+                "description": "existing EVVExport record"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Export state"
+              }
+            ]
+          },
+          "docs": "Get the date and time of the latest EVV export for the `branch_id`, `claim_destination_system` and `export_type` selected, returned from the record of the most recent file that was exported, regardless of its status.  If no record is found a default date is returned instead."
+        },
+        {
+          "info": {
+            "name": "Get the date and time of the latest EVV export using the Export ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/evv_exports/latest_export_date/:evv_export_id",
+            "params": [
+              {
+                "name": "evv_export_id",
+                "value": "",
+                "type": "path",
+                "description": "existing EVVexport record"
+              }
+            ]
+          },
+          "docs": "Returns the date and time from the record of the most recent file that was exported prior to `evv_export_id`, regardless of its status.  If no record is found the default date is returned."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

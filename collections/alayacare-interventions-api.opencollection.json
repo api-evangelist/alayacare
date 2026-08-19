@@ -1,0 +1,169 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Interventions API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Interventions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of available intervention types.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/intervention_types"
+          },
+          "docs": "Get a list of available intervention types."
+        },
+        {
+          "info": {
+            "name": "Get the intervention list of a Careplan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/interventions",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              }
+            ]
+          },
+          "docs": "Get the intervention list of a Careplan"
+        },
+        {
+          "info": {
+            "name": "Create an intervention in a Careplan using Alayacare care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/interventions",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              }
+            ]
+          },
+          "docs": "Create an intervention in a careplan. Based on Intervention are then recurrence definition they will them be available as visit interventions. \n- `recurrence_type` can be set with a frequency of `per_visit`, `per_request` or `custom`\n For `custom`  recurrence type the `recurrence` object is mandatory and additionnal information is required to define the frequency and the availability of the intervention.\n- `include_485` is Only required if the 485 feature flag is tuned ON\n\nInterventions can be l"
+        },
+        {
+          "info": {
+            "name": "Get a specific intervention by intervention ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/interventions/:intervention_id",
+            "params": [
+              {
+                "name": "intervention_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the intervention"
+              }
+            ]
+          },
+          "docs": "Get a specific intervention by intervention ID"
+        },
+        {
+          "info": {
+            "name": "Edit the given intervention",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/interventions/:intervention_id",
+            "params": [
+              {
+                "name": "intervention_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the intervention"
+              }
+            ]
+          },
+          "docs": "Update an intervention attached to a careplan\n- Only services assigned to the client can be linked to the intervention\n"
+        },
+        {
+          "info": {
+            "name": "Delete a care plan intervention using the intervention ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/interventions/:intervention_id",
+            "params": [
+              {
+                "name": "intervention_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the intervention"
+              }
+            ]
+          },
+          "docs": "Delete a Care plan intervention\n- Only interventions in `draft` status can be deleted\n"
+        },
+        {
+          "info": {
+            "name": "Update intervention status to archived",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/interventions/:intervention_id/status/archived",
+            "params": [
+              {
+                "name": "intervention_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of careplan intervention"
+              }
+            ]
+          },
+          "docs": "Update intervention status to archived"
+        },
+        {
+          "info": {
+            "name": "Update intervention status to completed",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/interventions/:intervention_id/status/completed",
+            "params": [
+              {
+                "name": "intervention_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of careplan intervention"
+              }
+            ]
+          },
+          "docs": "Update intervention status to completed"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

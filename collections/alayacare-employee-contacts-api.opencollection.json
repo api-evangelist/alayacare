@@ -1,0 +1,122 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Employee Contacts API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Employee Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create employee contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts"
+          },
+          "docs": "- Only one of `employee_id` or `external_employee_id` can be specified\n"
+        },
+        {
+          "info": {
+            "name": "Get employee contact details using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee contact"
+              },
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given employee and their contact. These properties include:\n  - `contact_type`\n  - `relationship`\n\nFor backward compatibility, the employee ID parameters can be\nomitted, but this operation will only succeed if the contact is\nnot shared, therefore ensuring the employee ID is unambiguous.\n\n The relationship properties will be specified in the employees array of the "
+        },
+        {
+          "info": {
+            "name": "Update employee contact details using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the employee contact"
+              }
+            ]
+          },
+          "docs": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given employee and their contact. These properties include:\n  - `contact_type`\n  - `relationship`\n\nFor backward compatibility, the employee ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nis not shared, therefore ensuring the employee ID is unambiguos.\n"
+        },
+        {
+          "info": {
+            "name": "Get employee contact details using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/by_id/:external_contact_id",
+            "params": [
+              {
+                "name": "external_contact_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee contact"
+              }
+            ]
+          },
+          "docs": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given employee and their contact. These properties include:\n  - `contact_type`\n  - `relationship`\n\nFor backward compatibility, the employee ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nis not shared, therefore ensuring the employee ID is unambiguos.\n"
+        },
+        {
+          "info": {
+            "name": "Update employee contact details using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/contacts/by_id/:external_contact_id",
+            "params": [
+              {
+                "name": "external_contact_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the employee contact"
+              }
+            ]
+          },
+          "docs": "A contact may be shared by more than one employee or client. Some\nproperties of a contact are tied to the specific relation between\na given employee and their contact. These properties include:\n  - `contact_type`\n  - `relationship`\n\nFor backward compatibility, the employee ID attribute can be omitted\nfrom the payload, but the operation will only succeed if the contact\nis not shared, therefore ensuring the employee ID is unambiguos.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

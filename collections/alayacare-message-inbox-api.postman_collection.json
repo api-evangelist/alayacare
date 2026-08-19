@@ -1,0 +1,592 @@
+{
+  "item": [
+    {
+      "id": "bd637bf0-682d-46ad-b5f9-e59d51a0a20b",
+      "name": "message inbox",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "368a637b-7783-41d1-9fe0-ca392596eaf0",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nSend a message for a sequence as a supply organization.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nSend a message for a sequence as a supply organization.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nSend a message for a sequence as a supply organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "messages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sequence_id\": \"<uuid>\",\n  \"category\": \"<string>\",\n  \"text\": \"<string>\",\n  \"author\": \"<string>\",\n  \"file\": {\n    \"url\": \"<string>\",\n    \"name\": \"<string>\",\n    \"size_in_bytes\": \"<integer>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a93585f7-1cec-49a5-a8b6-bee920827268",
+              "name": "Successfully sent message.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "messages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sequence_id\": \"<uuid>\",\n  \"category\": \"<string>\",\n  \"text\": \"<string>\",\n  \"author\": \"<string>\",\n  \"file\": {\n    \"url\": \"<string>\",\n    \"name\": \"<string>\",\n    \"size_in_bytes\": \"<integer>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": {\n    \"id\": \"6855355a-a696-21a5-00f8-f8d5a9442834\",\n    \"sequence_id\": \"4d0e1f49-3ad8-d3d5-9f66-050e8d53fa71\",\n    \"category\": \"<string>\",\n    \"sender_type\": \"demand\",\n    \"created_at\": \"1953-10-31T04:45:04.743Z\",\n    \"text\": \"string\",\n    \"author\": \"string\",\n    \"file\": {\n      \"id\": \"a6013a1e-52bb-c8c0-baa2-ab6e21820216\",\n      \"name\": \"string\",\n      \"url\": \"string\",\n      \"size_in_bytes\": 14764061\n    }\n  },\n  \"sender\": {\n    \"id\": \"b08fdedb-454d-2aa0-6469-547645f029fb\",\n    \"name\": \"string\"\n  },\n  \"recipient\": {\n    \"id\": \"9d300885-a016-495d-2e84-ee51700c80a3\",\n    \"name\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "355cf5d5-39e8-4370-9665-201568b9b3f9",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a paginated collection of messages for a sequence as a supply organization.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a paginated collection of messages for a sequence as a supply organization.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a paginated collection of messages for a sequence as a supply organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "messages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sequence_id",
+                  "value": "<uuid>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "sender_type",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "category",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "items_per_page",
+                  "value": "100"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9e753063-7597-4a6e-8476-62dc309bdc8a",
+              "name": "Successfully got the messages.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "messages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sequence_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "sender_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "items_per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "created_at"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"d650690b-c7ac-fdca-7337-80bbbc2c0f1f\",\n      \"category\": \"<string>\",\n      \"sender_type\": \"<string>\",\n      \"created_at\": \"1981-01-25T04:30:11.061Z\",\n      \"text\": \"string\",\n      \"author\": \"string\",\n      \"file\": {\n        \"id\": \"ca6294b8-cbce-fc7b-ca44-ab14beab5405\",\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"id\": \"17ff22ce-23b0-a336-9edf-06a439ee5f93\",\n      \"category\": \"<string>\",\n      \"sender_type\": \"<string>\",\n      \"created_at\": \"1973-11-16T10:04:43.852Z\",\n      \"text\": \"string\",\n      \"author\": \"string\",\n      \"file\": {\n        \"id\": \"dd68913d-ca35-6336-a94c-1f3087b8d24a\",\n        \"name\": \"string\"\n      }\n    }\n  ],\n  \"items_per_page\": 100,\n  \"page\": 1,\n  \"total_items\": 1053,\n  \"total_pages\": 2103\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f047a238-2c31-454e-923b-31f5a0584bc2",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the details of a message for a sequence as a supply organization.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the details of a message for a sequence as a supply organization.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the details of a message for a sequence as a supply organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "messages",
+                ":message_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "message_id",
+                  "description": "(Required) ID of a message."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3e9069d3-efaa-48b1-b69f-3946da2aa30d",
+              "name": "Successfully got the message.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "messages",
+                    ":message_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "message_id",
+                      "description": "(Required) ID of a message."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": {\n    \"id\": \"5ab35ba8-2f51-b3b4-5b64-089f245f6ba9\",\n    \"sequence_id\": \"25e161ec-6789-6b6d-cb13-e4a85d0cb89a\",\n    \"category\": \"<string>\",\n    \"sender_type\": \"<string>\",\n    \"created_at\": \"2015-09-19T01:32:00.615Z\",\n    \"text\": \"string\",\n    \"author\": \"string\",\n    \"file\": {\n      \"id\": \"67195c0a-069b-e796-46a4-f75c32594827\",\n      \"name\": \"string\",\n      \"url\": \"string\",\n      \"size_in_bytes\": 46157927\n    }\n  },\n  \"sender\": {\n    \"id\": \"d2f840f0-d81e-2118-fd01-7b776385370c\",\n    \"name\": \"string\"\n  },\n  \"recipient\": {\n    \"id\": \"3b492ce8-6e15-46a6-b7bc-b1a8a9d1c541\",\n    \"name\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "15727ee8-c676-4189-9d2b-ec993a0b976d",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the file attached to a message as a supply organization.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the file attached to a message as a supply organization.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the file attached to a message as a supply organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "messages",
+                "files",
+                ":file_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "file_id",
+                  "description": "(Required) ID of a file."
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "571638f5-eb32-4339-9806-316a16af6a45",
+              "name": "Successfully got the file.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "messages",
+                    "files",
+                    ":file_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "file_id",
+                      "description": "(Required) ID of a file."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e99cb089-2f30-455e-98d9-7cec844def8c",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the pre-signed URL for the file attached to a message as a supply\norganization.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the pre-signed URL for the file attached to a message as a supply\norganization.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the pre-signed URL for the file attached to a message as a supply\norganization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "messages",
+                "files",
+                ":file_id",
+                "presigned"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "file_id",
+                  "description": "(Required) ID of a file."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b8ad003d-a793-4f76-8fa0-177e4bf3e2e6",
+              "name": "Successfully got the pre-signed URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "messages",
+                    "files",
+                    ":file_id",
+                    "presigned"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "file_id",
+                      "description": "(Required) ID of a file."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ee2621e1-b046-48ec-a952-23c4f27f708a",
+    "name": "AlayaCare Accounting Accounts message inbox API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

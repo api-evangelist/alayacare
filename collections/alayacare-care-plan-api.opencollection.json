@@ -1,0 +1,632 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Care plan API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Care plan",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of care plan base information using the client Alayacare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:client_id/careplans",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the client Alayacare ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by careplan status"
+              },
+              {
+                "name": "start_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by care plan start date time greater or equal than specified value.\nIf not specified will default to now.\nExpected format is ISO 8601 converted to UTC timezone.\n`start_date_from` can be used as this filter name.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "start_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by care plan start date time less than or equal than specified value.\nIf not specified will default to 7 days from now.\nExpected format is ISO 8601 converted to UTC timezone.\n`start_date_to` can be used as this filter name\nEx: `2019-02-18T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by care plan end date time greater or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2019-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by care plan date time less than or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2018-02-18T08:00:00-05:00`            \n"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by careplan name"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Define the field for sorting"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Define the type of sorting (asc/desc)"
+              }
+            ]
+          },
+          "docs": "Get a list of care plan base information using the client Alayacare ID"
+        },
+        {
+          "info": {
+            "name": "Create a care plan using the client Alayacare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:client_id/careplans",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the client Alayacare ID"
+              }
+            ]
+          },
+          "docs": "Create a care plan using the client Alayacare ID"
+        },
+        {
+          "info": {
+            "name": "Get a list of care plan base information using the client external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/by_id/:external_client_id/careplans",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the client external ID"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by careplan status"
+              },
+              {
+                "name": "start_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by careplan start date time greater or equal than specified value.\nIf not specified will default to now.\nExpected format is ISO 8601 converted to UTC timezone.\n`start_at` can be used as this filter name.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "start_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by careplan start date time less than or equal than specified value.\nIf not specified will default to 7 days from now.\nExpected format is ISO 8601 converted to UTC timezone.\n`end_at` can be used as this filter name\nEx: `2019-02-18T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_date_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit end date time greater or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2019-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "end_date_to",
+                "value": "",
+                "type": "query",
+                "description": "Filter by visit end date time less than or equal than specified value. \nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2018-02-18T08:00:00-05:00`            \n"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by careplan name"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Define the field for sorting"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Define the type of sorting (asc/desc)"
+              }
+            ]
+          },
+          "docs": "Get a list of care plan base information using the client external ID"
+        },
+        {
+          "info": {
+            "name": "Create a care plan using the client external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/by_id/:external_client_id/careplans",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using the client external ID"
+              }
+            ]
+          },
+          "docs": "Create a care plan using the client external ID"
+        },
+        {
+          "info": {
+            "name": "Get the detailed information of the active care plan using Alayacare client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:client_id/careplans/active",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using Alayacare client DB ID"
+              },
+              {
+                "name": "root_item_id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)\n"
+              },
+              {
+                "name": "root_item_type",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by tags"
+              },
+              {
+                "name": "services",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by services"
+              },
+              {
+                "name": "departments",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by departments"
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by status"
+              }
+            ]
+          },
+          "docs": "Deprecated. Use /careplans/currently-active instead.\nReturns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned"
+        },
+        {
+          "info": {
+            "name": "Get the detailed information of the active care plan using Alayacare client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:client_id/careplans/currently-active",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using Alayacare client DB ID"
+              },
+              {
+                "name": "root_item_id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)\n"
+              },
+              {
+                "name": "root_item_type",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by tags"
+              },
+              {
+                "name": "services",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by services"
+              },
+              {
+                "name": "departments",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by departments"
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by status"
+              }
+            ]
+          },
+          "docs": "Returns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned when filtering on the type `diagnosis`  and the spec"
+        },
+        {
+          "info": {
+            "name": "Get the detailed information of the active care plan using client external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/by_id/:external_client_id/careplans/active",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using Alayacare client external ID"
+              },
+              {
+                "name": "root_item_id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)\n"
+              },
+              {
+                "name": "root_item_type",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by tags"
+              },
+              {
+                "name": "services",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by services"
+              },
+              {
+                "name": "departments",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by departments"
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by status"
+              }
+            ]
+          },
+          "docs": "Deprecated. Use /careplans/currently-active instead.\nReturns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned"
+        },
+        {
+          "info": {
+            "name": "Get the detailed information of the active care plan using client external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/by_id/:external_client_id/careplans/currently-active",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "Send request using Alayacare client external ID"
+              },
+              {
+                "name": "root_item_id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)\n"
+              },
+              {
+                "name": "root_item_type",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by tags"
+              },
+              {
+                "name": "services",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by services"
+              },
+              {
+                "name": "departments",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by departments"
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by status"
+              }
+            ]
+          },
+          "docs": "Returns the detailed information of the active careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n\n- Specifying `root_item_id` and `root_item_type` filters will return the `root_item` and any item linked to it.   Both filters must be valid and specified together or an error will be returned.\n- For example, if a specific `diagnosis_id` is linked to 2 goals then the 3 entities will be returned when filtering on the type `diagnosis`  and the spec"
+        },
+        {
+          "info": {
+            "name": "Get detailed information about a care plan using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              },
+              {
+                "name": "root_item_id",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root item ID (`diagnosis`, `goal` and `intervention` IDs)\n"
+              },
+              {
+                "name": "root_item_type",
+                "value": "",
+                "type": "query",
+                "description": "Only return the details for the specified root items type (`diagnosis`, `goal` or `intervention`)"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Set the start date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "Set the end date of the search period for the root items (`diagnosis`, `goal` and `intervention`) (YYYY-MM-DD)"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by tags"
+              },
+              {
+                "name": "services",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by services"
+              },
+              {
+                "name": "departments",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by departments"
+              },
+              {
+                "name": "statuses",
+                "value": "",
+                "type": "query",
+                "description": "Filter root items by status"
+              }
+            ]
+          },
+          "docs": "Returns the detailed information of the careplan, including all sub entities referenced as `root_item` (`diagnosis`, `goal` and `intervention`)\n"
+        },
+        {
+          "info": {
+            "name": "Update care plan base information using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              }
+            ]
+          },
+          "docs": "Update care plan base information using the care plan ID"
+        },
+        {
+          "info": {
+            "name": "Change status of care plan to active using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/status/active",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              }
+            ]
+          },
+          "docs": "- If a care plan is in `completed` or `archived` status, then the care plan cannot be re-activated again.\n- Only `one` care plan can be active at a time.\n- If an existing care plan is currently active, and you wish to create and activate a new care plan, then the `start_date` of the new care plan must be `after` the `start _date` of the currently active care plan.\n"
+        },
+        {
+          "info": {
+            "name": "Change status of care plan to archived using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/status/archived",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              }
+            ]
+          },
+          "docs": "- Care plans in active status must be completed before they can be archived.\n"
+        },
+        {
+          "info": {
+            "name": "Change status of care plan to completed using the care plan ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/careplans/:plan_id/status/completed",
+            "params": [
+              {
+                "name": "plan_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of care plan"
+              }
+            ]
+          },
+          "docs": "Change status of care plan to completed using the care plan ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

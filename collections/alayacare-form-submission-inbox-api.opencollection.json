@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts form submission inbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "form submission inbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "POST /v1/inbox/form_submissions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/form_submissions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: supply `org_admin` assigned to the associated referral.\n\n# Description\nSave a form submission.\n\nOne of `service_id` or `visit_id` must be provided.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

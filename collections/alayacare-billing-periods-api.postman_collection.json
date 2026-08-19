@@ -1,0 +1,697 @@
+{
+  "item": [
+    {
+      "id": "e384cbfd-7ccf-4d5d-805c-504367fdf787",
+      "name": "Billing Periods",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "637098d4-b7fb-4650-9d1d-da3ec5828183",
+          "name": "Get a payor invoicing billing period",
+          "request": {
+            "name": "Get a payor invoicing billing period",
+            "description": {},
+            "url": {
+              "path": [
+                "billing",
+                "periods",
+                ":billing_period_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "billing_period_id",
+                  "description": "(Required) Billing Period ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4c90c328-0610-42ff-9587-6242bf5a6401",
+              "name": "the payor invoicing billing period",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "periods",
+                    ":billing_period_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "billing_period_id",
+                      "description": "(Required) Billing Period ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7900,\n  \"branch\": {\n    \"id\": 1000,\n    \"name\": \"AlayaCare Health\"\n  },\n  \"create_user\": {\n    \"id\": 7407,\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"update_user\": {\n    \"id\": 6304,\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"close_user\": {\n    \"id\": 8696,\n    \"first_name\": \"string\",\n    \"last_name\": \"string\"\n  },\n  \"create_time\": \"1947-02-23T00:16:17.542Z\",\n  \"update_time\": \"2016-03-29T14:22:42.573Z\",\n  \"closed_at\": \"1947-11-17T07:29:58.059Z\",\n  \"guid\": 6214,\n  \"start_date\": \"1988-07-11\",\n  \"end_date\": \"2007-05-05\",\n  \"back_billing_date\": null,\n  \"invoice_date\": \"1982-09-12\",\n  \"idstatus\": 9305,\n  \"overtime_check\": false,\n  \"is_closed\": false,\n  \"allow_shift_creation\": true,\n  \"type\": \"payor_invoicing\",\n  \"frequency\": 3507,\n  \"job_id\": 4249,\n  \"invoice_count\": 5055,\n  \"draft_invoice_count\": 1385,\n  \"sent_invoice_count\": 9773,\n  \"deleted_invoice_count\": 8311,\n  \"is_first\": false,\n  \"is_latest\": false,\n  \"funder_filters\": [\n    {\n      \"id\": 8,\n      \"code\": \"Some Funder\",\n      \"name\": \"Some Funder\",\n      \"description\": \"Some Funder\",\n      \"invoicing_model\": \"funder_individual\",\n      \"guid\": 9\n    },\n    {\n      \"id\": 8,\n      \"code\": \"Some Funder\",\n      \"name\": \"Some Funder\",\n      \"description\": \"Some Funder\",\n      \"invoicing_model\": \"funder_individual\",\n      \"guid\": 9\n    }\n  ],\n  \"payor_type_filters\": [\n    \"individual_invoices\",\n    \"individual_invoices\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a5ae514f-105b-483e-9f2e-1b1b671201f9",
+          "name": "Get a collection of all payor invoicing billing periods",
+          "request": {
+            "name": "Get a collection of all payor invoicing billing periods",
+            "description": {},
+            "url": {
+              "path": [
+                "billing",
+                "periods",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Filter by page number."
+                },
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "100",
+                  "description": "Number of items per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "start_date",
+                  "description": "Field to sort by"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "ASC",
+                  "description": "Order to sort by"
+                },
+                {
+                  "disabled": false,
+                  "key": "frequency",
+                  "value": "<integer>",
+                  "description": "Returns all billing periods with that frequency."
+                },
+                {
+                  "disabled": false,
+                  "key": "invoice_date_from",
+                  "value": "<date>",
+                  "description": "Returns all billing periods using that Invoice Date within the date range."
+                },
+                {
+                  "disabled": false,
+                  "key": "invoice_date_to",
+                  "value": "<date>",
+                  "description": "Returns all billing periods using that Invoice Date within the date range."
+                },
+                {
+                  "disabled": false,
+                  "key": "billing_period_from",
+                  "value": "<date>",
+                  "description": "Returns all billing periods that overlap with the entered date range."
+                },
+                {
+                  "disabled": false,
+                  "key": "billing_period_to",
+                  "value": "<string>",
+                  "description": "Returns all billing periods that overlap with the entered date range."
+                },
+                {
+                  "disabled": false,
+                  "key": "branch_id",
+                  "value": "<integer>",
+                  "description": "Filter by branch ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "search_id",
+                  "value": "<integer>",
+                  "description": "Partial search on the id field."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ca167b54-aba5-430e-9227-e02a2fdeb0bb",
+              "name": "the list of payor invoicing billing periods",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "periods",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "start_date"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "ASC"
+                    },
+                    {
+                      "key": "frequency",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "invoice_date_from",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "invoice_date_to",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "billing_period_from",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "billing_period_to",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "search_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 8636,\n  \"page\": 5625,\n  \"items_per_page\": 5958,\n  \"total_pages\": 6896,\n  \"items\": [\n    {\n      \"id\": 2347,\n      \"branch\": {\n        \"id\": 1000,\n        \"name\": \"AlayaCare Health\"\n      },\n      \"create_user\": {\n        \"id\": 8424,\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"update_user\": {\n        \"id\": 6150,\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"close_user\": {\n        \"id\": 7388,\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"create_time\": \"1985-05-29T20:46:27.124Z\",\n      \"update_time\": \"2018-03-10T13:24:32.770Z\",\n      \"closed_at\": \"1971-09-26T21:25:33.257Z\",\n      \"guid\": 2351,\n      \"start_date\": \"2004-10-03\",\n      \"end_date\": \"1997-04-04\",\n      \"back_billing_date\": null,\n      \"invoice_date\": \"2009-06-21\",\n      \"idstatus\": 6521,\n      \"overtime_check\": false,\n      \"is_closed\": false,\n      \"allow_shift_creation\": true,\n      \"type\": \"payor_invoicing\",\n      \"frequency\": 9083,\n      \"job_id\": 556,\n      \"invoice_count\": 2794,\n      \"draft_invoice_count\": 3344,\n      \"sent_invoice_count\": 2886,\n      \"deleted_invoice_count\": 3399,\n      \"is_first\": true,\n      \"is_latest\": false,\n      \"funder_filters\": [\n        {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\",\n          \"guid\": 9\n        },\n        {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\",\n          \"guid\": 9\n        }\n      ],\n      \"payor_type_filters\": [\n        \"individual_invoices\",\n        \"individual_invoices\"\n      ]\n    },\n    {\n      \"id\": 4154,\n      \"branch\": {\n        \"id\": 1000,\n        \"name\": \"AlayaCare Health\"\n      },\n      \"create_user\": {\n        \"id\": 8579,\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"update_user\": {\n        \"id\": 819,\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"close_user\": {\n        \"id\": 5006,\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"create_time\": \"1992-09-17T13:49:52.816Z\",\n      \"update_time\": \"1968-08-25T20:10:28.587Z\",\n      \"closed_at\": \"1997-08-25T01:11:17.399Z\",\n      \"guid\": 8531,\n      \"start_date\": \"1991-04-01\",\n      \"end_date\": \"2024-08-23\",\n      \"back_billing_date\": null,\n      \"invoice_date\": \"1964-02-11\",\n      \"idstatus\": 2773,\n      \"overtime_check\": false,\n      \"is_closed\": false,\n      \"allow_shift_creation\": true,\n      \"type\": \"payor_invoicing\",\n      \"frequency\": 759,\n      \"job_id\": 9081,\n      \"invoice_count\": 689,\n      \"draft_invoice_count\": 570,\n      \"sent_invoice_count\": 9619,\n      \"deleted_invoice_count\": 6870,\n      \"is_first\": false,\n      \"is_latest\": true,\n      \"funder_filters\": [\n        {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\",\n          \"guid\": 9\n        },\n        {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\",\n          \"guid\": 9\n        }\n      ],\n      \"payor_type_filters\": [\n        \"individual_invoices\",\n        \"individual_invoices\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "55ccfec4-ff00-424d-987b-e8c440f8adb0",
+          "name": "Fetch multiple private pay invoices",
+          "request": {
+            "name": "Fetch multiple private pay invoices",
+            "description": {},
+            "url": {
+              "path": [
+                "billing",
+                "periods",
+                ":billing_period_id",
+                "invoices"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "100",
+                  "description": "Number of items per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Filter by page number."
+                },
+                {
+                  "disabled": false,
+                  "key": "client_search",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "invoice_search",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>,<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "ASC",
+                  "description": "Order to sort by"
+                },
+                {
+                  "disabled": false,
+                  "key": "bill_to_party",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "balance_from",
+                  "value": "<number>"
+                },
+                {
+                  "disabled": false,
+                  "key": "balance_to",
+                  "value": "<number>"
+                },
+                {
+                  "disabled": false,
+                  "key": "unpaid_balance",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "client_tags",
+                  "value": "<string>,<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "client_tag_mode",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "program_type",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "program_name_search",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "master_invoice_id",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "<string>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "billing_period_id",
+                  "description": "(Required) Billing Period ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4e19d785-fe02-48fb-9ba4-aac9f635308b",
+              "name": "Collection of invoices",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "periods",
+                    ":billing_period_id",
+                    "invoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "count",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "client_search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "invoice_search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "ASC"
+                    },
+                    {
+                      "key": "bill_to_party",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "balance_from",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "balance_to",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "unpaid_balance",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "client_tags",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "client_tag_mode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "program_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "program_name_search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "master_invoice_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "billing_period_id",
+                      "description": "(Required) Billing Period ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"count\": 17,\n  \"items_per_page\": 10,\n  \"total_pages\": 2,\n  \"items\": [\n    {\n      \"invoice_number\": 2348,\n      \"invoice_version\": 0,\n      \"master_invoice_id\": 12345,\n      \"status\": \"draft\",\n      \"balance\": \"5.00\",\n      \"payments\": \"2.00\",\n      \"adjustments\": \"3.00\",\n      \"total\": \"10.00\",\n      \"pdf_url\": \"https://alayacare.com/invoice5283_20190625.pdf\",\n      \"pdf_url_create_time\": \"2018-01-16T14:17:05-0500\",\n      \"id\": 12,\n      \"emailed\": true,\n      \"client\": {\n        \"id\": 16,\n        \"first_name\": \"Jane\",\n        \"last_name\": \"Jones\"\n      },\n      \"program\": {\n        \"id\": 12345,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"program_type\": \"LTCI\",\n        \"name\": \"Long Term Care Insurance\",\n        \"guarantor_funder\": {\n          \"id\": 111,\n          \"code\": \"GF1\",\n          \"name\": \"Some Funder\"\n        },\n        \"guarantor_billing_contact\": {\n          \"id\": 111,\n          \"first_name\": \"Bruce\",\n          \"last_name\": \"Lee\"\n        },\n        \"client_billing_cycle\": 999\n      },\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    },\n    {\n      \"invoice_number\": 2348,\n      \"invoice_version\": 0,\n      \"master_invoice_id\": 12345,\n      \"status\": \"draft\",\n      \"balance\": \"5.00\",\n      \"payments\": \"2.00\",\n      \"adjustments\": \"3.00\",\n      \"total\": \"10.00\",\n      \"pdf_url\": \"https://alayacare.com/invoice5283_20190625.pdf\",\n      \"pdf_url_create_time\": \"2018-01-16T14:17:05-0500\",\n      \"id\": 12,\n      \"emailed\": true,\n      \"client\": {\n        \"id\": 16,\n        \"first_name\": \"Jane\",\n        \"last_name\": \"Jones\"\n      },\n      \"program\": {\n        \"id\": 12345,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"program_type\": \"LTCI\",\n        \"name\": \"Long Term Care Insurance\",\n        \"guarantor_funder\": {\n          \"id\": 111,\n          \"code\": \"GF1\",\n          \"name\": \"Some Funder\"\n        },\n        \"guarantor_billing_contact\": {\n          \"id\": 111,\n          \"first_name\": \"Bruce\",\n          \"last_name\": \"Lee\"\n        },\n        \"client_billing_cycle\": 999\n      },\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2312a48f-0802-4b62-bf5a-344076f59acd",
+          "name": "Fetch multiple private pay invoices",
+          "request": {
+            "name": "Fetch multiple private pay invoices",
+            "description": {},
+            "url": {
+              "path": [
+                "billing",
+                "periods",
+                "invoice",
+                ":invoice_id",
+                "details"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "ASC",
+                  "description": "Order to sort by"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "<string>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "invoice_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "85bdd39c-59e8-47af-9d37-194b4c5bd7ae",
+              "name": "the invoice",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "periods",
+                    "invoice",
+                    ":invoice_id",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort_order",
+                      "value": "ASC"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "invoice_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 12,\n  \"status\": \"draft\",\n  \"invoice_number\": 2348,\n  \"invoice_version\": 0,\n  \"invoice_date\": \"2018-01-16\",\n  \"updated_at\": \"2018-01-16T14:17:05-0500\",\n  \"balance\": 5,\n  \"total\": 10,\n  \"can_be_written_off\": false,\n  \"can_be_voided\": false,\n  \"can_be_regenerated\": false,\n  \"can_be_paid\": false,\n  \"can_be_deleted\": false,\n  \"can_add_transaction\": false,\n  \"is_ccac_funder\": false,\n  \"is_funder_batched_funder\": false,\n  \"total_visits\": 2,\n  \"total_premiums\": 3,\n  \"total_supplies\": 4,\n  \"total_client_premiums\": 5,\n  \"total_income_items\": 6,\n  \"visits_and_premiums_subtotal\": 10,\n  \"supplies_subtotal\": 0,\n  \"client_premiums_subtotal\": 5,\n  \"income_items_subtotal\": 6,\n  \"client_id\": 2,\n  \"crn\": \"10009\",\n  \"taxes\": {\n    \"taxtotal\": 2,\n    \"types\": {\n      \"name\": \"HST\",\n      \"total\": 2\n    }\n  },\n  \"bill_to\": {\n    \"id\": 12,\n    \"name\": \"Funder\",\n    \"guid\": \"27990\",\n    \"guid_to\": \"27991\",\n    \"is_active\": true,\n    \"import_id\": 123,\n    \"remarks\": \"falls prevention program\",\n    \"contact_type\": \"Referral Contact\",\n    \"lang\": \"english\",\n    \"list\": \"Funder List (System)\"\n  },\n  \"pdf_url\": \"/path/to/file.pdf\",\n  \"invoice_items\": [\n    {\n      \"id\": 12,\n      \"invoice_id\": 12,\n      \"source_id\": 12,\n      \"subtotal\": 10,\n      \"total_cost\": 3,\n      \"total_taxes\": 3,\n      \"total\": 13,\n      \"ajdustment_type\": \"adjustment\",\n      \"create_user_id\": 2,\n      \"created_at\": \"2018-01-16T14:17:05-0500\",\n      \"gl_asset_acc_account_id\": 2,\n      \"gl_revenue_acc_account_id\": 2,\n      \"item_end_at\": \"1971-12-15\",\n      \"item_start_at\": \"1973-05-15\",\n      \"memo\": \"memo\",\n      \"policy_version_id\": 2,\n      \"quantity\": 2,\n      \"quantity_units\": \"hours\",\n      \"receivables_cost_centre_id\": 2,\n      \"taxable\": true,\n      \"type\": \"visit\",\n      \"unitprice\": 2,\n      \"updated_at\": \"2018-01-16T14:17:05-0500\",\n      \"update_user_id\": 2,\n      \"voided_by_id\": 2,\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    },\n    {\n      \"id\": 12,\n      \"invoice_id\": 12,\n      \"source_id\": 12,\n      \"subtotal\": 10,\n      \"total_cost\": 3,\n      \"total_taxes\": 3,\n      \"total\": 13,\n      \"ajdustment_type\": \"adjustment\",\n      \"create_user_id\": 2,\n      \"created_at\": \"2018-01-16T14:17:05-0500\",\n      \"gl_asset_acc_account_id\": 2,\n      \"gl_revenue_acc_account_id\": 2,\n      \"item_end_at\": \"1965-03-18\",\n      \"item_start_at\": \"2010-08-28\",\n      \"memo\": \"memo\",\n      \"policy_version_id\": 2,\n      \"quantity\": 2,\n      \"quantity_units\": \"hours\",\n      \"receivables_cost_centre_id\": 2,\n      \"taxable\": true,\n      \"type\": \"visit\",\n      \"unitprice\": 2,\n      \"updated_at\": \"2018-01-16T14:17:05-0500\",\n      \"update_user_id\": 2,\n      \"voided_by_id\": 2,\n      \"payor\": {\n        \"id\": 1,\n        \"checksum\": 7,\n        \"client\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\"\n        },\n        \"funder\": {\n          \"id\": 8,\n          \"code\": \"Some Funder\",\n          \"name\": \"Some Funder\",\n          \"description\": \"Some Funder\",\n          \"invoicing_model\": \"funder_individual\"\n        },\n        \"billing_contact\": {\n          \"id\": 16,\n          \"first_name\": \"Jane\",\n          \"last_name\": \"Jones\",\n          \"address\": \"12 crescent street\",\n          \"address_suite\": \"app. 1B\",\n          \"city\": \"Cityville\",\n          \"state\": \"Quebec\",\n          \"zip\": \"H1H1H1\",\n          \"country\": \"Canada\",\n          \"phone_main\": \"5141234567\"\n        }\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b7923e55-edbf-4f05-b4b8-98e8936984ba",
+    "name": "AlayaCare Accounting Accounts Billing Periods API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

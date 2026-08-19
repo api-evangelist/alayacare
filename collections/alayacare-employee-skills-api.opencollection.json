@@ -1,0 +1,299 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Employee Skills API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Employee Skills",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of an employee's skills by the employee AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/skills",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of a employee"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on skill category and name"
+              },
+              {
+                "name": "category_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter skills by category ID, one or more using **OR**"
+              }
+            ]
+          },
+          "docs": "Get a list of an employee's skills by the employee AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Create an employee specific skill by the employee AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/skills",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of a employee"
+              }
+            ]
+          },
+          "docs": "- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list. \n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+        },
+        {
+          "info": {
+            "name": "Get an employee's skills details by the employee AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/skills/:skill_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of an employee"
+              },
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of a skill"
+              }
+            ]
+          },
+          "docs": "Get an employee's skills details by the employee AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Update an employee's skill by the employee AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/skills/:skill_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of an employee"
+              },
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of a skill"
+              }
+            ]
+          },
+          "docs": "- Skill fields sent in the payload will overwrite existing fields on the employee skill.\n- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list. \n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+        },
+        {
+          "info": {
+            "name": "Remove a employee's skill by the employee AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/skills/:skill_id",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of an employee"
+              },
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "The AlayaCare ID of a skill"
+              }
+            ]
+          },
+          "docs": "- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of an employee's skills by the employee external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/skills",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The external ID of an employee"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on skill category and name"
+              },
+              {
+                "name": "category_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter skills by category ID, one or more using **OR**"
+              }
+            ]
+          },
+          "docs": "Get a list of an employee's skills by the employee external ID"
+        },
+        {
+          "info": {
+            "name": "Create an employee specific skill by the employee external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/skills",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "The external ID of an employee"
+              }
+            ]
+          },
+          "docs": "- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list. \n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+        },
+        {
+          "info": {
+            "name": "Get an employee's skills details by the employee external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/skills/:skill_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of an employee"
+              },
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the employee's skill"
+              }
+            ]
+          },
+          "docs": "Get an employee's skills details by the employee external ID"
+        },
+        {
+          "info": {
+            "name": "Update an employee's skill by the employee external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/skills/:skill_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of an employee"
+              },
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the employee's skill"
+              }
+            ]
+          },
+          "docs": "- Skill fields sent in the payload will overwrite existing fields on the employee skill.\n- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list.\n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+        },
+        {
+          "info": {
+            "name": "Remove a employee's skill by the employee external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/skills/:skill_id",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of an employee"
+              },
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the employee's skill"
+              }
+            ]
+          },
+          "docs": "- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

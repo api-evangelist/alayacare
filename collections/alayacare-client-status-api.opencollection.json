@@ -1,0 +1,303 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Client Status API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Client Status",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get client status details using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/status",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by a single client status."
+              },
+              {
+                "name": "effective_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter for client status that are effective on a date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on client status `note` and reason `name`"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of client status records for a client by AlayaCare client ID."
+        },
+        {
+          "info": {
+            "name": "Create a client status using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/status",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "* `reason_id` can only be set and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* `end_date` can only be set for `on_hold` status\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n"
+        },
+        {
+          "info": {
+            "name": "Get a client status details using its AlayaCare Client and Status ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/status/:status_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "status_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the status"
+              }
+            ]
+          },
+          "docs": "Returns details for a client status by AlayaCare client ID and status ID."
+        },
+        {
+          "info": {
+            "name": "Update a client status using its AlayaCare Client and Status ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/status/:status_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "status_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the status"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "* `end_date` can only be edited for `on_hold` and `pending` status\n* `effective_date` can only be edited for `on_hold`, `discharged` and `pending` status\n* `reason_id` can only be edited and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n"
+        },
+        {
+          "info": {
+            "name": "Remove a client status using its AlayaCare Client and Status ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/status/:status_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "status_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the status"
+              }
+            ]
+          },
+          "docs": "* Only `on_hold`, `waiting_list` and `discharged` status can be deleted\n"
+        },
+        {
+          "info": {
+            "name": "Get client status details using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/status",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by a single client status."
+              },
+              {
+                "name": "effective_date",
+                "value": "",
+                "type": "query",
+                "description": "Filter for client status that are effective on a date greater or equal than specified value.\nExpected format is ISO 8601.\nEx: `2018-02-03T08:00:00-05:00`\n"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on client status `note` and reason `name`"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of client status records for a client by external client ID."
+        },
+        {
+          "info": {
+            "name": "Create a client status using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/status",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "* `reason_id` can only be set and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* `end_date` can only be set for `on_hold` status\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n"
+        },
+        {
+          "info": {
+            "name": "Get a client status details using External Client ID and Status ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/status/:status_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "status_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the status"
+              }
+            ]
+          },
+          "docs": "Returns details for a client status by external client ID and status ID."
+        },
+        {
+          "info": {
+            "name": "Update a client status using External Client ID and Status ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/status/:status_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "status_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the status"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "* `end_date` can only be edited for `on_hold` and `pending` status\n* `effective_date` can only be edited for `on_hold`, `discharged` and `pending` status\n* `reason_id` can only be edited and is mandatory for `on_hold` and `discharged` status. See resource `status_reasons` in `accounting-api-external` for a list of available client status reasons\n* Specific rules for configuring client status follow the internal AlayaCare application logic\n"
+        },
+        {
+          "info": {
+            "name": "Remove a client status using External Client ID and Status ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/status/:status_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              },
+              {
+                "name": "status_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the status"
+              }
+            ]
+          },
+          "docs": "* Only `on_hold`, `waiting_list` and `discharged` status can be deleted\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

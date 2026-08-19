@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Visit notes API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Visit notes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add note to a visit using AlayaCare ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/:alayacare_visit_id/notes",
+            "params": [
+              {
+                "name": "alayacare_visit_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare visit ID"
+              }
+            ]
+          },
+          "docs": "Add note to a visit using AlayaCare ID"
+        },
+        {
+          "info": {
+            "name": "Add note to a visit using External ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/visits/by_id/:visit_id/notes",
+            "params": [
+              {
+                "name": "visit_id",
+                "value": "",
+                "type": "path",
+                "description": "External visit ID"
+              }
+            ]
+          },
+          "docs": "Add note to a visit using External ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

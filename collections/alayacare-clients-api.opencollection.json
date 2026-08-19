@@ -1,0 +1,480 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Clients API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Clients",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch id."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on client profile attributes. Mulitiple filter parameters can be used at once to apply all filtering criteria.\nexample: ?filter=smith&filter=123-456-6789\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by client status, one or more using OR. Default format is comma-separated (`?status=active,pending`). Repeated params (`?status=active&status=pending`) are also accepted."
+              },
+              {
+                "name": "group",
+                "value": "",
+                "type": "query",
+                "description": "Filter by group ID, one or more using **OR**. Default format is comma-separated (`?group=1,2`). Repeated params (`?group=1&group=2`) are also accepted."
+              },
+              {
+                "name": "ac_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by AlayaCare ID (ID starting with ACxxxxxxxx). Accepts one value per request."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of clients, optionally filtered."
+        },
+        {
+          "info": {
+            "name": "Create client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "- Client created with status: **pending**\n- If no branch is specified client will be created in the current user branch\n- Only one of `profile_id` or a `demographics` object can be specified\n"
+        },
+        {
+          "info": {
+            "name": "Get client details using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "exclude_user_deactivated_groups",
+                "value": "",
+                "type": "query",
+                "description": "Flag that filters the result indicating if the deactivated user groups must be excluded from the result.\nexample: ?exclude_user_deactivated_groups=true\n"
+              }
+            ]
+          },
+          "docs": "Returns client details for a single client by AlayaCare client ID."
+        },
+        {
+          "info": {
+            "name": "Update client details using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "* Changing the `status` of a client is not supported by this endpoint. Any `status` sent will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "Get client details using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client to retrieve"
+              }
+            ]
+          },
+          "docs": "Returns client details for a single client by external client ID."
+        },
+        {
+          "info": {
+            "name": "Update client details using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client to retrieve"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "* Changing the `status` of a client is not supported by this endpoint. Any `status` sent will be ignored.\n"
+        },
+        {
+          "info": {
+            "name": "Get list of client contacts using AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/contacts",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              },
+              {
+                "name": "is_billing",
+                "value": "",
+                "type": "query",
+                "description": "Filter by billing contact flag"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on profile attributes values.\n\nExample profile attributes:\n+ `first_name`: string\n+ `last_name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `gender`: string\n+ `relationship`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of contacts for a client by AlayaCare client ID."
+        },
+        {
+          "info": {
+            "name": "Get list of client contacts using AlayaCare Client external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/contacts",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare external ID of the client"
+              },
+              {
+                "name": "is_billing",
+                "value": "",
+                "type": "query",
+                "description": "Filter by billing contact flag"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Filter by page number."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Substring search on profile attributes values.\n\nExample profile attributes:\n+ `first_name`: string\n+ `last_name`: string\n+ `city`: string\n+ `title`: string\n+ `state`: string\n+ `gender`: string\n+ `relationship`: string\n+ `contact_type`: string\n+ `fax`: string\n+ `company`: string\n+ `phone_other`: string\n+ `phone_main`: string\n+ `address`: string\n+ `country`: string\n+ `zip`: string\n+ `address_suite`: string\n+ `remarks`: string\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of contacts for a client by external client ID."
+        },
+        {
+          "info": {
+            "name": "Get list of employees blocked by this client or blocking this client",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/blocked_employees",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              }
+            ]
+          },
+          "docs": "Returns employees blocked by or blocking the client (by AlayaCare client ID)."
+        },
+        {
+          "info": {
+            "name": "Get list of employees blocked by this client or blocking this client using external client id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/blocked_employees",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare external ID of the client"
+              }
+            ]
+          },
+          "docs": "Returns employees blocked by or blocking the client (by external client ID)."
+        },
+        {
+          "info": {
+            "name": "Get client profile picture pre-authorized URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/picture",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare ID of the client"
+              }
+            ]
+          },
+          "docs": "Returns a pre-authorized URL for the client profile picture (by AlayaCare client ID)."
+        },
+        {
+          "info": {
+            "name": "Get client profile picture pre-authorized URL using external client id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/picture",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External ID of the client"
+              }
+            ]
+          },
+          "docs": "Returns a pre-authorized URL for the client profile picture (by external client ID)."
+        },
+        {
+          "info": {
+            "name": "Get all available tags for clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/tags"
+          },
+          "docs": "Returns all available tags for clients."
+        },
+        {
+          "info": {
+            "name": "Create a client tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/tags",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new client tag."
+        },
+        {
+          "info": {
+            "name": "Rename an existing client tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/tags/rename",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Renames an existing client tag."
+        },
+        {
+          "info": {
+            "name": "Add tags to a Client using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/tags",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare client ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Tags sent in the payload will overwrite existing tags on the Client"
+        },
+        {
+          "info": {
+            "name": "Update tags of a Client using its AlayaCare Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/:client_id/tags",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare client ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Tags sent in the payload will be added to existing tags on the Client"
+        },
+        {
+          "info": {
+            "name": "Add tags to a Client using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/tags",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External Client ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Tags sent in the payload will overwrite existing tags on the Client"
+        },
+        {
+          "info": {
+            "name": "Update tags of a Client using External Client ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/clients/by_id/:external_client_id/tags",
+            "params": [
+              {
+                "name": "external_client_id",
+                "value": "",
+                "type": "path",
+                "description": "External Client ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Tags sent in the payload will be added to existing tags on the Client"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

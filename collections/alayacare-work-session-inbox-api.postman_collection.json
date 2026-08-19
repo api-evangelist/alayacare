@@ -1,0 +1,247 @@
+{
+  "item": [
+    {
+      "id": "74d9a3d3-211b-4cca-ac55-8fc881733072",
+      "name": "work session inbox",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fa149a88-3a9e-4066-8f7a-109b1c0c9ed0",
+          "name": "# Authorization\nRequired role: `org_admin` assigned to the associated referral.\n\n# Description\nStart a Work Session for a given visit.\n\nOne of `visit_id` or `visit_inbox_id` must be provided.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin` assigned to the associated referral.\n\n# Description\nStart a Work Session for a given visit.\n\nOne of `visit_id` or `visit_inbox_id` must be provided.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin` assigned to the associated referral.\n\n# Description\nStart a Work Session for a given visit.\n\nOne of `visit_id` or `visit_inbox_id` must be provided.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "work_sessions",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_at\": \"<dateTime>\",\n  \"inbox_id\": \"<string>\",\n  \"start_latitude\": \"<double>\",\n  \"start_longitude\": \"<double>\",\n  \"visit_id\": \"<uuid>\",\n  \"visit_inbox_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e710ae1f-b25a-4144-adc3-c19926640e71",
+              "name": "Successfully started a Work Session.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "work_sessions",
+                    "start"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start_at\": \"<dateTime>\",\n  \"inbox_id\": \"<string>\",\n  \"start_latitude\": \"<double>\",\n  \"start_longitude\": \"<double>\",\n  \"visit_id\": \"<uuid>\",\n  \"visit_inbox_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4700e02a-7b6a-e4d7-5006-e0630a6bde12\",\n  \"inbox_id\": \"<string>\",\n  \"start_at\": \"<dateTime>\",\n  \"start_latitude\": \"<double>\",\n  \"start_longitude\": \"<double>\",\n  \"visit_id\": \"<uuid>\",\n  \"visit_inbox_id\": \"<string>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "09d4d9e6-1618-4da6-b5cc-fdf25be78ea8",
+          "name": "# Authorization\nRequired role: `org_admin` who started the Work Session.\n\n# Description\nEnd a Work Session.\n\n* One of `work_session_id` or `inbox_id` must be provided, AND\n* One of `visit_id` or `visit_inbox_id` must be provided.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin` who started the Work Session.\n\n# Description\nEnd a Work Session.\n\n* One of `work_session_id` or `inbox_id` must be provided, AND\n* One of `visit_id` or `visit_inbox_id` must be provided.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin` who started the Work Session.\n\n# Description\nEnd a Work Session.\n\n* One of `work_session_id` or `inbox_id` must be provided, AND\n* One of `visit_id` or `visit_inbox_id` must be provided.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "inbox",
+                "work_sessions",
+                "end"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"end_at\": \"<dateTime>\",\n  \"work_session_id\": \"<uuid>\",\n  \"end_latitude\": \"<double>\",\n  \"end_longitude\": \"<double>\",\n  \"visit_id\": \"<uuid>\",\n  \"visit_inbox_id\": \"<string>\",\n  \"inbox_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e91fa0de-8cf5-4fe4-ab42-cc21eb688a4f",
+              "name": "Successfully ended a Work Session.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "inbox",
+                    "work_sessions",
+                    "end"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"end_at\": \"<dateTime>\",\n  \"work_session_id\": \"<uuid>\",\n  \"end_latitude\": \"<double>\",\n  \"end_longitude\": \"<double>\",\n  \"visit_id\": \"<uuid>\",\n  \"visit_inbox_id\": \"<string>\",\n  \"inbox_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "059aa8fa-a8ac-42a9-a436-c9ef941a97b7",
+    "name": "AlayaCare Accounting Accounts work session inbox API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

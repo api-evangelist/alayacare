@@ -1,0 +1,1324 @@
+{
+  "item": [
+    {
+      "id": "f219fc45-355f-45a9-946c-1898270ffb58",
+      "name": "Visit Premiums",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0bb1e029-c1bb-4262-93c3-1b6c4df5203b",
+          "name": "Get a list of premiums attached to a visit",
+          "request": {
+            "name": "Get a list of premiums attached to a visit",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":visit_id",
+                "premiums"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Filter by page number"
+                },
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "10",
+                  "description": "Number of items per page"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8fc27ee1-2308-4a6f-9d4e-28564b7051f7",
+              "name": "A list of premiums attached to the visit",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 10,\n  \"page\": 1,\n  \"total_pages\": 1,\n  \"items\": [\n    {\n      \"visit_premium_id\": 345,\n      \"quantity\": 2,\n      \"premium\": {\n        \"code\": \"MILEAGE\",\n        \"premium_id\": 643,\n        \"pay_code\": {\n          \"id\": 3,\n          \"code\": \"string\"\n        },\n        \"bill_codes\": [\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"rule\": \"Weekends\",\n        \"branch\": {\n          \"id\": 1000,\n          \"name\": \"AlayaCare Health\"\n        }\n      },\n      \"description\": \"Reported travel KMs\"\n    },\n    {\n      \"visit_premium_id\": 345,\n      \"quantity\": 2,\n      \"premium\": {\n        \"code\": \"MILEAGE\",\n        \"premium_id\": 643,\n        \"pay_code\": {\n          \"id\": 3,\n          \"code\": \"string\"\n        },\n        \"bill_codes\": [\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"rule\": \"Weekends\",\n        \"branch\": {\n          \"id\": 1000,\n          \"name\": \"AlayaCare Health\"\n        }\n      },\n      \"description\": \"Reported travel KMs\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "230ed0e2-ad94-4a4d-97b5-e2156cdbfc0e",
+              "name": "The visit referenced by visit_id was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"404\",\n  \"message\": \"Visit not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3edcf64a-5732-47ff-beb4-e2ac05393afe",
+          "name": "Create a visit premium",
+          "request": {
+            "name": "Create a visit premium",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":visit_id",
+                "premiums"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": \"<number>\",\n  \"description\": \"<string>\",\n  \"override_locked_visit\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4425b5db-8d7e-4309-a574-bc5f97b5d839",
+              "name": "Visit premium created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\",\n  \"override_locked_visit\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"visit_premium_id\": 345,\n  \"quantity\": 2,\n  \"premium\": {\n    \"code\": \"MILEAGE\",\n    \"premium_id\": 643,\n    \"pay_code\": {\n      \"id\": 3,\n      \"code\": \"string\"\n    },\n    \"bill_codes\": [\n      {\n        \"id\": 783,\n        \"code\": \"MEDIBILL\"\n      },\n      {\n        \"id\": 783,\n        \"code\": \"MEDIBILL\"\n      }\n    ],\n    \"rule\": \"Weekends\",\n    \"branch\": {\n      \"id\": 1000,\n      \"name\": \"AlayaCare Health\"\n    }\n  },\n  \"description\": \"Reported travel KMs\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a773eed5-bc8d-420b-acf3-1210bd13124c",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\",\n  \"override_locked_visit\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"401\",\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8778a111-baf7-4f41-b2d6-a3e50846c102",
+              "name": "The visit referenced by visit_id was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\",\n  \"override_locked_visit\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"404\",\n  \"message\": \"Visit not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "69eba35c-7cc4-4fa9-980b-0f28ab0fff7d",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\",\n  \"override_locked_visit\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"409\",\n  \"message\": \"The funding configuration of this premium does not match that of the visit\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ddce5326-476a-49f0-b3ac-e90b94cb3704",
+          "name": "Get the details of a single visit premium",
+          "request": {
+            "name": "Get the details of a single visit premium",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":visit_id",
+                "premiums",
+                ":visit_premium_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_premium_id",
+                  "description": "(Required) AlayaCare visit premium ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9fd38567-6c40-4599-b2c0-567e828970ca",
+              "name": "A visit premium",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"visit_premium_id\": 345,\n  \"quantity\": 2,\n  \"premium\": {\n    \"code\": \"MILEAGE\",\n    \"premium_id\": 643,\n    \"pay_code\": {\n      \"id\": 3,\n      \"code\": \"string\"\n    },\n    \"bill_codes\": [\n      {\n        \"id\": 783,\n        \"code\": \"MEDIBILL\"\n      },\n      {\n        \"id\": 783,\n        \"code\": \"MEDIBILL\"\n      }\n    ],\n    \"rule\": \"Weekends\",\n    \"branch\": {\n      \"id\": 1000,\n      \"name\": \"AlayaCare Health\"\n    }\n  },\n  \"description\": \"Reported travel KMs\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6d70d8aa-c638-4344-8159-26d12734355b",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"401\",\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fe94f509-9cb5-46de-9d86-4f1c0aa435bf",
+              "name": "The visit referenced by visit_id was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"404\",\n  \"message\": \"Visit not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9c4b87dc-f045-4380-8b09-faaa09095251",
+          "name": "Update a visit premium",
+          "request": {
+            "name": "Update a visit premium",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":visit_id",
+                "premiums",
+                ":visit_premium_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_premium_id",
+                  "description": "(Required) AlayaCare visit premium ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": \"<number>\",\n  \"description\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "448b4bd0-6366-4d12-b83e-9f929251ce5e",
+              "name": "Visit premium updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"visit_premium_id\": 345,\n  \"quantity\": 2,\n  \"premium\": {\n    \"code\": \"MILEAGE\",\n    \"premium_id\": 643,\n    \"pay_code\": {\n      \"id\": 3,\n      \"code\": \"string\"\n    },\n    \"bill_codes\": [\n      {\n        \"id\": 783,\n        \"code\": \"MEDIBILL\"\n      },\n      {\n        \"id\": 783,\n        \"code\": \"MEDIBILL\"\n      }\n    ],\n    \"rule\": \"Weekends\",\n    \"branch\": {\n      \"id\": 1000,\n      \"name\": \"AlayaCare Health\"\n    }\n  },\n  \"description\": \"Reported travel KMs\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a90f2e4f-5c44-4c50-bd1d-f86ef1b445eb",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"401\",\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e793d3cb-9a1e-45bd-8fe0-d1b422b5bf08",
+              "name": "The visit referenced by visit_id was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"404\",\n  \"message\": \"Visit not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9dd6259a-dd3f-4609-a678-77bb8f39fb64",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"premium_id\": \"<integer>\",\n  \"quantity\": 1.01,\n  \"description\": \"Mileage KMs\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"409\",\n  \"message\": \"The funding configuration of this premium does not match that of the visit\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4ede0a12-6564-4718-a8a5-e7e82b69163f",
+          "name": "Delete a visit premium from a visit",
+          "request": {
+            "name": "Delete a visit premium from a visit",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":visit_id",
+                "premiums",
+                ":visit_premium_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "visit_premium_id",
+                  "description": "(Required) AlayaCare visit premium ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d5b76250-b7fc-45b2-a0dd-ee9cba2301a8",
+              "name": "Visit premium successfully deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d012dea9-3a00-48d6-9968-dbb41f2608b9",
+              "name": "Authorization required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"401\",\n  \"message\": \"Authorization required.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b17efa3e-5655-445e-a41b-f531d1f5a39f",
+              "name": "The visit referenced by visit_id was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":visit_id",
+                    "premiums",
+                    ":visit_premium_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "visit_premium_id",
+                      "description": "(Required) AlayaCare visit premium ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"404\",\n  \"message\": \"Visit not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "486e3427-44ea-4d46-8a32-aedfe73dd1da",
+    "name": "AlayaCare Accounting Accounts Visit Premiums API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

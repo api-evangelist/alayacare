@@ -1,0 +1,217 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Attachment Directory API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Attachment Directory",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the content of a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare internal ID of the employee\n"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path",
+                "description": "Path where the directory lives\n"
+              }
+            ]
+          },
+          "docs": "Get the content of a directory"
+        },
+        {
+          "info": {
+            "name": "Create a new directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare internal ID of the employee\n"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path",
+                "description": "Path where the directory lives\n"
+              }
+            ]
+          },
+          "docs": "Create a directory at the `path` location, along with the underlying directory structure if it doesn't exist already.\nThe path location represents the destination of the directory.\n"
+        },
+        {
+          "info": {
+            "name": "Copy, move or rename directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare internal ID of the employee\n"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path",
+                "description": "Path where the directory lives\n"
+              }
+            ]
+          },
+          "docs": "Copy, move or rename a directory and create the underlying directory structure of the new location if it doesn't already exist.\n\nThe url of the `PUT` request is the path to the source location.\n\nThe payload must indicate whether the intention of the action is to copy, move or rename the file.\n\nIf a directory is being copied or moved, the destination is mandatory in the payload.\n\nThe url of the `PUT` request is the path to the source location.\ni.e., if we have the following directories:\n- `dir1/c"
+        },
+        {
+          "info": {
+            "name": "Delete a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/:employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "employee_id",
+                "value": "",
+                "type": "path",
+                "description": "AlayaCare internal ID of the employee\n"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path",
+                "description": "Path where the directory lives\n"
+              }
+            ]
+          },
+          "docs": "Delete a directory which does not contain underlying directory or files.\n\nIf the directory contains underlying directories or files, a `forced-delete` field set to `true` must be provided in the request payload for the directory to be deleted. \n.\n"
+        },
+        {
+          "info": {
+            "name": "Get the content of a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the content of a directory"
+        },
+        {
+          "info": {
+            "name": "Create a new directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Create a directory at the `path` location, along with the underlying directory structure if it doesn't exist already\n"
+        },
+        {
+          "info": {
+            "name": "Copy, move or rename a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Copy, move or rename a directory and create the underlying directory structure of the new location if it doesn't already exist.\n\nThe url of the `PUT` request is the path to the source location.\n\nThe payload must indicate whether the intention of the action is to copy, move or rename the file.\n\nIf a directory is being copied or moved, the destination is mandatory in the payload.\n\nThe url of the `PUT` request is the path to the source location.\ni.e., if we have the following directories:\n- `dir1/c"
+        },
+        {
+          "info": {
+            "name": "Delete a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/employees/by_id/:external_employee_id/attachments/:directory_path/",
+            "params": [
+              {
+                "name": "external_employee_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "directory_path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a directory which does not contain underlying directory or files.\n\nIf the directory contains underlying directories or files, a `forced-delete` field set to `true` must be provided in the request payload for the directory to be deleted. \n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

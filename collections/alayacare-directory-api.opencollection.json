@@ -1,0 +1,133 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Directory API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Directory",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the content of a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:id/:path/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the content of a directory"
+        },
+        {
+          "info": {
+            "name": "Create a new directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:id/:path/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Create a directory at the `path` location, along with the underlying folder structure if it doesn't exist already\n"
+        },
+        {
+          "info": {
+            "name": "Copy or move a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:id/:path/",
+            "headers": [
+              {
+                "name": "source",
+                "value": ""
+              },
+              {
+                "name": "move",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Copy or move a directory and create the underlying folder structure of the new location if it doesn't already exist.\n\nWhether the directory is moved or simply copied is defined by a `move` header that can be set to `true` (if the header is not provided, its value defaults to `false` and the `source` directory will remain).\n\nThe url of the `PUT` request is the path to the destination location.\ni.e., if we have the following directories:\n- `dir1/child1/`\n- `dir2/child2/`\n\nand we want to copy `chil"
+        },
+        {
+          "info": {
+            "name": "Delete a directory",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/client/:id/:path/",
+            "headers": [
+              {
+                "name": "forced-delete",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a directory and its content. A `forced-delete` header set to `true` must be provided for the directory to be deleted. Otherwise, the reponse will be a confirmation message with a status `400`.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

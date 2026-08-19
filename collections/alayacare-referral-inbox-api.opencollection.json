@@ -1,0 +1,163 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts referral inbox API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "referral inbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/inbox/referrals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/referrals",
+            "params": [
+              {
+                "name": "referral_status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "shift_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "revisions",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Referrals matched to the Supply Organization.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/inbox/referrals/{referral_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/referrals/:referral_id",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet the anonymized details of Referrals matched to the Supply\norganization. This must contain no PHI.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/referrals/{referral_id}/mark_processed",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/referrals/:referral_id/mark_processed",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\nRequired referral state: `assigned`\n\n# Description\nAcknowledges that the Supply organization has received and processed the assigned Referral.\nThis will mark the Referral as `processed` and will inform the Demand organization.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/referrals/{referral_id}/cancel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/referrals/:referral_id/cancel",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCancel an Referral after it's assigned to the Supply Organization.  \nA Referral can only be Cancelled if the status is `assigned` or `processed`.\n"
+        },
+        {
+          "info": {
+            "name": "POST /v1/inbox/referrals/{referral_id}/tasks/update",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/inbox/referrals/:referral_id/tasks/update",
+            "params": [
+              {
+                "name": "referral_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "# Authorization\nRequired role: `org_admin`\n\n# Description\nUpdate referral tasks for a given referral.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

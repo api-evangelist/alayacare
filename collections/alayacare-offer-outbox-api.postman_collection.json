@@ -1,0 +1,848 @@
+{
+  "item": [
+    {
+      "id": "e440af20-5776-4e1c-8360-4f98a667a88c",
+      "name": "offer outbox",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "08ff8f73-8cf6-49fb-82ea-117f00a03f83",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate an Offer by the Demand organization.  \nMultiple open or assigned offers with offer_type: `visit` are not permitted for the same visit. This is to prevent conflicting acceptances and assignations.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate an Offer by the Demand organization.  \nMultiple open or assigned offers with offer_type: `visit` are not permitted for the same visit. This is to prevent conflicting acceptances and assignations.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nCreate an Offer by the Demand organization.  \nMultiple open or assigned offers with offer_type: `visit` are not permitted for the same visit. This is to prevent conflicting acceptances and assignations.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "offers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"offer\": {\n    \"care_type\": \"<string>\",\n    \"offer_type\": \"<string>\",\n    \"expires_at\": \"<dateTime>\",\n    \"comment\": \"<string>\",\n    \"demand_labels\": [\n      \"<string>\"\n    ]\n  },\n  \"client\": {\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"demographics\": {\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\",\n      \"email\": \"<email>\",\n      \"phone_number\": \"<string>\",\n      \"phone_other\": \"<string>\",\n      \"phone_personal\": \"<string>\",\n      \"date_of_birth\": \"<date>\",\n      \"gender\": \"<string>\",\n      \"language\": \"<string>\"\n    },\n    \"outbox_id\": \"<string>\",\n    \"contacts\": [\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      }\n    ],\n    \"allergies\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"risks\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      }\n    ],\n    \"diagnoses\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"surgeries\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      }\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"service\": {\n    \"name\": \"<string>\",\n    \"outbox_id\": \"<string>\",\n    \"start_at\": \"<dateTime>\",\n    \"expected_start_at\": \"<dateTime>\",\n    \"end_at\": \"<dateTime>\",\n    \"instructions\": \"<string>\",\n    \"notes\": \"<string>\",\n    \"skills\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"use_client_address\": \"<boolean>\",\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"alayacare\": {\n    \"authorizations\": [\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      },\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      }\n    ],\n    \"care_plan\": {\n      \"name\": \"<string>\",\n      \"outbox_id\": \"<integer>\",\n      \"start_date\": \"<date>\",\n      \"end_date\": \"<date>\",\n      \"status\": \"<string>\",\n      \"diagnoses\": [\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"goals\": [\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"progress_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"last_updated_progress\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"progress_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"last_updated_progress\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ],\n      \"interventions\": [\n        {\n          \"has_duration\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_required\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"external_link\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"timezone\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"has_duration\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_required\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"external_link\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"timezone\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ],\n      \"updated_at\": \"<dateTime>\"\n    },\n    \"form_templates\": [\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      },\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    ]\n  },\n  \"case_manager\": {\n    \"name\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"fax_number\": \"<string>\",\n    \"email\": \"<string>\"\n  },\n  \"direct_supply_persona_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"price\": {\n    \"default\": {\n      \"rate\": \"<decimal>\",\n      \"unit\": \"<string>\"\n    },\n    \"custom\": [\n      {\n        \"rate\": \"<decimal>\",\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      },\n      {\n        \"rate\": \"<decimal>\",\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      }\n    ]\n  },\n  \"visits\": [\n    {\n      \"outbox_id\": \"<string>\",\n      \"start_at\": \"<dateTime>\",\n      \"end_at\": \"<dateTime>\",\n      \"instructions\": \"<string>\",\n      \"tasks\": [\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        }\n      ]\n    },\n    {\n      \"outbox_id\": \"<string>\",\n      \"start_at\": \"<dateTime>\",\n      \"end_at\": \"<dateTime>\",\n      \"instructions\": \"<string>\",\n      \"tasks\": [\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1c07b74f-aaad-498f-bd99-393e6f0af827",
+              "name": "Successfully created Offer",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "offers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"offer\": {\n    \"care_type\": \"<string>\",\n    \"offer_type\": \"<string>\",\n    \"expires_at\": \"<dateTime>\",\n    \"comment\": \"<string>\",\n    \"demand_labels\": [\n      \"<string>\"\n    ]\n  },\n  \"client\": {\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"demographics\": {\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\",\n      \"email\": \"<email>\",\n      \"phone_number\": \"<string>\",\n      \"phone_other\": \"<string>\",\n      \"phone_personal\": \"<string>\",\n      \"date_of_birth\": \"<date>\",\n      \"gender\": \"<string>\",\n      \"language\": \"<string>\"\n    },\n    \"outbox_id\": \"<string>\",\n    \"contacts\": [\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      }\n    ],\n    \"allergies\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"risks\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"allergy\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"allergy\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      }\n    ],\n    \"diagnoses\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"surgeries\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      }\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"service\": {\n    \"name\": \"<string>\",\n    \"outbox_id\": \"<string>\",\n    \"start_at\": \"<dateTime>\",\n    \"expected_start_at\": \"<dateTime>\",\n    \"end_at\": \"<dateTime>\",\n    \"instructions\": \"<string>\",\n    \"notes\": \"<string>\",\n    \"skills\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"use_client_address\": \"<boolean>\",\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"alayacare\": {\n    \"authorizations\": [\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      },\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      }\n    ],\n    \"care_plan\": {\n      \"name\": \"<string>\",\n      \"outbox_id\": \"<integer>\",\n      \"start_date\": \"<date>\",\n      \"end_date\": \"<date>\",\n      \"status\": \"<string>\",\n      \"diagnoses\": [\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"goals\": [\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"progress_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"last_updated_progress\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"is_primary\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"progress_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"last_updated_progress\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ],\n      \"interventions\": [\n        {\n          \"has_duration\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_required\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"external_link\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"timezone\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        {\n          \"has_duration\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_required\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outbox_id\": \"<integer>\",\n          \"rank\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"start_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"description\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"end_date\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"external_link\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"is_from_library\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"recurrence\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"timezone\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"updated_at\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      ],\n      \"updated_at\": \"<dateTime>\"\n    },\n    \"form_templates\": [\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      },\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"field_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"label\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"parent_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"rank\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"required\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"field_tag\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"instructions\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"json_logic\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"settings\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    ]\n  },\n  \"case_manager\": {\n    \"name\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"fax_number\": \"<string>\",\n    \"email\": \"<string>\"\n  },\n  \"direct_supply_persona_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"price\": {\n    \"default\": {\n      \"rate\": 30,\n      \"unit\": \"<string>\"\n    },\n    \"custom\": [\n      {\n        \"rate\": 30,\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      },\n      {\n        \"rate\": 30,\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      }\n    ]\n  },\n  \"visits\": [\n    {\n      \"outbox_id\": \"<string>\",\n      \"start_at\": \"<dateTime>\",\n      \"end_at\": \"<dateTime>\",\n      \"instructions\": \"<string>\",\n      \"tasks\": [\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        }\n      ]\n    },\n    {\n      \"outbox_id\": \"<string>\",\n      \"start_at\": \"<dateTime>\",\n      \"end_at\": \"<dateTime>\",\n      \"instructions\": \"<string>\",\n      \"tasks\": [\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"outbox_id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"is_required\": \"<boolean>\",\n          \"description\": \"<string>\"\n        }\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"offer\": {\n    \"care_type\": \"<string>\",\n    \"created_at\": \"2012-05-10T03:31:21.931Z\",\n    \"expires_at\": \"<dateTime>\",\n    \"id\": \"3de8ea07-abb7-a000-8ab2-5e5cb265993b\",\n    \"offer_type\": \"<string>\",\n    \"start_at\": \"1999-05-21T11:13:05.676Z\",\n    \"status\": \"declined_by_all\",\n    \"comment\": \"<string>\",\n    \"demand_labels\": [\n      \"<string>\"\n    ],\n    \"reason_code\": \"client_request\",\n    \"reason_comment\": \"string\",\n    \"shift_id\": \"9d6c794c-8d6b-7e29-484e-5a50005c2328\",\n    \"end_at\": \"1990-11-13T17:46:18.138Z\",\n    \"updated_at\": \"1978-08-09T18:26:07.262Z\"\n  },\n  \"demand\": {\n    \"id\": \"4cf621eb-2272-3ef8-6027-9a7008ce23ab\",\n    \"name\": \"string\"\n  },\n  \"client\": {\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"demographics\": {\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\",\n      \"email\": \"<email>\",\n      \"phone_number\": \"<string>\",\n      \"phone_other\": \"<string>\",\n      \"phone_personal\": \"<string>\",\n      \"date_of_birth\": \"<date>\",\n      \"gender\": \"<string>\",\n      \"language\": \"<string>\"\n    },\n    \"outbox_id\": \"string\",\n    \"contacts\": [\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      }\n    ],\n    \"allergies\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"risks\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"allergy\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"allergy\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      }\n    ],\n    \"diagnoses\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"surgeries\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      }\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"service\": {\n    \"id\": \"56b6b368-eb35-ab1d-b96e-c90db30f4fa0\",\n    \"name\": \"<string>\",\n    \"outbox_id\": \"string\",\n    \"start_at\": \"<dateTime>\",\n    \"expected_start_at\": \"<dateTime>\",\n    \"end_at\": \"<dateTime>\",\n    \"instructions\": \"<string>\",\n    \"notes\": \"<string>\",\n    \"skills\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"use_client_address\": false,\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"response_counts\": {\n    \"modified_at\": \"1948-05-18T13:01:09.872Z\",\n    \"sent\": 4259,\n    \"accepted\": 4731,\n    \"declined\": 1788\n  },\n  \"supply\": {\n    \"id\": \"ffcc1f17-28b7-4d26-0368-b60199978e26\",\n    \"name\": \"string\"\n  },\n  \"alayacare\": {\n    \"authorizations\": [\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      },\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      }\n    ],\n    \"care_plan\": {\n      \"name\": \"<string>\",\n      \"outbox_id\": \"<integer>\",\n      \"start_date\": \"<date>\",\n      \"end_date\": \"<date>\",\n      \"status\": \"<string>\",\n      \"diagnoses\": [\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"goals\": [\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"interventions\": [\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"updated_at\": \"<dateTime>\"\n    },\n    \"form_templates\": [\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"case_manager\": {\n    \"name\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"fax_number\": \"<string>\",\n    \"email\": \"<string>\"\n  },\n  \"direct_supply_persona_ids\": [\n    \"f692cbdc-ff29-bfd2-227d-22914d39d90a\",\n    \"7d03af18-b991-8cf2-bfa6-108577f08b69\"\n  ],\n  \"price\": {\n    \"default\": {\n      \"rate\": 30,\n      \"unit\": \"<string>\"\n    },\n    \"custom\": [\n      {\n        \"rate\": 30,\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      },\n      {\n        \"rate\": 30,\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      }\n    ]\n  },\n  \"visits\": [\n    {\n      \"id\": \"033abb5d-fa33-6f9c-be0f-01b8ade60fe1\",\n      \"outbox_id\": \"string\",\n      \"start_at\": \"2007-04-07T07:48:40.114Z\",\n      \"end_at\": \"1976-02-23T03:29:28.337Z\",\n      \"instructions\": \"string\",\n      \"tasks\": [\n        {\n          \"id\": \"6be0657d-3c39-ee74-8201-a1250e8ddce8\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": false,\n          \"description\": \"string\"\n        },\n        {\n          \"id\": \"fadd2112-fab2-263c-4800-b272267d2012\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": true,\n          \"description\": \"string\"\n        }\n      ]\n    },\n    {\n      \"id\": \"4ef7159e-e385-4f65-9b10-efbfb995e14b\",\n      \"outbox_id\": \"string\",\n      \"start_at\": \"1987-12-09T00:39:12.891Z\",\n      \"end_at\": \"2002-10-19T10:16:35.132Z\",\n      \"instructions\": \"string\",\n      \"tasks\": [\n        {\n          \"id\": \"3386fc8a-a2e9-1409-e886-a69a3b619eb6\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": false,\n          \"description\": \"string\"\n        },\n        {\n          \"id\": \"675fc717-6393-cffe-a53a-45d54b31a26c\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": true,\n          \"description\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f44ba069-53f9-4444-89a1-27fc6504767e",
+          "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Offers created by the Demand organization.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Offers created by the Demand organization.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\n# Description\nGet a collection of Offers created by the Demand organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "offers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "care_type",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "offer_type",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "client_outbox_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "visit_outbox_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "is_accepted",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "expires_after",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "expires_before",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "shift_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "demand_label",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "items_per_page",
+                  "value": "100"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "last_modified"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b8c1931d-ee33-4c2d-b2bd-36c16533297e",
+              "name": "Successfully returned Offer Outbox Collection",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "offers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "care_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "offer_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "client_outbox_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "visit_outbox_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "is_accepted",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "expires_after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "expires_before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "shift_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "demand_label",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "items_per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "last_modified"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "desc"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"items_per_page\": 100,\n  \"total_items\": 1348,\n  \"total_pages\": 6604,\n  \"items\": [\n    {\n      \"offer\": {\n        \"care_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"created_at\": \"2013-08-20T03:21:31.768Z\",\n        \"expires_at\": \"<dateTime>\",\n        \"id\": \"149132ea-ebf1-4b29-9b23-d357c2aaef62\",\n        \"offer_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"start_at\": \"1957-04-22T08:40:09.736Z\",\n        \"status\": \"<string>\",\n        \"comment\": \"<string>\",\n        \"demand_labels\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"reason_code\": \"datetime_change\",\n        \"reason_comment\": \"string\",\n        \"shift_id\": \"5bf9cd66-4104-96e6-98a0-e060347c205b\",\n        \"end_at\": \"2023-08-24T04:55:52.921Z\",\n        \"updated_at\": \"2026-05-11T08:18:15.804Z\"\n      },\n      \"client\": {\n        \"demographics\": {\n          \"first_name\": \"string\",\n          \"last_name\": \"string\"\n        },\n        \"outbox_id\": \"string\"\n      },\n      \"service\": {\n        \"name\": \"strin\",\n        \"outbox_id\": \"string\"\n      },\n      \"response_counts\": {\n        \"modified_at\": \"2017-04-10T18:58:52.297Z\",\n        \"sent\": 5716,\n        \"accepted\": 716,\n        \"declined\": 8193\n      }\n    },\n    {\n      \"offer\": {\n        \"care_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"created_at\": \"1993-04-16T22:47:52.654Z\",\n        \"expires_at\": \"<dateTime>\",\n        \"id\": \"a72c47f1-1df7-7a06-4200-ce4458bc9ba5\",\n        \"offer_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"start_at\": \"2012-11-27T07:00:41.335Z\",\n        \"status\": \"<string>\",\n        \"comment\": \"<string>\",\n        \"demand_labels\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"reason_code\": \"other\",\n        \"reason_comment\": \"string\",\n        \"shift_id\": \"92d8af5d-e112-0c78-5078-f382fb078d7f\",\n        \"end_at\": \"2023-11-06T03:26:42.142Z\",\n        \"updated_at\": \"1998-05-06T00:40:41.024Z\"\n      },\n      \"client\": {\n        \"demographics\": {\n          \"first_name\": \"string\",\n          \"last_name\": \"string\"\n        },\n        \"outbox_id\": \"string\"\n      },\n      \"service\": {\n        \"name\": \"string\",\n        \"outbox_id\": \"string\"\n      },\n      \"response_counts\": {\n        \"modified_at\": \"2017-04-12T11:36:50.245Z\",\n        \"sent\": 5148,\n        \"accepted\": 9032,\n        \"declined\": 4068\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6cfd5d6b-5bb5-45fe-9b6a-a8fedf1d02f1",
+          "name": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the details of an Offer created by the Demand organization.\n",
+          "request": {
+            "name": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the details of an Offer created by the Demand organization.\n",
+            "description": {
+              "content": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the details of an Offer created by the Demand organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "offers",
+                ":offer_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "offer_id",
+                  "description": "(Required) ID of an offer"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8d44e09d-d323-4387-adba-7f35f3ba9054",
+              "name": "Successfully returned Offer Outbox Scalar",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "offers",
+                    ":offer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "offer_id",
+                      "description": "(Required) ID of an offer"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"offer\": {\n    \"care_type\": \"<string>\",\n    \"created_at\": \"2008-04-26T22:17:22.342Z\",\n    \"expires_at\": \"<dateTime>\",\n    \"id\": \"f3cd1a67-88c0-d2a8-0e30-3dbdde7a737d\",\n    \"offer_type\": \"<string>\",\n    \"start_at\": \"1996-06-03T07:00:09.865Z\",\n    \"status\": \"<string>\",\n    \"comment\": \"<string>\",\n    \"demand_labels\": [\n      \"<string>\"\n    ],\n    \"reason_code\": \"client_hospitalization\",\n    \"reason_comment\": \"string\",\n    \"shift_id\": \"1a702c0c-7122-5e3b-5cce-b6015fab5559\",\n    \"end_at\": \"1975-01-28T18:23:13.196Z\",\n    \"updated_at\": \"1969-10-23T12:41:15.258Z\"\n  },\n  \"demand\": {\n    \"id\": \"de75de43-6c1e-2d7a-4ea5-dedd551245d0\",\n    \"name\": \"string\"\n  },\n  \"client\": {\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"demographics\": {\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\",\n      \"email\": \"<email>\",\n      \"phone_number\": \"<string>\",\n      \"phone_other\": \"<string>\",\n      \"phone_personal\": \"<string>\",\n      \"date_of_birth\": \"<date>\",\n      \"gender\": \"<string>\",\n      \"language\": \"<string>\"\n    },\n    \"outbox_id\": \"string\",\n    \"contacts\": [\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"address\": {\n          \"city\": \"<string>\",\n          \"state\": \"<string>\",\n          \"zip\": \"<string>\",\n          \"country\": \"<string>\",\n          \"name\": \"<string>\",\n          \"address\": \"<string>\",\n          \"address_suite\": \"<string>\",\n          \"latitude\": \"<double>\",\n          \"longitude\": \"<double>\"\n        },\n        \"contact_type\": \"<string>\",\n        \"email\": \"<email>\",\n        \"is_active\": true,\n        \"is_emergency\": \"<boolean>\",\n        \"phone_number\": \"<string>\",\n        \"phone_other\": \"<string>\",\n        \"phone_personal\": \"<string>\",\n        \"language\": \"<string>\",\n        \"relationship\": \"<string>\"\n      }\n    ],\n    \"allergies\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"<string>\",\n        \"severity\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"risks\": [\n      {\n        \"name\": \"<string>\",\n        \"category\": \"allergy\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"category\": \"allergy\",\n        \"severity\": \"<integer>\",\n        \"start_date\": \"<date>\"\n      }\n    ],\n    \"diagnoses\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"is_primary\": \"<boolean>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\",\n        \"treatment\": \"<string>\"\n      }\n    ],\n    \"surgeries\": [\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"details\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"end_date\": \"<date>\"\n      }\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"service\": {\n    \"id\": \"52cd00f4-412b-d8b3-1381-1b249f1f613c\",\n    \"name\": \"<string>\",\n    \"outbox_id\": \"string\",\n    \"start_at\": \"<dateTime>\",\n    \"expected_start_at\": \"<dateTime>\",\n    \"end_at\": \"<dateTime>\",\n    \"instructions\": \"<string>\",\n    \"notes\": \"<string>\",\n    \"skills\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ],\n    \"use_client_address\": true,\n    \"address\": {\n      \"address\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"country\": \"<string>\",\n      \"name\": \"<string>\",\n      \"address_suite\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"referral_only_custom_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"value\": \"<string>\",\n        \"type\": \"<string>\"\n      }\n    ]\n  },\n  \"response_counts\": {\n    \"modified_at\": \"2013-07-09T01:59:06.720Z\",\n    \"sent\": 8171,\n    \"accepted\": 3287,\n    \"declined\": 376\n  },\n  \"supply\": {\n    \"id\": \"8b292bf0-d018-8c3c-57ee-8f717f98618a\",\n    \"name\": \"string\"\n  },\n  \"alayacare\": {\n    \"authorizations\": [\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      },\n      {\n        \"authorization_status\": \"<string>\",\n        \"first_day_of_week\": \"<integer>\",\n        \"rule_type\": \"<string>\",\n        \"start_date\": \"<date>\",\n        \"authorization_number\": \"<string>\",\n        \"end_date\": \"<date>\",\n        \"id\": \"<integer>\",\n        \"import_id\": \"<string>\",\n        \"member_number\": \"<string>\",\n        \"notes\": \"<string>\",\n        \"program_id\": \"<string>\",\n        \"custom_number_of_days\": \"<integer>\",\n        \"rule_custom\": \"<decimal>\",\n        \"rule_daily\": \"<decimal>\",\n        \"rule_weekly\": \"<decimal>\",\n        \"rule_monthly\": \"<decimal>\",\n        \"rule_period\": \"<decimal>\",\n        \"rule_monday\": \"<decimal>\",\n        \"rule_tuesday\": \"<decimal>\",\n        \"rule_wednesday\": \"<decimal>\",\n        \"rule_thursday\": \"<decimal>\",\n        \"rule_friday\": \"<decimal>\",\n        \"rule_saturday\": \"<decimal>\",\n        \"rule_sunday\": \"<decimal>\"\n      }\n    ],\n    \"care_plan\": {\n      \"name\": \"<string>\",\n      \"outbox_id\": \"<integer>\",\n      \"start_date\": \"<date>\",\n      \"end_date\": \"<date>\",\n      \"status\": \"<string>\",\n      \"diagnoses\": [\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"goals\": [\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"diagnoses\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"interventions\": [\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"outbox_id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"goals\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"updated_at\": \"<dateTime>\"\n    },\n    \"form_templates\": [\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      {\n        \"admin_eyes_only\": \"<boolean>\",\n        \"approve_automatically\": \"<boolean>\",\n        \"display_instructions_in_pdf\": \"<boolean>\",\n        \"display_report\": \"<boolean>\",\n        \"exclude_from_shift_report\": \"<boolean>\",\n        \"form_type\": \"<string>\",\n        \"id\": \"<integer>\",\n        \"language_code\": \"<string>\",\n        \"name\": \"<string>\",\n        \"notify_alert_queue\": \"<boolean>\",\n        \"pre_populate\": \"<boolean>\",\n        \"requires_clock_in\": \"<boolean>\",\n        \"schema_id\": \"<uuid>\",\n        \"schema_version\": \"<integer>\",\n        \"visit_link_required\": \"<boolean>\",\n        \"clinical_event_name\": \"<string>\",\n        \"instructions\": \"<string>\",\n        \"fields\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"case_manager\": {\n    \"name\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"fax_number\": \"<string>\",\n    \"email\": \"<string>\"\n  },\n  \"direct_supply_persona_ids\": [\n    \"4bf163ef-fa40-f757-dea2-734c2f949d9f\",\n    \"e757a3bf-ca25-8919-7a8e-aca9f077b5c0\"\n  ],\n  \"price\": {\n    \"default\": {\n      \"rate\": 30,\n      \"unit\": \"<string>\"\n    },\n    \"custom\": [\n      {\n        \"rate\": 30,\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      },\n      {\n        \"rate\": 30,\n        \"supply_persona_id\": \"<uuid>\",\n        \"unit\": \"<string>\"\n      }\n    ]\n  },\n  \"visits\": [\n    {\n      \"id\": \"7d284560-38f7-b194-3acd-4e2569aba354\",\n      \"outbox_id\": \"string\",\n      \"start_at\": \"2025-08-25T05:27:26.578Z\",\n      \"end_at\": \"1972-07-11T21:43:44.865Z\",\n      \"instructions\": \"string\",\n      \"tasks\": [\n        {\n          \"id\": \"dcd96885-97e3-f3aa-5c2d-db2a7e37d254\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": false,\n          \"description\": \"string\"\n        },\n        {\n          \"id\": \"1e83a5ce-d423-aa7b-7d3f-6a3f954bcbbf\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": true,\n          \"description\": \"string\"\n        }\n      ]\n    },\n    {\n      \"id\": \"6f9aa304-1b48-2b3d-f06a-7f1980ad2062\",\n      \"outbox_id\": \"string\",\n      \"start_at\": \"2011-12-26T14:33:58.517Z\",\n      \"end_at\": \"2003-05-14T22:27:16.493Z\",\n      \"instructions\": \"string\",\n      \"tasks\": [\n        {\n          \"id\": \"233bb4b7-e1d6-3dd4-5553-c716e8e1e043\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": false,\n          \"description\": \"string\"\n        },\n        {\n          \"id\": \"7582f4c4-b270-c56f-ef3b-73adf5dbec95\",\n          \"outbox_id\": \"string\",\n          \"name\": \"string\",\n          \"is_required\": true,\n          \"description\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b75b6206-dc3e-4bf9-8ba9-4423eac8f138",
+          "name": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the Offer Matches of an Offer created by the Demand organization.\n",
+          "request": {
+            "name": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the Offer Matches of an Offer created by the Demand organization.\n",
+            "description": {
+              "content": "# Authorization\n\nRequired role: `org_admin`\n\n# Description\nGet the Offer Matches of an Offer created by the Demand organization.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "offers",
+                ":offer_id",
+                "matches"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "response",
+                  "value": "<string>",
+                  "description": "Response of an Offer Match to filter on. <br>\nMultiple values are supported (in an `OR` fashion). <br>\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sequence_id",
+                  "value": "<uuid>",
+                  "description": "Sequence ID of the Offer Match to filter on.\nMultiple values are supported (in an `OR` fashion).\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "items_per_page",
+                  "value": "100"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "last_modified"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "offer_id",
+                  "description": "(Required) ID of an offer"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "785a24d6-2ed3-4f3b-ad7a-425a90da9623",
+              "name": "Successfully returned Offer Matches.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "offers",
+                    ":offer_id",
+                    "matches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "response",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sequence_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "items_per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "last_modified"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "desc"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "offer_id",
+                      "description": "(Required) ID of an offer"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"items_per_page\": 100,\n  \"total_items\": 450,\n  \"total_pages\": 6347,\n  \"items\": [\n    {\n      \"match\": {\n        \"id\": \"ffd2662d-add6-e639-6bfe-8e35e343d0ac\",\n        \"response\": \"<string>\",\n        \"status\": \"assigned\",\n        \"sequence_id\": \"64033d55-6b87-282c-5cc5-bccd4d937005\",\n        \"created_at\": \"2010-03-11T07:02:25.277Z\",\n        \"reason_code\": \"string\",\n        \"comment\": \"string\",\n        \"updated_at\": \"2015-03-20T03:30:10.658Z\"\n      },\n      \"supply\": {\n        \"id\": \"638c849d-947c-fca1-6dee-f4117b8bf958\",\n        \"name\": \"string\"\n      }\n    },\n    {\n      \"match\": {\n        \"id\": \"21490b79-e4e9-16b0-353d-e1d8062e5c8b\",\n        \"response\": \"<string>\",\n        \"status\": \"open\",\n        \"sequence_id\": \"e4c6f567-8cab-728e-ca63-f575d778f4c8\",\n        \"created_at\": \"1999-12-18T23:27:25.153Z\",\n        \"reason_code\": \"string\",\n        \"comment\": \"string\",\n        \"updated_at\": \"1967-01-20T07:36:04.838Z\"\n      },\n      \"supply\": {\n        \"id\": \"b085a3f8-5bee-eb34-3f39-afa4bb8011c7\",\n        \"name\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0f56deb3-1a26-4c39-8ba4-a546410ae4f2",
+          "name": "# Authorization\nRequired role: `org_admin`\n\nRequired offer state: `sent`\n\n\n# Description\nClose an Offer created by the Demand organization that has not yet been assigned.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`\n\nRequired offer state: `sent`\n\n\n# Description\nClose an Offer created by the Demand organization that has not yet been assigned.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`\n\nRequired offer state: `sent`\n\n\n# Description\nClose an Offer created by the Demand organization that has not yet been assigned.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "offers",
+                ":offer_id",
+                "close"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "offer_id",
+                  "description": "(Required) ID of an offer"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason_code\": \"<string>\",\n  \"reason_comment\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c7db8bf9-eb58-4bcd-9c90-0ea94b515c8e",
+              "name": "Successfully marked Offer as Cancelled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "offers",
+                    ":offer_id",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "offer_id",
+                      "description": "(Required) ID of an offer"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason_code\": \"<string>\",\n  \"reason_comment\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb75e9b9-0e63-40db-b96c-4ba0ccbf2caa",
+          "name": "# Authorization\nRequired role: `org_admin`.\n\nRequired offer state: `accepted`.\n\n# Description\nAssign an Offer created by the Demand Organization to a\nSupply Organization that accepted the Offer.  \nThe offer assignment setting of the Demand organization must be set to `manual`, otherwise this action is forbidden.\n",
+          "request": {
+            "name": "# Authorization\nRequired role: `org_admin`.\n\nRequired offer state: `accepted`.\n\n# Description\nAssign an Offer created by the Demand Organization to a\nSupply Organization that accepted the Offer.  \nThe offer assignment setting of the Demand organization must be set to `manual`, otherwise this action is forbidden.\n",
+            "description": {
+              "content": "# Authorization\nRequired role: `org_admin`.\n\nRequired offer state: `accepted`.\n\n# Description\nAssign an Offer created by the Demand Organization to a\nSupply Organization that accepted the Offer.  \nThe offer assignment setting of the Demand organization must be set to `manual`, otherwise this action is forbidden.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "outbox",
+                "offers",
+                ":offer_id",
+                "assign"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "offer_id",
+                  "description": "(Required) ID of an offer"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"offer_match_id\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7078e67c-da19-4de9-89ca-977d03ff3071",
+              "name": "Successfully marked Offer as Assigned.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "outbox",
+                    "offers",
+                    ":offer_id",
+                    "assign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "offer_id",
+                      "description": "(Required) ID of an offer"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"offer_match_id\": \"<uuid>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3ca6d78a-c82f-41aa-b176-369fac32546e",
+    "name": "AlayaCare Accounting Accounts offer outbox API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts Client Cost Centres API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Client Cost Centres",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add a cost centre to a client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/cost_centres/:cost_centre_id/clients",
+            "params": [
+              {
+                "name": "cost_centre_id",
+                "value": "",
+                "type": "path",
+                "description": "Cost centre ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a cost centre to a client"
+        },
+        {
+          "info": {
+            "name": "Delete a cost centre from a client",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/cost_centres/:cost_centre_id/clients/:client_id",
+            "params": [
+              {
+                "name": "cost_centre_id",
+                "value": "",
+                "type": "path",
+                "description": "Cost centre ID"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "Client ID"
+              }
+            ]
+          },
+          "docs": "Delete a cost centre from a client"
+        },
+        {
+          "info": {
+            "name": "Delete a cost centre from a client using external ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/cost_centres/:cost_centre_id/clients/by_id/:client_external_id",
+            "params": [
+              {
+                "name": "cost_centre_id",
+                "value": "",
+                "type": "path",
+                "description": "Cost centre ID"
+              },
+              {
+                "name": "client_external_id",
+                "value": "",
+                "type": "path",
+                "description": "Client external ID"
+              }
+            ]
+          },
+          "docs": "Delete a cost centre from a client using external ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

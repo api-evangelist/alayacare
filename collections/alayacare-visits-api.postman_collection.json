@@ -1,0 +1,2610 @@
+{
+  "item": [
+    {
+      "id": "0b19cb09-fbd1-4bf6-ae10-07747de94c18",
+      "name": "Visits",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "38f84711-5719-49b5-a02d-566eb5204600",
+          "name": "Get a list of visits and submissions given a client id.\n",
+          "request": {
+            "name": "Get a list of visits and submissions given a client id.\n",
+            "description": {
+              "content": "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n* `client_id` and `external_client_id` are mutually exclusive\n* `employee_id` and `external_employee_id` are mutually exclusive\n* Must specify either `client_id` or `external_client_id`\n* If the end_date is not specified, it will be defaulted to the end of today's date\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "submissions",
+                "visits"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_at",
+                  "value": "<dateTime>",
+                  "description": "Filter by start date greater or equal than specified value"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at",
+                  "value": "<dateTime>",
+                  "description": "Filter by end date less or equal than specified value. If not specified, the default date will be defaulted to the end of today's date"
+                },
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<integer>",
+                  "description": "Filter by client ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "external_client_id",
+                  "value": "<string>",
+                  "description": "Filter by external client ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "employee_id",
+                  "value": "<integer>",
+                  "description": "Filter by employee ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "external_employee_id",
+                  "value": "<string>",
+                  "description": "Filter by external employee ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "work_session_id",
+                  "value": "<integer>",
+                  "description": "Filter by work session ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "service_id",
+                  "value": "<integer>",
+                  "description": "Filter by service ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Filter by page number. If not specified will default to 1"
+                },
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "100",
+                  "description": "Number of items per page. If not specified will default to 100"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6054a3d3-36a6-48db-bae9-c7b1622293e9",
+              "name": "Visit information with form submissions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "submissions",
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "employee_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_employee_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "work_session_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "service_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 1,\n  \"page\": 1,\n  \"total_pages\": 1,\n  \"items_per_page\": 1,\n  \"items\": [\n    {\n      \"id\": 1,\n      \"service_id\": 1,\n      \"service_name\": \"Physiotherapy\",\n      \"start_at\": \"string\",\n      \"end_at\": \"string\",\n      \"employee_id\": 101,\n      \"submissions\": [\n        {\n          \"id\": 123,\n          \"name\": \"Physiotherapy\",\n          \"schema_id\": \"c3560f0e-7a72-41ea-9d2b-b4d9457e4339\"\n        },\n        {\n          \"id\": 123,\n          \"name\": \"Physiotherapy\",\n          \"schema_id\": \"c3560f0e-7a72-41ea-9d2b-b4d9457e4339\"\n        }\n      ]\n    },\n    {\n      \"id\": 1,\n      \"service_id\": 1,\n      \"service_name\": \"Physiotherapy\",\n      \"start_at\": \"string\",\n      \"end_at\": \"string\",\n      \"employee_id\": 101,\n      \"submissions\": [\n        {\n          \"id\": 123,\n          \"name\": \"Physiotherapy\",\n          \"schema_id\": \"c3560f0e-7a72-41ea-9d2b-b4d9457e4339\"\n        },\n        {\n          \"id\": 123,\n          \"name\": \"Physiotherapy\",\n          \"schema_id\": \"c3560f0e-7a72-41ea-9d2b-b4d9457e4339\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8aa83a13-a7d8-4210-9a1b-b536c1d53a3a",
+              "name": "Invalid request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "submissions",
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "employee_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_employee_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "work_session_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "service_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Only one of either `account_id` or `external_client_id` should be specified.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fbe740c4-c2b0-4a3d-a4bc-4e8d5371d52e",
+              "name": "Authentication required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "submissions",
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "employee_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_employee_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "work_session_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "service_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 401,\n  \"message\": \"Please verify your access level for this url.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6ff51cb-ed06-4906-bc6d-d10e232c9cd5",
+              "name": "Permission error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "submissions",
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "employee_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "external_employee_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "work_session_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "service_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 403,\n  \"message\": \"You do not have the required permissions to perform this action.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e1818020-871c-4d19-bc04-b917275547b4",
+          "name": "Get a list of cancel codes",
+          "request": {
+            "name": "Get a list of cancel codes",
+            "description": {},
+            "url": {
+              "path": [
+                "cancelcodes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ca54e635-8253-4c14-b2fd-570b20986b28",
+              "name": "A list of cancel codes",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cancelcodes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6e19d34-e244-470c-b9e7-5c8f8f1a861f",
+          "name": "Get list of visits",
+          "request": {
+            "name": "Get list of visits",
+            "description": {
+              "content": "**Note:** This endpoint returns only patient/client visits (where the client is a patient). To retrieve facility visits, use the `/facility_visits` endpoint instead.\n- `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.\n- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.\n- If the `start_date_from` filter is not specified, it will default to **now**.\n- If the `start_date_to` filter is not specified, it will default to **7 days from now**.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "visits"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "description": {
+                    "content": "Filter on a list of tags and return values for at least one matching tag. Filter by multiple tag names using **OR**.\n",
+                    "type": "text/plain"
+                  },
+                  "key": "tags",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "Filter by visit start date time greater or equal than specified value.\nIf not specified will default to now.\nExpected format is ISO 8601 converted to UTC timezone.\n`start_at` can be used as this filter name\nEx: `2018-02-03T08:00:00-05:00`\n",
+                    "type": "text/plain"
+                  },
+                  "key": "start_date_from",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "Filter by visit start date time less than or equal than specified value.\nIf not specified will default to 7 days from now.\nExpected format is ISO 8601 converted to UTC timezone.\n`end_at` can be used as this filter name\nEx: `2019-02-18T08:00:00-05:00`\n",
+                    "type": "text/plain"
+                  },
+                  "key": "start_date_to",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "Filter by visit end date time greater or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2019-02-03T08:00:00-05:00`\n",
+                    "type": "text/plain"
+                  },
+                  "key": "end_date_from",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "Filter by visit end date time less than or equal than specified value.\nExpected format is ISO 8601 converted to UTC timezone.\nEx: `2018-02-18T08:00:00-05:00`\n",
+                    "type": "text/plain"
+                  },
+                  "key": "end_date_to",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "If true, returns only visits with a valid cancel code, not including 'On Hold'.\nIf false, returns only visits with 'On Hold' codes or *no* cancel code.\n",
+                    "type": "text/plain"
+                  },
+                  "key": "is_cancelled",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "If true, returns only visits with an 'On Hold' cancel code.\nIf false, returns only visits with *no* cancel code or with a cancel code other than 'On Hold'.\n",
+                    "type": "text/plain"
+                  },
+                  "key": "is_on_hold",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "If true, returns only visits with *no* employee assigned.\nIf false, returns only visits with an employee assigned.\n",
+                    "type": "text/plain"
+                  },
+                  "key": "is_vacant",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "Status of the visit based on status hierarchy from AlayaCare web application, one or more using **OR**. (This can only be one of scheduled,vacant,on_hold,cancelled,offered,clocked,late,completed,missed,approved)",
+                    "type": "text/plain"
+                  },
+                  "key": "status",
+                  "value": ""
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a4414cd3-fbfe-47d3-908c-2f2d9e6033e1",
+              "name": "A list of visits",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tags",
+                      "value": ""
+                    },
+                    {
+                      "key": "start_date_from",
+                      "value": ""
+                    },
+                    {
+                      "key": "start_date_to",
+                      "value": ""
+                    },
+                    {
+                      "key": "end_date_from",
+                      "value": ""
+                    },
+                    {
+                      "key": "end_date_to",
+                      "value": ""
+                    },
+                    {
+                      "key": "is_cancelled",
+                      "value": ""
+                    },
+                    {
+                      "key": "is_on_hold",
+                      "value": ""
+                    },
+                    {
+                      "key": "is_vacant",
+                      "value": ""
+                    },
+                    {
+                      "key": "status",
+                      "value": ""
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "97e8f998-9f31-4aee-b372-43a9480c28c3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tags",
+                      "value": ""
+                    },
+                    {
+                      "key": "start_date_from",
+                      "value": ""
+                    },
+                    {
+                      "key": "start_date_to",
+                      "value": ""
+                    },
+                    {
+                      "key": "end_date_from",
+                      "value": ""
+                    },
+                    {
+                      "key": "end_date_to",
+                      "value": ""
+                    },
+                    {
+                      "key": "is_cancelled",
+                      "value": ""
+                    },
+                    {
+                      "key": "is_on_hold",
+                      "value": ""
+                    },
+                    {
+                      "key": "is_vacant",
+                      "value": ""
+                    },
+                    {
+                      "key": "status",
+                      "value": ""
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "43ab840d-914b-4afd-a419-444baccce67b",
+          "name": "Create a new visit",
+          "request": {
+            "name": "Create a new visit",
+            "description": {
+              "content": "- `client_id` or `alayacare_client_id` is required, not specifying one is an invalid request.\n- `client_id` and `alayacare_client_id` are mutually exclusive, specifying both is an invalid request.\n- `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request..\n- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request..\n**Remarks**\nA visit can be created without specifying the service if the client has a single **active** service.\nIf no employee is specified a vacant visit will be created.\nA cancelled visit (`cancelled`= `true`) must include a cancel code ID.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "visits"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "94275b6b-6e6f-4574-9ddb-86b63755086e",
+              "name": "Visit successfully created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "e50ea845-305a-467c-a5d2-ce13b860c786",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7924063c-c85e-47c6-bde0-2f7b1a00885b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9d7f7b9c-8039-4229-8842-07dda029ff49",
+          "name": "Get visit details using AlayaCare ID",
+          "request": {
+            "name": "Get visit details using AlayaCare ID",
+            "description": {
+              "content": "**Note:** This endpoint returns only patient/client visits (where the client is a patient).\nIf the visit belongs to a facility, this endpoint will return a `404`. Use `GET /facility_visits/{alayacare_visit_id}` instead.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "visits",
+                ":alayacare_visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "alayacare_visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9d30725a-ab73-42a3-8ef9-d6cb2573e689",
+              "name": "Visit details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "40a6e426-b689-40a6-9dbe-3069195ca431",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "4f757243-ece4-4bf7-b351-2e9f966e784a",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1177db6b-c991-4f25-9d88-02c5d0daa2ba",
+          "name": "Update visit details using AlayaCare ID",
+          "request": {
+            "name": "Update visit details using AlayaCare ID",
+            "description": {
+              "content": "**Note:** This endpoint only supports patient/client visits. To update a facility visit, use `PUT /facility_visits/{alayacare_visit_id}` instead.\n\nA cancelled visit (`cancelled`= `true`) must include a cancel code ID.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "visits",
+                ":alayacare_visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "alayacare_visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                }
+              ]
+            },
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8e1a2cb3-f738-4f1d-abf4-4434c523ce80",
+              "name": "Visit successfully updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "14f88d5c-e561-4d3b-be6c-e96400bf34f3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8ea30414-9914-4a26-9dea-36faf42d5b68",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b13efa1f-b7ef-4889-a403-c84f814337cd",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d3d70aba-f07e-4a0b-9efd-3a173ddf587f",
+          "name": "Delete visit using AlayaCare ID",
+          "request": {
+            "name": "Delete visit using AlayaCare ID",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":alayacare_visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "alayacare_visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d6c324b4-c2f7-4b10-b972-99e348e6fc00",
+              "name": "Visit successfully deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "096c709f-c53d-48bc-80b3-1824583ab3d6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1b88f2db-293b-43cc-b004-980a03404119",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a50ac2c2-4b59-48d3-a248-c455afaf5aaf",
+          "name": "Get visit details using external ID",
+          "request": {
+            "name": "Get visit details using external ID",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                "by_id",
+                ":visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "visit_id",
+                  "description": "(Required) External visit ID"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ef4aa5a8-63d2-48fb-86f6-ac0ed8f23272",
+              "name": "Visit details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b376557d-38be-43f9-ae96-5f3ed64a760f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f4c14862-5c82-4775-9aa7-bd626ef4370a",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1dbbbb10-d3bd-4997-90e4-8e761902ef8e",
+          "name": "Update visit details using external ID",
+          "request": {
+            "name": "Update visit details using external ID",
+            "description": {
+              "content": "A cancelled visit (`cancelled`= `true`) must include a cancel code ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "visits",
+                "by_id",
+                ":visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "visit_id",
+                  "description": "(Required) External visit ID"
+                }
+              ]
+            },
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "49e38219-9234-4289-918e-0fb65fa6f8d0",
+              "name": "Visit successfully updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9394f84f-003d-4506-ae89-e5f960511ee4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a1914e5f-c0de-4e15-a97b-6669bb529d84",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "089163d2-16a4-4300-bba1-f6d3905282f1",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8030f523-8634-4c1d-953c-05fa1a011e4e",
+          "name": "Delete visit using external ID",
+          "request": {
+            "name": "Delete visit using external ID",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                "by_id",
+                ":visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "visit_id",
+                  "description": "(Required) External visit ID"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "df81d581-e806-420f-9515-89f1db9a6753",
+              "name": "Visit successfully deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d2057ab6-51b5-4295-b4de-9300820e987f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9d1e0169-709a-4deb-bc57-8039bb0571d6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "by_id",
+                    ":visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "visit_id",
+                      "description": "(Required) External visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1b658e51-9871-415c-87d4-04d2aa684364",
+          "name": "Lock list of visits using Alayacare visit ID or external visit ID",
+          "request": {
+            "name": "Lock list of visits using Alayacare visit ID or external visit ID",
+            "description": {
+              "content": "**Remarks**\n- Only Approved visits can be locked using `alayacare_visit_id` or `visit_id`.\n- Visits cannot be **unlocked**.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "visits",
+                "lock"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5f96c844-fa5b-42c4-a0b3-4a948a7fa478",
+              "name": "Visit successfully locked",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "lock"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8ac48317-e895-4d02-9947-b94c9beb116b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "lock"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Multi-Status (WebDAV) (RFC 4918)",
+              "code": 207,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1f4f57bb-89e6-4b70-bbc5-33b3b01c5d19",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "lock"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d8ee590c-94e9-4903-bf87-97643b3bf6c4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    "lock"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6824c68-4390-45e5-ab43-d9cdb288c1d3",
+          "name": "Get the delivery date of a visit given the ID",
+          "request": {
+            "name": "Get the delivery date of a visit given the ID",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":alayacare_visit_id",
+                "delivery_date"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "alayacare_visit_id",
+                  "description": "(Required) AlayaCare visit ID"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "27545dce-2c9c-4a65-a3b3-cbb983ece673",
+              "name": "Delivery date for visit",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id",
+                    "delivery_date"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d060f692-d1c3-4040-bf2b-0e903934076d",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":alayacare_visit_id",
+                    "delivery_date"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "alayacare_visit_id",
+                      "description": "(Required) AlayaCare visit ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "caa18fbc-9f52-4f90-b025-9f8c113983c6",
+          "name": "Get the next visit ID for a client",
+          "request": {
+            "name": "Get the next visit ID for a client",
+            "description": {},
+            "url": {
+              "path": [
+                "visits",
+                ":client_id",
+                "next_visit_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "description": {
+                    "content": "If false, get the next visit without a cancel code\n",
+                    "type": "text/plain"
+                  },
+                  "key": "with_canceled",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "content": "Date to filter the next visit. If not specified, date is now.",
+                    "type": "text/plain"
+                  },
+                  "key": "date_utc",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "",
+                  "key": "client_id",
+                  "description": "(Required) Client ID"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "222968b6-b7a1-40d3-a3b1-6197943e6715",
+              "name": "Next visit ID for client",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":client_id",
+                    "next_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "with_canceled",
+                      "value": ""
+                    },
+                    {
+                      "key": "date_utc",
+                      "value": ""
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "client_id",
+                      "description": "(Required) Client ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "16430462-c376-405b-b9b6-eb6400111e39",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "visits",
+                    ":client_id",
+                    "next_visit_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "with_canceled",
+                      "value": ""
+                    },
+                    {
+                      "key": "date_utc",
+                      "value": ""
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "",
+                      "key": "client_id",
+                      "description": "(Required) Client ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.alayacare.com/ext/api/v2/accounting",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "0c0c4076-976d-46a1-8815-08e586341522",
+    "name": "AlayaCare Accounting Accounts Visits API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- visit_id\n- premium_id\n- visit_premium_id\n- employee_id\n- cost_centre_id\n- client_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- employee_external_id\n- client_external_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n",
+      "type": "text/plain"
+    }
+  }
+}

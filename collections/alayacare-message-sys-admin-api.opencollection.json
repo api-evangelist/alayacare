@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AlayaCare Accounting Accounts message sys_admin API",
+    "version": "1.0.19-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "message sys_admin",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /v1/sys_admin/messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/sys_admin/messages",
+            "params": [
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sender_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "items_per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a paginated collection of messages for a sequence as a system admin.\n"
+        },
+        {
+          "info": {
+            "name": "GET /v1/sys_admin/messages/by_file_id/{file_id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.alayacare.com/ext/api/v2/accounting/v1/sys_admin/messages/by_file_id/:file_id",
+            "params": [
+              {
+                "name": "file_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of a file."
+              }
+            ]
+          },
+          "docs": "# Authorization\nRequired role: `sys_admin`\n\n# Description\nGet a message by file ID.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
