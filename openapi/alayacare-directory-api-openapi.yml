@@ -1,44 +1,20 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Directory API
-  description: '**AlayaCare IDs:**
+  version: 1.0.0
+  title: AlayaCare External Files Directory API
+  description: '**Remarks:**
+
+    Please note that the difference between a `Directory` and a `File` resource is that `Directory` requires a trailing `/` at the end of the path
+
+    **AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
 
     - id
 
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
-    - client_id
-
-
-    **External IDs**
-
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
-
-    - employee_external_id
-
-    - client_external_id
-
-
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
     '
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
-security:
-- basic_auth: []
+- url: https://homecare.alayacare.com/ext/api/v2/files
 tags:
 - name: Directory
 paths:
@@ -47,51 +23,54 @@ paths:
     - name: id
       in: path
       required: true
-      type: integer
+      schema:
+        type: integer
     - name: path
       in: path
       required: true
-      type: string
+      schema:
+        type: string
     get:
       tags:
       - Directory
       summary: Get the content of a directory
-      produces:
-      - application/json
       responses:
         200:
           description: Content of a directory
-          schema:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: Path to file or directory
-                  example: client/1002/report.pdf
-                last_modified:
-                  type: string
-                  format: date-time
-                  description: 'When the file or directory was last modified (ISO 8601)
-
-                    '
-                  example: '2017-07-08T13:30:00+00:00'
-                size:
-                  type: integer
-                  description: Size of the file in bytes
-          examples:
+          content:
             application/json:
-            - last_modified: '2016-01-14T18:58:44+00:00'
-              name: client/1002/Physician Order/
-              size: 0
-            - last_modified: '2016-08-24T18:45:29+00:00'
-              name: client/1002/picture.jpg
-              size: 5499
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Path to file or directory
+                      example: client/1002/report.pdf
+                    last_modified:
+                      type: string
+                      format: date-time
+                      description: 'When the file or directory was last modified (ISO 8601)
+
+                        '
+                      example: '2017-07-08T13:30:00+00:00'
+                    size:
+                      type: integer
+                      description: Size of the file in bytes
+              example:
+              - last_modified: '2016-01-14T18:58:44+00:00'
+                name: client/1002/Physician Order/
+                size: 0
+              - last_modified: '2016-08-24T18:45:29+00:00'
+                name: client/1002/picture.jpg
+                size: 5499
         404:
           description: Directory not found
-          schema:
-            $ref: '#/definitions/DirectoryNotFoundSchema'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectoryNotFoundSchema'
     post:
       tags:
       - Directory
@@ -99,37 +78,39 @@ paths:
       description: 'Create a directory at the `path` location, along with the underlying folder structure if it doesn''t exist already
 
         '
-      produces:
-      - application/json
       responses:
         201:
           description: Directory created
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 201
-              name:
-                type: string
-                description: Url to the directory created
-                example: client/1002/new directory/
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 201
+                  name:
+                    type: string
+                    description: Url to the directory created
+                    example: client/1002/new directory/
         400:
           description: 'Bad Request: Can''t post a file when creating a directory
 
             '
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Can't post a file when creating a folder
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 400
+                  message:
+                    type: string
+                    description: Detail on the error
+                    example: Can't post a file when creating a folder
     put:
       tags:
       - Directory
@@ -158,52 +139,58 @@ paths:
       parameters:
       - name: source
         in: header
-        type: string
         description: 'path of the directory to copy or move (source directory)
 
           '
+        schema:
+          type: string
       - name: move
         in: header
-        type: boolean
         description: 'specifies if the directory is moved or copied (defaults to false, i.e. copied)
 
           '
-      produces:
-      - application/json
+        schema:
+          type: boolean
       responses:
         200:
           description: Directory copied or moved
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 200
-              name:
-                type: string
-                description: 'Url to the new location of the copied or moved directory
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 200
+                  name:
+                    type: string
+                    description: 'Url to the new location of the copied or moved directory
 
-                  '
-                example: client/1002/new directory copied/
+                      '
+                    example: client/1002/new directory copied/
         400:
           description: 'Bad Request: Missing `source` header
 
             '
-          schema:
-            type: object
-            properties:
-              message:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  source:
-                    type: string
-                    description: Detail on the error
-                    example: The request cannot be processed without the source variable
+                  message:
+                    type: object
+                    properties:
+                      source:
+                        type: string
+                        description: Detail on the error
+                        example: The request cannot be processed without the source variable
         404:
           description: Source Directory not found
-          schema:
-            $ref: '#/definitions/DirectoryNotFoundSchema'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectoryNotFoundSchema'
     delete:
       tags:
       - Directory
@@ -215,10 +202,9 @@ paths:
       - name: forced-delete
         in: header
         required: true
-        type: boolean
         description: required header to delete a directory
-      produces:
-      - application/json
+        schema:
+          type: boolean
       responses:
         204:
           description: Directory deleted
@@ -226,36 +212,35 @@ paths:
           description: 'Bad Request: Missing `forced-delete` header
 
             '
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detailon the error
-                example: This action will delete the folder and its content. Please confirm
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 400
+                  message:
+                    type: string
+                    description: Detailon the error
+                    example: This action will delete the folder and its content. Please confirm
         404:
           description: Directory not found
-          schema:
-            $ref: '#/definitions/DirectoryNotFoundSchema'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectoryNotFoundSchema'
 components:
-  securitySchemes:
-    basic_auth:
-      type: http
-      description: Basic HTTP auth over https
-      scheme: basic
-definitions:
-  DirectoryNotFoundSchema:
-    type: object
-    properties:
-      code:
-        type: integer
-        description: http status response code
-        example: 404
-      message:
-        type: string
-        description: detail on the error
-        example: Folder "Ghost Directory" not found
+  schemas:
+    DirectoryNotFoundSchema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 404
+        message:
+          type: string
+          description: detail on the error
+          example: Folder "Ghost Directory" not found

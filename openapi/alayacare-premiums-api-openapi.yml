@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Premiums API
+  title: AlayaCare Accounting Premiums API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -180,83 +180,26 @@ paths:
           $ref: '#/components/responses/ErrorPremiumNotFound'
 components:
   schemas:
-    PaginatedList:
-      description: Base model of all paginated lists
+    PremiumCreateSchema:
       type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
       required:
-      - count
-      - page
-      - total_pages
-      - items
-    PayCode:
-      description: AlayaCare pay code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare pay code ID
-          example: 3
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare pay code name
-          example: 783
-    Premium:
-      description: A premium configured in AlayaCare Accounting Settings
-      type: object
+      - code
       properties:
         code:
           type: string
-          description: AlayaCare premium code name
-          example: MILEAGE
-        premium_id:
+          example: TESTCODE
+        pay_code_id:
           type: integer
-          description: AlayaCare premium ID
-          example: 643
+          example: 1
           minimum: 1
-        pay_code:
-          $ref: '#/components/schemas/PayCode'
+        branch_id:
+          type: integer
+          example: 1
+          minimum: 1
         bill_codes:
           type: array
           items:
-            $ref: '#/components/schemas/BillCode'
-        rule:
-          type: string
-          description: AlayaCare premium rule name
-          example: Weekends
-        branch:
-          $ref: '#/components/schemas/Branch'
-      required:
-      - code
-      - premium_id
-    PremiumsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      type: object
-      description: Paginated list of premiums
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Premium'
+            $ref: '#/components/schemas/BillCodeStub'
     ErrorResponse:
       description: Error response
       type: object
@@ -272,42 +215,20 @@ components:
       required:
       - code
       - message
-    BillCodeQuerySchema:
+    PremiumUpdateSchema:
+      type: object
       properties:
-        branch:
-          $ref: '#/components/schemas/Branch'
         code:
           type: string
-        excluded_from_billing:
-          type: boolean
-        guid:
-          type: integer
-        id:
-          type: integer
-        is_disabled:
-          type: boolean
-        name:
-          type: string
-        units:
-          type: string
-      required:
-      - id
-      - code
-      - name
-      - excluded_from_billing
-      - is_disabled
-      - units
-      type: object
-    PayCodeSchema:
-      type: object
-      properties:
-        id:
+          example: TESTCODE
+        pay_code_id:
           type: integer
           example: 1
           minimum: 1
-        code:
-          type: string
-          example: SP
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeStub'
     BillCodeStub:
       type: object
       description: Only one of id or guid should be present
@@ -359,6 +280,109 @@ components:
       required:
       - id
       - code
+    PayCode:
+      description: AlayaCare pay code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare pay code ID
+          example: 3
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare pay code name
+          example: 783
+    Premium:
+      description: A premium configured in AlayaCare Accounting Settings
+      type: object
+      properties:
+        code:
+          type: string
+          description: AlayaCare premium code name
+          example: MILEAGE
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          example: 643
+          minimum: 1
+        pay_code:
+          $ref: '#/components/schemas/PayCode'
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCode'
+        rule:
+          type: string
+          description: AlayaCare premium rule name
+          example: Weekends
+        branch:
+          $ref: '#/components/schemas/Branch'
+      required:
+      - code
+      - premium_id
+    PayCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
+    BillCodeQuerySchema:
+      properties:
+        branch:
+          $ref: '#/components/schemas/Branch'
+        code:
+          type: string
+        excluded_from_billing:
+          type: boolean
+        guid:
+          type: integer
+        id:
+          type: integer
+        is_disabled:
+          type: boolean
+        name:
+          type: string
+        units:
+          type: string
+      required:
+      - id
+      - code
+      - name
+      - excluded_from_billing
+      - is_disabled
+      - units
+      type: object
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     Branch:
       description: AlayaCare branch
       type: object
@@ -372,40 +396,16 @@ components:
           type: string
           description: Branch name
           example: AlayaCare Health
-    PremiumCreateSchema:
+    PremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
       type: object
-      required:
-      - code
+      description: Paginated list of premiums
       properties:
-        code:
-          type: string
-          example: TESTCODE
-        pay_code_id:
-          type: integer
-          example: 1
-          minimum: 1
-        branch_id:
-          type: integer
-          example: 1
-          minimum: 1
-        bill_codes:
+        items:
           type: array
           items:
-            $ref: '#/components/schemas/BillCodeStub'
-    PremiumUpdateSchema:
-      type: object
-      properties:
-        code:
-          type: string
-          example: TESTCODE
-        pay_code_id:
-          type: integer
-          example: 1
-          minimum: 1
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeStub'
+            $ref: '#/components/schemas/Premium'
   responses:
     ErrorResponseAccessDenied:
       description: Access denied

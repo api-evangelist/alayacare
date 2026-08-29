@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Funders API
+  title: AlayaCare Accounting Funders API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -192,126 +192,32 @@ paths:
           $ref: '#/components/responses/ErrorFunderNotFound'
 components:
   schemas:
-    BranchSummary:
-      description: Branch summary
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
-    InvoicingModelField:
-      type: string
-      description: "Invoicing Model used by the Funder\n\n* batched -> All Client Visits roll up to 1 Invoice for the Payor\n* funder_individual -> One Invoice per Client is sent to the Payor\n* individual_invoices -> One Invoice per Client is sent to the Client or Billing Contact\n* hcp -> invoicing_model specific for Australian Home Care Packages program\n* mecicaid -> Each Date of Service or Visit creates 1 Invoice\n* ccac -> CHRIS/HPG/LHIN invoicing model - Each Visit creates 1 Invoice.\n          All Invoices for 1 payor are batched into 1 submission to the payor\n"
-      enum:
-      - batched
-      - funder_individual
-      - individual_invoices
-      - ccac
-      - medicaid
-      - hcp
-      - ndis
-    FunderDetails:
-      type: object
-      properties:
-        id:
-          description: AlayaCare funder ID
-          type: integer
-          example: 1
-          minimum: 1
-        external_id:
-          description: External funder ID
-          type: string
-          example: sor_funder_id_1
-          nullable: true
-        name:
-          description: Funder name
-          type: string
-          example: Insurance Company
         code:
-          description: Funder code
+          type: integer
+          example: 400
+          description: Response code
+        message:
           type: string
-          example: IC-1
-        type:
-          description: Funder type
-          type: string
-          enum:
-          - funder_individual
-          - client_individual
-          - electronic_billing
-          - funder_batched
-          - ccac
-          - hcp
-        status:
-          description: Funder status
-          type: string
-          enum:
-          - enabled
-          - disabled
-        organization:
-          description: Organization
-          type: string
-          example: Home Healthcare Agency
-        organization_code:
-          description: Organization code
-          type: string
-          example: HHC-0101
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
+          example: Invalid request
+          description: Detailed error message
       required:
-      - id
-      - name
-    FunderCcacUpdateSchema:
-      description: Create requests for Funders with 'ccac' invoicing_model type
+      - code
+      - message
+    FunderCommonCreateSchema:
+      description: Update requests for 'batched', 'funder_individual' and 'individual_invoices' invoicing model types
       allOf:
-      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
-      - $ref: '#/components/schemas/FunderCcacUpdateFieldsSchema'
-    FunderCcacUpdateFieldsSchema:
-      type: object
-      properties:
-        ccac_code:
-          type: string
-          example: GT
-        ccac_name:
-          type: string
-          example: Central CCAC
-        organization_code:
-          type: string
-          example: org_code
-        organization_name:
-          type: string
-          example: Green Cross Inc.
-        billing_frequency:
-          type: string
-          example: weekly
-          enum:
-          - none
-          - weekly
-          - calendar_month
-        file_name_prefix:
-          type: string
-          example: GT
-    FunderHcpScalarSchema:
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseScalarSchema'
-      properties:
-        organization_code:
-          type: string
-          example: HHC-0101
-        organization_name:
-          type: string
-          example: Home Healthcare Agency
-        recognized_revenue_account_id:
-          type: integer
-          example: 1
-        unearned_revenue_account_id:
-          type: integer
-          example: 1
+      - $ref: '#/components/schemas/FunderBaseCreateSchema'
+      - $ref: '#/components/schemas/FunderCommonUpdateFieldsSchema'
+    FunderCreateSchema:
+      anyOf:
+      - $ref: '#/components/schemas/FunderCommonCreateSchema'
+      - $ref: '#/components/schemas/FunderElectronicBillingCreateSchema'
+      - $ref: '#/components/schemas/FunderHcpCreateSchema'
+      - $ref: '#/components/schemas/FunderCcacCreateSchema'
     FunderHcpUpdateFieldsSchema:
       type: object
       required:
@@ -331,6 +237,49 @@ components:
         unearned_revenue_account_id:
           type: integer
           example: 1
+    LinkedEntitySchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+    CostCentreSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        number:
+          type: string
+          example: '123'
+        description:
+          type: string
+          example: '123'
+    FunderCommonScalarSchema:
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseScalarSchema'
+      properties:
+        allow_paypal_payment:
+          type: boolean
+          description: Funder can use paypal
+          example: false
+        agency_profile:
+          $ref: '#/components/schemas/LinkedEntitySchema'
+        billing_contact:
+          $ref: '#/components/schemas/LinkedEntitySchema'
+        organization_code:
+          type: string
+          example: HHC-0101
+        organization_name:
+          type: string
+          example: Home Healthcare Agency
+        billing_frequency:
+          type: string
+          enum:
+          - no_frequency
+          - weekly
+          - calendar_month
     FunderBaseScalarSchema:
       allOf:
       - type: object
@@ -423,43 +372,6 @@ components:
           line_item_limit:
             type: number
             example: 76
-    FunderElectronicBillingCreateSchema:
-      description: Create request for Funder with 'medicaid' invoicing_model type
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseCreateSchema'
-      - $ref: '#/components/schemas/FunderElectronicBillingUpdateFieldsSchema'
-    FunderCommonCreateSchema:
-      description: Update requests for 'batched', 'funder_individual' and 'individual_invoices' invoicing model types
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseCreateSchema'
-      - $ref: '#/components/schemas/FunderCommonUpdateFieldsSchema'
-    FunderCcacScalarSchema:
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseScalarSchema'
-      properties:
-        ccac_code:
-          type: string
-          description: CCAC code
-        ccac_name:
-          type: string
-          description: CCAC name
-        organization_code:
-          type: string
-          example: HHC-0101
-        organization_name:
-          type: string
-          example: Home Healthcare Agency
-        billing_adjustment_period:
-          type: integer
-          example: 1
-        file_name_prefix:
-          type: string
-        billing_frequency:
-          type: string
-          enum:
-          - no_frequency
-          - weekly
-          - calendar_month
     FunderTypeField:
       type: string
       description: 'Provided for backwards compatibility, equivalent to `invoicing_model`
@@ -492,87 +404,10 @@ components:
       - funder_batched
       - ccac
       - hcp
-    FunderBaseUpdateSchema:
-      type: object
-      description: Fields shared by create requests for all invoicing_model types
-      properties:
-        code:
-          type: string
-          example: Code
-        description:
-          type: string
-          example: Description
-        gl_asset:
-          $ref: '#/components/schemas/LinkedEntitySchema'
-        gl_bank:
-          $ref: '#/components/schemas/LinkedEntitySchema'
-        holiday_multiplier:
-          type: number
-          example: '1.00'
-        invoicing_model:
-          $ref: '#/components/schemas/InvoicingModelField'
-        name:
-          type: string
-          example: Name
-        profile:
-          $ref: '#/components/schemas/ProfileSchema'
-        taxes:
-          type: array
-          items:
-            $ref: '#/components/schemas/FunderTaxesItemSchema'
-        gl_receivables_cost_centre:
-          $ref: '#/components/schemas/CostCentreSchema'
-        gl_bank_cost_centre:
-          $ref: '#/components/schemas/CostCentreSchema'
-        line_item_limit:
-          type: number
-          example: 76
-    FunderCommonScalarSchema:
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseScalarSchema'
-      properties:
-        allow_paypal_payment:
-          type: boolean
-          description: Funder can use paypal
-          example: false
-        agency_profile:
-          $ref: '#/components/schemas/LinkedEntitySchema'
-        billing_contact:
-          $ref: '#/components/schemas/LinkedEntitySchema'
-        organization_code:
-          type: string
-          example: HHC-0101
-        organization_name:
-          type: string
-          example: Home Healthcare Agency
-        billing_frequency:
-          type: string
-          enum:
-          - no_frequency
-          - weekly
-          - calendar_month
-    CostCentreSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        number:
-          type: string
-          example: '123'
-        description:
-          type: string
-          example: '123'
-    FunderCommonUpdateSchema:
-      description: Update requests for 'batched', 'funder_individual' and 'individual_invoices' invoicing model types
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
-      - $ref: '#/components/schemas/FunderCommonUpdateFieldsSchema'
-    FunderHcpUpdateSchema:
+    FunderHcpCreateSchema:
       description: Create request for Funder with 'hcp' invoicing_model type
       allOf:
-      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
+      - $ref: '#/components/schemas/FunderBaseCreateSchema'
       - $ref: '#/components/schemas/FunderHcpUpdateFieldsSchema'
     FunderUpdateSchema:
       anyOf:
@@ -580,96 +415,47 @@ components:
       - $ref: '#/components/schemas/FunderElectronicBillingUpdateSchema'
       - $ref: '#/components/schemas/FunderHcpUpdateSchema'
       - $ref: '#/components/schemas/FunderCcacUpdateSchema'
-    ProfileSchema:
-      type: object
-      properties:
-        first_name:
-          type: string
-          example: First name
-        last_name:
-          type: string
-          example: Last name
-    FunderCcacCreateSchema:
-      description: Create requests for Funders with 'ccac' invoicing_model type
+    FunderHcpScalarSchema:
       allOf:
-      - $ref: '#/components/schemas/FunderBaseCreateSchema'
-      - $ref: '#/components/schemas/FunderCcacUpdateFieldsSchema'
-    FunderScalarSchema:
-      anyOf:
-      - $ref: '#/components/schemas/FunderCommonScalarSchema'
-      - $ref: '#/components/schemas/FunderCcacScalarSchema'
-      - $ref: '#/components/schemas/FunderHcpScalarSchema'
-    FunderCreateSchema:
-      anyOf:
-      - $ref: '#/components/schemas/FunderCommonCreateSchema'
-      - $ref: '#/components/schemas/FunderElectronicBillingCreateSchema'
-      - $ref: '#/components/schemas/FunderHcpCreateSchema'
-      - $ref: '#/components/schemas/FunderCcacCreateSchema'
-    ErrorResponse:
-      description: Error response
-      type: object
+      - $ref: '#/components/schemas/FunderBaseScalarSchema'
       properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
+        organization_code:
           type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    FunderBaseCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
-      - type: object
-        properties:
-          branch_id:
-            type: integer
-            description: The ID of the branch to which this funder belongs
-            example: 1
-            minimum: 1
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
+          example: HHC-0101
+        organization_name:
+          type: string
+          example: Home Healthcare Agency
+        recognized_revenue_account_id:
           type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
           example: 1
-          minimum: 1
-        total_pages:
+        unearned_revenue_account_id:
           type: integer
-          description: Total number of pages available
           example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    FunderElectronicBillingUpdateSchema:
-      description: Create request for Funder with 'medicaid' invoicing_model type
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
-      - $ref: '#/components/schemas/FunderElectronicBillingUpdateFieldsSchema'
-    FunderList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of funders
+    FunderCcacUpdateFieldsSchema:
+      type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/FunderDetails'
+        ccac_code:
+          type: string
+          example: GT
+        ccac_name:
+          type: string
+          example: Central CCAC
+        organization_code:
+          type: string
+          example: org_code
+        organization_name:
+          type: string
+          example: Green Cross Inc.
+        billing_frequency:
+          type: string
+          example: weekly
+          enum:
+          - none
+          - weekly
+          - calendar_month
+        file_name_prefix:
+          type: string
+          example: GT
     FunderElectronicBillingUpdateFieldsSchema:
       type: object
       required:
@@ -1181,17 +967,217 @@ components:
           enum:
           - Y
           - I
-    FunderHcpCreateSchema:
-      description: Create request for Funder with 'hcp' invoicing_model type
-      allOf:
-      - $ref: '#/components/schemas/FunderBaseCreateSchema'
-      - $ref: '#/components/schemas/FunderHcpUpdateFieldsSchema'
-    LinkedEntitySchema:
+    BranchSummary:
+      description: Branch summary
       type: object
       properties:
         id:
           type: integer
-          example: 12
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    FunderElectronicBillingUpdateSchema:
+      description: Create request for Funder with 'medicaid' invoicing_model type
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
+      - $ref: '#/components/schemas/FunderElectronicBillingUpdateFieldsSchema'
+    FunderDetails:
+      type: object
+      properties:
+        id:
+          description: AlayaCare funder ID
+          type: integer
+          example: 1
+          minimum: 1
+        external_id:
+          description: External funder ID
+          type:
+          - string
+          - 'null'
+          example: sor_funder_id_1
+        name:
+          description: Funder name
+          type: string
+          example: Insurance Company
+        code:
+          description: Funder code
+          type: string
+          example: IC-1
+        type:
+          description: Funder type
+          type: string
+          enum:
+          - funder_individual
+          - client_individual
+          - electronic_billing
+          - funder_batched
+          - ccac
+          - hcp
+        status:
+          description: Funder status
+          type: string
+          enum:
+          - enabled
+          - disabled
+        organization:
+          description: Organization
+          type: string
+          example: Home Healthcare Agency
+        organization_code:
+          description: Organization code
+          type: string
+          example: HHC-0101
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
+      required:
+      - id
+      - name
+    FunderScalarSchema:
+      anyOf:
+      - $ref: '#/components/schemas/FunderCommonScalarSchema'
+      - $ref: '#/components/schemas/FunderCcacScalarSchema'
+      - $ref: '#/components/schemas/FunderHcpScalarSchema'
+    FunderCcacUpdateSchema:
+      description: Create requests for Funders with 'ccac' invoicing_model type
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
+      - $ref: '#/components/schemas/FunderCcacUpdateFieldsSchema'
+    FunderList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of funders
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunderDetails'
+    ProfileSchema:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: First name
+        last_name:
+          type: string
+          example: Last name
+    FunderTaxesItemSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: TPS
+        percentage:
+          type: number
+          example: 15.001
+    FunderCommonUpdateSchema:
+      description: Update requests for 'batched', 'funder_individual' and 'individual_invoices' invoicing model types
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
+      - $ref: '#/components/schemas/FunderCommonUpdateFieldsSchema'
+    FunderBaseCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
+      - type: object
+        properties:
+          branch_id:
+            type: integer
+            description: The ID of the branch to which this funder belongs
+            example: 1
+            minimum: 1
+    FunderCcacCreateSchema:
+      description: Create requests for Funders with 'ccac' invoicing_model type
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseCreateSchema'
+      - $ref: '#/components/schemas/FunderCcacUpdateFieldsSchema'
+    FunderBaseUpdateSchema:
+      type: object
+      description: Fields shared by create requests for all invoicing_model types
+      properties:
+        code:
+          type: string
+          example: Code
+        description:
+          type: string
+          example: Description
+        gl_asset:
+          $ref: '#/components/schemas/LinkedEntitySchema'
+        gl_bank:
+          $ref: '#/components/schemas/LinkedEntitySchema'
+        holiday_multiplier:
+          type: number
+          example: '1.00'
+        invoicing_model:
+          $ref: '#/components/schemas/InvoicingModelField'
+        name:
+          type: string
+          example: Name
+        profile:
+          $ref: '#/components/schemas/ProfileSchema'
+        taxes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunderTaxesItemSchema'
+        gl_receivables_cost_centre:
+          $ref: '#/components/schemas/CostCentreSchema'
+        gl_bank_cost_centre:
+          $ref: '#/components/schemas/CostCentreSchema'
+        line_item_limit:
+          type: number
+          example: 76
+    InvoicingModelField:
+      type: string
+      description: "Invoicing Model used by the Funder\n\n* batched -> All Client Visits roll up to 1 Invoice for the Payor\n* funder_individual -> One Invoice per Client is sent to the Payor\n* individual_invoices -> One Invoice per Client is sent to the Client or Billing Contact\n* hcp -> invoicing_model specific for Australian Home Care Packages program\n* mecicaid -> Each Date of Service or Visit creates 1 Invoice\n* ccac -> CHRIS/HPG/LHIN invoicing model - Each Visit creates 1 Invoice.\n          All Invoices for 1 payor are batched into 1 submission to the payor\n"
+      enum:
+      - batched
+      - funder_individual
+      - individual_invoices
+      - ccac
+      - medicaid
+      - hcp
+      - ndis
+    FunderElectronicBillingCreateSchema:
+      description: Create request for Funder with 'medicaid' invoicing_model type
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseCreateSchema'
+      - $ref: '#/components/schemas/FunderElectronicBillingUpdateFieldsSchema'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    FunderHcpUpdateSchema:
+      description: Create request for Funder with 'hcp' invoicing_model type
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseUpdateSchema'
+      - $ref: '#/components/schemas/FunderHcpUpdateFieldsSchema'
     FunderCommonUpdateFieldsSchema:
       type: object
       properties:
@@ -1220,19 +1206,43 @@ components:
           - no_frequency
           - weekly
           - calendar_month
-    FunderTaxesItemSchema:
-      type: object
+    FunderCcacScalarSchema:
+      allOf:
+      - $ref: '#/components/schemas/FunderBaseScalarSchema'
       properties:
-        id:
+        ccac_code:
+          type: string
+          description: CCAC code
+        ccac_name:
+          type: string
+          description: CCAC name
+        organization_code:
+          type: string
+          example: HHC-0101
+        organization_name:
+          type: string
+          example: Home Healthcare Agency
+        billing_adjustment_period:
           type: integer
           example: 1
-        name:
+        file_name_prefix:
           type: string
-          example: TPS
-        percentage:
-          type: number
-          example: 15.001
+        billing_frequency:
+          type: string
+          enum:
+          - no_frequency
+          - weekly
+          - calendar_month
   parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
     branchId:
       description: Filter by branch ID
       name: branch_id
@@ -1249,38 +1259,7 @@ components:
       schema:
         type: integer
         default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
   responses:
-    ErrorFunderNotFound:
-      description: The funder referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '404'
-                message: Funder not found
-    ErrorResponseMutuallyExclusive:
-      description: Mutually exclusive
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                message: funder_id and alayacare_funder_id are mutually exclusive
     ErrorVisitNotFound:
       description: The visit referenced by visit_id was not found
       content:
@@ -1303,6 +1282,28 @@ components:
               value:
                 code: '409'
                 message: The funding configuration of this premium does not match that of the visit
+    ErrorResponseMutuallyExclusive:
+      description: Mutually exclusive
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: funder_id and alayacare_funder_id are mutually exclusive
+    ErrorFunderNotFound:
+      description: The funder referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '404'
+                message: Funder not found
     ErrorResponseAuthentication:
       description: Authorization required
       content:

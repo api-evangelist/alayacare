@@ -1,44 +1,17 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Comments API
-  description: '**AlayaCare IDs:**
-
-    The following terms are used to reference IDs that identify resources in AlayaCare:
-
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
-    - client_id
-
-
-    **External IDs**
-
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
-
-    - employee_external_id
-
-    - client_external_id
-
-
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+  title: External Tasks 2.0 Comments API
+  version: 1.0.0
+  description: "**Internal IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- client_id\n- comment_id\n- employee_id\n- form_id\n- subtask_id\n- task_id\n- \n**External IDs**\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their form; they are treated as strings.\n\nThe following terms are used to reference IDs that identify resources in systems external to AlayaCare:\n- external_client_id\n- external_employee_id\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n- Currently filtering by date is timezone-naive and will assume any filters to be provided in the timezone of branch associated to the task.\n"
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
+- url: https://homecare.alayacare.com
+  description: Production server
+- url: https://homecare.staging.alayacare.com
+  description: Staging server
+- url: https://homecare.uat.alayacare.com
+  description: UAT server
 security:
-- basic_auth: []
+- BasicAuth: []
 tags:
 - name: Comments
 paths:
@@ -169,6 +142,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
 components:
   responses:
+    404NotFound:
+      description: Entity not found
     403Forbidden:
       description: Forbidden
       content:
@@ -176,8 +151,6 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       headers: {}
-    404NotFound:
-      description: Entity not found
     401Unauthorized:
       description: Unauthorized
       content:
@@ -187,27 +160,31 @@ components:
       headers: {}
     400BadRequest:
       description: Bad request
-  parameters:
-    task_id:
-      name: task_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The task identifier
-    comment_id:
-      name: comment_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The uniqut task comment identifier
-      example: 11111
   schemas:
-    TaskCommentList:
+    ErrorResponse:
+      title: Error response
       type: object
-      items:
-        $ref: '#/components/schemas/TaskComment'
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              code:
+                type: string
+            required:
+            - message
+      required:
+      - message
+      - request_id
     Person:
       type: object
       description: Encapsulates the bare details of a person
@@ -246,30 +223,10 @@ components:
         profile_photo_url:
           type: string
           description: URL to profile photo
-    ErrorResponse:
-      title: Error response
+    TaskCommentList:
       type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        request_id:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              code:
-                type: string
-            required:
-            - message
-      required:
-      - message
-      - request_id
+      items:
+        $ref: '#/components/schemas/TaskComment'
     TaskComment:
       type: object
       description: Comments on a task.
@@ -298,8 +255,19 @@ components:
         updated_by:
           $ref: '#/components/schemas/Person'
           description: Who updated the comment
-  securitySchemes:
-    basic_auth:
-      type: http
-      description: Basic HTTP auth over https
-      scheme: basic
+  parameters:
+    task_id:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The task identifier
+    comment_id:
+      name: comment_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The uniqut task comment identifier
+      example: 11111

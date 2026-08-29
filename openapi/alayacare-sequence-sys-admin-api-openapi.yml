@@ -1,44 +1,26 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts sequence sys_admin API
-  description: '**AlayaCare IDs:**
-
-    The following terms are used to reference IDs that identify resources in AlayaCare:
-
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
-    - client_id
-
-
-    **External IDs**
-
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
-
-    - employee_external_id
-
-    - client_external_id
-
-
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+  title: Alayacare sequence sys_admin API
+  version: '1.0'
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
+- url: https://api.{env}.alayamarket.{region}/offers
+  variables:
+    env:
+      description: The server environment.
+      enum:
+      - staging
+      - sandbox
+      - prod
+      default: prod
+    region:
+      description: The server top-level domain indicating the region.
+      enum:
+      - ca
+      - com
+      - com.au
+      default: ca
 security:
-- basic_auth: []
+- CognitoAuthorizer: []
 tags:
 - name: sequence sys_admin
 paths:
@@ -111,23 +93,31 @@ paths:
         passthroughBehavior: when_no_match
         type: aws_proxy
 components:
-  parameters:
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
   schemas:
+    DemographicLeanCore:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+      required:
+      - first_name
+      - last_name
+    SequenceLatestReferralResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+      - id
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
     SysAdminSequenceCollectionResponse:
       type: object
       properties:
@@ -159,38 +149,6 @@ components:
       - supply
       - client
       - service
-    SequenceLatestReferralResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-      - id
-    DemographicLeanCore:
-      type: object
-      properties:
-        first_name:
-          type: string
-          minLength: 1
-        last_name:
-          type: string
-          minLength: 1
-      required:
-      - first_name
-      - last_name
-    SequenceServiceResponse:
-      type: object
-      properties:
-        outbox_id:
-          type: string
-          minLength: 1
-        name:
-          type: string
-          minLength: 1
-      required:
-      - name
-      - outbox_id
     SequenceClientResponse:
       type: object
       properties:
@@ -205,51 +163,6 @@ components:
       required:
       - outbox_id
       - demographics
-    SequenceOfferResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-      - id
-    SysAdminSequencePageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
-        required:
-        - items
-    OrganizationLeanCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-      required:
-      - id
-      - name
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -269,8 +182,98 @@ components:
       - items_per_page
       - total_items
       - total_pages
+    SysAdminSequencePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
+        required:
+        - items
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    SequenceOfferResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+      - id
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    SequenceServiceResponse:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+      required:
+      - name
+      - outbox_id
+  parameters:
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
   securitySchemes:
-    basic_auth:
-      type: http
-      description: Basic HTTP auth over https
-      scheme: basic
+    CognitoAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: cognito_user_pools
+        providerARNs:
+        - Fn::Sub: '{{resolve:ssm:/${StackName}/${UserPoolArnSSMParameterName}}}'
+x-amazon-apigateway-request-validators:
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+  params:
+    validateRequestBody: false
+    validateRequestParameters: true
+  params-and-body:
+    validateRequestBody: true
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: params
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{"message": $context.error.messageString, "description": "$context.error.validationErrorString"}'

@@ -1,44 +1,26 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts message inbox API
-  description: '**AlayaCare IDs:**
-
-    The following terms are used to reference IDs that identify resources in AlayaCare:
-
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
-    - client_id
-
-
-    **External IDs**
-
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
-
-    - employee_external_id
-
-    - client_external_id
-
-
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+  title: Alayacare message inbox API
+  version: '1.0'
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
+- url: https://api.{env}.alayamarket.{region}/offers
+  variables:
+    env:
+      description: The server environment.
+      enum:
+      - staging
+      - sandbox
+      - prod
+      default: prod
+    region:
+      description: The server top-level domain indicating the region.
+      enum:
+      - ca
+      - com
+      - com.au
+      default: ca
 security:
-- basic_auth: []
+- CognitoAuthorizer: []
 tags:
 - name: message inbox
 paths:
@@ -201,136 +183,22 @@ paths:
         passthroughBehavior: when_no_match
         type: aws_proxy
 components:
-  parameters:
-    MessageCategoryQueryParam:
-      in: query
-      name: category
-      schema:
-        $ref: '#/components/schemas/MessageCategoryCore'
-    SequenceIdQueryParam:
-      in: query
-      name: sequence_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    MessageSenderTypeQueryParam:
-      in: query
-      name: sender_type
-      schema:
-        $ref: '#/components/schemas/MessageSenderTypeCore'
-    FileIdPathParam:
-      in: path
-      name: file_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a file.
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    MessageIdPathParam:
-      in: path
-      name: message_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a message.
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
   schemas:
+    MessageCategoryCore:
+      type: string
+      enum:
+      - client_attachment
+      - comment
     PageNumberCore:
       type: integer
       minimum: 1
       default: 1
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    OrgAdminMessageSendRequest:
+    OrgAdminFilePresignedDetailResponse:
       properties:
-        sequence_id:
+        url:
           type: string
-          format: uuid
-        category:
-          $ref: '#/components/schemas/MessageCategoryCore'
-        text:
-          type: string
-          maxLength: 2500
-        author:
-          type: string
-          maxLength: 100
-        file:
-          type: object
-          title: OrgAdminMessageSendFileRequest
-          properties:
-            url:
-              type: string
-            name:
-              type: string
-            size_in_bytes:
-              type: integer
-              minimum: 0
-              maximum: 52428800
-          required:
-          - url
-          - name
       required:
-      - sequence_id
-      - category
-    OrgAdminMessageCollectionResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-        category:
-          $ref: '#/components/schemas/MessageCategoryCore'
-        sender_type:
-          $ref: '#/components/schemas/MessageSenderTypeCore'
-        text:
-          type: string
-          maxLength: 2500
-        author:
-          type: string
-          maxLength: 100
-        created_at:
-          type: string
-          format: date-time
-        file:
-          type: object
-          title: MessageCollectionFileResponse
-          properties:
-            id:
-              type: string
-              format: uuid
-            name:
-              type: string
-          required:
-          - id
-          - name
-      required:
-      - id
-      - category
-      - sender_type
-      - created_at
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
+      - url
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -350,28 +218,6 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    OrgAdminMessagePageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/OrgAdminMessageCollectionResponse'
-        required:
-        - items
-    OrgAdminFilePresignedDetailResponse:
-      properties:
-        url:
-          type: string
-      required:
-      - url
-    MessageSenderTypeCore:
-      type: string
-      enum:
-      - demand
-      - supply
     OrgAdminMessageDetailResponse:
       properties:
         message:
@@ -449,13 +295,170 @@ components:
       - message
       - sender
       - recipient
-    MessageCategoryCore:
+    SortOrderCore:
       type: string
       enum:
-      - client_attachment
-      - comment
+      - asc
+      - desc
+      default: desc
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    OrgAdminMessageCollectionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+        category:
+          $ref: '#/components/schemas/MessageCategoryCore'
+        sender_type:
+          $ref: '#/components/schemas/MessageSenderTypeCore'
+        text:
+          type: string
+          maxLength: 2500
+        author:
+          type: string
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+        file:
+          type: object
+          title: MessageCollectionFileResponse
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+          required:
+          - id
+          - name
+      required:
+      - id
+      - category
+      - sender_type
+      - created_at
+    OrgAdminMessagePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrgAdminMessageCollectionResponse'
+        required:
+        - items
+    MessageSenderTypeCore:
+      type: string
+      enum:
+      - demand
+      - supply
+    OrgAdminMessageSendRequest:
+      properties:
+        sequence_id:
+          type: string
+          format: uuid
+        category:
+          $ref: '#/components/schemas/MessageCategoryCore'
+        text:
+          type: string
+          maxLength: 2500
+        author:
+          type: string
+          maxLength: 100
+        file:
+          type: object
+          title: OrgAdminMessageSendFileRequest
+          properties:
+            url:
+              type: string
+            name:
+              type: string
+            size_in_bytes:
+              type: integer
+              minimum: 0
+              maximum: 52428800
+          required:
+          - url
+          - name
+      required:
+      - sequence_id
+      - category
+  parameters:
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    MessageIdPathParam:
+      in: path
+      name: message_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a message.
+    FileIdPathParam:
+      in: path
+      name: file_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a file.
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    SequenceIdQueryParam:
+      in: query
+      name: sequence_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    MessageSenderTypeQueryParam:
+      in: query
+      name: sender_type
+      schema:
+        $ref: '#/components/schemas/MessageSenderTypeCore'
+    MessageCategoryQueryParam:
+      in: query
+      name: category
+      schema:
+        $ref: '#/components/schemas/MessageCategoryCore'
   securitySchemes:
-    basic_auth:
-      type: http
-      description: Basic HTTP auth over https
-      scheme: basic
+    CognitoAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: cognito_user_pools
+        providerARNs:
+        - Fn::Sub: '{{resolve:ssm:/${StackName}/${UserPoolArnSSMParameterName}}}'
+x-amazon-apigateway-request-validators:
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+  params:
+    validateRequestBody: false
+    validateRequestParameters: true
+  params-and-body:
+    validateRequestBody: true
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: params
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{"message": $context.error.messageString, "description": "$context.error.validationErrorString"}'

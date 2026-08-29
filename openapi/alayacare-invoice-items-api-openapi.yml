@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Invoice Items API
+  title: AlayaCare Accounting Invoice Items API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -92,30 +92,6 @@ paths:
                 $ref: '#/components/schemas/InvoiceQuerySchema'
 components:
   schemas:
-    PayorSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        checksum:
-          type: integer
-          example: 7
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        funder:
-          $ref: '#/components/schemas/FunderStub'
-        billing_contact:
-          $ref: '#/components/schemas/BillingContactSchema'
-    TaxesSchema:
-      type: object
-      properties:
-        taxtotal:
-          type: number
-          example: 2
-        types:
-          $ref: '#/components/schemas/TaxTypesSchema'
     InvoiceItemSchema:
       type: object
       properties:
@@ -215,48 +191,39 @@ components:
           minimum: 1
         payor:
           $ref: '#/components/schemas/PayorSchema'
-    TaxTypesSchema:
-      type: object
-      properties:
-        name:
-          type: string
-          example: HST
-        total:
-          type: number
-          example: 2
-    BillingContactSchema:
+    BillToSchema:
       type: object
       properties:
         id:
           type: integer
-          example: 16
-        first_name:
+          example: 12
+        name:
           type: string
-          example: Jane
-        last_name:
+          example: Funder
+        guid:
           type: string
-          example: Jones
-        address:
+          example: '27990'
+        guid_to:
           type: string
-          example: 12 crescent street
-        address_suite:
+          example: '27991'
+        is_active:
+          type: boolean
+          example: true
+        import_id:
+          type: integer
+          example: 123
+        remarks:
           type: string
-          example: app. 1B
-        city:
+          example: falls prevention program
+        contact_type:
           type: string
-          example: Cityville
-        state:
+          example: Referral Contact
+        lang:
           type: string
-          example: Quebec
-        zip:
+          example: english
+        list:
           type: string
-          example: H1H1H1
-        country:
-          type: string
-          example: Canada
-        phone_main:
-          type: string
-          example: '5141234567'
+          example: Funder List (System)
     ClientSchema:
       type: object
       properties:
@@ -270,6 +237,14 @@ components:
         last_name:
           type: string
           example: Jones
+    TaxesSchema:
+      type: object
+      properties:
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
     InvoiceQuerySchema:
       type: object
       properties:
@@ -370,6 +345,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InvoiceItemSchema'
+    PayorSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
+    TaxTypesSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: HST
+        total:
+          type: number
+          example: 2
     FunderStub:
       type: object
       properties:
@@ -389,39 +389,39 @@ components:
         invoicing_model:
           type: string
           example: funder_individual
-    BillToSchema:
+    BillingContactSchema:
       type: object
       properties:
         id:
           type: integer
-          example: 12
-        name:
+          example: 16
+        first_name:
           type: string
-          example: Funder
-        guid:
+          example: Jane
+        last_name:
           type: string
-          example: '27990'
-        guid_to:
+          example: Jones
+        address:
           type: string
-          example: '27991'
-        is_active:
-          type: boolean
-          example: true
-        import_id:
-          type: integer
-          example: 123
-        remarks:
+          example: 12 crescent street
+        address_suite:
           type: string
-          example: falls prevention program
-        contact_type:
+          example: app. 1B
+        city:
           type: string
-          example: Referral Contact
-        lang:
+          example: Cityville
+        state:
           type: string
-          example: english
-        list:
+          example: Quebec
+        zip:
           type: string
-          example: Funder List (System)
+          example: H1H1H1
+        country:
+          type: string
+          example: Canada
+        phone_main:
+          type: string
+          example: '5141234567'
   parameters:
     sortOrder:
       in: query

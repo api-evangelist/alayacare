@@ -1,44 +1,63 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Client Status API
+  title: Patients - Clients Client Status API
+  version: 1.0.18-oas3
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
 
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
     - client_id
+
+    - status_id
+
+    - contact_id
 
 
     **External IDs**
 
     The following terms are used to reference IDs that identify resources systems external to AlayaCare:
 
-    - employee_external_id
+    - external_client_id
 
-    - client_external_id
+    - external_contact_id
 
 
     External IDs are required to be unique.
 
     No other assumptions are made regarding their format they are treated as strings.
 
+    External IDs are unique to a single profile_id.
+
+
+    **Profile IDs**
+
+    The following term is used to describe a profile resource in AlayaCare:
+
+    - profile_id
+
+
+    Profile IDs can be shared across clients, contacts, and employees in the
+
+    case that an entity shares one or more of those roles.
+
+
+    **Client Status Considerations**
+
+    - Clients can have multiple status configured depending on their business needs. Rules for configuring client status follow the internal AlayaCare application logic.
+
+    - Updating the `status` of a client will have repercussions in the AlayaCare application.
+
+
+    Please refer to this link for more information: https://alayacare.zendesk.com/hc/en-us/articles/360015538392
+
     '
+  contact:
+    name: AlayaCare
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
-security:
-- basic_auth: []
+- url: '{server}/ext/api/v2/patients'
+  variables:
+    server:
+      default: https://demo3.alayacare.ca
 tags:
 - name: Client Status
   description: Client status related endpoints.
@@ -441,31 +460,6 @@ paths:
           $ref: '#/components/responses/ErrorResponseMultipleClientsFound'
 components:
   schemas:
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
     ClientStatusDetails:
       description: AlayaCare client status entity
       type: object
@@ -508,39 +502,52 @@ components:
           $ref: '#/components/schemas/CreatedByDetails'
         updated_by:
           $ref: '#/components/schemas/UpdatedByDetails'
-    ClientServicesStatus:
-      description: 'Client service statuses update details if this block is not sent,
-
-        it is defaulted to FALSE, meaning the services statuses are not updated
-
-        '
-      type: object
-      properties:
-        update_services:
-          type: boolean
-          description: Whether or not to apply the client status change to their associated services.
-          example: true
-        service_status:
-          type: string
-          description: The status change will be applied to services with this specific services_status only.
-          enum:
-          - on_hold
-          - active
-          - discharged
-          - waiting_list
-          example: on_hold
-        service_status_reason:
-          type: integer
-          description: The status change will be applied to services with this specific service_status_reason only.
-          example: 9
-    ClientStatusCreated:
-      description: AlayaCare client status entity
+    ReasonDetails:
+      description: AlayaCare Status Change Details
       type: object
       properties:
         id:
           type: integer
-          description: AlayaCare client status ID
-          example: 1001
+          description: AlayaCare status reason ID.
+          example: 1
+        name:
+          type: string
+          description: AlayaCare status reason name
+          example: Vacation
+      required:
+      - id
+      - name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    CreatedByDetails:
+      type: object
+      description: User who created the record
+      properties:
+        id:
+          type: integer
+          description: Id of the employee who created the record
+          example: 284
+        external_id:
+          type: string
+          description: External ID of the employee who created the record
+          example: '450'
+        name:
+          type: string
+          description: Name of the employee who created the record
+          example: John Smith
     ClientStatusCreate:
       description: AlayaCare client status entity to create
       type: object
@@ -577,16 +584,55 @@ components:
       required:
       - effective_date
       - status
-    ClientStatusList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of client status
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/ClientStatusDetails'
+    UpdatedByDetails:
+      type: object
+      description: User who updated the record
+      properties:
+        id:
+          type: integer
+          description: Id of the employee who updated the record
+          example: 284
+        external_id:
+          type: string
+          description: External ID of the employee who updated the record
+          example: '450'
+        name:
+          type: string
+          description: Name of the employee who updated the record
+          example: John Smith
+    ClientServicesStatus:
+      description: 'Client service statuses update details if this block is not sent,
+
+        it is defaulted to FALSE, meaning the services statuses are not updated
+
+        '
+      type: object
+      properties:
+        update_services:
+          type: boolean
+          description: Whether or not to apply the client status change to their associated services.
+          example: true
+        service_status:
+          type: string
+          description: The status change will be applied to services with this specific services_status only.
+          enum:
+          - on_hold
+          - active
+          - discharged
+          - waiting_list
+          example: on_hold
+        service_status_reason:
+          type: integer
+          description: The status change will be applied to services with this specific service_status_reason only.
+          example: 9
+    ClientStatusCreated:
+      description: AlayaCare client status entity
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare client status ID
+          example: 1001
     ClientStatusUpdate:
       description: AlayaCare client status entity to create
       type: object
@@ -611,106 +657,42 @@ components:
           format: date-time
         services:
           $ref: '#/components/schemas/ClientServicesStatus'
-    CreatedByDetails:
-      type: object
-      description: User who created the record
-      properties:
-        id:
-          type: integer
-          description: Id of the employee who created the record
-          example: 284
-        external_id:
-          type: string
-          description: External ID of the employee who created the record
-          example: '450'
-        name:
-          type: string
-          description: Name of the employee who created the record
-          example: John Smith
-    ReasonDetails:
-      description: AlayaCare Status Change Details
+    PaginatedList:
+      description: Base model of all paginated lists
       type: object
       properties:
-        id:
+        count:
           type: integer
-          description: AlayaCare status reason ID.
+          description: Number of items in the response
           example: 1
-        name:
-          type: string
-          description: AlayaCare status reason name
-          example: Vacation
-      required:
-      - id
-      - name
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
+        page:
           type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    UpdatedByDetails:
-      type: object
-      description: User who updated the record
-      properties:
-        id:
+          description: Current page number
+          example: 1
+        total_pages:
           type: integer
-          description: Id of the employee who updated the record
-          example: 284
-        external_id:
-          type: string
-          description: External ID of the employee who updated the record
-          example: '450'
-        name:
-          type: string
-          description: Name of the employee who updated the record
-          example: John Smith
-  requestBodies:
-    ClientStatusCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ClientStatusCreate'
-      description: Client status data in JSON format
-      required: true
-    ClientStatusUpdate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ClientStatusUpdate'
-      description: Client status data in JSON format
-      required: true
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    ClientStatusList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of client status
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ClientStatusDetails'
   responses:
-    ErrorResponseMultipleClientsFound:
-      description: Conflict. Multiple clients share the external ID given in the path and they should be merged
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 409
-                message: Multiple clients found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
     ErrorResponseClientStatusNotFound:
       description: Client status relationship not found
       content:
@@ -722,6 +704,17 @@ components:
               value:
                 code: 404
                 message: Client status relationship not found
+    ErrorResponseMultipleClientsFound:
+      description: Conflict. Multiple clients share the external ID given in the path and they should be merged
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 409
+                message: Multiple clients found
     ErrorResponseClientNotFound:
       description: Client not found
       content:
@@ -733,6 +726,32 @@ components:
               value:
                 code: 404
                 message: Client not found.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+  requestBodies:
+    ClientStatusUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientStatusUpdate'
+      description: Client status data in JSON format
+      required: true
+    ClientStatusCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientStatusCreate'
+      description: Client status data in JSON format
+      required: true
   securitySchemes:
     basic_auth:
       type: http

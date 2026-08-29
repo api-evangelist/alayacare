@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Employee Cost Centres API
+  title: AlayaCare Accounting Employee Cost Centres API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -129,41 +129,22 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
-    ErrorResponseEmployeeCostCentreNotFound:
-      description: The employee with the referenced cost_centre_id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Employee with ID 1010 and Cost Centre ID 10 not found
-    ErrorResponseCostCentreDisabled:
-      description: The cost centre referenced by cost_centre_id is disabled
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Cost centre is disabled
   schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     CostCentreEmployeeCreateSchema:
       type: object
       properties:
@@ -190,21 +171,40 @@ components:
           description: Cost centre ID
           example: 10
           minimum: 1
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+  responses:
+    ErrorResponseEmployeeCostCentreNotFound:
+      description: The employee with the referenced cost_centre_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Employee with ID 1010 and Cost Centre ID 10 not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorResponseCostCentreDisabled:
+      description: The cost centre referenced by cost_centre_id is disabled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Cost centre is disabled
   securitySchemes:
     basic_auth:
       type: http

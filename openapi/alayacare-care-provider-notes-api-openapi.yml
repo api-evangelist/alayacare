@@ -1,44 +1,63 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Care Provider Notes API
+  title: Patients - Clients Care Provider Notes API
+  version: 1.0.18-oas3
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
 
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
     - client_id
+
+    - status_id
+
+    - contact_id
 
 
     **External IDs**
 
     The following terms are used to reference IDs that identify resources systems external to AlayaCare:
 
-    - employee_external_id
+    - external_client_id
 
-    - client_external_id
+    - external_contact_id
 
 
     External IDs are required to be unique.
 
     No other assumptions are made regarding their format they are treated as strings.
 
+    External IDs are unique to a single profile_id.
+
+
+    **Profile IDs**
+
+    The following term is used to describe a profile resource in AlayaCare:
+
+    - profile_id
+
+
+    Profile IDs can be shared across clients, contacts, and employees in the
+
+    case that an entity shares one or more of those roles.
+
+
+    **Client Status Considerations**
+
+    - Clients can have multiple status configured depending on their business needs. Rules for configuring client status follow the internal AlayaCare application logic.
+
+    - Updating the `status` of a client will have repercussions in the AlayaCare application.
+
+
+    Please refer to this link for more information: https://alayacare.zendesk.com/hc/en-us/articles/360015538392
+
     '
+  contact:
+    name: AlayaCare
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
-security:
-- basic_auth: []
+- url: '{server}/ext/api/v2/patients'
+  variables:
+    server:
+      default: https://demo3.alayacare.ca
 tags:
 - name: Care Provider Notes
   description: Care provider note related endpoints.
@@ -505,78 +524,7 @@ paths:
         '500':
           description: Internal server error.
 components:
-  requestBodies:
-    CareProviderNoteCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CareProviderNoteCreate'
-      description: Care provider note data in JSON format
-      required: true
   schemas:
-    CareProviderNoteCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the category
-        description:
-          type: string
-          description: Description of the category
-    CareProviderNoteDetail:
-      type: object
-      description: 'Details about the care provider note.
-
-        The category object is only present if include=category is provided.
-
-        '
-      properties:
-        id:
-          type: integer
-          description: ID of the note
-        patient_id:
-          type: integer
-          description: ID of the patient
-        patient_external_id:
-          type: string
-          description: External ID of the patient
-        category_id:
-          type: integer
-          description: ID of the category
-        category:
-          $ref: '#/components/schemas/CareProviderNoteCategory'
-        content:
-          type: string
-          description: Content of the note
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time the note was created
-        create_user_id:
-          type: integer
-          description: ID of the user who created the note
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time the note was updated
-        update_user_id:
-          type: integer
-          description: ID of the user who updated the note
-        is_archived:
-          type: boolean
-          description: Whether the note is archived
-    CareProviderNoteCategoryCursorList:
-      type: object
-      description: Cursor-based paginated list of care provider note categories
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CareProviderNoteCategory'
-        next_cursor:
-          type: string
-          description: Cursor to the next page. Will be null when there are no more items.
-          nullable: true
     ErrorResponse:
       description: Error response
       type: object
@@ -631,21 +579,83 @@ components:
           items:
             $ref: '#/components/schemas/CareProviderNoteDetail'
         next_cursor:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Cursor to the next page. Will be null when there are no more items.
-          nullable: true
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
+    CareProviderNoteCategoryCursorList:
+      type: object
+      description: Cursor-based paginated list of care provider note categories
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareProviderNoteCategory'
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: Cursor to the next page. Will be null when there are no more items.
+    CareProviderNoteDetail:
+      type: object
+      description: 'Details about the care provider note.
+
+        The category object is only present if include=category is provided.
+
+        '
+      properties:
+        id:
+          type: integer
+          description: ID of the note
+        patient_id:
+          type: integer
+          description: ID of the patient
+        patient_external_id:
+          type: string
+          description: External ID of the patient
+        category_id:
+          type: integer
+          description: ID of the category
+        category:
+          $ref: '#/components/schemas/CareProviderNoteCategory'
+        content:
+          type: string
+          description: Content of the note
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time the note was created
+        create_user_id:
+          type: integer
+          description: ID of the user who created the note
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time the note was updated
+        update_user_id:
+          type: integer
+          description: ID of the user who updated the note
+        is_archived:
+          type: boolean
+          description: Whether the note is archived
+    CareProviderNoteCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the category
+        description:
+          type: string
+          description: Description of the category
+  requestBodies:
+    CareProviderNoteCreate:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
+            $ref: '#/components/schemas/CareProviderNoteCreate'
+      description: Care provider note data in JSON format
+      required: true
+  responses:
     ErrorResponseCareProviderNoteNotFound:
       description: Care provider note not found
       content:
@@ -679,6 +689,17 @@ components:
               value:
                 code: 404
                 message: Client not found.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

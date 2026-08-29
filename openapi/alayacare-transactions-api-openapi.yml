@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Transactions API
+  title: AlayaCare Accounting Transactions API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -344,98 +344,6 @@ paths:
           $ref: '#/components/responses/TransactionNotFound'
 components:
   schemas:
-    ClientShortSchema:
-      type: object
-      description: A client
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the client
-        name:
-          type: string
-          description: The name of the client
-        alayacare_id:
-          type: string
-          description: The AlayaCare ID of the client
-      example:
-        id: 1
-        name: Peter Tosh
-        alayacare_id: AC000000123
-    TransactionExtendedSchema:
-      allOf:
-      - $ref: '#/components/schemas/TransactionSchema'
-      - type: object
-        properties:
-          entries:
-            type: array
-            items:
-              $ref: '#/components/schemas/TransactionEntrySchema'
-          visits:
-            type: array
-            items:
-              $ref: '#/components/schemas/VisitSchema'
-    UserShortSchema:
-      type: object
-      description: A user
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the user
-        name:
-          type: string
-          description: The name of the user
-    BillingContactShortSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the billing contact
-        full_name:
-          type: string
-          description: The full name of the billing contact
-    FunderShortSchema:
-      type: object
-      description: A funder
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the funder
-        code:
-          type: string
-          description: The code of the funder
-        name:
-          type: string
-          description: The name of the funder
-        invoicing_model:
-          type: string
-          description: The invoicing model of the funder
-    NotFound:
-      type: object
-      properties:
-        code:
-          type: string
-          example: 404
-        message:
-          type: string
-          example: Entity not found
-      required:
-      - code
-      - message
-    TransactionAdjustmentSchema:
-      type: object
-      properties:
-        total_credit:
-          type: number
-          format: float
-          description: description
-        total_debit:
-          type: number
-          format: float
-          description: description
     TransactionSchema:
       type: object
       description: A representation of an accounting transaction
@@ -507,24 +415,6 @@ components:
           type: integer
           minimum: 1
           description: The id of the billing period associated to the transaction
-    TransactionEntrySchema:
-      type: object
-      properties:
-        account:
-          type: object
-          properties:
-            id:
-              type: integer
-            account:
-              $ref: '#/components/schemas/AccountSchema'
-            debit:
-              type: number
-              format: float
-            credit:
-              type: number
-              format: float
-            cost_centre:
-              $ref: '#/components/schemas/CostCentreScalarSchema'
     AccountSchema:
       type: object
       description: A representation of a General Ledger account
@@ -550,6 +440,96 @@ components:
         type: Revenue
         is_disabled: false
         gl_number: 4002
+    TransactionAdjustmentSchema:
+      type: object
+      properties:
+        total_credit:
+          type: number
+          format: float
+          description: description
+        total_debit:
+          type: number
+          format: float
+          description: description
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Entity not found
+      required:
+      - code
+      - message
+    ClientShortSchema:
+      type: object
+      description: A client
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the client
+        name:
+          type: string
+          description: The name of the client
+        alayacare_id:
+          type: string
+          description: The AlayaCare ID of the client
+      example:
+        id: 1
+        name: Peter Tosh
+        alayacare_id: AC000000123
+    FunderShortSchema:
+      type: object
+      description: A funder
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the funder
+        code:
+          type: string
+          description: The code of the funder
+        name:
+          type: string
+          description: The name of the funder
+        invoicing_model:
+          type: string
+          description: The invoicing model of the funder
+    BillingContactShortSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the billing contact
+        full_name:
+          type: string
+          description: The full name of the billing contact
+    CostCentreScalarSchema:
+      description: A cost centre
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        number:
+          type: string
+          example: MTL-032
+        description:
+          type: string
+          example: A cost centre
+    VisitSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        start_time:
+          type: string
+          format: date-time
     TransactionType:
       description: Transaction type
       type: object
@@ -573,28 +553,48 @@ components:
         is_custom:
           type: boolean
           description: True if this type is custom (was created by the user); False if not
-    VisitSchema:
+    UserShortSchema:
       type: object
+      description: A user
       properties:
         id:
           type: integer
-          minimum: 1
-        start_time:
+          format: int64
+          description: The ID of the user
+        name:
           type: string
-          format: date-time
-    CostCentreScalarSchema:
-      description: A cost centre
+          description: The name of the user
+    TransactionExtendedSchema:
+      allOf:
+      - $ref: '#/components/schemas/TransactionSchema'
+      - type: object
+        properties:
+          entries:
+            type: array
+            items:
+              $ref: '#/components/schemas/TransactionEntrySchema'
+          visits:
+            type: array
+            items:
+              $ref: '#/components/schemas/VisitSchema'
+    TransactionEntrySchema:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
-        number:
-          type: string
-          example: MTL-032
-        description:
-          type: string
-          example: A cost centre
+        account:
+          type: object
+          properties:
+            id:
+              type: integer
+            account:
+              $ref: '#/components/schemas/AccountSchema'
+            debit:
+              type: number
+              format: float
+            credit:
+              type: number
+              format: float
+            cost_centre:
+              $ref: '#/components/schemas/CostCentreScalarSchema'
   responses:
     TransactionNotFound:
       description: Transaction not found

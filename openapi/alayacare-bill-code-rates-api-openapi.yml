@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Bill Code Rates API
+  title: AlayaCare Accounting Bill Code Rates API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -184,31 +184,40 @@ paths:
         '404':
           $ref: '#/components/responses/BillCodeRateNotFound'
 components:
-  responses:
-    BillCodeNotFound:
-      description: The Billcode referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    BillCodeRateNotFound:
-      description: The Bill Code Rate Recurrence Rule referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    BillCodeRateTierQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
+    BillCodeRateRRuleQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+        required:
+        - id
+        - rate
+        - external_id
+        - duration
+        - order
+        - override_holiday_multiplicator
     RRuleSchema:
       type: object
       description: A recurrence rule for a Bill Code Rate
@@ -255,13 +264,18 @@ components:
           example: 10
         rrule:
           $ref: '#/components/schemas/RRuleSchema'
-    BillCodeRateUpdateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
-      - type: object
-        properties:
-          tiered_rates:
-            $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Entity not found
+      required:
+      - code
+      - message
     BillCodeRateTierCreateSchema:
       type: object
       properties:
@@ -290,18 +304,54 @@ components:
       - rate
       - start_at
       - unit
-    NotFound:
+    BillCodeRateQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+          rrules:
+            $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+          tiered_rates:
+            $ref: '#/components/schemas/BillCodeRateTierQuerySchema'
+      required:
+      - id
+    PaginatedList:
+      description: Base model of all paginated lists
       type: object
       properties:
-        code:
-          type: string
-          example: 404
-        message:
-          type: string
-          example: Entity not found
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
       required:
-      - code
-      - message
+      - count
+      - page
+      - total_pages
+      - items
+    BillCodeRateRRuleCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        required:
+        - rate
+        - order
+        - override_holiday_multiplicator
     BillCodeRateCreateSchema:
       type: object
       properties:
@@ -333,96 +383,14 @@ components:
       - rate
       - units
       - start_at
-    BillCodeRateRRuleQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
-      - type: object
-        properties:
-          id:
-            type: integer
-            example: 12
-        required:
-        - id
-        - rate
-        - external_id
-        - duration
-        - order
-        - override_holiday_multiplicator
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    BillCodeRateQuerySchema:
+    BillCodeRateUpdateSchema:
       allOf:
       - $ref: '#/components/schemas/BillCodeRateCreateSchema'
       - type: object
         properties:
-          id:
-            type: integer
-            example: 12
-          rrules:
-            $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
           tiered_rates:
-            $ref: '#/components/schemas/BillCodeRateTierQuerySchema'
-      required:
-      - id
-    BillCodeRateRRuleCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
-      - type: object
-        required:
-        - rate
-        - order
-        - override_holiday_multiplicator
-    BillCodeRateTierQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
+            $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
   parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
     page:
       description: Filter by page number.
       name: page
@@ -432,18 +400,50 @@ components:
         type: integer
         default: 1
         minimum: 1
-    billcodeId:
-      name: billcode_id
-      in: path
-      required: true
-      schema:
-        type: integer
     billcodeRateId:
       name: billcode_rate_id
       in: path
       required: true
       schema:
         type: integer
+    billcodeId:
+      name: billcode_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+  responses:
+    BillCodeNotFound:
+      description: The Billcode referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    BillCodeRateNotFound:
+      description: The Bill Code Rate Recurrence Rule referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

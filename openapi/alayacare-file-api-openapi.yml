@@ -1,44 +1,20 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts File API
-  description: '**AlayaCare IDs:**
+  version: 1.0.0
+  title: AlayaCare External Files File API
+  description: '**Remarks:**
+
+    Please note that the difference between a `Directory` and a `File` resource is that `Directory` requires a trailing `/` at the end of the path
+
+    **AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
 
     - id
 
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
-    - client_id
-
-
-    **External IDs**
-
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
-
-    - employee_external_id
-
-    - client_external_id
-
-
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
     '
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
-security:
-- basic_auth: []
+- url: https://homecare.alayacare.com/ext/api/v2/files
 tags:
 - name: File
 paths:
@@ -47,11 +23,13 @@ paths:
     - name: id
       in: path
       required: true
-      type: integer
+      schema:
+        type: integer
     - name: path
       in: path
       required: true
-      type: string
+      schema:
+        type: string
     get:
       tags:
       - File
@@ -61,17 +39,19 @@ paths:
           description: Content of the file
         400:
           description: File not found
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 404
-              message:
-                type: string
-                description: Detail on the error
-                example: File "file.pdf" to delete not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 404
+                  message:
+                    type: string
+                    description: Detail on the error
+                    example: File "file.pdf" to delete not found
     post:
       tags:
       - File
@@ -88,44 +68,49 @@ paths:
         **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file.
 
         '
-      parameters:
-      - name: file
-        in: formData
-        type: file
-        description: The file to upload
-      consumes:
-      - multipart/form-data
-      produces:
-      - application/json
       responses:
         201:
           description: File uploaded
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 201
-              name:
-                type: string
-                description: Url to the file uploaded
-                example: client/1002/file.pdf
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 201
+                  name:
+                    type: string
+                    description: Url to the file uploaded
+                    example: client/1002/file.pdf
         400:
           description: 'Bad Request: File missing
 
             '
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Could not find a file to upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response code
+                    example: 400
+                  message:
+                    type: string
+                    description: Detail on the error
+                    example: Could not find a file to upload
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The file to upload
+                  format: binary
     put:
       tags:
       - File
@@ -151,71 +136,70 @@ paths:
         A 400 response will be returned for a request to move a folder in one of its own subfolders.
 
         '
-      produces:
-      - application/json
       responses:
         200:
           description: File copied or moved
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response
-                example: 200
-              name:
-                type: integer
-                description: 'Url to the new location of the copied or moved file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: http status response
+                    example: 200
+                  name:
+                    type: integer
+                    description: 'Url to the new location of the copied or moved file
 
-                  '
-                example: client/1002/new_location.txt
+                      '
+                    example: client/1002/new_location.txt
         400:
           description: 'Bad Request: Missing `source` header
 
             '
-          schema:
-            type: object
-            properties:
-              message:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  source:
-                    type: string
-                    description: Detail on the error
-                    example: The request cannot be processed without the source variable
+                  message:
+                    type: object
+                    properties:
+                      source:
+                        type: string
+                        description: Detail on the error
+                        example: The request cannot be processed without the source variable
         404:
           description: Source file not found
-          schema:
-            $ref: '#/definitions/FileNotFoundSchema'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNotFoundSchema'
     delete:
       tags:
       - File
       summary: Delete a file
       description: Delete a file. As opposed to deleting a directory, the forced-delete header is not required to delete a single file.
-      produces:
-      - application/json
       responses:
         204:
           description: File deleted
         404:
           description: File not found
-          schema:
-            $ref: '#/definitions/FileNotFoundSchema'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNotFoundSchema'
 components:
-  securitySchemes:
-    basic_auth:
-      type: http
-      description: Basic HTTP auth over https
-      scheme: basic
-definitions:
-  FileNotFoundSchema:
-    type: object
-    properties:
-      code:
-        type: integer
-        description: http status response code
-        example: 404
-      message:
-        type: string
-        description: Detail on the error
-        example: File "file.pdf" not found
+  schemas:
+    FileNotFoundSchema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 404
+        message:
+          type: string
+          description: Detail on the error
+          example: File "file.pdf" not found

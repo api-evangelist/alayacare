@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Client Cost Centres API
+  title: AlayaCare Accounting Client Cost Centres API
   description: '**AlayaCare IDs:**
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
@@ -128,33 +128,41 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
 components:
+  responses:
+    ErrorResponseClientCostCentreNotFound:
+      description: The client with the referenced cost_centre_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Client with ID 1010 and Cost Centre ID 10 not found
+    ErrorResponseCostCentreDisabled:
+      description: The cost centre referenced by cost_centre_id is disabled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Cost centre is disabled
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
-    CostCentreClientCreate:
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: client ID
-          example: 1010
-          minimum: 1
-        client_external_id:
-          type: string
-          description: client external ID
-          example: john.1010
-    CostCentreClientResponse:
-      description: Client to cost centre link
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: client ID
-          example: 1010
-          minimum: 1
-        cost_centre_id:
-          type: integer
-          description: Cost centre ID
-          example: 10
-          minimum: 1
     ErrorResponse:
       description: Error response
       type: object
@@ -170,40 +178,32 @@ components:
       required:
       - code
       - message
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
-    ErrorResponseCostCentreDisabled:
-      description: The cost centre referenced by cost_centre_id is disabled
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Cost centre is disabled
-    ErrorResponseClientCostCentreNotFound:
-      description: The client with the referenced cost_centre_id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Client with ID 1010 and Cost Centre ID 10 not found
+    CostCentreClientResponse:
+      description: Client to cost centre link
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        cost_centre_id:
+          type: integer
+          description: Cost centre ID
+          example: 10
+          minimum: 1
+    CostCentreClientCreate:
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        client_external_id:
+          type: string
+          description: client external ID
+          example: john.1010
   securitySchemes:
     basic_auth:
       type: http

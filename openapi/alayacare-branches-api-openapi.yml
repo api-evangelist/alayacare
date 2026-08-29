@@ -1,44 +1,14 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Branches API
-  description: '**AlayaCare IDs:**
-
-    The following terms are used to reference IDs that identify resources in AlayaCare:
-
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
-
-    - client_id
-
-
-    **External IDs**
-
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
-
-    - employee_external_id
-
-    - client_external_id
-
-
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+  title: Alayacare Branches API
+  version: '1.0'
+  description: 'Operations tagged Branches across 3 of this provider''s published API definitions: alayacare-client-openapi.yml, alayacare-employee-openapi.yml, alayacare-employee-skills-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
-security:
-- basic_auth: []
+- url: '{server}/ext/api/v2/patients'
+  variables:
+    server:
+      default: https://demo3.alayacare.ca
+- url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
 - name: Branches
   description: Branch related endpoints.
@@ -62,60 +32,13 @@ paths:
                 $ref: '#/components/schemas/BranchList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+    servers:
+    - url: '{server}/ext/api/v2/patients'
+      variables:
+        server:
+          default: https://demo3.alayacare.ca
 components:
   schemas:
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    BranchList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of branches
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/Branch'
-    Branch:
-      description: AlayaCare branch.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare branch ID
-          example: 1
-        name:
-          type: string
-          description: AlayaCare branch name
-          example: Toronto branch
-        profile:
-          $ref: '#/components/schemas/BranchProfile'
-      required:
-      - id
-      - name
     ErrorResponse:
       description: Error response
       type: object
@@ -186,6 +109,163 @@ components:
           description: Branch main phone number
           type: string
           example: 514-999-9999
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    Branch:
+      description: AlayaCare branch.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare branch ID
+          example: 1
+        name:
+          type: string
+          description: AlayaCare branch name
+          example: Toronto branch
+        profile:
+          $ref: '#/components/schemas/BranchProfile'
+      required:
+      - id
+      - name
+    BranchList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of branches
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Branch'
+    ErrorResponse_2:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    PaginatedList_2:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    BranchList_2:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList_2'
+      description: Paginated list of branches
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+    ErrorResponse_3:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    PaginatedList_3:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    BranchList_3:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList_3'
+      description: Paginated list of branches
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   responses:
     ErrorResponseAuthentication:
       description: Authorization required
@@ -198,25 +278,30 @@ components:
               value:
                 code: 401
                 message: Authorization required.
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
+    ErrorResponseAuthentication_2:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseAuthentication_3:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_3'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http
       description: Basic HTTP auth over https
       scheme: basic
+x-refined-from:
+- alayacare-client-openapi.yml
+- alayacare-employee-openapi.yml
+- alayacare-employee-skills-openapi.yml

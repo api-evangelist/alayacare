@@ -1,44 +1,53 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  version: 1.0.19-oas3
-  title: AlayaCare Accounting Accounts Visit tags API
-  description: '**AlayaCare IDs:**
+  version: 1.0.17
+  title: AlayaCare Scheduler Visit tags API
+  description: '**External IDs:**
 
-    The following terms are used to reference IDs that identify resources in AlayaCare:
-
-    - id
-
-    - visit_id
-
-    - premium_id
-
-    - visit_premium_id
-
-    - employee_id
-
-    - cost_centre_id
+    The following terms are used to reference ids that identify resources in systems external to AlayaCare:
 
     - client_id
 
+    - employee_id
 
-    **External IDs**
+    - service_id
 
-    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+    - funder_id
 
-    - employee_external_id
+    - visit_id
 
-    - client_external_id
+    - facility_id
 
 
-    External IDs are required to be unique.
+    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
 
-    No other assumptions are made regarding their format they are treated as strings.
+
+    **AlayaCare IDs:**
+
+    The following terms are used to reference ids that identify resources in AlayaCare:
+
+    - alayacare_client_id
+
+    - alayacare_employee_id
+
+    - alayacare_service_id
+
+    - alayacare_funder_id
+
+    - alayacare_visit_id
+
+    - alayacare_facility_id
+
+
+    **Remarks**
+
+    All dates must be in ISO 8601 format with timezone data
 
     '
+  contact:
+    name: AlayaCare
 servers:
-- url: https://example.alayacare.com/ext/api/v2/accounting
-security:
-- basic_auth: []
+- url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 tags:
 - name: Visit tags
 paths:
@@ -50,91 +59,101 @@ paths:
       responses:
         '200':
           description: A list of available tags for visits
-          schema:
-            $ref: '#/definitions/VisitTagList'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitTagList'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
   /visits/{alayacare_visit_id}/tags:
     parameters:
     - name: alayacare_visit_id
       description: AlayaCare visit ID
       in: path
-      type: integer
       required: true
+      schema:
+        type: integer
     post:
       tags:
       - Visit tags
       summary: Add tags to a visit using AlayaCare ID
-      parameters:
-      - name: body
-        description: An array of visit tags
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/VisitTagCreate'
       responses:
         '201':
           description: Visit tags successfully added.
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitTagCreate'
+        description: An array of visit tags
+        required: true
     put:
       tags:
       - Visit tags
       summary: Update tags of a visit using AlayaCare ID
       description: Tags sent in the payload will overwrite existing tags on the visit
-      parameters:
-      - name: body
-        description: An array of visit tags
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/VisitTagCreate'
       responses:
         '200':
           description: Visit tags successfully updated
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitTagCreate'
+        description: An array of visit tags
+        required: true
   /visits/by_id/{visit_id}/tags:
     parameters:
     - name: visit_id
       description: External visit ID
       in: path
-      type: string
       required: true
+      schema:
+        type: string
     post:
       tags:
       - Visit tags
       summary: Add tags to a visit using External ID
-      parameters:
-      - name: body
-        description: An array of visit tags
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/VisitTagCreate'
       responses:
         '201':
           description: Visit tags successfully added.
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitTagCreate'
+        description: An array of visit tags
+        required: true
     put:
       tags:
       - Visit tags
@@ -143,95 +162,105 @@ paths:
       responses:
         '200':
           description: Visit tags successfully updated
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
   /facility_visits/{alayacare_visit_id}/tags:
     parameters:
     - name: alayacare_visit_id
       description: AlayaCare visit ID
       in: path
-      type: integer
       required: true
+      schema:
+        type: integer
     post:
       tags:
       - Visit tags
       summary: Add tags to a Facility Visit using AlayaCare ID
-      parameters:
-      - name: body
-        description: An array of visit tags
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/VisitTagCreate'
       responses:
         '201':
           description: Visit tags successfully added.
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitTagCreate'
+        description: An array of visit tags
+        required: true
     put:
       tags:
       - Visit tags
       summary: Update tags of a Facility Visit using AlayaCare ID
       description: Tags sent in the payload will overwrite existing tags on the visit
-      parameters:
-      - name: body
-        description: An array of visit tags
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/VisitTagCreate'
       responses:
         '200':
           description: Visit tags successfully updated
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitTagCreate'
+        description: An array of visit tags
+        required: true
   /facility_visits/by_id/{visit_id}/tags:
     parameters:
     - name: visit_id
       description: External visit ID
       in: path
-      type: string
       required: true
+      schema:
+        type: string
     post:
       tags:
       - Visit tags
       summary: Add tags to a visit using External ID
-      parameters:
-      - name: body
-        description: An array of visit tags
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/VisitTagCreate'
       responses:
         '201':
           description: Visit tags successfully added.
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitTagCreate'
+        description: An array of visit tags
+        required: true
     put:
       tags:
       - Visit tags
@@ -240,234 +269,246 @@ paths:
       responses:
         '200':
           description: Visit tags successfully updated
-          schema:
-            $ref: '#/definitions/Visit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
         '400':
-          $ref: '#/responses/ErrorResponseVisitTagInvalidRequest'
+          $ref: '#/components/responses/ErrorResponseVisitTagInvalidRequest'
         '401':
-          $ref: '#/responses/ErrorResponseAuthentication'
+          $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
-          $ref: '#/responses/ErrorResponseVisitNotFound'
+          $ref: '#/components/responses/ErrorResponseVisitNotFound'
 components:
+  responses:
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseVisitTagInvalidRequest:
+      description: Invalid data submitted for visit tag creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Tag does not exist for visits
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+  schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    VisitTag:
+      type: string
+      description: Name of tag.
+      example: First visit
+    VisitCancelCode:
+      description: Visit cancellation code
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare cancel code ID
+          example: 1
+        code:
+          type: string
+          description: Cancel code
+          example: CLNT_REQ_RESCHEDULE
+        description:
+          type:
+          - string
+          - 'null'
+          description: Cancel code description
+          example: Client requested reschedule
+      required:
+      - id
+      - code
+    Visit:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisit'
+      properties:
+        alayacare_client_id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        client_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_client_id_1
+      required:
+      - alayacare_client_id
+    VisitTagList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitTag'
+    VisitTagCreate:
+      type: array
+      description: An array of visit tags.
+      items:
+        $ref: '#/components/schemas/VisitTag'
+    VisitNoteCreate:
+      description: Visit note
+      type: object
+      properties:
+        text:
+          type: string
+          description: Content of the visit note
+          maxLength: 1000
+          example: A sample visit note.
+      required:
+      - text
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    BaseVisit:
+      type: object
+      properties:
+        alayacare_employee_id:
+          type:
+          - integer
+          - 'null'
+          description: AlayaCare employee ID
+          example: 101
+        alayacare_service_id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
+        alayacare_visit_id:
+          type: integer
+          description: AlayaCare visit ID
+          example: 10001
+        employee_id:
+          type:
+          - string
+          - 'null'
+          description: External employee ID
+          example: sor_employee_id_1
+        service_id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_id_1
+        visit_id:
+          type:
+          - string
+          - 'null'
+          description: External visit ID
+          example: sor_visit_id_1
+        status:
+          type: string
+          description: Status of the visit based on status hierarchy from AlayaCare web application.
+          example: scheduled
+          enum:
+          - scheduled
+          - vacant
+          - on_hold
+          - cancelled
+          - offered
+          - clocked
+          - late
+          - completed
+          - missed
+          - approved
+        start_at:
+          type: string
+          format: date-time
+          description: Visit start time (ISO 8601)
+          example: '2017-07-08T13:30:00+00:00'
+        end_at:
+          type: string
+          format: date-time
+          description: Visit end time (ISO 8601)
+          example: '2017-07-08T14:00:00+00:00'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitNote'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitTag'
+        cancelled:
+          type: boolean
+          description: Indicates if visit is cancelled
+        cancel_code:
+          $ref: '#/components/schemas/VisitCancelCode'
+      required:
+      - alayacare_service_id
+      - alayacare_visit_id
+      - start_at
+      - end_at
+      - cancelled
+      - cancel_code
+    VisitNote:
+      allOf:
+      - $ref: '#/components/schemas/VisitNoteCreate'
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time of the note
+          example: '2017-07-08T13:30:00+00:00'
+      required:
+      - created_at
   securitySchemes:
     basic_auth:
       type: http
-      description: Basic HTTP auth over https
       scheme: basic
-definitions:
-  VisitNote:
-    allOf:
-    - $ref: '#/definitions/VisitNoteCreate'
-    properties:
-      created_at:
-        type: string
-        format: date-time
-        description: Creation time of the note
-        example: '2017-07-08T13:30:00+00:00'
-    required:
-    - created_at
-  VisitNoteCreate:
-    description: Visit note
-    type: object
-    properties:
-      text:
-        type: string
-        description: Content of the visit note
-        maxLength: 1000
-        example: A sample visit note.
-    required:
-    - text
-  VisitCancelCode:
-    description: Visit cancellation code
-    type: object
-    x-nullable: true
-    properties:
-      id:
-        type: integer
-        description: AlayaCare cancel code ID
-        example: 1
-      code:
-        type: string
-        description: Cancel code
-        example: CLNT_REQ_RESCHEDULE
-      description:
-        type: string
-        description: Cancel code description
-        example: Client requested reschedule
-        x-nullable: true
-    required:
-    - id
-    - code
-  Visit:
-    allOf:
-    - $ref: '#/definitions/BaseVisit'
-    properties:
-      alayacare_client_id:
-        type: integer
-        description: AlayaCare client ID
-        example: 1001
-      client_id:
-        type: string
-        description: External client ID
-        example: sor_client_id_1
-        x-nullable: true
-    required:
-    - alayacare_client_id
-  VisitTag:
-    type: string
-    description: Name of tag.
-    example: First visit
-  BaseVisit:
-    type: object
-    properties:
-      alayacare_employee_id:
-        type: integer
-        description: AlayaCare employee ID
-        example: 101
-        x-nullable: true
-      alayacare_service_id:
-        type: integer
-        description: AlayaCare service ID
-        example: 1
-      alayacare_visit_id:
-        type: integer
-        description: AlayaCare visit ID
-        example: 10001
-      employee_id:
-        type: string
-        description: External employee ID
-        example: sor_employee_id_1
-        x-nullable: true
-      service_id:
-        type: string
-        description: External service ID
-        example: sor_service_id_1
-        x-nullable: true
-      visit_id:
-        type: string
-        description: External visit ID
-        example: sor_visit_id_1
-        x-nullable: true
-      status:
-        type: string
-        description: Status of the visit based on status hierarchy from AlayaCare web application.
-        example: scheduled
-        enum:
-        - scheduled
-        - vacant
-        - on_hold
-        - cancelled
-        - offered
-        - clocked
-        - late
-        - completed
-        - missed
-        - approved
-      start_at:
-        type: string
-        format: date-time
-        description: Visit start time (ISO 8601)
-        example: '2017-07-08T13:30:00+00:00'
-      end_at:
-        type: string
-        format: date-time
-        description: Visit end time (ISO 8601)
-        example: '2017-07-08T14:00:00+00:00'
-      notes:
-        type: array
-        items:
-          $ref: '#/definitions/VisitNote'
-      tags:
-        type: array
-        items:
-          $ref: '#/definitions/VisitTag'
-      cancelled:
-        type: boolean
-        description: Indicates if visit is cancelled
-      cancel_code:
-        $ref: '#/definitions/VisitCancelCode'
-    required:
-    - alayacare_service_id
-    - alayacare_visit_id
-    - start_at
-    - end_at
-    - cancelled
-    - cancel_code
-  PaginatedList:
-    description: Base model of all paginated lists
-    type: object
-    properties:
-      count:
-        type: integer
-        description: Number of items in the response
-        example: 1
-      page:
-        type: integer
-        description: Current page number
-        example: 1
-      total_pages:
-        type: integer
-        description: Total number of pages available
-        example: 1
-      items:
-        type: array
-        items:
-          type: object
-    required:
-    - count
-    - page
-    - total_pages
-    - items
-  ErrorResponse:
-    description: Error response
-    type: object
-    properties:
-      code:
-        type: integer
-        example: 400
-        description: Response code
-      message:
-        type: string
-        example: Invalid request
-        description: Detailed error message
-    required:
-    - code
-    - message
-  VisitTagCreate:
-    type: array
-    description: An array of visit tags.
-    items:
-      $ref: '#/definitions/VisitTag'
-  VisitTagList:
-    allOf:
-    - $ref: '#/definitions/PaginatedList'
-    properties:
-      items:
-        type: array
-        items:
-          $ref: '#/definitions/VisitTag'
-responses:
-  ErrorResponseVisitTagInvalidRequest:
-    description: Invalid data submitted for visit tag creation
-    schema:
-      $ref: '#/definitions/ErrorResponse'
-    examples:
-      application/json:
-        code: 400
-        message: Tag does not exist for visits
-  ErrorResponseVisitNotFound:
-    description: Visit not found
-    schema:
-      $ref: '#/definitions/ErrorResponse'
-    examples:
-      application/json:
-        code: 404
-        message: Visit not found
-  ErrorResponseAuthentication:
-    description: Authorization required
-    schema:
-      $ref: '#/definitions/ErrorResponse'
-    examples:
-      application/json:
-        code: 401
-        message: Authorization required.
+      description: Basic HTTP auth over https
