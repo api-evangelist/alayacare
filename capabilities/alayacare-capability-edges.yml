@@ -1,0 +1,219 @@
+slug: alayacare
+provider: AlayaCare
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Healthcare Providers
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 20
+edges:
+- tag: Progress Notes
+  spec_file: alayacare-progress-notes-api-openapi.yml
+  capability_id: BC-2830.10
+  capability_id_l1: BC-2830
+  capability_name: Clinical Note Documentation
+  confidence: 0.92
+  evidence: '"Create a progress note"; "Get a list of progress notes by a client''s AlayaCare ID"; schema
+    "ProgressNoteCreate" under "External Clinical API"'
+  reason: Authoring and retrieval of clinical progress notes for clients is directly clinical note documentation
+    within the care record.
+- tag: referral inbox
+  spec_file: alayacare-referral-inbox-api-openapi.yml
+  capability_id: BC-2820.10
+  capability_id_l1: BC-2820
+  capability_name: Referral Management
+  confidence: 0.87
+  evidence: GET /v1/inbox/referrals, POST /v1/inbox/referrals/{referral_id}/mark_processed, POST /v1/inbox/referrals/{referral_id}/cancel;
+    InboxReferralCarePlanResponse
+  reason: Receipt, review, processing and cancellation of inbound patient care referrals with care-plan
+    and case-manager data — squarely referral management within care coordination.
+- tag: referral outbox
+  spec_file: alayacare-referral-outbox-api-openapi.yml
+  capability_id: BC-2820.10
+  capability_id_l1: BC-2820
+  capability_name: Referral Management
+  confidence: 0.87
+  evidence: POST /v1/outbox/referrals, POST /v1/outbox/referrals/{referral_id}/cancel; OutboxReferralClientResponse,
+    OutboxCarePlanDiagnosisCore
+  reason: Creation, update and cancellation of outbound patient referrals including client, diagnosis
+    and visit detail — end-to-end referral management.
+- tag: Medication Administration
+  spec_file: alayacare-medication-administration-api-openapi.yml
+  capability_id: BC-2850.40
+  capability_id_l1: BC-2850
+  capability_name: Medication Administration & Reconciliation
+  confidence: 0.85
+  evidence: POST /medications/{medication_id}/administrations — "Create a medication administration.";
+    schemas MedicationAdministration, MedicationAdministrationCreate
+  reason: Operations record and retrieve medication administration events against a client's medication,
+    which is precisely Medication Administration & Reconciliation.
+- tag: visit inbox
+  spec_file: alayacare-visit-inbox-api-openapi.yml
+  capability_id: BC-2800.10
+  capability_id_l1: BC-2800
+  capability_name: Scheduling & Appointment Management
+  confidence: 0.85
+  evidence: POST /v1/inbox/visits/schedule, POST /v1/inbox/visits/{visit_id}/assign, POST /v1/inbox/visits/{visit_id}/reschedule;
+    schema InboxVisitScheduleRequest
+  reason: Operations book, assign, hold, cancel and reschedule home-care visits — provider/resource scheduling
+    and appointment booking, i.e. Scheduling & Appointment Management. 'Inbox' is the write-side channel,
+    not a business object.
+- tag: Billing Cycles
+  spec_file: alayacare-billing-cycles-api-openapi.yml
+  capability_id: BC-2870
+  capability_id_l1: BC-2870
+  capability_name: Healthcare Revenue Cycle Management
+  confidence: 0.8
+  evidence: GET /billing/cycles/{billing_period_id}/invoices Fetch multiple private pay invoices
+  reason: Billing cycles with invoice and invoice-item retrieval for clients, payors and funders is provider
+    revenue cycle billing. Evidence spans both private-pay patient invoicing and payor invoicing, so the
+    L2 (patient financial services vs claim production) is not determinable; L1 only.
+- tag: Billing Periods
+  spec_file: alayacare-billing-periods-api-openapi.yml
+  capability_id: BC-2870
+  capability_id_l1: BC-2870
+  capability_name: Healthcare Revenue Cycle Management
+  confidence: 0.8
+  evidence: GET /billing/periods/{billing_period_id} Get a payor invoicing billing period
+  reason: Payor invoicing billing periods plus private-pay invoice retrieval (PayorInvoicingBillingPeriod,
+    InvoiceItemSchema, FunderWithGuidSchema) is healthcare provider revenue cycle billing; mixed payor/patient
+    scope so no single L2 is named.
+- tag: Care Provider Notes
+  spec_file: alayacare-care-provider-notes-api-openapi.yml
+  capability_id: BC-2830.10
+  capability_id_l1: BC-2830
+  capability_name: Clinical Note Documentation
+  confidence: 0.78
+  evidence: POST /clients/{client_id}/care-provider-notes createCareProviderNote Create a care provider
+    note
+  reason: Authoring, categorising, retrieving and archiving clinician notes against a client record is
+    clinical note documentation within the active patient record.
+- tag: Employees
+  spec_file: alayacare-employees-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.78
+  evidence: POST /employees "Create an employee."; PUT /employees/{employee_id}/status "Update employee
+    status"; schemas EmployeeDemographics, EmploymentType, Department, Role
+  reason: Full lifecycle CRUD over employee master records including demographics, employment type, department,
+    role and termination status — employee records / HR service delivery. Workforce administration regardless
+    of the care-industry buyer.
+- tag: Visits
+  spec_file: alayacare-visits-api-openapi.yml
+  capability_id: BC-2800.10
+  capability_id_l1: BC-2800
+  capability_name: Scheduling & Appointment Management
+  confidence: 0.75
+  evidence: '"POST /visits Create a new visit"; "GET /cancelcodes Get a list of cancel codes"; schema
+    "VisitCancelCode", "VisitWorkSession", "DeliveryDateInformation"'
+  reason: Operations create, update, cancel and lock scheduled home-care visits with cancellation codes
+    and delivery dates — provider/resource appointment scheduling for a home care agency. Some ambiguity
+    with home care delivery itself, hence 0.75.
+- tag: Bill Codes
+  spec_file: alayacare-bill-codes-api-openapi.yml
+  capability_id: BC-2870.10
+  capability_id_l1: BC-2870
+  capability_name: Charge Capture & Chargemaster Management
+  confidence: 0.72
+  evidence: 'GET /billcodes Get all Bill Codes ... schemas: BillCodeTaxSchema, RoundingRuleSchema, ModifierRuleSchema,
+    FunderStubSchema'
+  reason: Definition and enable/disable of billing codes with modifiers, taxes, rounding rules and funder
+    links — the catalogue of billable service codes for a care provider, matching charge capture and chargemaster
+    stewardship.
+- tag: Employee Contacts
+  spec_file: alayacare-employee-contacts-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.72
+  evidence: POST /contacts "Create employee contact"; schemas EmployeeContactDemographics, EmployeeContactRelationship,
+    EmployeeStatus
+  reason: 'CRUD over employee contact/demographic records (relationship, status) — maintenance of employee
+    master records, which is HR Operations. Not a customer/CRM contact: every path is scoped to employee_id.'
+- tag: Invoices
+  spec_file: alayacare-invoices-api-openapi.yml
+  capability_id: BC-2870.60
+  capability_id_l1: BC-2870
+  capability_name: Patient Financial Services
+  confidence: 0.72
+  evidence: GET /billing/periods/{billing_period_id}/invoices — "Fetch multiple private pay invoices";
+    schemas PrivateInvoicesSchema, BillToSchema, BillingContactSchema
+  reason: Retrieval of private-pay client invoices per billing cycle is patient/client billing within
+    provider revenue cycle management.
+- tag: referral sys_admin
+  spec_file: alayacare-referral-sys-admin-api-openapi.yml
+  capability_id: BC-2820.10
+  capability_id_l1: BC-2820
+  capability_name: Referral Management
+  confidence: 0.72
+  evidence: GET /v1/sys_admin/referrals/{referral_id}; SysAdminReferralDetailResponse, OutboxReferralCore
+  reason: Administrative read access to the same patient referral records; referral management, though
+    the surface is oversight/read-only.
+- tag: Bill Code Rates
+  spec_file: alayacare-bill-code-rates-api-openapi.yml
+  capability_id: BC-2870.10
+  capability_id_l1: BC-2870
+  capability_name: Charge Capture & Chargemaster Management
+  confidence: 0.7
+  evidence: GET /billcodes/{billcode_id}/rates Get all Bill Code Rates
+  reason: CRUD over rates attached to billing codes, with rate tiers (BillCodeRateTierCreateSchema) —
+    maintenance of the provider's billable-service rate structure, i.e. chargemaster stewardship inside
+    revenue cycle.
+- tag: Care plan
+  spec_file: alayacare-care-plan-api-openapi.yml
+  capability_id: BC-2820.20
+  capability_id_l1: BC-2820
+  capability_name: Case & Care Management
+  confidence: 0.7
+  evidence: POST /client/{client_id}/careplans Create a care plan using the client Alayacare ID
+  reason: Create/update/activate/archive care plans with diagnoses, goals, goal progress and interventions
+    (CarePlanGoal, CarePlanDiagnosis, GoalProgress) — planning and execution of care management for a
+    client. Could alternatively be read as clinical documentation, so not top confidence.
+- tag: Clients
+  spec_file: alayacare-clients-api-openapi.yml
+  capability_id: BC-2800.20
+  capability_id_l1: BC-2800
+  capability_name: Patient Registration Management
+  confidence: 0.7
+  evidence: POST /clients createClient Create client; schemas ClientCreateDemographics, ClientDemographicsLocation,
+    CareTeamMember
+  reason: CRUD over the care recipient's profile and demographics for a home-care provider — capture and
+    stewardship of patient registration data.
+- tag: Invoice Items
+  spec_file: alayacare-invoice-items-api-openapi.yml
+  capability_id: BC-2870.60
+  capability_id_l1: BC-2870
+  capability_name: Patient Financial Services
+  confidence: 0.7
+  evidence: GET /billing/cycles/invoice/{invoice_id}/details — "Fetch a specific invoice's invoice items";
+    schemas InvoiceItemSchema, BillToSchema, TaxesSchema, PayorSchema
+  reason: Invoice line detail for client/private-pay billing in a care provider's accounting API — patient
+    (client) financial services within healthcare revenue cycle.
+- tag: Visit notes
+  spec_file: alayacare-visit-notes-api-openapi.yml
+  capability_id: BC-2830.10
+  capability_id_l1: BC-2830
+  capability_name: Clinical Note Documentation
+  confidence: 0.7
+  evidence: POST /visits/{alayacare_visit_id}/notes Add note to a visit using AlayaCare ID; schemas VisitNoteCreate,
+    VisitNote
+  reason: Authoring of notes against a patient care visit — clinician/caregiver note documentation for
+    the encounter record.
+- tag: Vitals
+  spec_file: alayacare-vitals-api-openapi.yml
+  capability_id: BC-2830
+  capability_id_l1: BC-2830
+  capability_name: Clinical Documentation Management
+  confidence: 0.7
+  evidence: '"Record a vital for a client using the client''s AlayaCare ID"; "API for creating, editing
+    and viewing vitals"; schemas "VitalCreate", "VitalUnits"'
+  reason: Creating, updating and reading vital-sign recordings against a client is structured clinical
+    documentation in the active patient record. Which sub-capability (note documentation vs. workflow)
+    is not determinable, so L1 only.
