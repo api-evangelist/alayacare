@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 20
+edge_count: 27
 edges:
 - tag: Progress Notes
   spec_file: alayacare-progress-notes-api-openapi.yml
@@ -84,6 +84,18 @@ edges:
   reason: Payor invoicing billing periods plus private-pay invoice retrieval (PayorInvoicingBillingPeriod,
     InvoiceItemSchema, FunderWithGuidSchema) is healthcare provider revenue cycle billing; mixed payor/patient
     scope so no single L2 is named.
+- tag: Medication
+  spec_file: alayacare-medication-api-openapi.yml
+  capability_id: BC-2850
+  capability_id_l1: BC-2850
+  capability_name: Pharmacy & Medication Management
+  confidence: 0.8
+  evidence: POST /client/{client_id}/medications  Create a new medication for a specific client; schemas
+    Medication, DosageType, Route, TimeInstruction, AdministeredByNurse, Discrepancy
+  reason: CRUD over client medication records with dosage, route, delivery mode and status change — provider-side
+    medication management for home care clients. L1 is clear; the surface spans medication profile maintenance
+    rather than a single named sub-capability.
+  recovered_from: healthcare-vertical-edges.json
 - tag: Care Provider Notes
   spec_file: alayacare-care-provider-notes-api-openapi.yml
   capability_id: BC-2830.10
@@ -105,6 +117,28 @@ edges:
   reason: Full lifecycle CRUD over employee master records including demographics, employment type, department,
     role and termination status — employee records / HR service delivery. Workforce administration regardless
     of the care-industry buyer.
+- tag: Employee Notes
+  spec_file: alayacare-employee-notes-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.75
+  evidence: '"Create an employee note by the employee''s AlayaCare ID"; "This `comment` is saved as an
+    Employee Note with a `note_type` of type `terminated`"'
+  reason: CRUD on notes attached to employee records, including termination comments — employee record
+    keeping / HR service delivery, not clinical documentation.
+  recovered_from: healthcare-vertical-edges.json
+- tag: Employee Skills
+  spec_file: alayacare-employee-skills-api-openapi.yml
+  capability_id: BC-300
+  capability_id_l1: BC-300
+  capability_name: Human Capital Management
+  confidence: 0.75
+  evidence: GET /employees/{employee_id}/skills    Get a list of an employee's skills
+  reason: Maintains employee skill profiles — clearly human capital management, but ambiguous between
+    talent/competency management and HR record keeping (skills are likely used for visit matching), so
+    no L2 asserted.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: Visits
   spec_file: alayacare-visits-api-openapi.yml
   capability_id: BC-2800.10
@@ -186,6 +220,19 @@ edges:
     CareTeamMember
   reason: CRUD over the care recipient's profile and demographics for a home-care provider — capture and
     stewardship of patient registration data.
+- tag: Interventions
+  spec_file: alayacare-interventions-api-openapi.yml
+  capability_id: BC-2820.20
+  capability_id_l1: BC-2820
+  capability_name: Case & Care Management
+  confidence: 0.7
+  evidence: POST /careplans/{plan_id}/interventions  Create an intervention in a Careplan using Alayacare
+    care plan ID; schemas CreateCarePlanIntervention, InterventionType, CareplanItemStatus, and IDs plan_id/diagnosis_id/goal_id
+  reason: Operations create, edit, complete and archive interventions within a client care plan tied to
+    diagnoses and goals — i.e. care-plan/case-management planning and execution for home care clients.
+    Mapped to Case & Care Management; some ambiguity remains versus clinical documentation of the plan,
+    hence 0.7.
+  recovered_from: healthcare-vertical-edges.json
 - tag: Invoice Items
   spec_file: alayacare-invoice-items-api-openapi.yml
   capability_id: BC-2870.60
@@ -196,6 +243,29 @@ edges:
     schemas InvoiceItemSchema, BillToSchema, TaxesSchema, PayorSchema
   reason: Invoice line detail for client/private-pay billing in a care provider's accounting API — patient
     (client) financial services within healthcare revenue cycle.
+- tag: Latest Vitals
+  spec_file: alayacare-latest-vitals-api-openapi.yml
+  capability_id: BC-2830
+  capability_id_l1: BC-2830
+  capability_name: Clinical Documentation Management
+  confidence: 0.7
+  evidence: GET /vitals/client/{client_id}/latest  Get a list of the latest vital recordings by the client's
+    AlayaCare ID; schemas VitalLatest, VitalName, VitalUnits
+  reason: Retrieval of recorded clinical vital signs per client from the 'External Clinical API' — part
+    of the active clinical record. Clinical Documentation Management is the honest L1; the evidence does
+    not clearly name a specific sub-capability (not narrative notes, not results review), so no L2.
+  recovered_from: healthcare-vertical-edges.json
+- tag: Visit interventions
+  spec_file: alayacare-visit-interventions-api-openapi.yml
+  capability_id: BC-2810.80
+  capability_id_l1: BC-2810
+  capability_name: Home & Community Care Delivery
+  confidence: 0.7
+  evidence: GET /visits/{alayacare_visit_id}/interventions  Get a list of interventions for a visit; PUT
+    .../interventions  Link Interventions to a visit; schema Intervention
+  reason: Care interventions linked to and completed within home-care visits are the substance of clinical
+    care delivered in the client's home, matching home and community care delivery.
+  recovered_from: healthcare-vertical-edges.json
 - tag: Visit notes
   spec_file: alayacare-visit-notes-api-openapi.yml
   capability_id: BC-2830.10
@@ -217,3 +287,13 @@ edges:
   reason: Creating, updating and reading vital-sign recordings against a client is structured clinical
     documentation in the active patient record. Which sub-capability (note documentation vs. workflow)
     is not determinable, so L1 only.
+- tag: visit outbox
+  spec_file: alayacare-visit-outbox-api-openapi.yml
+  capability_id: BC-2800.10
+  capability_id_l1: BC-2800
+  capability_name: Scheduling & Appointment Management
+  confidence: 0.7
+  evidence: GET /v1/outbox/visits, GET /v1/outbox/visits/{visit_id}, OutboxVisitDetailResponse
+  reason: Read access to scheduled home care visits — same visit/appointment scheduling domain, but read-only
+    so weaker evidence.
+  recovered_from: healthcare-vertical-edges.json
