@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Send a message for a sequence as a demand organization.
-
-        '
+        Send a message for a sequence as a demand organization.'
       requestBody:
         required: true
         content:
@@ -57,6 +55,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create outbox messages
+      x-summary-source: derived
+      operationId: postV1OutboxMessages
+      x-operation-id-source: derived
     get:
       tags:
       - message outbox
@@ -67,9 +69,7 @@ paths:
 
         # Description
 
-        Get a paginated collection of messages for a sequence as a demand organization.
-
-        '
+        Get a paginated collection of messages for a sequence as a demand organization.'
       parameters:
       - $ref: '#/components/parameters/SequenceIdQueryParam'
       - $ref: '#/components/parameters/MessageSenderTypeQueryParam'
@@ -97,6 +97,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox messages
+      x-summary-source: derived
+      operationId: getV1OutboxMessages
+      x-operation-id-source: derived
   /v1/outbox/messages/{message_id}:
     parameters:
     - $ref: '#/components/parameters/MessageIdPathParam'
@@ -110,9 +114,7 @@ paths:
 
         # Description
 
-        Get the details of a message for a sequence as a demand organization.
-
-        '
+        Get the details of a message for a sequence as a demand organization.'
       responses:
         200:
           description: Successfully got the message.
@@ -126,6 +128,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox messages by message id
+      x-summary-source: derived
+      operationId: getV1OutboxMessagesByMessageId
+      x-operation-id-source: derived
   /v1/outbox/messages/files/{file_id}:
     parameters:
     - $ref: '#/components/parameters/FileIdPathParam'
@@ -139,9 +145,7 @@ paths:
 
         # Description
 
-        Get the file attached to a message as a demand organization.
-
-        '
+        Get the file attached to a message as a demand organization.'
       responses:
         200:
           description: Successfully got the file.
@@ -151,6 +155,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox messages files by file id
+      x-summary-source: derived
+      operationId: getV1OutboxMessagesFilesByFileId
+      x-operation-id-source: derived
   /v1/outbox/messages/files/{file_id}/presigned:
     parameters:
     - $ref: '#/components/parameters/FileIdPathParam'
@@ -166,9 +174,7 @@ paths:
 
         Get the pre-signed URL for the file attached to a message as a demand
 
-        organization.
-
-        '
+        organization.'
       responses:
         200:
           description: Successfully got the pre-signed URL.
@@ -182,23 +188,65 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox messages files by file id presigned
+      x-summary-source: derived
+      operationId: getV1OutboxMessagesFilesByFileIdPresigned
+      x-operation-id-source: derived
 components:
+  parameters:
+    SequenceIdQueryParam:
+      in: query
+      name: sequence_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    FileIdPathParam:
+      in: path
+      name: file_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a file.
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    MessageCategoryQueryParam:
+      in: query
+      name: category
+      schema:
+        $ref: '#/components/schemas/MessageCategoryCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    MessageIdPathParam:
+      in: path
+      name: message_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a message.
+    MessageSenderTypeQueryParam:
+      in: query
+      name: sender_type
+      schema:
+        $ref: '#/components/schemas/MessageSenderTypeCore'
   schemas:
-    MessageCategoryCore:
-      type: string
-      enum:
-      - client_attachment
-      - comment
     PageNumberCore:
       type: integer
       minimum: 1
       default: 1
-    OrgAdminFilePresignedDetailResponse:
-      properties:
-        url:
-          type: string
-      required:
-      - url
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -305,6 +353,53 @@ components:
       type: integer
       minimum: 1
       default: 100
+    OrgAdminFilePresignedDetailResponse:
+      properties:
+        url:
+          type: string
+      required:
+      - url
+    OrgAdminMessageSendRequest:
+      properties:
+        sequence_id:
+          type: string
+          format: uuid
+        category:
+          $ref: '#/components/schemas/MessageCategoryCore'
+        text:
+          type: string
+          maxLength: 2500
+        author:
+          type: string
+          maxLength: 100
+        file:
+          type: object
+          title: OrgAdminMessageSendFileRequest
+          properties:
+            url:
+              type: string
+            name:
+              type: string
+            size_in_bytes:
+              type: integer
+              minimum: 0
+              maximum: 52428800
+          required:
+          - url
+          - name
+      required:
+      - sequence_id
+      - category
+    MessageCategoryCore:
+      type: string
+      enum:
+      - client_attachment
+      - comment
+    MessageSenderTypeCore:
+      type: string
+      enum:
+      - demand
+      - supply
     OrgAdminMessageCollectionResponse:
       properties:
         id:
@@ -351,91 +446,6 @@ components:
               $ref: '#/components/schemas/OrgAdminMessageCollectionResponse'
         required:
         - items
-    MessageSenderTypeCore:
-      type: string
-      enum:
-      - demand
-      - supply
-    OrgAdminMessageSendRequest:
-      properties:
-        sequence_id:
-          type: string
-          format: uuid
-        category:
-          $ref: '#/components/schemas/MessageCategoryCore'
-        text:
-          type: string
-          maxLength: 2500
-        author:
-          type: string
-          maxLength: 100
-        file:
-          type: object
-          title: OrgAdminMessageSendFileRequest
-          properties:
-            url:
-              type: string
-            name:
-              type: string
-            size_in_bytes:
-              type: integer
-              minimum: 0
-              maximum: 52428800
-          required:
-          - url
-          - name
-      required:
-      - sequence_id
-      - category
-  parameters:
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    MessageIdPathParam:
-      in: path
-      name: message_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a message.
-    FileIdPathParam:
-      in: path
-      name: file_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a file.
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    SequenceIdQueryParam:
-      in: query
-      name: sequence_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    MessageSenderTypeQueryParam:
-      in: query
-      name: sender_type
-      schema:
-        $ref: '#/components/schemas/MessageSenderTypeCore'
-    MessageCategoryQueryParam:
-      in: query
-      name: category
-      schema:
-        $ref: '#/components/schemas/MessageCategoryCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

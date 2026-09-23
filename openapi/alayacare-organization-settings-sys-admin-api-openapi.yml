@@ -43,9 +43,7 @@ paths:
 
         # Description
 
-        Set offer assignment setting for an organization.
-
-        '
+        Set offer assignment setting for an organization.'
       requestBody:
         required: true
         content:
@@ -61,6 +59,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create sys admin demand personas by demand persona id settings assignment
+      x-summary-source: derived
+      operationId: postV1SysAdminDemandPersonasByDemandPersonaIdSettingsAssignment
+      x-operation-id-source: derived
     get:
       tags:
       - organization settings sys_admin
@@ -71,9 +73,7 @@ paths:
 
         # Description
 
-        Get offer assignment setting for an organization.
-
-        '
+        Get offer assignment setting for an organization.'
       responses:
         200:
           description: Offer assignment setting.
@@ -87,9 +87,13 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin demand personas by demand persona id settings assignment
+      x-summary-source: derived
+      operationId: getV1SysAdminDemandPersonasByDemandPersonaIdSettingsAssignment
+      x-operation-id-source: derived
 components:
   schemas:
-    OutboxOfferAssignmentSettingUpdateResponse:
+    OutboxOfferAssignmentSettingUpdateRequest:
       type: object
       properties:
         offer_assignment:
@@ -99,7 +103,7 @@ components:
           - manual
       required:
       - offer_assignment
-    OutboxOfferAssignmentSettingUpdateRequest:
+    OutboxOfferAssignmentSettingUpdateResponse:
       type: object
       properties:
         offer_assignment:

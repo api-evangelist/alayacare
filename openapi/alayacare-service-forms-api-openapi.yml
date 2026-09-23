@@ -23,43 +23,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique.
-
-
-    No other assumptions are made regarding their format; they are treated as
-
-    strings.
-
-
-
-    **AlayaCare IDs:**
-
-
-    The following terms are used to reference ids that identify resources in
-
-    AlayaCare:
-
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-
-    **Remarks**
-
-
-    - All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 - url: https://homecare.uat.alayacare.ca/ext/api/v2/scheduler
@@ -89,9 +53,7 @@ paths:
       tags:
       - Service Forms
       summary: Get list of forms that can be attached to services
-      description: 'Get a list of forms
-
-        '
+      description: Get a list of forms
       responses:
         '200':
           description: The list of forms
@@ -101,31 +63,38 @@ paths:
                 $ref: '#/components/schemas/ServiceFormList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getServicesForms
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
   schemas:
-    ServiceForm:
-      description: Details of forms
-      type: object
+    ServiceFormList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of forms
       properties:
-        branch:
-          $ref: '#/components/schemas/Branch'
-        id:
-          type: integer
-          minimum: 1
-          description: Service code id
-          example: 1
-        name:
-          type: string
-          description: Service Code name
-          example: SC1
-        status:
-          type: string
-          description: service form status
-          example: active
-        version:
-          type: string
-          description: service form version
-          example: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceForm'
     ErrorResponse:
       description: Error response
       type: object
@@ -141,15 +110,6 @@ components:
       required:
       - code
       - message
-    ServiceFormList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of forms
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceForm'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -175,6 +135,29 @@ components:
       - page
       - total_pages
       - items
+    ServiceForm:
+      description: Details of forms
+      type: object
+      properties:
+        branch:
+          $ref: '#/components/schemas/Branch'
+        id:
+          type: integer
+          minimum: 1
+          description: Service code id
+          example: 1
+        name:
+          type: string
+          description: Service Code name
+          example: SC1
+        status:
+          type: string
+          description: service form status
+          example: active
+        version:
+          type: string
+          description: service form version
+          example: 1
     Branch:
       description: AlayaCare branch
       type: object
@@ -188,25 +171,6 @@ components:
           type: string
           description: Branch name
           example: Toronto branch
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

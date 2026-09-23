@@ -2,7 +2,18 @@ openapi: 3.2.0
 info:
   version: 1.0.0
   title: AlayaCare Forms Form Submissions API
-  description: "**Internal IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- account_id\n- client_user_id\n\n**External IDs:**\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their form; they are treated as strings. \n\nThe following terms are used to reference IDs that identify resources in systems external to AlayaCare:\n- external_client_id\n- external_employee_id\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n"
+  description: '**Internal IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - account_id
+
+    - client_user_id
+
+
+    **External IDs:**
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/tasks/forms20
 security:
@@ -14,10 +25,26 @@ paths:
     get:
       tags:
       - Form Submissions
-      summary: 'Get a list of submissions.
+      summary: Get a list of submissions
+      description: '* Only form submissions that the current user can view will be returned.
 
-        '
-      description: "* Only form submissions that the current user can view will be returned.\n* Results are ordered by the form submission ID in ascending order by default.\n* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n* `account_id` and `external_client_id` are mutually exclusive.\n* `create_user_id` and `external_employee_id` are mutually exclusive.\n* Can return only up to 2 weeks data.\n"
+        * Results are ordered by the form submission ID in ascending order by default.
+
+        * Requires one of the following ACLs:
+
+        - `ACL_PATROL_CLIENT_REPORTS_VIEW`
+
+        - `ACL_CLIENT_SHIFTREPORT_VIEW`
+
+        - `ACL_CLIENT_REPORTS_VIEW`
+
+        - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`
+
+        * `account_id` and `external_client_id` are mutually exclusive.
+
+        * `create_user_id` and `external_employee_id` are mutually exclusive.
+
+        * Can return only up to 2 weeks data.'
       parameters:
       - name: create_user_id
         in: query
@@ -121,14 +148,22 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         '403':
           $ref: '#/components/responses/PermissionError'
+      operationId: getSubmissions
+      x-operation-id-source: derived
   /submissions/{submission_id}:
     get:
       tags:
       - Form Submissions
-      summary: 'Get form submission details by form submission ID.
+      summary: Get form submission details by form submission ID
+      description: '* Requires one of the following ACLs:
 
-        '
-      description: "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n"
+        - `ACL_PATROL_CLIENT_REPORTS_VIEW`
+
+        - `ACL_CLIENT_SHIFTREPORT_VIEW`
+
+        - `ACL_CLIENT_REPORTS_VIEW`
+
+        - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`'
       parameters:
       - name: submission_id
         description: AlayaCare ID of the submission
@@ -149,14 +184,20 @@ paths:
           $ref: '#/components/responses/PermissionError'
         '404':
           $ref: '#/components/responses/ErrorResponseNotFound'
+      operationId: getSubmissionsBySubmissionId
+      x-operation-id-source: derived
   /submissions/count_visit_submissions:
     get:
       tags:
       - Form Submissions
-      summary: 'Get the count of approved form submissions and the total count of form submissions by work session.
+      summary: Get the count of approved form submissions and the total count of form…
+      description: '* Requires one of the following ACLs:
 
-        '
-      description: "* Requires one of the following ACLs:\n  - `ACL_PATROL_REPORT_VISIT_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n* `user_id` and `external_employee_id` are mutually exclusive.\n"
+        - `ACL_PATROL_REPORT_VISIT_VIEW`
+
+        - `ACL_CLIENT_SHIFTREPORT_VIEW`
+
+        * `user_id` and `external_employee_id` are mutually exclusive.'
       parameters:
       - name: work_session_id
         description: One or more work_session_ids. Use parameter multiple times for multiple work_session_ids
@@ -197,14 +238,22 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         '403':
           $ref: '#/components/responses/PermissionError'
+      operationId: getSubmissionsCountVisitSubmissions
+      x-operation-id-source: derived
   /submissions/{submission_id}/submission_revision:
     get:
       tags:
       - Form Submissions
-      summary: 'Get form submission change logs.
+      summary: Get form submission change logs
+      description: '* Requires one of the following ACLs:
 
-        '
-      description: "* Requires one of the following ACLs:\n  - `ACL_PATROL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_SHIFTREPORT_VIEW`\n  - `ACL_CLIENT_REPORTS_VIEW`\n  - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`\n"
+        - `ACL_PATROL_CLIENT_REPORTS_VIEW`
+
+        - `ACL_CLIENT_SHIFTREPORT_VIEW`
+
+        - `ACL_CLIENT_REPORTS_VIEW`
+
+        - `ACL_CLIENT_REPORTS_HISTORICAL_VIEW`'
       parameters:
       - name: submission_id
         description: Form submission ID
@@ -251,74 +300,130 @@ paths:
           $ref: '#/components/responses/PermissionError'
         '404':
           $ref: '#/components/responses/ErrorResponseNotFound'
+      operationId: getSubmissionsBySubmissionIdSubmissionRevision
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      name: page
+      description: Filter by page number. If not specified will default to 1
+      in: query
+      schema:
+        type: integer
+        default: 1
+    count:
+      name: count
+      description: Number of items per page. If not specified will default to 100
+      in: query
+      schema:
+        type: integer
+        default: 100
   schemas:
-    SubmissionList:
-      description: A list of form submissions
+    UserShortSchema:
+      description: A user
       type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items_per_page
-      - items
       properties:
-        count:
-          description: Number of items in the response
+        id:
           type: integer
-          example: 10
-        page:
-          description: Current page number
-          type: integer
+          description: The ID of the user
           example: 1
-        total_pages:
-          description: Total number of pages available
+        guid:
           type: integer
-          example: 1
-        items_per_page:
-          description: Maximum number of item per page
+          description: The guid of the user
+          example: 100
+        profile_id:
           type: integer
-          example: 10
-        items:
+          description: The guid of the user
+          example: 123
+        name:
+          type: string
+          description: The name of the user
+          example: John Snow
+        roles:
           type: array
+          description: roles of the user
           items:
-            $ref: '#/components/schemas/Submission'
-    SubmissionFieldRead:
-      description: The submission field schema containing the form values.
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The ID of the role
+                example: 1
+              name:
+                type: string
+                description: The name of the role
+                example: admin
+    BranchSchema:
       type: object
-      required:
-      - field_id
-      - field_value
       properties:
-        field_id:
-          description: Unique ID of the field
+        id:
           type: integer
           example: 1
-        field_label:
-          description: The name of the field
+        name:
           type: string
-          example: Agency Name
-        field_type:
-          description: The type of the field
+          example: Branch A
+    SubmissionCoord:
+      description: Create a record of the GPS coordinates of the user when the submission was created.
+      type: object
+      required:
+      - lat
+      - lng
+      - measured_at
+      properties:
+        accuracy:
+          description: The accuracy of the GPS coordinates, in meters.
+          type: number
+          example: 123.4
+        lat:
+          description: The GPS latitude.
+          type: number
+          example: 45.516136
+        lng:
+          description: The GPS longitude.
+          type: number
+          example: -73.65683
+        measured_at:
+          description: The date-time at which the coordinates were measured.
           type: string
-          example: textarea
-        field_value:
-          description: "An object containing the field value.\nThis is a polymorphic field and the schema changes with the type.\n\n checkbox => boolean\n \n date => string (format: date)\n \n demographics => uses simple type schemas: autocomplete, boolean, list, list_multiple, number, text, textarea, autocomplete\n \n drawing => string (format: url)\n \n hyperlink => string (format: url)\n \n list => FieldValueList\n \n list_multiple => FieldValueListMultiple\n \n grid_fixed => FieldValueListMultiple\n \n grid_flexible => FieldValueListMultiple\n \n medication => FieldValueEntity\n \n medical_history => FieldValueEntity\n \n number => number\n \n picture => string (format: url)\n \n progress_notes => string\n \n risk => FieldValueEntity\n \n signature => string (format: url)\n \n text => string\n \n textarea => string\n \n time => string (format: time)\n \n vital => FieldValueEntity\n"
-          type: string
-          example: Text field value
-    ErrorResponse:
-      description: Error response
+          format: date-time
+          example: '2017-07-08T13:30:00+00:00'
+    VisitSubmissionCountResponse:
+      description: Schema for the visit submission count response.
+      properties:
+        default:
+          $ref: '#/components/schemas/VisitSubmissionCount'
+      additionalProperties:
+        $ref: '#/components/schemas/VisitSubmissionCount'
+      example:
+        submission_counts:
+          12345:
+            approved_count: 2
+            total_count: 5
+          12346:
+            approved_count: 0
+            total_count: 2
+    VisitSubmissionCount:
+      description: Count of form submissions for a visit.
       type: object
       properties:
-        code:
+        approved_count:
+          description: Count of approved form submissions for a visit.
           type: integer
-          description: Response code
-        message:
+        total_count:
+          description: Count of total form submissions for a visit.
+          type: integer
+    VisitSchema:
+      type: object
+      properties:
+        start_at:
+          type: integer
+          example: 1642053489
+        end_at:
+          type: integer
+          example: 1642053489
+        employee_name:
           type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+          example: John Doe
     Submission:
       description: The full content of a submission
       type: object
@@ -448,127 +553,6 @@ components:
           $ref: '#/components/schemas/BranchSchema'
         visit:
           $ref: '#/components/schemas/VisitSchema'
-    UserShortSchema:
-      description: A user
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The ID of the user
-          example: 1
-        guid:
-          type: integer
-          description: The guid of the user
-          example: 100
-        profile_id:
-          type: integer
-          description: The guid of the user
-          example: 123
-        name:
-          type: string
-          description: The name of the user
-          example: John Snow
-        roles:
-          type: array
-          description: roles of the user
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The ID of the role
-                example: 1
-              name:
-                type: string
-                description: The name of the role
-                example: admin
-    SubmissionStatus:
-      description: The status of a form submission
-      type: string
-      default: unapproved
-      enum:
-      - draft
-      - unapproved
-      - approved
-      - verification
-      - job_pending
-      - to_delete
-      - correcting
-      - sent
-      - inactive
-      - correction_number_reqquired
-      - sent_inactive
-    BranchSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        name:
-          type: string
-          example: Branch A
-    VisitSubmissionCount:
-      description: Count of form submissions for a visit.
-      type: object
-      properties:
-        approved_count:
-          description: Count of approved form submissions for a visit.
-          type: integer
-        total_count:
-          description: Count of total form submissions for a visit.
-          type: integer
-    VisitSubmissionCountResponse:
-      description: Schema for the visit submission count response.
-      properties:
-        default:
-          $ref: '#/components/schemas/VisitSubmissionCount'
-      additionalProperties:
-        $ref: '#/components/schemas/VisitSubmissionCount'
-      example:
-        submission_counts:
-          12345:
-            approved_count: 2
-            total_count: 5
-          12346:
-            approved_count: 0
-            total_count: 2
-    VisitSchema:
-      type: object
-      properties:
-        start_at:
-          type: integer
-          example: 1642053489
-        end_at:
-          type: integer
-          example: 1642053489
-        employee_name:
-          type: string
-          example: John Doe
-    SubmissionCoord:
-      description: Create a record of the GPS coordinates of the user when the submission was created.
-      type: object
-      required:
-      - lat
-      - lng
-      - measured_at
-      properties:
-        accuracy:
-          description: The accuracy of the GPS coordinates, in meters.
-          type: number
-          example: 123.4
-        lat:
-          description: The GPS latitude.
-          type: number
-          example: 45.516136
-        lng:
-          description: The GPS longitude.
-          type: number
-          example: -73.65683
-        measured_at:
-          description: The date-time at which the coordinates were measured.
-          type: string
-          format: date-time
-          example: '2017-07-08T13:30:00+00:00'
     AccountShortSchema:
       type: object
       description: A client
@@ -593,25 +577,89 @@ components:
           type: string
           description: The external ID of the client or facility
           example: ex-123
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    SubmissionFieldRead:
+      description: The submission field schema containing the form values.
+      type: object
+      required:
+      - field_id
+      - field_value
+      properties:
+        field_id:
+          description: Unique ID of the field
+          type: integer
+          example: 1
+        field_label:
+          description: The name of the field
+          type: string
+          example: Agency Name
+        field_type:
+          description: The type of the field
+          type: string
+          example: textarea
+        field_value:
+          description: "An object containing the field value.\nThis is a polymorphic field and the schema changes with the type.\n\n checkbox => boolean\n \n date => string (format: date)\n \n demographics => uses simple type schemas: autocomplete, boolean, list, list_multiple, number, text, textarea, autocomplete\n \n drawing => string (format: url)\n \n hyperlink => string (format: url)\n \n list => FieldValueList\n \n list_multiple => FieldValueListMultiple\n \n grid_fixed => FieldValueListMultiple\n \n grid_flexible => FieldValueListMultiple\n \n medication => FieldValueEntity\n \n medical_history => FieldValueEntity\n \n number => number\n \n picture => string (format: url)\n \n progress_notes => string\n \n risk => FieldValueEntity\n \n signature => string (format: url)\n \n text => string\n \n textarea => string\n \n time => string (format: time)\n \n vital => FieldValueEntity\n"
+          type: string
+          example: Text field value
+    SubmissionStatus:
+      description: The status of a form submission
+      type: string
+      default: unapproved
+      enum:
+      - draft
+      - unapproved
+      - approved
+      - verification
+      - job_pending
+      - to_delete
+      - correcting
+      - sent
+      - inactive
+      - correction_number_reqquired
+      - sent_inactive
+    SubmissionList:
+      description: A list of form submissions
+      type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items_per_page
+      - items
+      properties:
+        count:
+          description: Number of items in the response
+          type: integer
+          example: 10
+        page:
+          description: Current page number
+          type: integer
+          example: 1
+        total_pages:
+          description: Total number of pages available
+          type: integer
+          example: 1
+        items_per_page:
+          description: Maximum number of item per page
+          type: integer
+          example: 10
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Submission'
   responses:
-    PermissionError:
-      description: Permission error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
     ErrorResponseInvalidRequest:
       description: Invalid request.
       content:
@@ -630,21 +678,24 @@ components:
           example:
             code: 404
             message: Form Submission not found.
-  parameters:
-    page:
-      name: page
-      description: Filter by page number. If not specified will default to 1
-      in: query
-      schema:
-        type: integer
-        default: 1
-    count:
-      name: count
-      description: Number of items per page. If not specified will default to 100
-      in: query
-      schema:
-        type: integer
-        default: 100
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    PermissionError:
+      description: Permission error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
   securitySchemes:
     basicAuth:
       type: http

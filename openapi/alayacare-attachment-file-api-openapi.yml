@@ -2,7 +2,25 @@ openapi: 3.2.0
 info:
   title: External Employee Attachment File API
   version: 1.0.8
-  description: "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- employee_id\n- contact_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n- external_contact_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format with timezone data\n\n**Employee Status Considerations**\n- When updating the `status` of an employee to `terminated`, it is possible to add a `comment`. This `comment` is saved as an Employee Note with a `note_type` of type `terminated`.\n- Updating the `status` of an employee will have repercussions in the AlayaCare application. Please refer to this link for more information: \n  https://alayacare.zendesk.com/hc/en-us/articles/360020774691\n"
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - employee_id
+
+    - contact_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+    - external_contact_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -33,11 +51,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileNotFoundSchema'
+      operationId: getEmployeesByEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
     post:
       tags:
       - Attachment File
       summary: Upload a file
-      description: "Upload a file at the `path` location and create the underlying directory structure if it doesn't exist already.\n\n`path` **cannot** end with `/` in order to create a file based on the request body.\n\n**Note:** This consumes `multipart form-data` as defined in the parameters below. \n\n**Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.\n"
+      description: 'Upload a file at the `path` location and create the underlying directory structure if it doesn''t exist already.
+
+
+        `path` **cannot** end with `/` in order to create a file based on the request body.
+
+
+        **Note:** This consumes `multipart form-data` as defined in the parameters below.
+
+
+        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.'
       responses:
         201:
           $ref: '#/components/responses/SuccessResponseFileUpload'
@@ -57,6 +86,8 @@ paths:
                   type: string
                   description: The file to upload
                   format: binary
+      operationId: postEmployeesByEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
     put:
       tags:
       - Attachment File
@@ -80,9 +111,7 @@ paths:
         - `dir2/child2/file2.txt`
 
 
-        and we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must be specified in the payload and must be: `dir2/child2/file1.txt`. The `source` URL request has to be `dir1/child1/file1.txt`.
-
-        '
+        and we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must be specified in the payload and must be: `dir2/child2/file1.txt`. The `source` URL request has to be `dir1/child1/file1.txt`.'
       responses:
         200:
           $ref: '#/components/responses/SuccessResponseAttachmentFileUpdate'
@@ -103,6 +132,8 @@ paths:
               $ref: '#/components/schemas/AttachmentAction'
         description: Object with fields to be updated
         required: true
+      operationId: putEmployeesByEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
     delete:
       tags:
       - Attachment File
@@ -117,6 +148,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileNotFoundSchema'
+      operationId: deleteEmployeesByEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
   /employees/by_id/{external_employee_id}/attachments/{file_path}:
     parameters:
     - name: external_employee_id
@@ -142,6 +175,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileNotFoundSchema'
+      operationId: getEmployeesByIdByExternalEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
     post:
       tags:
       - Attachment File
@@ -155,9 +190,7 @@ paths:
         **Note:** This consumes `multipart form-data` as defined in the parameters below.
 
 
-        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.
-
-        '
+        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file and the file must be attached as well.'
       responses:
         201:
           $ref: '#/components/responses/SuccessResponseFileUpload'
@@ -177,6 +210,8 @@ paths:
                   type: string
                   description: The file to upload
                   format: binary
+      operationId: postEmployeesByIdByExternalEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
     put:
       tags:
       - Attachment File
@@ -200,9 +235,7 @@ paths:
         - `dir2/child2/file2.txt`
 
 
-        and we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must be specified in the payload and must be: `dir2/child2/file1.txt`. The `source` URL request has to be `dir1/child1/file1.txt`.
-
-        '
+        and we want to copy `file1.txt` inside `dir2/child2/` (the goal is to have `dir2/child2/file1.txt`), the action to copy must be specified in the payload and must be: `dir2/child2/file1.txt`. The `source` URL request has to be `dir1/child1/file1.txt`.'
       responses:
         200:
           $ref: '#/components/responses/SuccessResponseAttachmentFileUpdate'
@@ -223,6 +256,8 @@ paths:
               $ref: '#/components/schemas/AttachmentAction'
         description: Object with fields to be updated
         required: true
+      operationId: putEmployeesByIdByExternalEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
     delete:
       tags:
       - Attachment File
@@ -237,21 +272,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileNotFoundSchema'
+      operationId: deleteEmployeesByIdByExternalEmployeeIdAttachmentsByFilePath
+      x-operation-id-source: derived
 components:
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     AttachmentAction:
       description: Attachment actions
       type: object
@@ -277,22 +301,20 @@ components:
           type: string
           description: Detail on the error
           example: File "/path/file.txt" not found
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
   responses:
-    ErrorResponseFileAlreadyExists:
-      description: File already exists.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 409
-              message:
-                type: string
-                description: Detail on the error
-                example: File "/path/file.txt" already exists
     ErrorResponseEmployeeNotFound:
       description: Employee not found
       content:
@@ -302,21 +324,6 @@ components:
           example:
             code: 404
             message: Employee not found.
-    ErrorResponseInvalidFileName:
-      description: The file name contains unsupported characters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Invalid file name
     SuccessResponseAttachmentFileUpdate:
       description: File copied, moved or renamed
       content:
@@ -349,6 +356,36 @@ components:
                 type: string
                 description: Detail on the error
                 example: Could not find a file to upload
+    ErrorResponseInvalidFileName:
+      description: The file name contains unsupported characters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Invalid file name
+    ErrorResponseFileAlreadyExists:
+      description: File already exists.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 409
+              message:
+                type: string
+                description: Detail on the error
+                example: File "/path/file.txt" already exists
     SuccessResponseFileUpload:
       description: File uploaded
       content:

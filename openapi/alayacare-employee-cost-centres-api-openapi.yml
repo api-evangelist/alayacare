@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -75,6 +73,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseCostCentreDisabled'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: postCostCentresByCostCentreIdEmployees
+      x-operation-id-source: derived
   /cost_centres/{cost_centre_id}/employees/{employee_id}:
     parameters:
     - in: path
@@ -102,6 +102,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseEmployeeCostCentreNotFound'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: deleteCostCentresByCostCentreIdEmployeesByEmployeeId
+      x-operation-id-source: derived
   /cost_centres/{cost_centre_id}/employees/by_id/{employee_external_id}:
     parameters:
     - in: path
@@ -128,8 +130,58 @@ paths:
           $ref: '#/components/responses/ErrorResponseEmployeeCostCentreNotFound'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: deleteCostCentresByCostCentreIdEmployeesByIdByEmployeeExternalId
+      x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseCostCentreDisabled:
+      description: The cost centre referenced by cost_centre_id is disabled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Cost centre is disabled
+    ErrorResponseEmployeeCostCentreNotFound:
+      description: The employee with the referenced cost_centre_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Employee with ID 1010 and Cost Centre ID 10 not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
+    CostCentreEmployeeResponse:
+      description: Employee to cost centre link
+      type: object
+      properties:
+        employee_id:
+          type: integer
+          description: Employee ID
+          example: 1010
+          minimum: 1
+        cost_centre_id:
+          type: integer
+          description: Cost centre ID
+          example: 10
+          minimum: 1
     ErrorResponse:
       description: Error response
       type: object
@@ -157,54 +209,6 @@ components:
           type: string
           description: Employee external ID
           example: john.1010
-    CostCentreEmployeeResponse:
-      description: Employee to cost centre link
-      type: object
-      properties:
-        employee_id:
-          type: integer
-          description: Employee ID
-          example: 1010
-          minimum: 1
-        cost_centre_id:
-          type: integer
-          description: Cost centre ID
-          example: 10
-          minimum: 1
-  responses:
-    ErrorResponseEmployeeCostCentreNotFound:
-      description: The employee with the referenced cost_centre_id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Employee with ID 1010 and Cost Centre ID 10 not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
-    ErrorResponseCostCentreDisabled:
-      description: The cost centre referenced by cost_centre_id is disabled
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Cost centre is disabled
   securitySchemes:
     basic_auth:
       type: http

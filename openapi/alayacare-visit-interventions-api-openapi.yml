@@ -19,31 +19,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
-
-
-    **AlayaCare IDs:**
-
-    The following terms are used to reference ids that identify resources in AlayaCare:
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-    **Remarks**
-
-    All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -94,6 +70,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseCareplanFeatureFlagState'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getVisitsByAlayacareVisitIdInterventions
+      x-operation-id-source: derived
     put:
       tags:
       - Visit interventions
@@ -102,9 +80,7 @@ paths:
 
         - Only active `interventions` on the patient active Careplan can be added
 
-        - Only the admin user can update the visit interventions when the work session is not open.
-
-        '
+        - Only the admin user can update the visit interventions when the work session is not open.'
       parameters:
       - name: alayacare_visit_id
         description: The ID of the visit
@@ -132,6 +108,8 @@ paths:
               $ref: '#/components/schemas/VisitInterventionsUpdate'
         description: List of interventions to apply to a visit
         required: true
+      operationId: putVisitsByAlayacareVisitIdInterventions
+      x-operation-id-source: derived
   /visits/{alayacare_visit_id}/interventions/ivr:
     put:
       tags:
@@ -145,9 +123,7 @@ paths:
 
         - Position should be always 0. It does not cover the interventions tries.
 
-        - The Employee ''?completions_by={employee_internal_id} must be clocked-in to the visit.
-
-        '
+        - The Employee ''?completions_by={employee_internal_id} must be clocked-in to the visit.'
       parameters:
       - name: alayacare_visit_id
         description: The ID of the visit
@@ -191,6 +167,8 @@ paths:
               $ref: '#/components/schemas/IvrVisitInterventions'
         description: List of interventions to apply to a visit
         required: true
+      operationId: putVisitsByAlayacareVisitIdInterventionsIvr
+      x-operation-id-source: derived
   /visits/by_id/{visit_id}/interventions:
     get:
       tags:
@@ -234,6 +212,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseCareplanFeatureFlagState'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getVisitsByIdByVisitIdInterventions
+      x-operation-id-source: derived
     put:
       tags:
       - Visit interventions
@@ -242,9 +222,7 @@ paths:
 
         - Only active `interventions` on the patient active careplan can be added
 
-        - Only the admin user can update the visit interventions when the work session is not open..
-
-        '
+        - Only the admin user can update the visit interventions when the work session is not open..'
       parameters:
       - name: visit_id
         description: The ID of the visit
@@ -272,51 +250,19 @@ paths:
               $ref: '#/components/schemas/VisitInterventionsUpdate'
         description: List of interventions to apply to a visit
         required: true
+      operationId: putVisitsByIdByVisitIdInterventions
+      x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required due to feature flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
+    VisitInterventionsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of visits
       properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitInterventions'
     VisitInterventions:
       description: A list of visit interventions
       type: object
@@ -393,6 +339,29 @@ components:
           description: Alayacare ID of the visit
           type: integer
           example: 2384
+    VisitInterventionsUpdate:
+      description: Interventions
+      type: object
+      properties:
+        interventions:
+          type: string
+          description: list of visit intervention ids
+          example: '[1, 2, 3, 4]'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     IvrVisitInterventions:
       description: A list of visit interventions
       type: object
@@ -430,6 +399,31 @@ components:
           - string
           - 'null'
           example: uuid
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     Intervention:
       type: object
       properties:
@@ -474,48 +468,34 @@ components:
           type: string
           description: One of the types defined in the setting "Care Documentation > Care Plan Intervention Types"
           example: Nursing
-    VisitInterventionsUpdate:
-      description: Interventions
-      type: object
-      properties:
-        interventions:
-          type: string
-          description: list of visit intervention ids
-          example: '[1, 2, 3, 4]'
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    VisitInterventionsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of visits
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisitInterventions'
+  responses:
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required due to feature flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

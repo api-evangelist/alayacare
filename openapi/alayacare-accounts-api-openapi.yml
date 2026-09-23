@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -116,6 +114,8 @@ paths:
                 $ref: '#/components/schemas/AccountList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getAccounts
+      x-operation-id-source: derived
     post:
       tags:
       - Accounts
@@ -158,6 +158,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '403':
           $ref: '#/components/responses/ErrorResponseAccessDenied'
+      operationId: postAccounts
+      x-operation-id-source: derived
   /accounts/{id}:
     get:
       tags:
@@ -182,6 +184,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '403':
           $ref: '#/components/responses/ErrorResponseAccessDenied'
+      operationId: getAccountsById
+      x-operation-id-source: derived
     put:
       tags:
       - Accounts
@@ -222,23 +226,32 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '403':
           $ref: '#/components/responses/ErrorResponseAccessDenied'
+      operationId: putAccountsById
+      x-operation-id-source: derived
 components:
   schemas:
-    ErrorResponse:
-      description: Error response
+    BranchSummary:
+      description: Branch summary
       type: object
       properties:
-        code:
+        id:
           type: integer
-          example: 400
-          description: Response code
-        message:
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
           type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+          description: Name of the branch
+          example: Headquarters
+    AccountList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of accounts
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
     Account:
       description: Account details
       type: object
@@ -280,28 +293,21 @@ components:
           - equity
           - revenue
           - expense
-    AccountList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of accounts
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
-    BranchSummary:
-      description: Branch summary
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        id:
+        code:
           type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
+          example: 400
+          description: Response code
+        message:
           type: string
-          description: Name of the branch
-          example: Headquarters
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object

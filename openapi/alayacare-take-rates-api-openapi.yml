@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Get a collection of take rates specific to demand organizations.
-
-        '
+        Get a collection of take rates specific to demand organizations.'
       parameters:
       - in: query
         name: demand_persona_id
@@ -57,6 +55,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin take rates demand take rates
+      x-summary-source: derived
+      operationId: getV1SysAdminTakeRatesDemandTakeRates
+      x-operation-id-source: derived
   /v1/sys_admin/take_rates/demand_take_rates/{demand_persona_id}:
     parameters:
     - in: path
@@ -84,9 +86,7 @@ paths:
         and apply the next available take rate (e.g., the regional take rate).
 
 
-        A take rate of 0 is a take rate of 0%.
-
-        '
+        A take rate of 0 is a take rate of 0%.'
       requestBody:
         required: true
         content:
@@ -102,6 +102,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create sys admin take rates demand take rates by demand persona id
+      x-summary-source: derived
+      operationId: postV1SysAdminTakeRatesDemandTakeRatesByDemandPersonaId
+      x-operation-id-source: derived
   /v1/sys_admin/take_rates/regional_take_rate:
     get:
       tags:
@@ -113,9 +117,7 @@ paths:
 
         # Description
 
-        Get a regional take rate.
-
-        '
+        Get a regional take rate.'
       responses:
         200:
           description: Successfully returned regional take rate
@@ -129,6 +131,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin take rates regional take rate
+      x-summary-source: derived
+      operationId: getV1SysAdminTakeRatesRegionalTakeRate
+      x-operation-id-source: derived
     post:
       tags:
       - take rates
@@ -139,9 +145,7 @@ paths:
 
         # Description
 
-        Set the regional take rate.
-
-        '
+        Set the regional take rate.'
       requestBody:
         required: true
         content:
@@ -161,23 +165,19 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create sys admin take rates regional take rate
+      x-summary-source: derived
+      operationId: postV1SysAdminTakeRatesRegionalTakeRate
+      x-operation-id-source: derived
 components:
   schemas:
-    DemandTakeRateCreateRequest:
+    RegionalTakeRateDetailResponse:
       type: object
       properties:
         rate:
           $ref: '#/components/schemas/TakeRateCore'
-    TakeRateCore:
-      type: number
-      format: decimal
-      minimum: 0
-      maximum: 1
-      description: 'A percentage of the offer price set by demand, represented by a fraction
-
-        between 0 and 1. For example, a regional take rate of 0.1 is 10%.
-
-        '
+      required:
+      - rate
     DemandTakeRateCore:
       type: object
       properties:
@@ -189,20 +189,6 @@ components:
       required:
       - demand_persona_id
       - rate
-    DemandTakeRateCollectionResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/DemandTakeRateCore'
-    RegionalTakeRateDetailResponse:
-      type: object
-      properties:
-        rate:
-          $ref: '#/components/schemas/TakeRateCore'
-      required:
-      - rate
     RegionalTakeRateUpdateRequest:
       type: object
       properties:
@@ -210,6 +196,28 @@ components:
           $ref: '#/components/schemas/TakeRateCore'
       required:
       - rate
+    TakeRateCore:
+      type: number
+      format: decimal
+      minimum: 0
+      maximum: 1
+      description: 'A percentage of the offer price set by demand, represented by a fraction
+
+        between 0 and 1. For example, a regional take rate of 0.1 is 10%.
+
+        '
+    DemandTakeRateCreateRequest:
+      type: object
+      properties:
+        rate:
+          $ref: '#/components/schemas/TakeRateCore'
+    DemandTakeRateCollectionResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DemandTakeRateCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

@@ -19,31 +19,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
-
-
-    **AlayaCare IDs:**
-
-    The following terms are used to reference ids that identify resources in AlayaCare:
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-    **Remarks**
-
-    All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -76,35 +52,9 @@ paths:
           $ref: '#/components/responses/ErrorResponseUnauthorized'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getVisitVerificationVisitsByAlayacareVisitId
+      x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseUnauthorized:
-      description: Authorization required due to release flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
     VisitVerificationDetails:
       description: Extended Visit Verification information
@@ -219,6 +169,34 @@ components:
           type: string
           example: Client overlapping work sessions
           description: Exception type name
+  responses:
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseUnauthorized:
+      description: Authorization required due to release flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
   securitySchemes:
     basic_auth:
       type: http

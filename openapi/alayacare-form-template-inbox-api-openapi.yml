@@ -40,9 +40,7 @@ paths:
 
         # Description
 
-        Returns the latest form version available for a given schema_id within a demand organization.
-
-        '
+        Returns the latest form version available for a given schema_id within a demand organization.'
       responses:
         200:
           description: Successfully retrieved the form template.
@@ -56,24 +54,11 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get inbox form templates by demand persona id by demand persona id by schema id…
+      x-summary-source: derived
+      operationId: getV1InboxFormTemplatesByDemandPersonaIdByDemandPersonaIdBySchemaIdBySchemaIdLatest
+      x-operation-id-source: derived
 components:
-  parameters:
-    FormSchemaIdPathParam:
-      in: path
-      name: schema_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: Schema id of a form.
-    DemandPersonaIdPathParam:
-      in: path
-      name: demand_persona_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a demand organization.
   schemas:
     FormTemplateCore:
       type: object
@@ -129,14 +114,6 @@ components:
       - schema_id
       - schema_version
       - visit_link_required
-    InboxFormTemplateFieldResponse:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateFieldCore'
-      - type: object
-        properties:
-          field_id:
-            type: string
-            format: uuid
     FormTemplateFieldCore:
       type: object
       properties:
@@ -182,6 +159,31 @@ components:
           demand_persona_id:
             type: string
             format: uuid
+    InboxFormTemplateFieldResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateFieldCore'
+      - type: object
+        properties:
+          field_id:
+            type: string
+            format: uuid
+  parameters:
+    FormSchemaIdPathParam:
+      in: path
+      name: schema_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Schema id of a form.
+    DemandPersonaIdPathParam:
+      in: path
+      name: demand_persona_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a demand organization.
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

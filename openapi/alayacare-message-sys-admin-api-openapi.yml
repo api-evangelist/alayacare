@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Get a paginated collection of messages for a sequence as a system admin.
-
-        '
+        Get a paginated collection of messages for a sequence as a system admin.'
       parameters:
       - $ref: '#/components/parameters/SequenceIdQueryParam'
       - $ref: '#/components/parameters/MessageSenderTypeQueryParam'
@@ -65,6 +63,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin messages
+      x-summary-source: derived
+      operationId: getV1SysAdminMessages
+      x-operation-id-source: derived
   /v1/sys_admin/messages/by_file_id/{file_id}:
     parameters:
     - $ref: '#/components/parameters/FileIdPathParam'
@@ -78,9 +80,7 @@ paths:
 
         # Description
 
-        Get a message by file ID.
-
-        '
+        Get a message by file ID.'
       responses:
         200:
           description: Successfully returned a message.
@@ -94,22 +94,53 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin messages by file id by file id
+      x-summary-source: derived
+      operationId: getV1SysAdminMessagesByFileIdByFileId
+      x-operation-id-source: derived
 components:
+  parameters:
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    SequenceIdQueryParam:
+      in: query
+      name: sequence_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    MessageCategoryQueryParam:
+      in: query
+      name: category
+      schema:
+        $ref: '#/components/schemas/MessageCategoryCore'
+    FileIdPathParam:
+      in: path
+      name: file_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a file.
+    MessageSenderTypeQueryParam:
+      in: query
+      name: sender_type
+      schema:
+        $ref: '#/components/schemas/MessageSenderTypeCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
   schemas:
-    MessageSenderTypeCore:
-      type: string
-      enum:
-      - demand
-      - supply
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    MessageCategoryCore:
-      type: string
-      enum:
-      - client_attachment
-      - comment
     SysAdminMessageDetailResponse:
       properties:
         message:
@@ -188,6 +219,35 @@ components:
       - message
       - sender
       - recipient
+    SysAdminMessagePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminMessageDetailResponse'
+        required:
+        - items
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    MessageCategoryCore:
+      type: string
+      enum:
+      - client_attachment
+      - comment
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    MessageSenderTypeCore:
+      type: string
+      enum:
+      - demand
+      - supply
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -213,62 +273,6 @@ components:
       - asc
       - desc
       default: desc
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    SysAdminMessagePageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminMessageDetailResponse'
-        required:
-        - items
-  parameters:
-    MessageSenderTypeQueryParam:
-      in: query
-      name: sender_type
-      schema:
-        $ref: '#/components/schemas/MessageSenderTypeCore'
-    MessageCategoryQueryParam:
-      in: query
-      name: category
-      schema:
-        $ref: '#/components/schemas/MessageCategoryCore'
-    FileIdPathParam:
-      in: path
-      name: file_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a file.
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    SequenceIdQueryParam:
-      in: query
-      name: sequence_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

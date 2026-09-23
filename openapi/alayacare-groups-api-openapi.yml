@@ -39,6 +39,37 @@ paths:
         server:
           default: https://demo3.alayacare.ca
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    branch_id:
+      description: Filter by branch id.
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+    branch_id_2:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
   schemas:
     GroupDetail:
       description: Patient group.
@@ -122,19 +153,6 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/GroupDetail'
-    ErrorResponse_2:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     GroupListItem:
       allOf:
       - $ref: '#/components/schemas/Group'
@@ -143,28 +161,6 @@ components:
       properties:
         branch:
           $ref: '#/components/schemas/BranchSummary'
-    GroupList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList_2'
-      description: Paginated list of groups
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupListItem'
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     Group:
       description: AlayaCare group.
       type: object
@@ -180,6 +176,31 @@ components:
       required:
       - id
       - name
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    ErrorResponse_2:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList_2:
       description: Base model of all paginated lists
       type: object
@@ -201,37 +222,16 @@ components:
       - page
       - total_pages
       - items
-  parameters:
-    branch_id:
-      description: Filter by branch id.
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    branch_id_2:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
+    GroupList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList_2'
+      description: Paginated list of groups
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupListItem'
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

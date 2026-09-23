@@ -2,7 +2,38 @@ openapi: 3.2.0
 info:
   version: 1.0.4
   title: External Clinical Care Plan Interventions API
-  description: "External Clinical API\n\n**Internal IDs**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- created_by\n- client_id\n- risk_id\n- medication_id\n- admin_id\n- vital_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_id\n- external_client_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n\n**Progress Notes**\n  API for creating and viewing client progress notes.\n\n**Risks**\nAPI for creating, viewing, updating, and removing client risks.\n\n**Medication**\n  API for creating, editing, and viewing medications and medication administrations.\n\n**Vitals**\n  API for creating, editing and viewing vitals.\n\nEach individual vital type is identified by a `name`. Dependent vitals are given the same `group`. Currently this is only used to link names `pressure_min` and `pressure_max` with the group `blood_pressure`, as these values should be recorded together.\n\nThe metadata of the vitals includes the configuration and thresholds, the default and available units, and any other required options for each vital type.\n"
+  description: 'External Clinical API
+
+
+    **Internal IDs**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - created_by
+
+    - client_id
+
+    - risk_id
+
+    - medication_id
+
+    - admin_id
+
+    - vital_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_id
+
+    - external_client_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 tags:
@@ -20,9 +51,7 @@ paths:
       tags:
       - Care Plan Interventions
       summary: Get a list of a client's care plan interventions using AlayaCare client ID
-      description: '- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.
-
-        '
+      description: '- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.'
       parameters:
       - $ref: '#/components/parameters/service_id'
       - $ref: '#/components/parameters/external_service_id'
@@ -51,6 +80,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseCareplanFeatureFlagState'
         404:
           $ref: '#/components/responses/ClientNotFound'
+      operationId: getInterventionsClientByClientId
+      x-operation-id-source: derived
   /interventions/client/by_id/{external_client_id}:
     parameters:
     - name: external_client_id
@@ -63,9 +94,7 @@ paths:
       tags:
       - Care Plan Interventions
       summary: Get a list of a client's interventions using external client ID
-      description: '- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.
-
-        '
+      description: '- `service_id` and `external_service_id` are mutually exclusive, specifying both is an invalid request.'
       parameters:
       - $ref: '#/components/parameters/service_id'
       - $ref: '#/components/parameters/external_service_id'
@@ -94,8 +123,48 @@ paths:
           $ref: '#/components/responses/ErrorResponseCareplanFeatureFlagState'
         404:
           $ref: '#/components/responses/ClientNotFound'
+      operationId: getInterventionsClientByIdByExternalClientId
+      x-operation-id-source: derived
 components:
+  parameters:
+    service_id:
+      name: service_id
+      in: query
+      required: false
+      description: Filter by alayacare service ID
+      schema:
+        type: integer
+    external_service_id:
+      name: external_service_id
+      in: query
+      required: false
+      description: Filter by external service ID
+      schema:
+        type: string
   schemas:
+    InterventionService:
+      description: Intervention service
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_external_id_1
+    InterventionList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of interventions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intervention'
     ErrorResponse:
       description: Error response
       type: object
@@ -109,15 +178,31 @@ components:
       required:
       - code
       - message
-    InterventionList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of interventions
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
       properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Intervention'
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     Intervention:
       type: object
       description: Care plan intervention
@@ -154,64 +239,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InterventionService'
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    InterventionService:
-      description: Intervention service
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_external_id_1
   responses:
-    ErrorResponseAdlsInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: service_id and external_service_id are mutually exclusive
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
     ClientNotFound:
       description: Not found.
       content:
@@ -230,21 +258,24 @@ components:
           example:
             code: 403
             message: You do not have the required permissions to perform this action.
-  parameters:
-    external_service_id:
-      name: external_service_id
-      in: query
-      required: false
-      description: Filter by external service ID
-      schema:
-        type: string
-    service_id:
-      name: service_id
-      in: query
-      required: false
-      description: Filter by alayacare service ID
-      schema:
-        type: integer
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    ErrorResponseAdlsInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: service_id and external_service_id are mutually exclusive
   securitySchemes:
     basic_auth:
       type: http

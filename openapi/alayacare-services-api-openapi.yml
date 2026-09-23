@@ -23,43 +23,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique.
-
-
-    No other assumptions are made regarding their format; they are treated as
-
-    strings.
-
-
-
-    **AlayaCare IDs:**
-
-
-    The following terms are used to reference ids that identify resources in
-
-    AlayaCare:
-
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-
-    **Remarks**
-
-
-    - All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 - url: https://homecare.uat.alayacare.ca/ext/api/v2/scheduler
@@ -80,9 +44,7 @@ paths:
 
         - `employee_id` and `alayacare_employee_id` are mutually exclusive, specifying both is an invalid request.
 
-        - `funder_id` and `external_funder_id` are mutually exclusive, specifying both is an invalid request.
-
-        '
+        - `funder_id` and `external_funder_id` are mutually exclusive, specifying both is an invalid request.'
       parameters:
       - $ref: '#/components/parameters/client_id'
       - $ref: '#/components/parameters/alayacare_client_id'
@@ -136,6 +98,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseServiceInvalidRequest'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getServices
+      x-operation-id-source: derived
     post:
       tags:
       - Services
@@ -335,6 +299,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '409':
           $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidEmployeeIds'
+      operationId: postServices
+      x-operation-id-source: derived
   /services/{alayacare_service_id}:
     parameters:
     - $ref: '#/components/parameters/alayacare_service_id'
@@ -359,6 +325,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseServiceInvalidRequest'
         '404':
           $ref: '#/components/responses/ErrorResponseServiceNotFound'
+      operationId: getServicesByAlayacareServiceId
+      x-operation-id-source: derived
     put:
       tags:
       - Services
@@ -371,9 +339,7 @@ paths:
 
         - The branch of the employee must match the branch of the client, incompatible branches are an invalid request.
 
-        - Reports and forms can be updated through the `reports` field.
-
-        '
+        - Reports and forms can be updated through the `reports` field.'
       requestBody:
         description: Service data in JSON format
         required: true
@@ -392,6 +358,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseServiceNotFound'
         '409':
           $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidEmployeeIds'
+      operationId: putServicesByAlayacareServiceId
+      x-operation-id-source: derived
   /services/by_id/{service_id}:
     parameters:
     - $ref: '#/components/parameters/service_id'
@@ -416,6 +384,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseServiceInvalidRequest'
         '404':
           $ref: '#/components/responses/ErrorResponseServiceNotFound'
+      operationId: getServicesByIdByServiceId
+      x-operation-id-source: derived
     put:
       tags:
       - Services
@@ -428,9 +398,7 @@ paths:
 
         - The branch of the employee must match the branch of the client, incompatible branches are an invalid request.
 
-        - Reports and forms can be updated through the `reports` field.
-
-        '
+        - Reports and forms can be updated through the `reports` field.'
       requestBody:
         description: Service data in JSON format
         required: true
@@ -449,31 +417,371 @@ paths:
           $ref: '#/components/responses/ErrorResponseServiceNotFound'
         '409':
           $ref: '#/components/responses/ErrorResponseServiceUpdateInvalidEmployeeIds'
+      operationId: putServicesByIdByServiceId
+      x-operation-id-source: derived
 components:
   schemas:
-    ErrorResponse:
-      description: Error response
+    ServiceRelationSchema:
       type: object
       properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
+        skills:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: 1
+                description: The id of a skill
+                example: 5
+            required:
+            - id
+    ServiceUpdate:
+      description: AlayaCare service entity data for updating
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/ServiceProfile'
+        provider_details:
+          $ref: '#/components/schemas/ServiceProviderDetails'
+        service_id:
           type: string
-          example: Invalid request
-          description: Detailed error message
+          description: External service id
+          example: sor_external_service_id_1
+        service_instructions:
+          description: Service instructions
+          type: string
+          example: Call in the morning to confirm each visit
+          x-nullable: true
+        primary_employee_id:
+          description: The ID of the primary employee assigned to the service
+          type: integer
+          minimum: 1
+          example: 100
+          x-nullable: true
+        primary_employee_external_id:
+          description: The external ID of the primary employee assigned to the service
+          type: string
+          example: sor_employee_id_1
+          x-nullable: true
+        reports:
+          type: array
+          description: List of Report or Form IDs to be attached in the service.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: 1
+                description: Report ID
+                example: 1
+              is_required:
+                type: boolean
+                description: Whether or not the report or form is required
+                example: true
+        service_accounting:
+          $ref: '#/components/schemas/ServiceAccountingSchema'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
       required:
-      - code
-      - message
-    ServiceStatus:
-      type: string
-      description: Current service status.
-      enum:
-      - active
-      - on_hold
-      - waiting_list
-      - discharged
+      - count
+      - page
+      - total_pages
+      - items
+    ProgramCreationDataSchema:
+      type: object
+      properties:
+        billing_cycle:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          minimum: 1
+          description: "The billing cylce for the program.\n\nValid values are:\n 1 - ONE_WEEK\n 2 - TWO_WEEKS\n 3 - FOUR_WEEKS\n 4 - CALENDAR_MONTH\n 5 - DAILY\n"
+          example: 1
+        is_guarantor_taxable:
+          type: boolean
+          description: Whether or not the guarantor is taxable
+        office_identification_set_id:
+          type: integer
+          minimum: 1
+          example: 1
+    ServiceAccountingSchema:
+      type: object
+      properties:
+        billable_using:
+          type:
+          - string
+          - 'null'
+          enum:
+          - null
+          - multiple_programs
+          - multiple_bill_codes
+          example: multiple_bill_codes
+        rating_rule_type:
+          type: string
+          enum:
+          - time_increment
+          - percentage
+          example: time_increment
+        service_id:
+          type: integer
+          minimum: 1
+          example: 1
+        bill_rate_id:
+          type: integer
+          minimum: 1
+          example: 1
+        is_taxable:
+          type: boolean
+          example: true
+        non_covered_amt:
+          type: boolean
+          default: false
+          example: true
+        rating_rules:
+          type: array
+          items:
+            type: object
+            properties:
+              program_id:
+                type: integer
+                minimum: 1
+              cost_centre_id:
+                type: integer
+                minimum: 1
+              funder_id:
+                type: integer
+                minimum: 1
+              minutes:
+                type: integer
+              is_default:
+                type: boolean
+              bill_code_id:
+                type: integer
+                minimum: 1
+              rank:
+                type: integer
+                minimum: 1
+              percent:
+                type: integer
+                minimum: 1
+              is_taxalbe:
+                type: boolean
+    ServiceList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of services
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+    ServiceDetails:
+      type: object
+      required:
+      - alayacare_service_id
+      - service_name
+      - service_status
+      properties:
+        alayacare_service_code_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare service code ID
+          example: 1
+        alayacare_service_id:
+          type: string
+          description: Alaycare service ID
+          example: 347
+        cost_centre:
+          $ref: '#/components/schemas/CostCentre'
+        employee:
+          $ref: '#/components/schemas/EmployeeDetails'
+        funders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceFunderDetails'
+        patient:
+          $ref: '#/components/schemas/ClientDetails'
+        profile:
+          $ref: '#/components/schemas/ServiceProfile'
+        provider_details:
+          $ref: '#/components/schemas/ServiceProviderDetails'
+        service_code_name:
+          type: string
+          description: Service code defined for service.
+          example: OTVISIT
+        service_id:
+          type: string
+          description: External service ID
+          example: 347
+          x-nullable: true
+        service_instructions:
+          description: Service instructions
+          type: string
+          example: Call in the morning to confirm each visit
+          x-nullable: true
+        service_name:
+          type: string
+          description: Name of client's service
+          example: OT Home Visit
+        service_start_date:
+          type: string
+          description: Date the service starts
+          example: '2021-03-19'
+        service_status:
+          $ref: '#/components/schemas/ServiceStatus'
+        start_date:
+          type: string
+          description: Service start datetime
+          example: '2018-01-01'
+        status_end_date:
+          type: string
+          description: The current service status end date
+          example: '2021-03-21T13:30:00+00:00'
+        status_reason:
+          type: string
+          description: The reason of the service status
+          example: Hospitalized
+        status_start_date:
+          type: string
+          description: The current service status date
+          example: '2021-03-19T13:30:00+00:00'
+        use_client_address:
+          type: boolean
+          description: whether or not to use the client address
+          example: true
+    ServiceProviderDetails:
+      description: 'Collection of key/value pairs representing service details for the Service Provider.
+
+        All values are treated as strings.
+
+        Corresponds to the "Latest Referral Info" section of the service on the AlayaCare web application.
+
+        '
+      type: object
+      properties:
+        authorization_schedule_type_name:
+          type: string
+          description: Summary of provider's authorization for service
+          example: Patient is currently available for service
+        billing_code_1:
+          type: string
+          description: Bill code for the service. Additional bill codes will result in incrementing keys.
+          example: 1000 - Home nursing visit
+        brn:
+          type: string
+          description: Billing Reference Number of the service
+          example: '12345'
+        client_guid:
+          type: string
+          description: GUID of the client in funder's system of record
+          example: 11aaa11-22b2-c333-44d4-55555555e555
+        contract_code:
+          type: string
+          description: Provider's LHIN contract code
+          example: ALAYA-HOM-HME-V-NU
+        end_date_1:
+          type: string
+          description: Service end date. Subsequent frequency updates will result in incrementing keys.
+          example: '2018-01-31'
+        focus_intervention:
+          type: string
+          description: Summary of focus of intervention
+          example: Client requires nursing for wound care management.
+        geographic_area:
+          type: string
+          description: Geographic indicator of service area, e.g. postal code
+          example: H4C
+        notification_notes:
+          type: string
+          description: Provider notification notes
+          example: Scheduled 4 weeks of care
+        offer_id:
+          type: string
+          description: ID of the service offer
+          example: '12345'
+        organization_code:
+          type: string
+          description: Service provider's organization code
+          example: 10ALAYA
+        patient_available_date:
+          type: string
+          description: Date patient is available for service
+          example: '2018-01-31'
+        provider_assignment_id:
+          type: string
+          description: ID of the service provider
+          example: '12345'
+        quantity_of_service_1:
+          type: string
+          description: Quantity of service based on units of service
+          example: '1.00'
+        referral_caseload:
+          type: string
+          description: Client's referral caseload
+          example: ALAYA - MTL - Nursing
+        required_first_visit_date:
+          type: string
+          description: First visit of the service must be scheduled on or before this date
+          example: '2018-01-31'
+        service_assignment_id:
+          type: string
+          description: Unique ID of the service
+          example: 11aaa11-22b2-c333-44d4-55555555e555
+        service_delivery_location_code:
+          type: string
+          description: Code for service delivery location
+          example: Home
+        service_delivery_type:
+          type: string
+          description: Description of the type of service delivery
+          example: Visit nursing home
+        service_plan_goals:
+          type: string
+          description: Summary of service plan goals
+          example: Client will receive wound care
+        service_type_code:
+          type: string
+          description: Code for type of service
+          example: Nursing
+        start_date_1:
+          type: string
+          description: Service start date. Subsequent frequency updates will result in incrementing keys.
+          example: '2018-01-31'
+        summary_1:
+          type: string
+          description: Summary of scheduled service frequency. Subsequent frequency updates will result in incrementing keys.
+          example: 8.00 visit(s), starting 01-Jan-2018 and ending 31-Jan-2018
+        treatment_orders:
+          type: string
+          description: Treatment orders
+          example: Patient requires weekly deliveries of medical supplies
+        unit_of_service_1:
+          type: string
+          description: Unit of service
+          example: Visits
     CostCentre:
       description: Details of a cost centre
       type: object
@@ -496,6 +804,14 @@ components:
           type: string
           description: Cost centre status
           example: enabled
+    ServiceStatus:
+      type: string
+      description: Current service status.
+      enum:
+      - active
+      - on_hold
+      - waiting_list
+      - discharged
     ServiceSchema:
       type: object
       properties:
@@ -662,106 +978,36 @@ components:
           minimum: 1
           description: The ID of the cost centre of the service.
           example: 10
-    ServiceRelationSchema:
-      type: object
-      properties:
-        skills:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                minimum: 1
-                description: The id of a skill
-                example: 5
-            required:
-            - id
-    ServiceCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/ServiceSchema'
-      - $ref: '#/components/schemas/ServiceRelationSchema'
-      properties:
-        service_accounting:
-          $ref: '#/components/schemas/ServiceAccountingSchema'
-        program_creation_data:
-          $ref: '#/components/schemas/ProgramCreationDataSchema'
-      required:
-      - name
-      - client
-      - funding_methodology
-      - funder
-      - service_code_id
-    ServiceUpdate:
-      description: AlayaCare service entity data for updating
-      type: object
-      properties:
-        profile:
-          $ref: '#/components/schemas/ServiceProfile'
-        provider_details:
-          $ref: '#/components/schemas/ServiceProviderDetails'
-        service_id:
-          type: string
-          description: External service id
-          example: sor_external_service_id_1
-        service_instructions:
-          description: Service instructions
-          type: string
-          example: Call in the morning to confirm each visit
-          x-nullable: true
-        primary_employee_id:
-          description: The ID of the primary employee assigned to the service
-          type: integer
-          minimum: 1
-          example: 100
-          x-nullable: true
-        primary_employee_external_id:
-          description: The external ID of the primary employee assigned to the service
-          type: string
-          example: sor_employee_id_1
-          x-nullable: true
-        reports:
-          type: array
-          description: List of Report or Form IDs to be attached in the service.
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                minimum: 1
-                description: Report ID
-                example: 1
-              is_required:
-                type: boolean
-                description: Whether or not the report or form is required
-                example: true
-        service_accounting:
-          $ref: '#/components/schemas/ServiceAccountingSchema'
-    SuccessResponse:
-      description: Success response.
+    ClientDetails:
+      description: Visit client details
       type: object
       properties:
         id:
           type: integer
           minimum: 1
-          description: AlayaCare ID
+          description: AlayaCare client ID
           example: 1001
         external_id:
           type: string
-          description: External ID
-          example: entity_external_id
+          description: External client ID
+          example: sor_client_id_1
+          x-nullable: true
+        profile_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare client profile ID
+          example: 7890
+        full_name:
+          type: string
+          description: Client full name
+          example: John Smith
+        timezone:
+          type: string
+          description: Time Zone name in IANA format (iana.org/time-zones)
+          example: America/Toronto
       required:
       - id
-      - external_id
-    ServiceList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of services
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Service'
+      - full_name
     GuidFunderBreakdownsSchema:
       type: object
       properties:
@@ -793,293 +1039,36 @@ components:
           type: integer
           description: The percentage paid by this funder
           example: 100
-    ServiceProviderDetails:
-      description: 'Collection of key/value pairs representing service details for the Service Provider.
-
-        All values are treated as strings.
-
-        Corresponds to the "Latest Referral Info" section of the service on the AlayaCare web application.
-
-        '
-      type: object
+    ServiceCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/ServiceSchema'
+      - $ref: '#/components/schemas/ServiceRelationSchema'
       properties:
-        authorization_schedule_type_name:
-          type: string
-          description: Summary of provider's authorization for service
-          example: Patient is currently available for service
-        billing_code_1:
-          type: string
-          description: Bill code for the service. Additional bill codes will result in incrementing keys.
-          example: 1000 - Home nursing visit
-        brn:
-          type: string
-          description: Billing Reference Number of the service
-          example: '12345'
-        client_guid:
-          type: string
-          description: GUID of the client in funder's system of record
-          example: 11aaa11-22b2-c333-44d4-55555555e555
-        contract_code:
-          type: string
-          description: Provider's LHIN contract code
-          example: ALAYA-HOM-HME-V-NU
-        end_date_1:
-          type: string
-          description: Service end date. Subsequent frequency updates will result in incrementing keys.
-          example: '2018-01-31'
-        focus_intervention:
-          type: string
-          description: Summary of focus of intervention
-          example: Client requires nursing for wound care management.
-        geographic_area:
-          type: string
-          description: Geographic indicator of service area, e.g. postal code
-          example: H4C
-        notification_notes:
-          type: string
-          description: Provider notification notes
-          example: Scheduled 4 weeks of care
-        offer_id:
-          type: string
-          description: ID of the service offer
-          example: '12345'
-        organization_code:
-          type: string
-          description: Service provider's organization code
-          example: 10ALAYA
-        patient_available_date:
-          type: string
-          description: Date patient is available for service
-          example: '2018-01-31'
-        provider_assignment_id:
-          type: string
-          description: ID of the service provider
-          example: '12345'
-        quantity_of_service_1:
-          type: string
-          description: Quantity of service based on units of service
-          example: '1.00'
-        referral_caseload:
-          type: string
-          description: Client's referral caseload
-          example: ALAYA - MTL - Nursing
-        required_first_visit_date:
-          type: string
-          description: First visit of the service must be scheduled on or before this date
-          example: '2018-01-31'
-        service_assignment_id:
-          type: string
-          description: Unique ID of the service
-          example: 11aaa11-22b2-c333-44d4-55555555e555
-        service_delivery_location_code:
-          type: string
-          description: Code for service delivery location
-          example: Home
-        service_delivery_type:
-          type: string
-          description: Description of the type of service delivery
-          example: Visit nursing home
-        service_plan_goals:
-          type: string
-          description: Summary of service plan goals
-          example: Client will receive wound care
-        service_type_code:
-          type: string
-          description: Code for type of service
-          example: Nursing
-        start_date_1:
-          type: string
-          description: Service start date. Subsequent frequency updates will result in incrementing keys.
-          example: '2018-01-31'
-        summary_1:
-          type: string
-          description: Summary of scheduled service frequency. Subsequent frequency updates will result in incrementing keys.
-          example: 8.00 visit(s), starting 01-Jan-2018 and ending 31-Jan-2018
-        treatment_orders:
-          type: string
-          description: Treatment orders
-          example: Patient requires weekly deliveries of medical supplies
-        unit_of_service_1:
-          type: string
-          description: Unit of service
-          example: Visits
-    ServiceDetails:
-      type: object
+        service_accounting:
+          $ref: '#/components/schemas/ServiceAccountingSchema'
+        program_creation_data:
+          $ref: '#/components/schemas/ProgramCreationDataSchema'
       required:
-      - alayacare_service_id
-      - service_name
-      - service_status
-      properties:
-        alayacare_service_code_id:
-          type: integer
-          minimum: 1
-          description: AlayaCare service code ID
-          example: 1
-        alayacare_service_id:
-          type: string
-          description: Alaycare service ID
-          example: 347
-        cost_centre:
-          $ref: '#/components/schemas/CostCentre'
-        employee:
-          $ref: '#/components/schemas/EmployeeDetails'
-        funders:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceFunderDetails'
-        patient:
-          $ref: '#/components/schemas/ClientDetails'
-        profile:
-          $ref: '#/components/schemas/ServiceProfile'
-        provider_details:
-          $ref: '#/components/schemas/ServiceProviderDetails'
-        service_code_name:
-          type: string
-          description: Service code defined for service.
-          example: OTVISIT
-        service_id:
-          type: string
-          description: External service ID
-          example: 347
-          x-nullable: true
-        service_instructions:
-          description: Service instructions
-          type: string
-          example: Call in the morning to confirm each visit
-          x-nullable: true
-        service_name:
-          type: string
-          description: Name of client's service
-          example: OT Home Visit
-        service_start_date:
-          type: string
-          description: Date the service starts
-          example: '2021-03-19'
-        service_status:
-          $ref: '#/components/schemas/ServiceStatus'
-        start_date:
-          type: string
-          description: Service start datetime
-          example: '2018-01-01'
-        status_end_date:
-          type: string
-          description: The current service status end date
-          example: '2021-03-21T13:30:00+00:00'
-        status_reason:
-          type: string
-          description: The reason of the service status
-          example: Hospitalized
-        status_start_date:
-          type: string
-          description: The current service status date
-          example: '2021-03-19T13:30:00+00:00'
-        use_client_address:
-          type: boolean
-          description: whether or not to use the client address
-          example: true
-    EmployeeDetails:
-      description: Visit employee details
+      - name
+      - client
+      - funding_methodology
+      - funder
+      - service_code_id
+    ErrorResponse:
+      description: Error response
       type: object
-      x-nullable: true
       properties:
-        id:
+        code:
           type: integer
-          minimum: 1
-          description: AlayaCare employee ID
-          example: 1001
-        external_id:
+          example: 400
+          description: Response code
+        message:
           type: string
-          description: External employee ID
-          example: sor_employee_id_1
-          x-nullable: true
-        profile_id:
-          type: integer
-          minimum: 1
-          description: AlayaCare client profile ID
-          example: 7891
-        full_name:
-          type: string
-          description: Employee full name
-          example: Jane Smith
-        email:
-          type: string
-          description: Employee email
-          example: employee_1@workplace.com
-        timezone:
-          type: string
-          description: Time Zone name in IANA format (iana.org/time-zones)
-          example: America/Toronto
+          example: Invalid request
+          description: Detailed error message
       required:
-      - id
-      - full_name
-    ServiceFunderBillingContact:
-      type: object
-      x-nullable: true
-      properties:
-        profile_id:
-          type: integer
-          minimum: 1
-          description: Billing contact profile ID
-          example: 1
-        name:
-          type: string
-          description: Billing contact full name.
-          example: Clark Kent
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    ClientDetails:
-      description: Visit client details
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-          description: AlayaCare client ID
-          example: 1001
-        external_id:
-          type: string
-          description: External client ID
-          example: sor_client_id_1
-          x-nullable: true
-        profile_id:
-          type: integer
-          minimum: 1
-          description: AlayaCare client profile ID
-          example: 7890
-        full_name:
-          type: string
-          description: Client full name
-          example: John Smith
-        timezone:
-          type: string
-          description: Time Zone name in IANA format (iana.org/time-zones)
-          example: America/Toronto
-      required:
-      - id
-      - full_name
+      - code
+      - message
     ServiceProfile:
       description: 'Collection of key/value pairs where keys are existing attributes in the service profile, defined through the AlayaCare web application.
 
@@ -1119,89 +1108,59 @@ components:
         form_context_fields:
           context_field_name_1: context_field_value_1
           context_field_name_2: context_field_value_2
-    ProgramCreationDataSchema:
+    ServiceFunderDetails:
       type: object
       properties:
-        billing_cycle:
-          type: integer
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-          minimum: 1
-          description: "The billing cylce for the program.\n\nValid values are:\n 1 - ONE_WEEK\n 2 - TWO_WEEKS\n 3 - FOUR_WEEKS\n 4 - CALENDAR_MONTH\n 5 - DAILY\n"
-          example: 1
-        is_guarantor_taxable:
-          type: boolean
-          description: Whether or not the guarantor is taxable
-        office_identification_set_id:
+        id:
+          description: AlayaCare funder ID
           type: integer
           minimum: 1
           example: 1
-    ServiceAccountingSchema:
-      type: object
-      properties:
-        billable_using:
-          type:
-          - string
-          - 'null'
-          enum:
-          - null
-          - multiple_programs
-          - multiple_bill_codes
-          example: multiple_bill_codes
-        rating_rule_type:
+        external_id:
+          description: External funder ID
           type: string
-          enum:
-          - time_increment
-          - percentage
-          example: time_increment
-        service_id:
+          example: sor_funder_id_1
+          x-nullable: true
+        name:
+          description: Funder name
+          type: string
+          example: Insurance Company
+        code:
+          description: Funder code
+          type: string
+          example: IC-1
+        organization:
+          description: Organization
+          type: string
+          example: Home Healthcare Agency
+        organization_code:
+          description: Organization code
+          type: string
+          example: HHC-0101
+        percentage:
+          type: integer
+          example: 100
+        billing_contact:
+          $ref: '#/components/schemas/ServiceFunderBillingContact'
+      required:
+      - id
+      - name
+    SuccessResponse:
+      description: Success response.
+      type: object
+      properties:
+        id:
           type: integer
           minimum: 1
-          example: 1
-        bill_rate_id:
-          type: integer
-          minimum: 1
-          example: 1
-        is_taxable:
-          type: boolean
-          example: true
-        non_covered_amt:
-          type: boolean
-          default: false
-          example: true
-        rating_rules:
-          type: array
-          items:
-            type: object
-            properties:
-              program_id:
-                type: integer
-                minimum: 1
-              cost_centre_id:
-                type: integer
-                minimum: 1
-              funder_id:
-                type: integer
-                minimum: 1
-              minutes:
-                type: integer
-              is_default:
-                type: boolean
-              bill_code_id:
-                type: integer
-                minimum: 1
-              rank:
-                type: integer
-                minimum: 1
-              percent:
-                type: integer
-                minimum: 1
-              is_taxalbe:
-                type: boolean
+          description: AlayaCare ID
+          example: 1001
+        external_id:
+          type: string
+          description: External ID
+          example: entity_external_id
+      required:
+      - id
+      - external_id
     Service:
       type: object
       required:
@@ -1242,152 +1201,55 @@ components:
           type: string
           description: the reason corresponding to service status
           example: hospitalization
-    ServiceFunderDetails:
+    ServiceFunderBillingContact:
       type: object
+      x-nullable: true
       properties:
-        id:
-          description: AlayaCare funder ID
+        profile_id:
           type: integer
           minimum: 1
+          description: Billing contact profile ID
           example: 1
-        external_id:
-          description: External funder ID
-          type: string
-          example: sor_funder_id_1
-          x-nullable: true
         name:
-          description: Funder name
           type: string
-          example: Insurance Company
-        code:
-          description: Funder code
-          type: string
-          example: IC-1
-        organization:
-          description: Organization
-          type: string
-          example: Home Healthcare Agency
-        organization_code:
-          description: Organization code
-          type: string
-          example: HHC-0101
-        percentage:
+          description: Billing contact full name.
+          example: Clark Kent
+    EmployeeDetails:
+      description: Visit employee details
+      type: object
+      x-nullable: true
+      properties:
+        id:
           type: integer
-          example: 100
-        billing_contact:
-          $ref: '#/components/schemas/ServiceFunderBillingContact'
+          minimum: 1
+          description: AlayaCare employee ID
+          example: 1001
+        external_id:
+          type: string
+          description: External employee ID
+          example: sor_employee_id_1
+          x-nullable: true
+        profile_id:
+          type: integer
+          minimum: 1
+          description: AlayaCare client profile ID
+          example: 7891
+        full_name:
+          type: string
+          description: Employee full name
+          example: Jane Smith
+        email:
+          type: string
+          description: Employee email
+          example: employee_1@workplace.com
+        timezone:
+          type: string
+          description: Time Zone name in IANA format (iana.org/time-zones)
+          example: America/Toronto
       required:
       - id
-      - name
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
-    external_ids:
-      name: external_ids
-      in: query
-      required: false
-      description: 'Filter by external IDs
-
-        External IDs are required to be unique.
-
-        No other assumptions are made regarding their format; they are treated as strings.
-
-        '
-      schema:
-        type: array
-        items:
-          type: string
-    client_id:
-      name: client_id
-      in: query
-      required: false
-      description: 'Filter by external client ID
-
-        External client ID is the client ID in the system of record.
-
-        Ex. CRM client identifier
-
-        '
-      schema:
-        type: string
-    alayacare_employee_id:
-      name: alayacare_employee_id
-      in: query
-      required: false
-      description: Filter by AlayaCare employee ID
-      schema:
-        type: integer
-        minimum: 1
-    employee_id:
-      name: employee_id
-      in: query
-      required: false
-      description: 'Filter by external employee ID
-
-        External employee ID is the employee ID in the system of record.
-
-        Ex. HR employee number
-
-        '
-      schema:
-        type: string
-    alayacare_client_id:
-      description: Filter by AlayaCare client ID
-      name: alayacare_client_id
-      in: query
-      required: false
-      schema:
-        type: string
-    alayacare_service_id:
-      name: alayacare_service_id
-      in: path
-      required: true
-      description: AlayaCare service ID
-      schema:
-        type: integer
-        minimum: 1
-    service_id:
-      name: service_id
-      in: path
-      required: true
-      description: External service ID
-      schema:
-        type: string
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
+      - full_name
   responses:
-    SuccessResponseCreationService:
-      description: Service successfully created
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          example:
-            id: 1
-            external_id: sor_service_external_id_1
-    SuccessResponseUpdateService:
-      description: Service successfully updated
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          example:
-            id: 1
-            external_id: sor_service_external_id_1
     ErrorResponseServiceInvalidRequest:
       description: Invalid request
       content:
@@ -1406,24 +1268,15 @@ components:
           example:
             code: 409
             message: primary_employee_id and primary_employee_external_id are mutually exclusive
-    ErrorResponseServiceUpdateInvalidRequest:
-      description: Invalid request
+    SuccessResponseUpdateService:
+      description: Service successfully updated
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: '#/components/schemas/SuccessResponse'
           example:
-            code: 400
-            message: Invalid request
-    ErrorResponseServiceNotFound:
-      description: Service not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Service not found
+            id: 1
+            external_id: sor_service_external_id_1
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -1433,6 +1286,123 @@ components:
           example:
             code: 401
             message: Authorization required.
+    SuccessResponseCreationService:
+      description: Service successfully created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          example:
+            id: 1
+            external_id: sor_service_external_id_1
+    ErrorResponseServiceNotFound:
+      description: Service not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Service not found
+    ErrorResponseServiceUpdateInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+  parameters:
+    service_id:
+      name: service_id
+      in: path
+      required: true
+      description: External service ID
+      schema:
+        type: string
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
+    client_id:
+      name: client_id
+      in: query
+      required: false
+      description: 'Filter by external client ID
+
+        External client ID is the client ID in the system of record.
+
+        Ex. CRM client identifier
+
+        '
+      schema:
+        type: string
+    alayacare_client_id:
+      description: Filter by AlayaCare client ID
+      name: alayacare_client_id
+      in: query
+      required: false
+      schema:
+        type: string
+    external_ids:
+      name: external_ids
+      in: query
+      required: false
+      description: 'Filter by external IDs
+
+        External IDs are required to be unique.
+
+        No other assumptions are made regarding their format; they are treated as strings.
+
+        '
+      schema:
+        type: array
+        items:
+          type: string
+    alayacare_employee_id:
+      name: alayacare_employee_id
+      in: query
+      required: false
+      description: Filter by AlayaCare employee ID
+      schema:
+        type: integer
+        minimum: 1
+    alayacare_service_id:
+      name: alayacare_service_id
+      in: path
+      required: true
+      description: AlayaCare service ID
+      schema:
+        type: integer
+        minimum: 1
+    employee_id:
+      name: employee_id
+      in: query
+      required: false
+      description: 'Filter by external employee ID
+
+        External employee ID is the employee ID in the system of record.
+
+        Ex. HR employee number
+
+        '
+      schema:
+        type: string
   securitySchemes:
     basicAuth:
       type: http

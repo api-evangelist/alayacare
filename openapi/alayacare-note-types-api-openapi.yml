@@ -29,6 +29,8 @@ paths:
                 $ref: '#/components/schemas/NoteTypesList'
         401:
           $ref: '#/components/responses/AuthChallenge'
+      operationId: getNoteTypes
+      x-operation-id-source: derived
     servers:
     - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 components:
@@ -52,6 +54,19 @@ components:
             code: 401
             message: Authorization required.
   schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -77,19 +92,6 @@ components:
       - page
       - total_pages
       - items
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     NoteTypesList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'

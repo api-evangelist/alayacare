@@ -22,12 +22,12 @@ servers:
 security:
 - CognitoAuthorizer: []
 tags:
-- name: organization settings
+- name: Organization Settings
 paths:
   /v1/demand_personas/settings/assignment:
     post:
       tags:
-      - organization settings
+      - Organization Settings
       description: '# Authorization
 
         Required role: `org_admin`
@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Set offer assignment setting for an organization.
-
-        '
+        Set offer assignment setting for an organization.'
       requestBody:
         required: true
         content:
@@ -53,9 +51,13 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create demand personas settings assignment
+      x-summary-source: derived
+      operationId: postV1DemandPersonasSettingsAssignment
+      x-operation-id-source: derived
     get:
       tags:
-      - organization settings
+      - Organization Settings
       description: '# Authorization
 
         Required role: `org_admin`
@@ -63,9 +65,7 @@ paths:
 
         # Description
 
-        Get offer assignment setting for an organization.
-
-        '
+        Get offer assignment setting for an organization.'
       responses:
         200:
           description: Offer assignment setting.
@@ -79,9 +79,13 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get demand personas settings assignment
+      x-summary-source: derived
+      operationId: getV1DemandPersonasSettingsAssignment
+      x-operation-id-source: derived
 components:
   schemas:
-    OutboxOfferAssignmentSettingUpdateResponse:
+    OutboxOfferAssignmentSettingUpdateRequest:
       type: object
       properties:
         offer_assignment:
@@ -91,7 +95,7 @@ components:
           - manual
       required:
       - offer_assignment
-    OutboxOfferAssignmentSettingUpdateRequest:
+    OutboxOfferAssignmentSettingUpdateResponse:
       type: object
       properties:
         offer_assignment:

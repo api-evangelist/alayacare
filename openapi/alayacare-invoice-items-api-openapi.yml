@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -62,6 +60,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceQuerySchema'
+      operationId: getBillingCyclesInvoiceByInvoiceIdDetails
+      x-operation-id-source: derived
   /billing/periods/invoice/{invoice_id}/details:
     get:
       tags:
@@ -90,8 +90,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvoiceQuerySchema'
+      operationId: getBillingPeriodsInvoiceByInvoiceIdDetails
+      x-operation-id-source: derived
 components:
   schemas:
+    FunderStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+          minimum: 1
+        code:
+          type: string
+          example: Some Funder
+        name:
+          type: string
+          example: Some Funder
+        description:
+          type: string
+          example: Some Funder
+        invoicing_model:
+          type: string
+          example: funder_individual
     InvoiceItemSchema:
       type: object
       properties:
@@ -224,27 +245,31 @@ components:
         list:
           type: string
           example: Funder List (System)
-    ClientSchema:
+    PayorSchema:
       type: object
       properties:
         id:
           type: integer
-          example: 16
+          example: 1
           minimum: 1
-        first_name:
-          type: string
-          example: Jane
-        last_name:
-          type: string
-          example: Jones
-    TaxesSchema:
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
+    TaxTypesSchema:
       type: object
       properties:
-        taxtotal:
+        name:
+          type: string
+          example: HST
+        total:
           type: number
           example: 2
-        types:
-          $ref: '#/components/schemas/TaxTypesSchema'
     InvoiceQuerySchema:
       type: object
       properties:
@@ -345,50 +370,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InvoiceItemSchema'
-    PayorSchema:
+    ClientSchema:
       type: object
       properties:
         id:
           type: integer
-          example: 1
+          example: 16
           minimum: 1
-        checksum:
-          type: integer
-          example: 7
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        funder:
-          $ref: '#/components/schemas/FunderStub'
-        billing_contact:
-          $ref: '#/components/schemas/BillingContactSchema'
-    TaxTypesSchema:
-      type: object
-      properties:
-        name:
+        first_name:
           type: string
-          example: HST
-        total:
-          type: number
-          example: 2
-    FunderStub:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 8
-          minimum: 1
-        code:
+          example: Jane
+        last_name:
           type: string
-          example: Some Funder
-        name:
-          type: string
-          example: Some Funder
-        description:
-          type: string
-          example: Some Funder
-        invoicing_model:
-          type: string
-          example: funder_individual
+          example: Jones
     BillingContactSchema:
       type: object
       properties:
@@ -422,6 +416,14 @@ components:
         phone_main:
           type: string
           example: '5141234567'
+    TaxesSchema:
+      type: object
+      properties:
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
   parameters:
     sortOrder:
       in: query

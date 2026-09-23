@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Get a collection of Offers.
-
-        '
+        Get a collection of Offers.'
       parameters:
       - in: query
         name: id
@@ -104,6 +102,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin offers
+      x-summary-source: derived
+      operationId: getV1SysAdminOffers
+      x-operation-id-source: derived
   /v1/sys_admin/offers/{offer_id}:
     parameters:
     - $ref: '#/components/parameters/OfferIdPathParam'
@@ -117,9 +119,7 @@ paths:
 
         # Description
 
-        Get the details of an Offer.
-
-        '
+        Get the details of an Offer.'
       responses:
         200:
           description: Successfully returned offer details.
@@ -133,6 +133,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin offers by offer id
+      x-summary-source: derived
+      operationId: getV1SysAdminOffersByOfferId
+      x-operation-id-source: derived
   /v1/sys_admin/offers/{offer_id}/matches:
     parameters:
     - $ref: '#/components/parameters/OfferIdPathParam'
@@ -147,9 +151,7 @@ paths:
 
         # Description
 
-        Get the Offer Matches of an Offer.
-
-        '
+        Get the Offer Matches of an Offer.'
       parameters:
       - in: query
         name: response
@@ -187,22 +189,47 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin offers by offer id matches
+      x-summary-source: derived
+      operationId: getV1SysAdminOffersByOfferIdMatches
+      x-operation-id-source: derived
 components:
+  parameters:
+    SortByParam:
+      in: query
+      name: sort_by
+      schema:
+        $ref: '#/components/schemas/SortByCore'
+    ShiftIdQueryParam:
+      in: query
+      name: shift_id
+      schema:
+        type: string
+        format: uuid
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    OfferIdPathParam:
+      in: path
+      name: offer_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of an offer
   schemas:
-    OutboxCarePlanDiagnosisCore:
-      allOf:
-      - $ref: '#/components/schemas/CarePlanDiagnosisCore'
-      - type: object
-        properties:
-          outbox_id:
-            type: integer
-        required:
-        - outbox_id
-    CareTypeCore:
-      type: string
-      enum:
-      - psw
-      - nursing
     OfferResponseCountsCore:
       type: object
       properties:
@@ -222,145 +249,6 @@ components:
           type: integer
           minimum: 0
           description: The number of declined offers.
-    OfferStatusCore:
-      type: string
-      enum:
-      - open
-      - assigned
-      - closed
-      - declined_by_all
-      - expired
-    CarePlanInterventionCore:
-      type: object
-      properties:
-        description:
-          type: string
-        end_date:
-          type: string
-          format: date
-        external_link:
-          title: CarePlanInterventionExternalLinkCore
-          type: object
-          properties:
-            label:
-              type: string
-            url:
-              type: string
-          required:
-          - label
-          - url
-        has_duration:
-          type: boolean
-        is_from_library:
-          type: boolean
-        is_required:
-          type: boolean
-        name:
-          type: string
-        rank:
-          type: integer
-        recurrence:
-          title: CarePlanInterventionRecurrenceCore
-          type: object
-          properties:
-            count:
-              type: integer
-            frequency:
-              type: string
-            interval:
-              type: integer
-            weekdays:
-              type: array
-              items:
-                type: string
-            monthday:
-              type: integer
-            available_from:
-              type: string
-            available_to:
-              type: string
-          required:
-          - frequency
-          - interval
-        recurrence_type:
-          type: string
-        start_date:
-          type: string
-          format: date
-        status:
-          type: string
-        timezone:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - has_duration
-      - is_required
-      - name
-      - rank
-      - recurrence_type
-      - start_date
-      - status
-      - type
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    OfferReasonCodeCore:
-      description: '`reason_code` and `reason_comment` associated to a cancelled or closed offer.
-
-        '
-      type: object
-      properties:
-        reason_code:
-          type: string
-          enum:
-          - datetime_change
-          - client_request
-          - client_hospitalization
-          - client_passed_away
-          - client_refused_service
-          - processing_error
-          - other
-        reason_comment:
-          type: string
-    CaseManagerCore:
-      type: object
-      properties:
-        name:
-          type: string
-        phone_number:
-          type: string
-        fax_number:
-          type: string
-        email:
-          type: string
-    OutboxFormTemplateCore:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateCore'
-      - type: object
-        properties:
-          fields:
-            type: array
-            items:
-              $ref: '#/components/schemas/FormTemplateFieldCore'
-    OfferTypeCore:
-      type: string
-      enum:
-      - visit
-      - service
-    OutboxOfferMatchPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/OutboxOfferMatchCollectionResponse'
     AuthorizationCore:
       type: object
       properties:
@@ -431,72 +319,81 @@ components:
       - first_day_of_week
       - rule_type
       - start_date
-    CarePlanGoalCore:
+    AllergyCore:
       type: object
       properties:
-        description:
-          type: string
-        end_date:
-          type: string
-          format: date
-        is_from_library:
-          type: boolean
-        is_primary:
-          type: boolean
-        last_updated_progress:
-          title: GoalLastUpdatedProgressCore
-          type: object
-          properties:
-            comment:
-              type: string
-            percentage:
-              type: integer
-            completed:
-              type: boolean
         name:
           type: string
-        progress_type:
+        category:
           type: string
-        rank:
+        severity:
+          type: string
+        start_date:
+          type: string
+          format: date
+        treatment:
+          type: string
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    OfferStatusCore:
+      type: string
+      enum:
+      - open
+      - assigned
+      - closed
+      - declined_by_all
+      - expired
+    OfferMatchResponseCore:
+      type: string
+      enum:
+      - pending
+      - accepted
+      - declined
+    RiskCore:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          example: allergy
+        severity:
           type: integer
         start_date:
           type: string
           format: date
-        status:
+    FormTemplateFieldCore:
+      type: object
+      properties:
+        field_tag:
           type: string
-        type:
+        field_type:
           type: string
-        updated_at:
+        id:
+          type: integer
+        instructions:
           type: string
-          format: date-time
-      required:
-      - name
-      - start_date
-      - is_primary
-      - type
-      - progress_type
-    OutboxCarePlanInterventionCore:
-      allOf:
-      - $ref: '#/components/schemas/CarePlanInterventionCore'
-      - type: object
-        properties:
-          goals:
-            type: array
-            items:
-              title: OutboxCarePlanInterventionGoalCore
-              type: object
-              properties:
-                outbox_id:
-                  type: integer
-                name:
-                  type: string
-              required:
-              - outbox_id
-              - name
-          outbox_id:
-            type: integer
+        json_logic:
+          type: object
+        label:
+          type: string
+        parent_id:
+          type: integer
+        rank:
+          type: integer
         required:
-        - outbox_id
+          type: boolean
+        settings:
+          type: object
+      required:
+      - field_type
+      - id
+      - label
+      - parent_id
+      - rank
+      - required
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -516,98 +413,51 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    CustomFieldCore:
+    OutboxOfferCore:
       type: object
       properties:
-        name:
+        care_type:
+          $ref: '#/components/schemas/CareTypeCore'
+        offer_type:
+          $ref: '#/components/schemas/OfferTypeCore'
+        expires_at:
           type: string
-        type:
+          format: date-time
+        comment:
           type: string
-        value:
-          type: string
+        demand_labels:
+          type: array
+          items:
+            type: string
+          minItems: 1
       required:
-      - name
-      - value
-    AllergyCore:
+      - care_type
+      - offer_type
+      - expires_at
+    SysAdminPriceCore:
       type: object
       properties:
-        name:
+        rate_demand:
+          type: number
+          format: decimal
+          description: The dollar amount for offer per unit.
+          example: 30.0
+        rate_supply:
+          type: number
+          format: decimal
+          description: The dollar amount for offer per unit.
+          example: 30.0
+        unit:
           type: string
-        category:
-          type: string
-        severity:
-          type: string
-        start_date:
-          type: string
-          format: date
-        treatment:
-          type: string
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    OfferMatchStatusCore:
-      type:
-      - string
-      - 'null'
-      enum:
-      - open
-      - expired
-      - closed
-      - assigned
-      - fulfilled
-    OutboxOfferCollectionResponse:
-      description: 'API response of an offer on the outbox API.
-
-        '
-      type: object
-      properties:
-        offer:
-          $ref: '#/components/schemas/OutboxOfferExtendedCore'
-        client:
-          title: OutboxOfferCollectionClientResponse
-          type: object
-          properties:
-            outbox_id:
-              type: string
-            demographics:
-              $ref: '#/components/schemas/DemographicLeanCore'
-          required:
-          - demographics
-          - outbox_id
-        service:
-          title: OutboxOfferServiceLeanResponse
-          type: object
-          properties:
-            outbox_id:
-              type: string
-            name:
-              type: string
-              minLength: 1
-          required:
-          - name
-          - outbox_id
-        response_counts:
-          $ref: '#/components/schemas/OfferResponseCountsCore'
+          description: The unit for the rate.
+          enum:
+          - per_visit
+          - per_hour
+          - amount
       required:
-      - offer
-      - client
-      - service
-      - response_counts
-    DemographicLeanCore:
-      type: object
-      properties:
-        first_name:
-          type: string
-          minLength: 1
-        last_name:
-          type: string
-          minLength: 1
-      required:
-      - first_name
-      - last_name
+      - rate_demand
+      - rate_supply
+      - unit
     OutboxAlayaCareCore:
       type: object
       properties:
@@ -621,101 +471,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OutboxFormTemplateCore'
-    OfferMatchResponseCore:
-      type: string
+    OfferMatchStatusCore:
+      type:
+      - string
+      - 'null'
       enum:
-      - pending
-      - accepted
-      - declined
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    OutboxCarePlanGoalCore:
-      allOf:
-      - $ref: '#/components/schemas/CarePlanGoalCore'
-      - type: object
-        properties:
-          outbox_id:
-            type: integer
-          diagnoses:
-            type: array
-            items:
-              title: OutboxCarePlanGoalDiagnosisCore
-              type: object
-              properties:
-                outbox_id:
-                  type: integer
-                name:
-                  type: string
-              required:
-              - outbox_id
-              - name
-        required:
-        - outbox_id
-    OutboxCarePlanCore:
-      type: object
-      properties:
-        outbox_id:
-          type: integer
-        name:
-          type: string
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        status:
-          type: string
-        diagnoses:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxCarePlanDiagnosisCore'
-        goals:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxCarePlanGoalCore'
-        interventions:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxCarePlanInterventionCore'
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - name
-      - outbox_id
-      - start_date
-    OfferMatchReasonCodeCore:
-      description: '`reason_code` associated with a declined Offer Match.
-
-        '
-      type: object
-      properties:
-        reason_code:
-          type: string
-        comment:
-          type: string
-    OutboxOfferPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/OutboxOfferCollectionResponse'
-    OutboxOfferMatchCollectionResponse:
-      description: 'API response for the representation of Offer Matches on the outbox API.
-
-        '
-      type: object
-      properties:
-        match:
-          $ref: '#/components/schemas/OfferMatchCore'
-        supply:
-          $ref: '#/components/schemas/OrganizationLeanCore'
+      - open
+      - expired
+      - closed
+      - assigned
+      - fulfilled
     CarePlanDiagnosisCore:
       type: object
       properties:
@@ -744,6 +509,34 @@ components:
       - name
       - start_date
       - is_primary
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    OfferMatchReasonCodeCore:
+      description: '`reason_code` associated with a declined Offer Match.
+
+        '
+      type: object
+      properties:
+        reason_code:
+          type: string
+        comment:
+          type: string
     FormTemplateCore:
       type: object
       properties:
@@ -798,40 +591,22 @@ components:
       - schema_id
       - schema_version
       - visit_link_required
-    OutboxOfferCore:
-      type: object
-      properties:
-        care_type:
-          $ref: '#/components/schemas/CareTypeCore'
-        offer_type:
-          $ref: '#/components/schemas/OfferTypeCore'
-        expires_at:
-          type: string
-          format: date-time
-        comment:
-          type: string
-        demand_labels:
-          type: array
-          items:
-            type: string
-          minItems: 1
-      required:
-      - care_type
-      - offer_type
-      - expires_at
-    RiskCore:
+    CustomFieldCore:
       type: object
       properties:
         name:
           type: string
-        category:
+        type:
           type: string
-          example: allergy
-        severity:
-          type: integer
-        start_date:
+        value:
           type: string
-          format: date
+      required:
+      - name
+      - value
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
     SysAdminOfferDetailResponse:
       type: object
       properties:
@@ -1139,72 +914,6 @@ components:
       - demand
       - client
       - service
-    SysAdminPriceCore:
-      type: object
-      properties:
-        rate_demand:
-          type: number
-          format: decimal
-          description: The dollar amount for offer per unit.
-          example: 30.0
-        rate_supply:
-          type: number
-          format: decimal
-          description: The dollar amount for offer per unit.
-          example: 30.0
-        unit:
-          type: string
-          description: The unit for the rate.
-          enum:
-          - per_visit
-          - per_hour
-          - amount
-      required:
-      - rate_demand
-      - rate_supply
-      - unit
-    FormTemplateFieldCore:
-      type: object
-      properties:
-        field_tag:
-          type: string
-        field_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        json_logic:
-          type: object
-        label:
-          type: string
-        parent_id:
-          type: integer
-        rank:
-          type: integer
-        required:
-          type: boolean
-        settings:
-          type: object
-      required:
-      - field_type
-      - id
-      - label
-      - parent_id
-      - rank
-      - required
-    OrganizationLeanCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-      required:
-      - id
-      - name
     OutboxOfferExtendedCore:
       allOf:
       - $ref: '#/components/schemas/OutboxOfferCore'
@@ -1238,6 +947,303 @@ components:
         - status
         - start_at
         - created_at
+    DemographicLeanCore:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+      required:
+      - first_name
+      - last_name
+    OutboxOfferCollectionResponse:
+      description: 'API response of an offer on the outbox API.
+
+        '
+      type: object
+      properties:
+        offer:
+          $ref: '#/components/schemas/OutboxOfferExtendedCore'
+        client:
+          title: OutboxOfferCollectionClientResponse
+          type: object
+          properties:
+            outbox_id:
+              type: string
+            demographics:
+              $ref: '#/components/schemas/DemographicLeanCore'
+          required:
+          - demographics
+          - outbox_id
+        service:
+          title: OutboxOfferServiceLeanResponse
+          type: object
+          properties:
+            outbox_id:
+              type: string
+            name:
+              type: string
+              minLength: 1
+          required:
+          - name
+          - outbox_id
+        response_counts:
+          $ref: '#/components/schemas/OfferResponseCountsCore'
+      required:
+      - offer
+      - client
+      - service
+      - response_counts
+    OutboxCarePlanInterventionCore:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanInterventionCore'
+      - type: object
+        properties:
+          goals:
+            type: array
+            items:
+              title: OutboxCarePlanInterventionGoalCore
+              type: object
+              properties:
+                outbox_id:
+                  type: integer
+                name:
+                  type: string
+              required:
+              - outbox_id
+              - name
+          outbox_id:
+            type: integer
+        required:
+        - outbox_id
+    OutboxCarePlanDiagnosisCore:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanDiagnosisCore'
+      - type: object
+        properties:
+          outbox_id:
+            type: integer
+        required:
+        - outbox_id
+    OfferTypeCore:
+      type: string
+      enum:
+      - visit
+      - service
+    CareTypeCore:
+      type: string
+      enum:
+      - psw
+      - nursing
+    OutboxCarePlanCore:
+      type: object
+      properties:
+        outbox_id:
+          type: integer
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+        diagnoses:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxCarePlanDiagnosisCore'
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxCarePlanGoalCore'
+        interventions:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxCarePlanInterventionCore'
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - outbox_id
+      - start_date
+    CarePlanGoalCore:
+      type: object
+      properties:
+        description:
+          type: string
+        end_date:
+          type: string
+          format: date
+        is_from_library:
+          type: boolean
+        is_primary:
+          type: boolean
+        last_updated_progress:
+          title: GoalLastUpdatedProgressCore
+          type: object
+          properties:
+            comment:
+              type: string
+            percentage:
+              type: integer
+            completed:
+              type: boolean
+        name:
+          type: string
+        progress_type:
+          type: string
+        rank:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        status:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - start_date
+      - is_primary
+      - type
+      - progress_type
+    OutboxOfferPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutboxOfferCollectionResponse'
+    OutboxFormTemplateCore:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateCore'
+      - type: object
+        properties:
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/FormTemplateFieldCore'
+    CaseManagerCore:
+      type: object
+      properties:
+        name:
+          type: string
+        phone_number:
+          type: string
+        fax_number:
+          type: string
+        email:
+          type: string
+    SortByCore:
+      type: string
+      enum:
+      - last_modified
+      default: last_modified
+    OutboxOfferMatchPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutboxOfferMatchCollectionResponse'
+    CarePlanInterventionCore:
+      type: object
+      properties:
+        description:
+          type: string
+        end_date:
+          type: string
+          format: date
+        external_link:
+          title: CarePlanInterventionExternalLinkCore
+          type: object
+          properties:
+            label:
+              type: string
+            url:
+              type: string
+          required:
+          - label
+          - url
+        has_duration:
+          type: boolean
+        is_from_library:
+          type: boolean
+        is_required:
+          type: boolean
+        name:
+          type: string
+        rank:
+          type: integer
+        recurrence:
+          title: CarePlanInterventionRecurrenceCore
+          type: object
+          properties:
+            count:
+              type: integer
+            frequency:
+              type: string
+            interval:
+              type: integer
+            weekdays:
+              type: array
+              items:
+                type: string
+            monthday:
+              type: integer
+            available_from:
+              type: string
+            available_to:
+              type: string
+          required:
+          - frequency
+          - interval
+        recurrence_type:
+          type: string
+        start_date:
+          type: string
+          format: date
+        status:
+          type: string
+        timezone:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - has_duration
+      - is_required
+      - name
+      - rank
+      - recurrence_type
+      - start_date
+      - status
+      - type
+    OutboxOfferMatchCollectionResponse:
+      description: 'API response for the representation of Offer Matches on the outbox API.
+
+        '
+      type: object
+      properties:
+        match:
+          $ref: '#/components/schemas/OfferMatchCore'
+        supply:
+          $ref: '#/components/schemas/OrganizationLeanCore'
     OfferMatchCore:
       description: 'Core representation of an Offer Match.
 
@@ -1270,6 +1276,46 @@ components:
         - status
         - sequence_id
         - created_at
+    OutboxCarePlanGoalCore:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanGoalCore'
+      - type: object
+        properties:
+          outbox_id:
+            type: integer
+          diagnoses:
+            type: array
+            items:
+              title: OutboxCarePlanGoalDiagnosisCore
+              type: object
+              properties:
+                outbox_id:
+                  type: integer
+                name:
+                  type: string
+              required:
+              - outbox_id
+              - name
+        required:
+        - outbox_id
+    OfferReasonCodeCore:
+      description: '`reason_code` and `reason_comment` associated to a cancelled or closed offer.
+
+        '
+      type: object
+      properties:
+        reason_code:
+          type: string
+          enum:
+          - datetime_change
+          - client_request
+          - client_hospitalization
+          - client_passed_away
+          - client_refused_service
+          - processing_error
+          - other
+        reason_comment:
+          type: string
     AddressCore:
       type: object
       properties:
@@ -1308,46 +1354,6 @@ components:
       - state
       - zip
       - country
-    SortByCore:
-      type: string
-      enum:
-      - last_modified
-      default: last_modified
-  parameters:
-    OfferIdPathParam:
-      in: path
-      name: offer_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of an offer
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    ShiftIdQueryParam:
-      in: query
-      name: shift_id
-      schema:
-        type: string
-        format: uuid
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    SortByParam:
-      in: query
-      name: sort_by
-      schema:
-        $ref: '#/components/schemas/SortByCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

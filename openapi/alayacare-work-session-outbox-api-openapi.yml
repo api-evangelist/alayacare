@@ -51,9 +51,7 @@ paths:
         Get a collection of Work Sessions for a given visit.
 
 
-        One of `visit_id` or `visit_outbox_id` must be provided.
-
-        '
+        One of `visit_id` or `visit_outbox_id` must be provided.'
       responses:
         200:
           description: Successfully retrieved a collection of Work Sessions.
@@ -67,8 +65,21 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox work sessions
+      x-summary-source: derived
+      operationId: getV1OutboxWorkSessions
+      x-operation-id-source: derived
 components:
   schemas:
+    OutboxWorkSessionPageResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxWorkSessionCollectionResponse'
+      required:
+      - items
     OutboxWorkSessionCollectionResponse:
       type: object
       properties:
@@ -111,15 +122,6 @@ components:
       - id
       - visit_id
       - start_at
-    OutboxWorkSessionPageResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxWorkSessionCollectionResponse'
-      required:
-      - items
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

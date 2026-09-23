@@ -30,7 +30,16 @@ paths:
     get:
       tags:
       - form submission outbox
-      description: "# Authorization\nRequired role: demand `org_admin` assigned to the referral \nassociated to the form submission.\n\n# Description\nRead a form submission.\n"
+      description: '# Authorization
+
+        Required role: demand `org_admin` assigned to the referral
+
+        associated to the form submission.
+
+
+        # Description
+
+        Read a form submission.'
       responses:
         200:
           description: Successfully retrieved the form submission.
@@ -44,13 +53,28 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox form submissions by form submission id
+      x-summary-source: derived
+      operationId: getV1OutboxFormSubmissionsByFormSubmissionId
+      x-operation-id-source: derived
   /v1/outbox/form_submissions/fields/{form_submission_field_id}/attachment/presigned:
     parameters:
     - $ref: '#/components/parameters/FormSubmissionFieldIdPathParam'
     get:
       tags:
       - form submission outbox
-      description: "# Authorization\nRequired role: demand `org_admin` assigned to the referral \nassociated to the form submission.\n\n# Description\nGet the pre-signed URL for the file attached to a form submission field as\na demand organization.\n"
+      description: '# Authorization
+
+        Required role: demand `org_admin` assigned to the referral
+
+        associated to the form submission.
+
+
+        # Description
+
+        Get the pre-signed URL for the file attached to a form submission field as
+
+        a demand organization.'
       responses:
         200:
           description: Successfully got the pre-signed URL.
@@ -64,8 +88,24 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox form submissions fields by form submission field id attachment…
+      x-summary-source: derived
+      operationId: getV1OutboxFormSubmissionsFieldsByFormSubmissionFieldIdAttachmentPresigned
+      x-operation-id-source: derived
 components:
   schemas:
+    OutboxFormSubmissionHiddenFieldCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        field_outbox_id:
+          type: string
+          description: ID of the form template field provided by the demand organization.
+      required:
+      - id
+      - field_outbox_id
     OutboxFormSubmissionDetailResponse:
       type: object
       properties:
@@ -146,18 +186,6 @@ components:
       - field_outbox_id
       - value_type
       - value
-    OutboxFormSubmissionHiddenFieldCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        field_outbox_id:
-          type: string
-          description: ID of the form template field provided by the demand organization.
-      required:
-      - id
-      - field_outbox_id
   parameters:
     FormSubmissionFieldIdPathParam:
       in: path

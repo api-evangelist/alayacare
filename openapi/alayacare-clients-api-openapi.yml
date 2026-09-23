@@ -22,35 +22,7 @@ info:
     - external_contact_id
 
 
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    External IDs are unique to a single profile_id.
-
-
-    **Profile IDs**
-
-    The following term is used to describe a profile resource in AlayaCare:
-
-    - profile_id
-
-
-    Profile IDs can be shared across clients, contacts, and employees in the
-
-    case that an entity shares one or more of those roles.
-
-
-    **Client Status Considerations**
-
-    - Clients can have multiple status configured depending on their business needs. Rules for configuring client status follow the internal AlayaCare application logic.
-
-    - Updating the `status` of a client will have repercussions in the AlayaCare application.
-
-
-    Please refer to this link for more information: https://alayacare.zendesk.com/hc/en-us/articles/360015538392
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -115,9 +87,7 @@ paths:
 
         - If no branch is specified client will be created in the current user branch
 
-        - Only one of `profile_id` or a `demographics` object can be specified
-
-        '
+        - Only one of `profile_id` or a `demographics` object can be specified'
       requestBody:
         content:
           application/json:
@@ -194,9 +164,7 @@ paths:
       - Clients
       summary: Update client details using its AlayaCare Client ID
       operationId: updateClient
-      description: '* Changing the `status` of a client is not supported by this endpoint. Any `status` sent will be ignored.
-
-        '
+      description: '* Changing the `status` of a client is not supported by this endpoint. Any `status` sent will be ignored.'
       requestBody:
         $ref: '#/components/requestBodies/ClientUpdate'
       responses:
@@ -249,9 +217,7 @@ paths:
       - Clients
       summary: Update client details using External Client ID
       operationId: updateClientByExt
-      description: '* Changing the `status` of a client is not supported by this endpoint. Any `status` sent will be ignored.
-
-        '
+      description: '* Changing the `status` of a client is not supported by this endpoint. Any `status` sent will be ignored.'
       requestBody:
         $ref: '#/components/requestBodies/ClientUpdate'
       responses:
@@ -374,7 +340,7 @@ paths:
     get:
       tags:
       - Clients
-      summary: Get list of employees blocked by this client or blocking this client using external client id
+      summary: Get list of employees blocked by this client or blocking this client using…
       operationId: listClientBlockedEmployeesByExt
       description: Returns employees blocked by or blocking the client (by external client ID).
       responses:
@@ -632,6 +598,365 @@ paths:
           $ref: '#/components/responses/ErrorResponseMultipleClientsFound'
 components:
   schemas:
+    Group:
+      description: Create Patient group.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare group ID.
+          example: 1
+        name:
+          type: string
+          description: AlayaCare group name
+          example: Group A
+      required:
+      - id
+    ClientListItem:
+      description: AlayaCare client list item
+      type: object
+      properties:
+        id:
+          description: AlayaCare client ID
+          type: integer
+          example: 1000
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        branch:
+          type: object
+          description: AlayaCare branch
+          properties:
+            id:
+              description: Branch ID
+              type: integer
+              example: 1000
+            name:
+              description: Branch name
+              type: string
+              example: Toronto branch
+        external_id:
+          description: External client ID
+          type:
+          - string
+          - 'null'
+          example: sor_client_external_id_1
+        profile_id:
+          description: AlayaCare profile ID
+          type: integer
+          example: 100
+        first_name:
+          description: Client first name
+          type: string
+          example: John
+        last_name:
+          description: Client last name
+          type: string
+          example: Smith
+        status:
+          $ref: '#/components/schemas/ClientStatus'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientTag'
+        _link:
+          description: Client link on the web application
+          type: string
+          example: https://demo3.alayacare.ca/permalink/client/b1
+    Client:
+      description: AlayaCare client list view
+      type: object
+      properties:
+        id:
+          description: AlayaCare client ID
+          type: integer
+          example: 1000
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        external_id:
+          description: External client ID
+          type:
+          - string
+          - 'null'
+          example: sor_client_external_id_1
+        profile_id:
+          description: AlayaCare profile ID
+          type: integer
+          example: 100
+        first_name:
+          description: Client first name
+          type: string
+          example: John
+        last_name:
+          description: Client last name
+          type: string
+          example: Smith
+        status:
+          $ref: '#/components/schemas/ClientStatus'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientTag'
+        _link:
+          description: Client link on the web application
+          type: string
+          example: https://demo3.alayacare.ca/permalink/client/b1
+      required:
+      - id
+      - ac_id
+      - external_id
+      - profile_id
+      - first_name
+      - last_name
+      - status
+      - _link
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    BlockedEmployeeList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of blocked or blocking employees
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/BlockedEmployeeListItem'
+    ClientTag:
+      type: string
+      description: Name of tag.
+      example: Tag
+    ContactList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of clients
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ClientContactListItem'
+    ClientCreateDemographics:
+      allOf:
+      - $ref: '#/components/schemas/ClientDemographics'
+      required:
+      - first_name
+      - last_name
+    ClientContactDemographics:
+      description: 'Collection of key/value pairs where keys are existing attributes in the patient contact profile, defined through the AlayaCare web application.
+
+        On the example below default profile keys for the client contact are used.
+
+
+        Example profile attributes:
+
+        + `first_name`: string
+
+        + `last_name`: string
+
+        + `city`: string
+
+        + `title`: string
+
+        + `state`: string
+
+        + `gender`: string
+
+        + `relationship`: string
+
+        + `contact_type`: string
+
+        + `fax`: string
+
+        + `company`: string
+
+        + `phone_other`: string
+
+        + `phone_main`: string
+
+        + `address`: string
+
+        + `country`: string
+
+        + `zip`: string
+
+        + `address_suite`: string
+
+        + `remarks`: string
+
+        '
+      type: object
+      properties:
+        first_name:
+          description: Profile first name
+          type: string
+          example: Jane
+        last_name:
+          description: Profile last name
+          type: string
+          example: Smith
+        gender:
+          description: Profile gender
+          type: string
+          example: M
+          enum:
+          - M
+          - F
+          - O
+    CostCentre:
+      description: Details of a cost centre
+      type:
+      - object
+      - 'null'
+      properties:
+        description:
+          type: string
+          description: Cost centre description
+          example: Montreal
+        id:
+          type: integer
+          description: Cost centre ID
+          example: 2
+        number:
+          type: string
+          description: Cost centre number for display in-app
+          example: '5555'
+        status:
+          type: string
+          description: Cost centre status
+          example: enabled
+    ClientTagList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ClientTag'
+    Location:
+      description: Location information
+      type:
+      - object
+      - 'null'
+      properties:
+        lat:
+          type: number
+          description: latitude
+          example: 45.518
+        lon:
+          type: number
+          description: longitude
+          example: -73.582
+        zip:
+          type: string
+          description: postal code
+          example: H0H 0H0
+    ClientList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of clients
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ClientListItem'
+    ClientDetails:
+      description: AlayaCare client entity
+      type: object
+      properties:
+        demographics:
+          $ref: '#/components/schemas/ClientDemographicsLocation'
+        id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_client_external_id_1
+        profile_id:
+          type: integer
+          description: AlayaCare profile ID
+          example: 7890
+        branch_id:
+          type: integer
+          description: AlayaCare client ID
+          example: 2001
+        status:
+          $ref: '#/components/schemas/ClientStatus'
+        contacts:
+          type: array
+          description: Client contacts
+          items:
+            $ref: '#/components/schemas/ClientContactListItem'
+        care_team:
+          type: array
+          description: List of employees on a client's care team.
+          items:
+            $ref: '#/components/schemas/CareTeamMember'
+        language:
+          $ref: '#/components/schemas/ClientLanguage'
+        groups:
+          type: array
+          description: Client groups
+          items:
+            $ref: '#/components/schemas/Group'
+        cost_centre:
+          $ref: '#/components/schemas/CostCentre'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientTag'
+        timezone:
+          description: 'Timezone name in IANA format (iana.org/time-zones). If not set, returns the branch timezone.
+
+            '
+          type: string
+          example: America/Toronto
+      required:
+      - id
+      - ac_id
+      - external_id
+      - profile_id
+      - demographics
+      - branch_id
+      - status
+      - contacts
+      - care_team
     ErrorResponse:
       description: Error response
       type: object
@@ -647,70 +972,6 @@ components:
       required:
       - code
       - message
-    ClientLanguage:
-      type:
-      - string
-      - 'null'
-      description: 'Supported language codes.
-
-        In some cases, a language (e.g. ''english'') can be provided when creating an entity,
-
-        and will be automatically converted to a language code (e.g. ''en'').
-
-        '
-      enum:
-      - sq
-      - ar
-      - hy
-      - ast
-      - bn
-      - my
-      - yue
-      - zh
-      - hr
-      - cs
-      - fa_AF
-      - nl
-      - en
-      - fo
-      - fr
-      - de
-      - el
-      - he
-      - hi
-      - hu
-      - it
-      - ja
-      - rw
-      - ko
-      - mdr
-      - ne
-      - ps
-      - fa
-      - pl
-      - pt
-      - pa
-      - ro
-      - ru
-      - sr
-      - sk
-      - so
-      - es
-      - sw
-      - tl
-      - ta
-      - ti
-      - uk
-      - ur
-      - vi
-      - other
-    ProfilePictureUrl:
-      type: object
-      properties:
-        url:
-          description: Pre-authorized profile picture URL.
-          type: string
-          example: https://place-hold.it/200
     ClientDemographicsLocation:
       description: 'Collection of key/value pairs where keys are existing attributes in the patient profile, defined through the AlayaCare webapp.
 
@@ -795,128 +1056,37 @@ components:
           - F
           - O
           example: M
-    ClientTag:
+    ClientContactStatus:
       type: string
-      description: Name of tag.
-      example: Tag
-    ClientCreateDemographics:
-      allOf:
-      - $ref: '#/components/schemas/ClientDemographics'
-      required:
-      - first_name
-      - last_name
-    CostCentre:
-      description: Details of a cost centre
+      enum:
+      - enabled
+      - disabled
+    ClientStatus:
       type:
-      - object
+      - string
       - 'null'
-      properties:
-        description:
-          type: string
-          description: Cost centre description
-          example: Montreal
-        id:
-          type: integer
-          description: Cost centre ID
-          example: 2
-        number:
-          type: string
-          description: Cost centre number for display in-app
-          example: '5555'
-        status:
-          type: string
-          description: Cost centre status
-          example: enabled
-    ClientUpdate:
-      description: AlayaCare client entity data for update.
+      enum:
+      - active
+      - pending
+      - on_hold
+      - discharged
+      - waiting_list
+      - unknown
+    BlockedEmployeeListItem:
+      description: Employee blocked by or blocking a client
       type: object
       properties:
-        demographics:
-          $ref: '#/components/schemas/ClientDemographics'
-        external_id:
+        employee:
+          $ref: '#/components/schemas/CareTeamMember'
+        block_originator:
           type: string
-          description: Client external ID
-          example: sor_client_external_id_1
-        language:
-          $ref: '#/components/schemas/ClientLanguage'
-        groups:
-          description: 'List of groups. Group objects have ID and name for convenience
-
-            of input, but only the IDs are used here. For valid IDs,
-
-            request /groups.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        timezone:
-          description: 'Timezone name in IANA format (iana.org/time-zones). If set to null, will inherit the branch timezone.
-
-            '
-          type: string
-          example: America/Toronto
-    ClientContactDemographics:
-      description: 'Collection of key/value pairs where keys are existing attributes in the patient contact profile, defined through the AlayaCare web application.
-
-        On the example below default profile keys for the client contact are used.
-
-
-        Example profile attributes:
-
-        + `first_name`: string
-
-        + `last_name`: string
-
-        + `city`: string
-
-        + `title`: string
-
-        + `state`: string
-
-        + `gender`: string
-
-        + `relationship`: string
-
-        + `contact_type`: string
-
-        + `fax`: string
-
-        + `company`: string
-
-        + `phone_other`: string
-
-        + `phone_main`: string
-
-        + `address`: string
-
-        + `country`: string
-
-        + `zip`: string
-
-        + `address_suite`: string
-
-        + `remarks`: string
-
-        '
-      type: object
-      properties:
-        first_name:
-          description: Profile first name
-          type: string
-          example: Jane
-        last_name:
-          description: Profile last name
-          type: string
-          example: Smith
-        gender:
-          description: Profile gender
-          type: string
-          example: M
+          description: Whether the employee or the client requested the block
           enum:
-          - M
-          - F
-          - O
+          - client
+          - employee
+        comments:
+          type: string
+          description: Reason for the block
     ClientCreate:
       description: AlayaCare client entity data for creation.
       type: object
@@ -976,367 +1146,92 @@ components:
           enum:
           - email
           - mail
-    Location:
-      description: Location information
-      type:
-      - object
-      - 'null'
-      properties:
-        lat:
-          type: number
-          description: latitude
-          example: 45.518
-        lon:
-          type: number
-          description: longitude
-          example: -73.582
-        zip:
-          type: string
-          description: postal code
-          example: H0H 0H0
-    SuccessResponse:
-      description: Success response.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External ID
-          example: entity_external_id
-      required:
-      - id
-      - external_id
-    ClientList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of clients
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/ClientListItem'
-    Group:
-      description: Create Patient group.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare group ID.
-          example: 1
-        name:
-          type: string
-          description: AlayaCare group name
-          example: Group A
-      required:
-      - id
-    ClientTagList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/ClientTag'
-    ClientContactListItem:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Client contact ID
-          example: 1
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        external_id:
-          type:
-          - string
-          - 'null'
-          example: crm_client_contact_external_id_1
-          description: Client contact external ID
-        contact_type:
-          type:
-          - string
-          - 'null'
-          example: Medical
-        relationship:
-          type:
-          - string
-          - 'null'
-          example: Doctor
-        language:
-          $ref: '#/components/schemas/ClientLanguage'
-        npi:
-          type: string
-          description: National provider identification number
-          example: '12345678'
-        provider_type:
-          type: string
-          description: Type of healthcare provider
-          example: Attending provider
-        status:
-          $ref: '#/components/schemas/ClientContactStatus'
-        demographics:
-          $ref: '#/components/schemas/ClientContactDemographics'
-      required:
-      - id
-      - ac_id
-      - external_id
-      - status
-      - demographics
-    Client:
-      description: AlayaCare client list view
-      type: object
-      properties:
-        id:
-          description: AlayaCare client ID
-          type: integer
-          example: 1000
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        external_id:
-          description: External client ID
-          type:
-          - string
-          - 'null'
-          example: sor_client_external_id_1
-        profile_id:
-          description: AlayaCare profile ID
-          type: integer
-          example: 100
-        first_name:
-          description: Client first name
-          type: string
-          example: John
-        last_name:
-          description: Client last name
-          type: string
-          example: Smith
-        status:
-          $ref: '#/components/schemas/ClientStatus'
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientTag'
-        _link:
-          description: Client link on the web application
-          type: string
-          example: https://demo3.alayacare.ca/permalink/client/b1
-      required:
-      - id
-      - ac_id
-      - external_id
-      - profile_id
-      - first_name
-      - last_name
-      - status
-      - _link
-    ClientStatus:
+    ClientLanguage:
       type:
       - string
       - 'null'
+      description: 'Supported language codes.
+
+        In some cases, a language (e.g. ''english'') can be provided when creating an entity,
+
+        and will be automatically converted to a language code (e.g. ''en'').
+
+        '
       enum:
-      - active
-      - pending
-      - on_hold
-      - discharged
-      - waiting_list
-      - unknown
-    CareTeamMember:
-      type: object
-      properties:
-        name:
-          type: string
-          example: John Smith
-          description: Employee name
-        id:
-          type: integer
-          example: 1001
-          description: AlayaCare ID of the employee
-        external_id:
-          type: string
-          example: sor_employee_external_id_1
-          description: External ID of the employee
-    ClientContactStatus:
-      type: string
-      enum:
-      - enabled
-      - disabled
-    ClientListItem:
-      description: AlayaCare client list item
-      type: object
-      properties:
-        id:
-          description: AlayaCare client ID
-          type: integer
-          example: 1000
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        branch:
-          type: object
-          description: AlayaCare branch
-          properties:
-            id:
-              description: Branch ID
-              type: integer
-              example: 1000
-            name:
-              description: Branch name
-              type: string
-              example: Toronto branch
-        external_id:
-          description: External client ID
-          type:
-          - string
-          - 'null'
-          example: sor_client_external_id_1
-        profile_id:
-          description: AlayaCare profile ID
-          type: integer
-          example: 100
-        first_name:
-          description: Client first name
-          type: string
-          example: John
-        last_name:
-          description: Client last name
-          type: string
-          example: Smith
-        status:
-          $ref: '#/components/schemas/ClientStatus'
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientTag'
-        _link:
-          description: Client link on the web application
-          type: string
-          example: https://demo3.alayacare.ca/permalink/client/b1
-    BlockedEmployeeList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of blocked or blocking employees
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/BlockedEmployeeListItem'
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    ClientDetails:
-      description: AlayaCare client entity
+      - sq
+      - ar
+      - hy
+      - ast
+      - bn
+      - my
+      - yue
+      - zh
+      - hr
+      - cs
+      - fa_AF
+      - nl
+      - en
+      - fo
+      - fr
+      - de
+      - el
+      - he
+      - hi
+      - hu
+      - it
+      - ja
+      - rw
+      - ko
+      - mdr
+      - ne
+      - ps
+      - fa
+      - pl
+      - pt
+      - pa
+      - ro
+      - ru
+      - sr
+      - sk
+      - so
+      - es
+      - sw
+      - tl
+      - ta
+      - ti
+      - uk
+      - ur
+      - vi
+      - other
+    ClientUpdate:
+      description: AlayaCare client entity data for update.
       type: object
       properties:
         demographics:
-          $ref: '#/components/schemas/ClientDemographicsLocation'
-        id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
+          $ref: '#/components/schemas/ClientDemographics'
         external_id:
-          type:
-          - string
-          - 'null'
-          description: External client ID
+          type: string
+          description: Client external ID
           example: sor_client_external_id_1
-        profile_id:
-          type: integer
-          description: AlayaCare profile ID
-          example: 7890
-        branch_id:
-          type: integer
-          description: AlayaCare client ID
-          example: 2001
-        status:
-          $ref: '#/components/schemas/ClientStatus'
-        contacts:
-          type: array
-          description: Client contacts
-          items:
-            $ref: '#/components/schemas/ClientContactListItem'
-        care_team:
-          type: array
-          description: List of employees on a client's care team.
-          items:
-            $ref: '#/components/schemas/CareTeamMember'
         language:
           $ref: '#/components/schemas/ClientLanguage'
         groups:
+          description: 'List of groups. Group objects have ID and name for convenience
+
+            of input, but only the IDs are used here. For valid IDs,
+
+            request /groups.
+
+            '
           type: array
-          description: Client groups
           items:
             $ref: '#/components/schemas/Group'
-        cost_centre:
-          $ref: '#/components/schemas/CostCentre'
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientTag'
         timezone:
-          description: 'Timezone name in IANA format (iana.org/time-zones). If not set, returns the branch timezone.
+          description: 'Timezone name in IANA format (iana.org/time-zones). If set to null, will inherit the branch timezone.
 
             '
           type: string
           example: America/Toronto
-      required:
-      - id
-      - ac_id
-      - external_id
-      - profile_id
-      - demographics
-      - branch_id
-      - status
-      - contacts
-      - care_team
-    ContactList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of clients
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/ClientContactListItem'
     ClientDemographics:
       description: 'Collection of key/value pairs where keys are existing attributes in the patient profile, defined through the AlayaCare webapp.
 
@@ -1419,49 +1314,98 @@ components:
           - F
           - O
           example: M
-    BlockedEmployeeListItem:
-      description: Employee blocked by or blocking a client
-      type: object
-      properties:
-        employee:
-          $ref: '#/components/schemas/CareTeamMember'
-        block_originator:
-          type: string
-          description: Whether the employee or the client requested the block
-          enum:
-          - client
-          - employee
-        comments:
-          type: string
-          description: Reason for the block
     ClientTagCreate:
       type: array
       description: An array of Client tags.
       items:
         $ref: '#/components/schemas/ClientTag'
+    CareTeamMember:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Smith
+          description: Employee name
+        id:
+          type: integer
+          example: 1001
+          description: AlayaCare ID of the employee
+        external_id:
+          type: string
+          example: sor_employee_external_id_1
+          description: External ID of the employee
+    ProfilePictureUrl:
+      type: object
+      properties:
+        url:
+          description: Pre-authorized profile picture URL.
+          type: string
+          example: https://place-hold.it/200
+    SuccessResponse:
+      description: Success response.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External ID
+          example: entity_external_id
+      required:
+      - id
+      - external_id
+    ClientContactListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Client contact ID
+          example: 1
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        external_id:
+          type:
+          - string
+          - 'null'
+          example: crm_client_contact_external_id_1
+          description: Client contact external ID
+        contact_type:
+          type:
+          - string
+          - 'null'
+          example: Medical
+        relationship:
+          type:
+          - string
+          - 'null'
+          example: Doctor
+        language:
+          $ref: '#/components/schemas/ClientLanguage'
+        npi:
+          type: string
+          description: National provider identification number
+          example: '12345678'
+        provider_type:
+          type: string
+          description: Type of healthcare provider
+          example: Attending provider
+        status:
+          $ref: '#/components/schemas/ClientContactStatus'
+        demographics:
+          $ref: '#/components/schemas/ClientContactDemographics'
+      required:
+      - id
+      - ac_id
+      - external_id
+      - status
+      - demographics
   responses:
-    ErrorResponseClientTagValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                message: Tags must contain only alphanumeric characters and spaces
-    SuccessResponseClientUpdate:
-      description: Client updated successfuly
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          examples:
-            response:
-              value:
-                id: 1001
-                external_id: sor_client_external_id_1
     ErrorResponseClientNotFound:
       description: Client not found
       content:
@@ -1473,50 +1417,6 @@ components:
               value:
                 code: 404
                 message: Client not found.
-    ErrorResponseClientTagInvalidRequest:
-      description: Invalid data submitted for Client tag creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                message: Tag does not exist for Client
-    SuccessResponseClientCreate:
-      description: Client created successfuly
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          examples:
-            response:
-              value:
-                id: 1001
-                external_id: sor_client_external_id_1
-    ErrorResponseClientTagNotFound:
-      description: Tag not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Client tag does not exist.
-    ErrorResponseClientTagAlreadyExists:
-      description: Tag already exists
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 409
-                message: This tag already exists
     ErrorResponseMultipleClientsFound:
       description: Conflict. Multiple clients share the external ID given in the path and they should be merged
       content:
@@ -1528,6 +1428,50 @@ components:
               value:
                 code: 409
                 message: Multiple clients found
+    ErrorResponseClientTagAlreadyExists:
+      description: Tag already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 409
+                message: This tag already exists
+    SuccessResponseClientUpdate:
+      description: Client updated successfuly
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            response:
+              value:
+                id: 1001
+                external_id: sor_client_external_id_1
+    ErrorResponseClientTagValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: Tags must contain only alphanumeric characters and spaces
+    SuccessResponseClientCreate:
+      description: Client created successfuly
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            response:
+              value:
+                id: 1001
+                external_id: sor_client_external_id_1
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -1539,6 +1483,43 @@ components:
               value:
                 code: 401
                 message: Authorization required.
+    ErrorResponseClientTagNotFound:
+      description: Tag not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client tag does not exist.
+    ErrorResponseClientTagInvalidRequest:
+      description: Invalid data submitted for Client tag creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: Tag does not exist for Client
+  requestBodies:
+    ClientUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientUpdate'
+      description: Client data in JSON format
+      required: true
+    ClientTagCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientTagCreate'
+      description: An array of Client tags
+      required: true
   parameters:
     page:
       description: Filter by page number.
@@ -1548,6 +1529,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
     status:
       description: Filter by client status, one or more using OR. Default format is comma-separated (`?status=active,pending`). Repeated params (`?status=active&status=pending`) are also accepted.
       name: status
@@ -1616,29 +1605,6 @@ components:
         '
       schema:
         type: string
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-  requestBodies:
-    ClientUpdate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ClientUpdate'
-      description: Client data in JSON format
-      required: true
-    ClientTagCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ClientTagCreate'
-      description: An array of Client tags
-      required: true
   securitySchemes:
     basic_auth:
       type: http

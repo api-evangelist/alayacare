@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -82,7 +80,43 @@ paths:
           $ref: '#/components/responses/ErrorResponseAccessDenied'
         '404':
           $ref: '#/components/responses/ErrorPremiumNotFound'
+      operationId: patchPremiumsByPremiumIdBillCodes
+      x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorPremiumNotFound:
+      description: The premium referenced by visit_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '404'
+                message: Premium not found
   schemas:
     ErrorResponse:
       description: Error response
@@ -99,6 +133,12 @@ components:
       required:
       - code
       - message
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Success
     BillCodeStub:
       type: object
       description: Only one of id or guid should be present
@@ -109,46 +149,6 @@ components:
         guid:
           type: integer
           example: 3
-    Success:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Success
-  responses:
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
-    ErrorPremiumNotFound:
-      description: The premium referenced by visit_id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '404'
-                message: Premium not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

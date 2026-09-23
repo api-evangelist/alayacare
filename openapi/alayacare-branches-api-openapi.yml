@@ -38,7 +38,34 @@ paths:
         server:
           default: https://demo3.alayacare.ca
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
+    BranchList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of branches
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Branch'
     ErrorResponse:
       description: Error response
       type: object
@@ -54,6 +81,48 @@ components:
       required:
       - code
       - message
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    Branch:
+      description: AlayaCare branch.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare branch ID
+          example: 1
+        name:
+          type: string
+          description: AlayaCare branch name
+          example: Toronto branch
+        profile:
+          $ref: '#/components/schemas/BranchProfile'
+      required:
+      - id
+      - name
     BranchProfile:
       description: 'Collection of key/value pairs where keys are existing attributes in the agency profile, defined through
 
@@ -109,58 +178,16 @@ components:
           description: Branch main phone number
           type: string
           example: 514-999-9999
-    PaginatedList:
-      description: Base model of all paginated lists
+    BranchList_2:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList_2'
+      description: Paginated list of branches
       type: object
       properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
         items:
           type: array
           items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    Branch:
-      description: AlayaCare branch.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare branch ID
-          example: 1
-        name:
-          type: string
-          description: AlayaCare branch name
-          example: Toronto branch
-        profile:
-          $ref: '#/components/schemas/BranchProfile'
-      required:
-      - id
-      - name
-    BranchList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of branches
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/Branch'
+            $ref: '#/components/schemas/Branch'
     ErrorResponse_2:
       description: Error response
       type: object
@@ -195,9 +222,9 @@ components:
       - page
       - total_pages
       - items
-    BranchList_2:
+    BranchList_3:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList_2'
+      - $ref: '#/components/schemas/PaginatedList_3'
       description: Paginated list of branches
       type: object
       properties:
@@ -239,33 +266,6 @@ components:
       - page
       - total_pages
       - items
-    BranchList_3:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList_3'
-      description: Paginated list of branches
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Branch'
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

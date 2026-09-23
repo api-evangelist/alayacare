@@ -2,7 +2,42 @@ openapi: 3.2.0
 info:
   version: 1.0.2
   title: Care Plan 2.0 Tags API
-  description: "External Clinical API\n\n**Internal IDs**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- created_by\n- client_id\n- employee_id\n- plan_id\n- diagnosis_id\n- goal_id\n- intervention_id\n\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n- external_client_id\n- external_service_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n  \n"
+  description: 'External Clinical API
+
+
+    **Internal IDs**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - created_by
+
+    - client_id
+
+    - employee_id
+
+    - plan_id
+
+    - diagnosis_id
+
+    - goal_id
+
+    - intervention_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+    - external_client_id
+
+    - external_service_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 tags:
@@ -13,7 +48,7 @@ paths:
       tags:
       - Tags
       summary: Get a list of all care plan tags
-      description: "- Care plan tags are configured \n"
+      description: '- Care plan tags are configured'
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/count'
@@ -30,8 +65,77 @@ paths:
           $ref: '#/components/responses/ErrorInsufficientAccess'
         '404':
           $ref: '#/components/responses/ErrorResponseInvalidTagId'
+      operationId: getCareplansTags
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+  responses:
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
+    ErrorResponseInvalidTagId:
+      description: Field 'tag_id' is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Field 'tag_id' is invalid
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 401
+            message: Please verify your access level for this url.
   schemas:
+    CarePlanTagList:
+      description: List of care plan tags
+      type: object
+      properties:
+        id:
+          description: Tag ID
+          type: integer
+          example: 2
+        name:
+          description: Tag name
+          type: string
+          example: Review care plan
+    CarePlanTags:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of care plan tags
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanTagList'
     ErrorResponse:
       description: Error response
       type: object
@@ -45,28 +149,6 @@ components:
       required:
       - code
       - message
-    CarePlanTags:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of care plan tags
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanTagList'
-    CarePlanTagList:
-      description: List of care plan tags
-      type: object
-      properties:
-        id:
-          description: Tag ID
-          type: integer
-          example: 2
-        name:
-          description: Tag name
-          type: string
-          example: Review care plan
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -88,51 +170,6 @@ components:
       - page
       - total_pages
       - items
-  responses:
-    ErrorResponseInvalidTagId:
-      description: Field 'tag_id' is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Field 'tag_id' is invalid
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 401
-            message: Please verify your access level for this url.
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   securitySchemes:
     basic_auth:
       type: http

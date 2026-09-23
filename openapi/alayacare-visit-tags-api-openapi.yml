@@ -19,31 +19,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
-
-
-    **AlayaCare IDs:**
-
-    The following terms are used to reference ids that identify resources in AlayaCare:
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-    **Remarks**
-
-    All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -65,6 +41,8 @@ paths:
                 $ref: '#/components/schemas/VisitTagList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getVisitsTags
+      x-operation-id-source: derived
   /visits/{alayacare_visit_id}/tags:
     parameters:
     - name: alayacare_visit_id
@@ -97,6 +75,8 @@ paths:
               $ref: '#/components/schemas/VisitTagCreate'
         description: An array of visit tags
         required: true
+      operationId: postVisitsByAlayacareVisitIdTags
+      x-operation-id-source: derived
     put:
       tags:
       - Visit tags
@@ -122,6 +102,8 @@ paths:
               $ref: '#/components/schemas/VisitTagCreate'
         description: An array of visit tags
         required: true
+      operationId: putVisitsByAlayacareVisitIdTags
+      x-operation-id-source: derived
   /visits/by_id/{visit_id}/tags:
     parameters:
     - name: visit_id
@@ -154,6 +136,8 @@ paths:
               $ref: '#/components/schemas/VisitTagCreate'
         description: An array of visit tags
         required: true
+      operationId: postVisitsByIdByVisitIdTags
+      x-operation-id-source: derived
     put:
       tags:
       - Visit tags
@@ -172,6 +156,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: putVisitsByIdByVisitIdTags
+      x-operation-id-source: derived
   /facility_visits/{alayacare_visit_id}/tags:
     parameters:
     - name: alayacare_visit_id
@@ -204,6 +190,8 @@ paths:
               $ref: '#/components/schemas/VisitTagCreate'
         description: An array of visit tags
         required: true
+      operationId: postFacilityVisitsByAlayacareVisitIdTags
+      x-operation-id-source: derived
     put:
       tags:
       - Visit tags
@@ -229,6 +217,8 @@ paths:
               $ref: '#/components/schemas/VisitTagCreate'
         description: An array of visit tags
         required: true
+      operationId: putFacilityVisitsByAlayacareVisitIdTags
+      x-operation-id-source: derived
   /facility_visits/by_id/{visit_id}/tags:
     parameters:
     - name: visit_id
@@ -261,6 +251,8 @@ paths:
               $ref: '#/components/schemas/VisitTagCreate'
         description: An array of visit tags
         required: true
+      operationId: postFacilityVisitsByIdByVisitIdTags
+      x-operation-id-source: derived
     put:
       tags:
       - Visit tags
@@ -279,78 +271,22 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: putFacilityVisitsByIdByVisitIdTags
+      x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseVisitTagInvalidRequest:
-      description: Invalid data submitted for visit tag creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Tag does not exist for visits
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
+    VisitTagList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
       properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitTag'
     VisitTag:
       type: string
       description: Name of tag.
       example: First visit
-    VisitCancelCode:
-      description: Visit cancellation code
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare cancel code ID
-          example: 1
-        code:
-          type: string
-          description: Cancel code
-          example: CLNT_REQ_RESCHEDULE
-        description:
-          type:
-          - string
-          - 'null'
-          description: Cancel code description
-          example: Client requested reschedule
-      required:
-      - id
-      - code
     Visit:
       allOf:
       - $ref: '#/components/schemas/BaseVisit'
@@ -367,30 +303,37 @@ components:
           example: sor_client_id_1
       required:
       - alayacare_client_id
-    VisitTagList:
+    VisitNote:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList'
+      - $ref: '#/components/schemas/VisitNoteCreate'
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisitTag'
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time of the note
+          example: '2017-07-08T13:30:00+00:00'
+      required:
+      - created_at
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     VisitTagCreate:
       type: array
       description: An array of visit tags.
       items:
         $ref: '#/components/schemas/VisitTag'
-    VisitNoteCreate:
-      description: Visit note
-      type: object
-      properties:
-        text:
-          type: string
-          description: Content of the visit note
-          maxLength: 1000
-          example: A sample visit note.
-      required:
-      - text
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -416,6 +359,40 @@ components:
       - page
       - total_pages
       - items
+    VisitCancelCode:
+      description: Visit cancellation code
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare cancel code ID
+          example: 1
+        code:
+          type: string
+          description: Cancel code
+          example: CLNT_REQ_RESCHEDULE
+        description:
+          type:
+          - string
+          - 'null'
+          description: Cancel code description
+          example: Client requested reschedule
+      required:
+      - id
+      - code
+    VisitNoteCreate:
+      description: Visit note
+      type: object
+      properties:
+        text:
+          type: string
+          description: Content of the visit note
+          maxLength: 1000
+          example: A sample visit note.
+      required:
+      - text
     BaseVisit:
       type: object
       properties:
@@ -496,17 +473,34 @@ components:
       - end_at
       - cancelled
       - cancel_code
-    VisitNote:
-      allOf:
-      - $ref: '#/components/schemas/VisitNoteCreate'
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          description: Creation time of the note
-          example: '2017-07-08T13:30:00+00:00'
-      required:
-      - created_at
+  responses:
+    ErrorResponseVisitTagInvalidRequest:
+      description: Invalid data submitted for visit tag creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Tag does not exist for visits
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

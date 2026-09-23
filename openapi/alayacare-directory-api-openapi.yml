@@ -10,9 +10,7 @@ info:
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
 
-    - id
-
-    '
+    - id'
 servers:
 - url: https://homecare.alayacare.com/ext/api/v2/files
 tags:
@@ -71,13 +69,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DirectoryNotFoundSchema'
+      operationId: getClientByIdByPath
+      x-operation-id-source: derived
     post:
       tags:
       - Directory
       summary: Create a new directory
-      description: 'Create a directory at the `path` location, along with the underlying folder structure if it doesn''t exist already
-
-        '
+      description: Create a directory at the `path` location, along with the underlying folder structure if it doesn't exist already
       responses:
         201:
           description: Directory created
@@ -111,6 +109,8 @@ paths:
                     type: string
                     description: Detail on the error
                     example: Can't post a file when creating a folder
+      operationId: postClientByIdByPath
+      x-operation-id-source: derived
     put:
       tags:
       - Directory
@@ -133,9 +133,7 @@ paths:
         and we want to copy `child1/` inside `dir2/` (the goal is to have `dir2/child1/`), the `path` in the url of the `PUT` request has to be: `dir2/child1/`. The `source` header of the request has to be `dir1/child1/`.
 
 
-        A 400 response will be returned for a request to move a folder in one of its own subfolders.
-
-        '
+        A 400 response will be returned for a request to move a folder in one of its own subfolders.'
       parameters:
       - name: source
         in: header
@@ -191,13 +189,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DirectoryNotFoundSchema'
+      operationId: putClientByIdByPath
+      x-operation-id-source: derived
     delete:
       tags:
       - Directory
       summary: Delete a directory
-      description: 'Delete a directory and its content. A `forced-delete` header set to `true` must be provided for the directory to be deleted. Otherwise, the reponse will be a confirmation message with a status `400`.
-
-        '
+      description: Delete a directory and its content. A `forced-delete` header set to `true` must be provided for the directory to be deleted. Otherwise, the reponse will be a confirmation message with a status `400`.
       parameters:
       - name: forced-delete
         in: header
@@ -231,6 +229,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DirectoryNotFoundSchema'
+      operationId: deleteClientByIdByPath
+      x-operation-id-source: derived
 components:
   schemas:
     DirectoryNotFoundSchema:

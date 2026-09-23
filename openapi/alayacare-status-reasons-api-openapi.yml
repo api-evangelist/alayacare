@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -71,49 +69,19 @@ paths:
                 $ref: '#/components/schemas/StatusReasonsList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getStatusReasons
+      x-operation-id-source: derived
 components:
-  parameters:
-    branchId:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
+    StatusReasonsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of status reasons
       properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusReasonDetail'
     StatusReasonDetail:
       description: Client status reason.
       type: object
@@ -150,15 +118,21 @@ components:
               type: string
               description: Branch name
               example: Toronto branch
-    StatusReasonsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of status reasons
+    ErrorResponse:
+      description: Error response
+      type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusReasonDetail'
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -185,6 +159,32 @@ components:
       - page
       - total_pages
       - items
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    branchId:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -67,7 +65,27 @@ paths:
                 $ref: '#/components/schemas/CostCentreList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getCostCentres
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
     CostCentreList:
       allOf:
@@ -143,24 +161,6 @@ components:
       - page
       - total_pages
       - items
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

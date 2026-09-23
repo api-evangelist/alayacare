@@ -2,7 +2,38 @@ openapi: 3.2.0
 info:
   version: 1.0.4
   title: External Clinical Client Risks API
-  description: "External Clinical API\n\n**Internal IDs**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- created_by\n- client_id\n- risk_id\n- medication_id\n- admin_id\n- vital_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_id\n- external_client_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n\n**Progress Notes**\n  API for creating and viewing client progress notes.\n\n**Risks**\nAPI for creating, viewing, updating, and removing client risks.\n\n**Medication**\n  API for creating, editing, and viewing medications and medication administrations.\n\n**Vitals**\n  API for creating, editing and viewing vitals.\n\nEach individual vital type is identified by a `name`. Dependent vitals are given the same `group`. Currently this is only used to link names `pressure_min` and `pressure_max` with the group `blood_pressure`, as these values should be recorded together.\n\nThe metadata of the vitals includes the configuration and thresholds, the default and available units, and any other required options for each vital type.\n"
+  description: 'External Clinical API
+
+
+    **Internal IDs**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - created_by
+
+    - client_id
+
+    - risk_id
+
+    - medication_id
+
+    - admin_id
+
+    - vital_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_id
+
+    - external_client_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 tags:
@@ -34,6 +65,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         404:
           $ref: '#/components/responses/ClientNotFound'
+      operationId: getClientsByClientIdRisks
+      x-operation-id-source: derived
     post:
       tags:
       - Client Risks
@@ -58,6 +91,8 @@ paths:
             schema:
               $ref: '#/components/schemas/RiskCreate'
         required: true
+      operationId: postClientsByClientIdRisks
+      x-operation-id-source: derived
   /clients/{client_id}/risks/{risk_id}:
     parameters:
     - name: client_id
@@ -94,6 +129,8 @@ paths:
               $ref: '#/components/schemas/RiskUpdate'
         description: Client risk data for update in JSON format.
         required: true
+      operationId: putClientsByClientIdRisksByRiskId
+      x-operation-id-source: derived
     delete:
       tags:
       - Client Risks
@@ -105,6 +142,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         404:
           $ref: '#/components/responses/ClientRiskNotFound'
+      operationId: deleteClientsByClientIdRisksByRiskId
+      x-operation-id-source: derived
   /clients/by_id/{external_client_id}/risks:
     parameters:
     - name: external_client_id
@@ -131,6 +170,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         404:
           $ref: '#/components/responses/ClientNotFound'
+      operationId: getClientsByIdByExternalClientIdRisks
+      x-operation-id-source: derived
     post:
       tags:
       - Client Risks
@@ -155,6 +196,8 @@ paths:
             schema:
               $ref: '#/components/schemas/RiskCreate'
         required: true
+      operationId: postClientsByIdByExternalClientIdRisks
+      x-operation-id-source: derived
   /clients/by_id/{external_client_id}/risks/{risk_id}:
     parameters:
     - name: external_client_id
@@ -193,6 +236,8 @@ paths:
               $ref: '#/components/schemas/RiskUpdate'
         description: Client risk data for update in JSON format.
         required: true
+      operationId: putClientsByIdByExternalClientIdRisksByRiskId
+      x-operation-id-source: derived
     delete:
       tags:
       - Client Risks
@@ -204,6 +249,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         404:
           $ref: '#/components/responses/ClientRiskNotFound'
+      operationId: deleteClientsByIdByExternalClientIdRisksByRiskId
+      x-operation-id-source: derived
 components:
   schemas:
     RiskSeverity:
@@ -217,19 +264,6 @@ components:
       - 3
       - 4
       - 5
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     RiskDetails:
       description: Details of the client risk
       type: object
@@ -288,34 +322,19 @@ components:
           example: Allergic to penicillin
         severity:
           $ref: '#/components/schemas/RiskSeverity'
-    RiskCreate:
-      description: Client risk data
+    ErrorResponse:
+      description: Error response
       type: object
-      required:
-      - category
-      - risk
-      - severity
       properties:
-        category:
-          $ref: '#/components/schemas/RiskCategory'
-        risk:
+        code:
+          type: integer
+          description: Response code
+        message:
           type: string
-          description: Free text description of the client risk
-          example: Allergic to penicillin
-          minLength: 1
-        severity:
-          $ref: '#/components/schemas/RiskSeverity'
-    RiskCategory:
-      description: Risk category (case-sensitive)
-      type: string
-      example: Allergy
-      enum:
-      - Allergy
-      - Environment
-      - Infectious Diseases
-      - Funder
-      - General
-      - Pets
+          description: Detailed error message
+      required:
+      - code
+      - message
     RiskList:
       description: A list of client risks
       type: object
@@ -336,43 +355,34 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RiskDetails'
-  responses:
-    ClientRiskInvalidRequest:
-      description: Invalid data submitted for client risk creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid risk category
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    ClientRiskNotFound:
-      description: Client risk not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client risk uid not found
-    ClientNotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found.
+    RiskCategory:
+      description: Risk category (case-sensitive)
+      type: string
+      example: Allergy
+      enum:
+      - Allergy
+      - Environment
+      - Infectious Diseases
+      - Funder
+      - General
+      - Pets
+    RiskCreate:
+      description: Client risk data
+      type: object
+      required:
+      - category
+      - risk
+      - severity
+      properties:
+        category:
+          $ref: '#/components/schemas/RiskCategory'
+        risk:
+          type: string
+          description: Free text description of the client risk
+          example: Allergic to penicillin
+          minLength: 1
+        severity:
+          $ref: '#/components/schemas/RiskSeverity'
   parameters:
     page:
       name: page
@@ -390,6 +400,43 @@ components:
       schema:
         type: integer
         default: 100
+  responses:
+    ClientNotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found.
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    ClientRiskInvalidRequest:
+      description: Invalid data submitted for client risk creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid risk category
+    ClientRiskNotFound:
+      description: Client risk not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client risk uid not found
   securitySchemes:
     basic_auth:
       type: http

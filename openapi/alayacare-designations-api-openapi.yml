@@ -2,7 +2,25 @@ openapi: 3.2.0
 info:
   title: External Employee Designations API
   version: 1.0.8
-  description: "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- employee_id\n- contact_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n- external_contact_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format with timezone data\n\n**Employee Status Considerations**\n- When updating the `status` of an employee to `terminated`, it is possible to add a `comment`. This `comment` is saved as an Employee Note with a `note_type` of type `terminated`.\n- Updating the `status` of an employee will have repercussions in the AlayaCare application. Please refer to this link for more information: \n  https://alayacare.zendesk.com/hc/en-us/articles/360020774691\n"
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - employee_id
+
+    - contact_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+    - external_contact_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -15,9 +33,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/count'
-      summary: 'Get a list of available employee designations
-
-        '
+      summary: Get a list of available employee designations
       responses:
         '200':
           description: A list of designations
@@ -27,21 +43,27 @@ paths:
                 $ref: '#/components/schemas/DesignationList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getDesignations
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     Designation:
       description: AlayaCare designation.
       type: object
@@ -62,6 +84,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Designation'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -83,23 +118,6 @@ components:
       - page
       - total_pages
       - items
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

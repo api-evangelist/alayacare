@@ -2,7 +2,25 @@ openapi: 3.2.0
 info:
   title: External Employee Roles API
   version: 1.0.8
-  description: "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- employee_id\n- contact_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n- external_contact_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format with timezone data\n\n**Employee Status Considerations**\n- When updating the `status` of an employee to `terminated`, it is possible to add a `comment`. This `comment` is saved as an Employee Note with a `note_type` of type `terminated`.\n- Updating the `status` of an employee will have repercussions in the AlayaCare application. Please refer to this link for more information: \n  https://alayacare.zendesk.com/hc/en-us/articles/360020774691\n"
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - employee_id
+
+    - contact_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+    - external_contact_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -15,9 +33,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/count'
-      summary: 'Get a list of available employee roles
-
-        '
+      summary: Get a list of available employee roles
       responses:
         '200':
           description: A list of roles
@@ -27,21 +43,39 @@ paths:
                 $ref: '#/components/schemas/RoleList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getRoles
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
-    ErrorResponse:
-      description: Error response
+    BranchSummary:
+      description: Branch summary
       type: object
       properties:
-        code:
+        id:
           type: integer
-          description: Response code
-        message:
+          description: ID of the branch
+          example: 1
+        name:
           type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+          description: Name of the branch
+          example: Headquarters
     RoleList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -56,39 +90,19 @@ components:
             properties:
               branch:
                 $ref: '#/components/schemas/BranchSummary'
-    BranchSummary:
-      description: Branch summary
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        id:
+        code:
           type: integer
-          description: ID of the branch
-          example: 1
-        name:
+          description: Response code
+        message:
           type: string
-          description: Name of the branch
-          example: Headquarters
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
+          description: Detailed error message
       required:
-      - count
-      - page
-      - total_pages
-      - items
+      - code
+      - message
     Role:
       description: AlayaCare role
       type: object
@@ -112,23 +126,27 @@ components:
       required:
       - id
       - name
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

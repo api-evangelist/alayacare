@@ -19,31 +19,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
-
-
-    **AlayaCare IDs:**
-
-    The following terms are used to reference ids that identify resources in AlayaCare:
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-    **Remarks**
-
-    All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -63,9 +39,7 @@ paths:
       tags:
       - Activities of Daily Living (ADL)
       summary: Get a list of a client's ADLs using AlayaCare client ID
-      description: '- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.
-
-        '
+      description: '- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.'
       parameters:
       - $ref: '#/components/parameters/service_id'
       - $ref: '#/components/parameters/alayacare_service_id'
@@ -84,6 +58,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseCareplanFeatureFlagState'
         '404':
           $ref: '#/components/responses/ErrorResponseClientNotFound'
+      operationId: getAdlsClientByAlayacareClientId
+      x-operation-id-source: derived
   /adls/client/by_id/{client_id}:
     parameters:
     - name: client_id
@@ -96,9 +72,7 @@ paths:
       tags:
       - Activities of Daily Living (ADL)
       summary: Get a list of a client's ADLs using external client ID
-      description: '- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.
-
-        '
+      description: '- `service_id` and `alayacare_service_id` are mutually exclusive, specifying both is an invalid request.'
       parameters:
       - $ref: '#/components/parameters/service_id'
       - $ref: '#/components/parameters/alayacare_service_id'
@@ -117,7 +91,24 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseClientNotFound'
+      operationId: getAdlsClientByIdByClientId
+      x-operation-id-source: derived
 components:
+  parameters:
+    service_id:
+      name: service_id
+      in: query
+      required: false
+      description: Filter by external service ID
+      schema:
+        type: string
+    alayacare_service_id:
+      name: alayacare_service_id
+      in: query
+      required: false
+      description: Filter by AlayaCare service ID
+      schema:
+        type: integer
   schemas:
     DailyActivityList:
       allOf:
@@ -128,6 +119,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DailyActivity'
+    DailyActivityService:
+      description: Daily activity service
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_external_id_1
+        alayacare_id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
     ErrorResponse:
       description: Error response
       type: object
@@ -143,17 +148,6 @@ components:
       required:
       - code
       - message
-    DailyActivityCategory:
-      description: Daily activity category
-      type: string
-      enum:
-      - adl_personal_care
-      - adl_mobility
-      - adl_equipment
-      - adl_nutrition
-      - adl_household_management
-      - adl_support
-      - adl_medication
     DailyActivity:
       type: object
       properties:
@@ -199,39 +193,18 @@ components:
       - page
       - total_pages
       - items
-    DailyActivityService:
-      description: Daily activity service
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_external_id_1
-        alayacare_id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1
+    DailyActivityCategory:
+      description: Daily activity category
+      type: string
+      enum:
+      - adl_personal_care
+      - adl_mobility
+      - adl_equipment
+      - adl_nutrition
+      - adl_household_management
+      - adl_support
+      - adl_medication
   responses:
-    ErrorResponseAdlsInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: service_id and alayacare_service_id are mutually exclusive
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
     ErrorResponseClientNotFound:
       description: Client not found
       content:
@@ -250,21 +223,24 @@ components:
           example:
             code: 403
             message: You do not have the required permissions to perform this action.
-  parameters:
-    alayacare_service_id:
-      name: alayacare_service_id
-      in: query
-      required: false
-      description: Filter by AlayaCare service ID
-      schema:
-        type: integer
-    service_id:
-      name: service_id
-      in: query
-      required: false
-      description: Filter by external service ID
-      schema:
-        type: string
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseAdlsInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: service_id and alayacare_service_id are mutually exclusive
   securitySchemes:
     basic_auth:
       type: http

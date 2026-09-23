@@ -22,35 +22,7 @@ info:
     - external_contact_id
 
 
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    External IDs are unique to a single profile_id.
-
-
-    **Profile IDs**
-
-    The following term is used to describe a profile resource in AlayaCare:
-
-    - profile_id
-
-
-    Profile IDs can be shared across clients, contacts, and employees in the
-
-    case that an entity shares one or more of those roles.
-
-
-    **Client Status Considerations**
-
-    - Clients can have multiple status configured depending on their business needs. Rules for configuring client status follow the internal AlayaCare application logic.
-
-    - Updating the `status` of a client will have repercussions in the AlayaCare application.
-
-
-    Please refer to this link for more information: https://alayacare.zendesk.com/hc/en-us/articles/360015538392
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -524,22 +496,52 @@ paths:
         '500':
           description: Internal server error.
 components:
+  responses:
+    ErrorResponseCareProviderNoteInvalidRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: Validation error.
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client not found.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseCareProviderNoteNotFound:
+      description: Care provider note not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Note with id 1 was not found
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
     CareProviderNoteCreate:
       type: object
       properties:
@@ -583,6 +585,30 @@ components:
           - string
           - 'null'
           description: Cursor to the next page. Will be null when there are no more items.
+    CareProviderNoteCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the category
+        description:
+          type: string
+          description: Description of the category
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     CareProviderNoteCategoryCursorList:
       type: object
       description: Cursor-based paginated list of care provider note categories
@@ -638,15 +664,6 @@ components:
         is_archived:
           type: boolean
           description: Whether the note is archived
-    CareProviderNoteCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the category
-        description:
-          type: string
-          description: Description of the category
   requestBodies:
     CareProviderNoteCreate:
       content:
@@ -655,51 +672,6 @@ components:
             $ref: '#/components/schemas/CareProviderNoteCreate'
       description: Care provider note data in JSON format
       required: true
-  responses:
-    ErrorResponseCareProviderNoteNotFound:
-      description: Care provider note not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Note with id 1 was not found
-    ErrorResponseCareProviderNoteInvalidRequest:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                message: Validation error.
-    ErrorResponseClientNotFound:
-      description: Client not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Client not found.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

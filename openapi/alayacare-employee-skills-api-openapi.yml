@@ -18,23 +18,7 @@ info:
     - external_employee_id
 
 
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-
-    **Remarks**
-
-    - All dates must be in ISO 8601 format with timezone data
-
-
-    **Skills Considerations**
-
-    - The skill master list and employee skills management are supported by this API
-
-    - Client specific skills are not supported by this API
-
-    '
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -68,11 +52,17 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         404:
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeesByEmployeeIdSkills
+      x-operation-id-source: derived
     post:
       tags:
       - Employee Skills
       summary: Create an employee specific skill by the employee AlayaCare ID
-      description: "- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list. \n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+      description: '- Skill fields (`acquired_date`, `expired_date`, `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+
+        - `comment` can only be set if one or more skill field is configured on the skill master list.
+
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.'
       responses:
         201:
           description: An employee specific skill
@@ -106,6 +96,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeSkillCreate'
         required: true
+      operationId: postEmployeesByEmployeeIdSkills
+      x-operation-id-source: derived
   /employees/{employee_id}/skills/{skill_id}:
     parameters:
     - name: employee_id
@@ -135,11 +127,19 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseEmployeeSkillNotFound'
+      operationId: getEmployeesByEmployeeIdSkillsBySkillId
+      x-operation-id-source: derived
     put:
       tags:
       - Employee Skills
       summary: Update an employee's skill by the employee AlayaCare ID
-      description: "- Skill fields sent in the payload will overwrite existing fields on the employee skill.\n- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list. \n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+      description: '- Skill fields sent in the payload will overwrite existing fields on the employee skill.
+
+        - Skill fields (`acquired_date`, `expired_date`, `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+
+        - `comment` can only be set if one or more skill field is configured on the skill master list.
+
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.'
       responses:
         200:
           description: Employee skill updated successfuly
@@ -167,13 +167,13 @@ paths:
               $ref: '#/components/schemas/EmployeeSkillUpdate'
         description: Employe skill data to update
         required: true
+      operationId: putEmployeesByEmployeeIdSkillsBySkillId
+      x-operation-id-source: derived
     delete:
       tags:
       - Employee Skills
       summary: Remove a employee's skill by the employee AlayaCare ID
-      description: '- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.
-
-        '
+      description: '- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.'
       responses:
         204:
           description: Skill successfully deleted
@@ -181,6 +181,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         404:
           $ref: '#/components/responses/ErrorResponseEmployeeSkillNotFound'
+      operationId: deleteEmployeesByEmployeeIdSkillsBySkillId
+      x-operation-id-source: derived
   /employees/by_id/{external_employee_id}/skills:
     parameters:
     - name: external_employee_id
@@ -209,11 +211,17 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         404:
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeesByIdByExternalEmployeeIdSkills
+      x-operation-id-source: derived
     post:
       tags:
       - Employee Skills
       summary: Create an employee specific skill by the employee external ID
-      description: "- Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.\n- `comment` can only be set if one or more skill field is configured on the skill master list. \n- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.\n"
+      description: '- Skill fields (`acquired_date`, `expired_date`, `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+
+        - `comment` can only be set if one or more skill field is configured on the skill master list.
+
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.'
       responses:
         201:
           description: An employee specific skill
@@ -247,6 +255,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeSkillCreate'
         required: true
+      operationId: postEmployeesByIdByExternalEmployeeIdSkills
+      x-operation-id-source: derived
   /employees/by_id/{external_employee_id}/skills/{skill_id}:
     parameters:
     - name: external_employee_id
@@ -276,19 +286,19 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseEmployeeSkillNotFound'
+      operationId: getEmployeesByIdByExternalEmployeeIdSkillsBySkillId
+      x-operation-id-source: derived
     put:
       tags:
       - Employee Skills
       summary: Update an employee's skill by the employee external ID
       description: '- Skill fields sent in the payload will overwrite existing fields on the employee skill.
 
-        - Skill fields (`acquired_date`, `expired_date`,  `label_1` and `label_2`) should only be included if they are configured on the skill master list.
+        - Skill fields (`acquired_date`, `expired_date`, `label_1` and `label_2`) should only be included if they are configured on the skill master list.
 
         - `comment` can only be set if one or more skill field is configured on the skill master list.
 
-        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.
-
-        '
+        - Employee must have a status of active, pending, on hold, suspended, or applicant to have skills assigned.'
       responses:
         200:
           description: Employee skill updated successfuly
@@ -316,13 +326,13 @@ paths:
               $ref: '#/components/schemas/EmployeeSkillUpdate'
         description: Employe skill data to update
         required: true
+      operationId: putEmployeesByIdByExternalEmployeeIdSkillsBySkillId
+      x-operation-id-source: derived
     delete:
       tags:
       - Employee Skills
       summary: Remove a employee's skill by the employee external ID
-      description: '- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.
-
-        '
+      description: '- Employee must have a status of active, pending, on hold, suspended, or applicant to have skills unassigned.'
       responses:
         204:
           description: Skill successfully deleted
@@ -330,100 +340,41 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         404:
           $ref: '#/components/responses/ErrorResponseEmployeeSkillNotFound'
+      operationId: deleteEmployeesByIdByExternalEmployeeIdSkillsBySkillId
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    filter:
+      description: Substring search on skill category and name
+      name: filter
+      in: query
+      required: false
+      schema:
+        type: string
+    category_id:
+      description: Filter skills by category ID, one or more using **OR**
+      name: category_id
+      in: query
+      required: false
+      schema:
+        type: integer
   schemas:
-    EmployeeSkillField:
-      description: Field(s) configured in the skill
-      type: object
-      required:
-      - acquired_date
-      - expired_date
-      - label_1
-      - label_2
-      properties:
-        acquired_date:
-          type: string
-          format: date
-          description: The skill field `acquired_date` value. For `type = Date` format must be ISO 8601
-          example: '2018-07-08T00:00:00+00:00'
-        expired_date:
-          type: string
-          format: date
-          description: The skill field `expired_date` value. For `type = Date` format must be ISO 8601
-          example: '2020-07-08T00:00:00+00:00'
-        label_1:
-          type: string
-          description: The skill field `label_1` value.
-          example: X3S J1M
-        label_2:
-          type: string
-          description: The skill field `label_2` value.
-          example: Volkswagen
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    SkillCategory:
-      description: Skill Category
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: integer
-          description: ID of the skill category
-          example: 1
-        name:
-          type: string
-          description: Name of the skill category
-          example: Languages
-    EmployeeSkillList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: 'List of skills
-
-        '
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/EmployeeSkillDetails'
-    EmployeeSkillCreate:
-      type: object
-      required:
-      - skill_id
-      properties:
-        skill_id:
-          type: integer
-          description: Id of the skill to assign to the employee
-          example: 123
-        comment:
-          type: string
-          description: Free text comment on the employee specific skill
-          example: This employee has reached a proficiency level in this skill
-        fields:
-          $ref: '#/components/schemas/EmployeeSkillField'
-    EmployeeSkillUpdate:
-      type: object
-      properties:
-        comment:
-          type: string
-          description: Free text comment on the employee specific skill
-          example: This employee has reached a proficiency level in this skill
-        fields:
-          $ref: '#/components/schemas/EmployeeSkillField'
     BranchSummary:
       description: Branch summary
       type: object
@@ -436,6 +387,31 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
+    CreatedDetails:
+      description: Created by and Created at information
+      type: object
+      properties:
+        created_by:
+          type: object
+          description: User who created the employee skill entry
+          properties:
+            id:
+              type: integer
+              description: Id of the employee who assigned the skill
+              example: 284
+            external_id:
+              type: string
+              description: External ID of the employee who assigned the skill
+              example: 450
+            name:
+              type: string
+              description: Name of the employee who assigned the skill
+              example: John Smith
+        created_at:
+          type: string
+          format: date-time
+          description: Date employee specific skill was assigned to the employee (ISO 8601) - Time saved at `T00:00:00+00:00`
+          example: '2017-07-08T00:00:00+00:00'
     EmployeeSkillDetails:
       description: AlayaCare employee skill attributes
       type: object
@@ -466,31 +442,83 @@ components:
           $ref: '#/components/schemas/EmployeeSkillField'
         created_details:
           $ref: '#/components/schemas/CreatedDetails'
-    CreatedDetails:
-      description: Created by and Created at information
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        created_by:
-          type: object
-          description: User who created the employee skill entry
-          properties:
-            id:
-              type: integer
-              description: Id of the employee who assigned the skill
-              example: 284
-            external_id:
-              type: string
-              description: External ID of the employee who assigned the skill
-              example: 450
-            name:
-              type: string
-              description: Name of the employee who assigned the skill
-              example: John Smith
-        created_at:
+        code:
+          type: integer
+          description: Response code
+        message:
           type: string
-          format: date-time
-          description: Date employee specific skill was assigned to the employee (ISO 8601) - Time saved at `T00:00:00+00:00`
-          example: '2017-07-08T00:00:00+00:00'
+          description: Detailed error message
+      required:
+      - code
+      - message
+    EmployeeSkillField:
+      description: Field(s) configured in the skill
+      type: object
+      required:
+      - acquired_date
+      - expired_date
+      - label_1
+      - label_2
+      properties:
+        acquired_date:
+          type: string
+          format: date
+          description: The skill field `acquired_date` value. For `type = Date` format must be ISO 8601
+          example: '2018-07-08T00:00:00+00:00'
+        expired_date:
+          type: string
+          format: date
+          description: The skill field `expired_date` value. For `type = Date` format must be ISO 8601
+          example: '2020-07-08T00:00:00+00:00'
+        label_1:
+          type: string
+          description: The skill field `label_1` value.
+          example: X3S J1M
+        label_2:
+          type: string
+          description: The skill field `label_2` value.
+          example: Volkswagen
+    EmployeeSkillUpdate:
+      type: object
+      properties:
+        comment:
+          type: string
+          description: Free text comment on the employee specific skill
+          example: This employee has reached a proficiency level in this skill
+        fields:
+          $ref: '#/components/schemas/EmployeeSkillField'
+    EmployeeSkillCreate:
+      type: object
+      required:
+      - skill_id
+      properties:
+        skill_id:
+          type: integer
+          description: Id of the skill to assign to the employee
+          example: 123
+        comment:
+          type: string
+          description: Free text comment on the employee specific skill
+          example: This employee has reached a proficiency level in this skill
+        fields:
+          $ref: '#/components/schemas/EmployeeSkillField'
+    EmployeeSkillList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: 'List of skills
+
+        '
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/EmployeeSkillDetails'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -512,47 +540,22 @@ components:
       - page
       - total_pages
       - items
-  parameters:
-    filter:
-      description: Substring search on skill category and name
-      name: filter
-      in: query
-      required: false
-      schema:
-        type: string
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    category_id:
-      description: Filter skills by category ID, one or more using **OR**
-      name: category_id
-      in: query
-      required: false
-      schema:
-        type: integer
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
+    SkillCategory:
+      description: Skill Category
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          description: ID of the skill category
+          example: 1
+        name:
+          type: string
+          description: Name of the skill category
+          example: Languages
   responses:
-    ErrorResponseEmployeeSkillNotFound:
-      description: Employee skill relationship not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee skill relationship not found
     ErrorResponseEmployeeNotFound:
       description: Employee not found
       content:
@@ -562,6 +565,15 @@ components:
           example:
             code: 404
             message: Employee not found.
+    ErrorResponseEmployeeSkillNotFound:
+      description: Employee skill relationship not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee skill relationship not found
     ErrorResponseAuthentication:
       description: Authorization required
       content:

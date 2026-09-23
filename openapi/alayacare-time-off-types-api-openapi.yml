@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -88,9 +86,7 @@ paths:
         required: false
         schema:
           type: string
-      summary: 'Get a list of time off types
-
-        '
+      summary: Get a list of time off types
       responses:
         '200':
           description: A list of time off types
@@ -100,16 +96,10 @@ paths:
                 $ref: '#/components/schemas/TimeOffList'
         '401':
           $ref: '#/components/responses/ErrorAuthentication'
+      operationId: getTimeOffTypes
+      x-operation-id-source: derived
 components:
   parameters:
-    branchId:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
     page:
       description: Filter by page number.
       name: page
@@ -127,22 +117,28 @@ components:
       schema:
         type: integer
         default: 100
+    branchId:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
   schemas:
-    ErrorResponse:
-      description: Error response
+    BranchSummary:
+      description: Branch summary
       type: object
       properties:
-        code:
+        id:
           type: integer
-          example: 400
-          description: Response code
-        message:
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
           type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+          description: Name of the branch
+          example: Headquarters
     TimeOff:
       description: Time off type details
       type: object
@@ -171,6 +167,34 @@ components:
           $ref: '#/components/schemas/ServiceCodeDetails'
         branch:
           $ref: '#/components/schemas/BranchSummary'
+    ServiceCodeDetails:
+      description: Service details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the service code
+          example: 1
+          minimum: 1
+        service_code_name:
+          type: string
+          description: Name of the service code
+          example: SICKPAID
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -197,19 +221,6 @@ components:
       - page
       - total_pages
       - items
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     TimeOffList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -221,19 +232,6 @@ components:
           items:
             allOf:
             - $ref: '#/components/schemas/TimeOff'
-    ServiceCodeDetails:
-      description: Service details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the service code
-          example: 1
-          minimum: 1
-        service_code_name:
-          type: string
-          description: Name of the service code
-          example: SICKPAID
   responses:
     ErrorAuthentication:
       description: Authorization required

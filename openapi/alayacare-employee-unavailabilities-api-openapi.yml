@@ -2,7 +2,23 @@ openapi: 3.2.0
 info:
   title: AlayaCare Employee Unavailabilities API
   version: 1.0.1
-  description: "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- employee_id\n- unavailability_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format converted to UTC timezone\n\n**Employee Unavailabilities Considerations**\n- Configuring Employee Unavailabilities will have repercussions in the AlayaCare application. \n\nPlease refer to this link for more information: https://alayacare.zendesk.com/hc/en-us/articles/225732027\n"
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - employee_id
+
+    - unavailability_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -113,9 +129,7 @@ paths:
         required: false
         schema:
           type: string
-      summary: 'Get a list of an employee unavailabilities using its AlayaCare ID
-
-        '
+      summary: Get a list of an employee unavailabilities using its AlayaCare ID
       responses:
         200:
           description: A list of an employee unavailabilities
@@ -127,21 +141,19 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         404:
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeeByEmployeeIdUnavailabilities
+      x-operation-id-source: derived
     post:
       tags:
       - Employee Unavailabilities
-      summary: 'Create an employee unavailability using its AlayaCare ID
-
-        '
+      summary: Create an employee unavailability using its AlayaCare ID
       description: '* `duration_paid_per_day` can only be set when the Time Off Type `pay_schedule_time` is set to `No` and the unavailability `all_day` is set to `true`
 
         * `duration_paid_per_day` is optional, if omitted the unavailability will be created with the Time Off Type `all_day_duration`
 
         * `time_off_type_id` is optional, if omitted the unavailability will be created with a Time Off Type set as `Unavailable`
 
-        * `duration` can only be set when when `all_day` is set to `false`
-
-        '
+        * `duration` can only be set when when `all_day` is set to `false`'
       responses:
         201:
           description: Unavailability created successfully
@@ -176,6 +188,8 @@ paths:
               $ref: '#/components/schemas/UnavailabilityCreate'
         description: Unavailability data in JSON format
         required: true
+      operationId: postEmployeeByEmployeeIdUnavailabilities
+      x-operation-id-source: derived
   /employee/by_id/{external_employee_id}/unavailabilities:
     parameters:
     - name: external_employee_id
@@ -281,9 +295,7 @@ paths:
         required: false
         schema:
           type: string
-      summary: 'Get a list of an employee unavailabilities using its External Employee ID
-
-        '
+      summary: Get a list of an employee unavailabilities using its External Employee ID
       responses:
         200:
           description: A list of an employee unavailabilities
@@ -295,21 +307,19 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         404:
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeeByIdByExternalEmployeeIdUnavailabilities
+      x-operation-id-source: derived
     post:
       tags:
       - Employee Unavailabilities
-      summary: 'Create an employee unavailability using its External Employee ID
-
-        '
+      summary: Create an employee unavailability using its External Employee ID
       description: '* `duration_paid_per_day` can only be set when the Time Off Type `pay_schedule_time` is set to `No` and the unavailability `all_day` is set to `true`
 
         * `duration_paid_per_day` is optional, if omitted the unavailability will be created with the Time Off Type `all_day_duration`
 
         * `time_off_type_id` is optional, if omitted the unavailability will be created with a Time Off Type set as `Unavailable`
 
-        * `duration` can only be set when when `all_day` is set to `false`
-
-        '
+        * `duration` can only be set when when `all_day` is set to `false`'
       responses:
         201:
           description: Unavailability created successfully
@@ -344,55 +354,39 @@ paths:
               $ref: '#/components/schemas/UnavailabilityCreate'
         description: Unavailability data in JSON format
         required: true
+      operationId: postEmployeeByIdByExternalEmployeeIdUnavailabilities
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
-    Unavailability:
-      description: Unavailability details
+    BranchSummary:
+      description: Branch summary
       type: object
       properties:
         id:
           type: integer
-          description: ID of the unavailability
+          description: ID of the branch
           example: 1
-        employee:
-          $ref: '#/components/schemas/EmployeeDetails'
-        time_off_type:
-          $ref: '#/components/schemas/TimeOffTypeDetails'
-        description:
+        name:
           type: string
-          description: Free text comment on the employee unavailability
-          example: Daily unavailability used for paid sick leaves.
-        duration:
-          type: integer
-          description: Unavailability duration in minutes. The duration will be set to 0 for an all day unavailability
-          example: 60
-        all_day:
-          type: boolean
-          description: Specifies if the unavailability is applicable for the entire day
-          example: false
-        rrule:
-          type: string
-          description: "Recurrence rule applied to the employee unavailability, configured based on the below parameters:\n  - `FREQ` is mandatory and can only be set to `DAILY`,`WEEKLY`or`MONTHLY`.\n  - `DTSTART` is mandatory \n    - The format will be ISO 8601 converted to employee timezone\n  - `UNTIL` is not mandatory\n    - The format will be ISO 8601 converted to employee timezone\n  - `INTERVAL` is mandatory. \n    - When `FREQ` is set to `DAILY`, `INTERVAL` can be set to a value between `1` to `365`\n    - When `FREQ` is set to `WEEKLY`, `INTERVAL` can be set to a value between `1` to `52`\n    - When `FREQ` is set to `MONTHLY`, `INTERVAL` can be set to a value between `1` to `12`\n  - `BYDAY` is mandatory and can only be set when `FREQ` is set to `WEEKLY`. `BYDAY` can be set to either `MO`,`TU`,`WE`,`TH`,`FR`,`SA`and/or`SU`. If multiple values are selected, separate them with a comma (i.e.: `BYDAY=TU,TH,SA`)\n  - `BYMONTHDAY` is mandatory and can only be set when `FREQ` is set to `MONTHLY`. `BYMONTHDAY` can be set to a value between `1` to `28`.\n  - `TIMEZONE` is the timezone of the employee.\n\nRefer to https://tools.ietf.org/html/rfc5545 for more information.\n"
-          example: FREQ=DAILY;DTSTART=20200130T050000Z;UNTIL=20200130T050000Z;INTERVAL=1;TIMEZONE=America/Toronto
-        duration_paid_per_day:
-          type: integer
-          description: "Payable portion of the day for an all day unavailability. For example, an 8 hours work day will be represented as 480 minutes of `duration_paid_per_day`. \nOverwrites the `all_day_duration` setting of the Time Off Type. Only available when `pay_schedule_time` of the Time Off Type is set to 'No' and the unavailability `all_day` is set to `true`.\n"
-          example: null
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+          description: Name of the branch
+          example: Headquarters
     UnavailabilityCreate:
       description: Unavailability creation details
       type: object
@@ -428,41 +422,29 @@ components:
           type: integer
           description: "Payable portion of the day for an all day unavailability. For example, an 8 hours work day will be represented as 480 minutes of `duration_paid_per_day`. \nOverwrites the `all_day_duration` setting of the Time Off Type. Only available when `pay_schedule_time` of the Time Off Type is set to 'No' and the unavailability `all_day` is set to `true`.\n"
           example: null
-    UnavailabilitiesList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: List of an employee unavailabilities
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/Unavailability'
-    EmployeeDetails:
-      description: Employee details
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    UnavailabilityCreated:
+      description: Unavailability created details
       type: object
+      required:
+      - id
       properties:
         id:
           type: integer
-          description: AlayaCare ID of the employee
+          description: ID of the unavailability
           example: 1
-        external_id:
-          type: string
-          description: External ID of the employee
-          example: external_id_1
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     TimeOffTypeDetails:
       description: Time Off Type details
       type: object
@@ -483,16 +465,6 @@ components:
           - false
           - Time_Off_Pay_Code
           - Visit_Pay_Code
-    UnavailabilityCreated:
-      description: Unavailability created details
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: integer
-          description: ID of the unavailability
-          example: 1
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -514,6 +486,63 @@ components:
       - page
       - total_pages
       - items
+    UnavailabilitiesList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: List of an employee unavailabilities
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/Unavailability'
+    Unavailability:
+      description: Unavailability details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the unavailability
+          example: 1
+        employee:
+          $ref: '#/components/schemas/EmployeeDetails'
+        time_off_type:
+          $ref: '#/components/schemas/TimeOffTypeDetails'
+        description:
+          type: string
+          description: Free text comment on the employee unavailability
+          example: Daily unavailability used for paid sick leaves.
+        duration:
+          type: integer
+          description: Unavailability duration in minutes. The duration will be set to 0 for an all day unavailability
+          example: 60
+        all_day:
+          type: boolean
+          description: Specifies if the unavailability is applicable for the entire day
+          example: false
+        rrule:
+          type: string
+          description: "Recurrence rule applied to the employee unavailability, configured based on the below parameters:\n  - `FREQ` is mandatory and can only be set to `DAILY`,`WEEKLY`or`MONTHLY`.\n  - `DTSTART` is mandatory \n    - The format will be ISO 8601 converted to employee timezone\n  - `UNTIL` is not mandatory\n    - The format will be ISO 8601 converted to employee timezone\n  - `INTERVAL` is mandatory. \n    - When `FREQ` is set to `DAILY`, `INTERVAL` can be set to a value between `1` to `365`\n    - When `FREQ` is set to `WEEKLY`, `INTERVAL` can be set to a value between `1` to `52`\n    - When `FREQ` is set to `MONTHLY`, `INTERVAL` can be set to a value between `1` to `12`\n  - `BYDAY` is mandatory and can only be set when `FREQ` is set to `WEEKLY`. `BYDAY` can be set to either `MO`,`TU`,`WE`,`TH`,`FR`,`SA`and/or`SU`. If multiple values are selected, separate them with a comma (i.e.: `BYDAY=TU,TH,SA`)\n  - `BYMONTHDAY` is mandatory and can only be set when `FREQ` is set to `MONTHLY`. `BYMONTHDAY` can be set to a value between `1` to `28`.\n  - `TIMEZONE` is the timezone of the employee.\n\nRefer to https://tools.ietf.org/html/rfc5545 for more information.\n"
+          example: FREQ=DAILY;DTSTART=20200130T050000Z;UNTIL=20200130T050000Z;INTERVAL=1;TIMEZONE=America/Toronto
+        duration_paid_per_day:
+          type: integer
+          description: "Payable portion of the day for an all day unavailability. For example, an 8 hours work day will be represented as 480 minutes of `duration_paid_per_day`. \nOverwrites the `all_day_duration` setting of the Time Off Type. Only available when `pay_schedule_time` of the Time Off Type is set to 'No' and the unavailability `all_day` is set to `true`.\n"
+          example: null
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
+    EmployeeDetails:
+      description: Employee details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare ID of the employee
+          example: 1
+        external_id:
+          type: string
+          description: External ID of the employee
+          example: external_id_1
   responses:
     ErrorResponseEmployeeNotFound:
       description: Employee not found
@@ -533,23 +562,6 @@ components:
           example:
             code: 401
             message: Authorization required
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   securitySchemes:
     basic_auth:
       type: http

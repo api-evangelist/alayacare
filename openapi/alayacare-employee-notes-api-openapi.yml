@@ -2,7 +2,25 @@ openapi: 3.2.0
 info:
   title: External Employee Employee Notes API
   version: 1.0.8
-  description: "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- employee_id\n- contact_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n- external_contact_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format with timezone data\n\n**Employee Status Considerations**\n- When updating the `status` of an employee to `terminated`, it is possible to add a `comment`. This `comment` is saved as an Employee Note with a `note_type` of type `terminated`.\n- Updating the `status` of an employee will have repercussions in the AlayaCare application. Please refer to this link for more information: \n  https://alayacare.zendesk.com/hc/en-us/articles/360020774691\n"
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - employee_id
+
+    - contact_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+    - external_contact_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -49,15 +67,15 @@ paths:
                 $ref: '#/components/schemas/EmployeeNotesDetailsList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getEmployeeNotesByEmployeeId
+      x-operation-id-source: derived
     post:
       summary: Create an employee note by the employee's AlayaCare ID
       tags:
       - Employee Notes
       description: '* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/
 
-        * Note `status` is optional, if omitted the employee note will be created with status set to `Active`.
-
-        '
+        * Note `status` is optional, if omitted the employee note will be created with status set to `Active`.'
       responses:
         201:
           description: Employee note created successfully
@@ -78,6 +96,8 @@ paths:
               $ref: '#/components/schemas/EmployeeNotesCreate'
         description: Employee note data in JSON format
         required: true
+      operationId: postEmployeeNotesByEmployeeId
+      x-operation-id-source: derived
   /employee_notes/by_id/{external_employee_id}:
     parameters:
     - name: external_employee_id
@@ -119,15 +139,15 @@ paths:
                 $ref: '#/components/schemas/EmployeeNotesDetailsList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getEmployeeNotesByIdByExternalEmployeeId
+      x-operation-id-source: derived
     post:
       summary: Create an employee note by the employee's external ID
       tags:
       - Employee Notes
       description: '* A subset of HTML is accepted in the content. Supported HTML is based upon the following library: https://bleach.readthedocs.io/en/latest/
 
-        * Note `status` is optional, if omitted the employee note will be created with status set to `Active`.
-
-        '
+        * Note `status` is optional, if omitted the employee note will be created with status set to `Active`.'
       responses:
         201:
           description: Employee note created successfully
@@ -148,8 +168,78 @@ paths:
               $ref: '#/components/schemas/EmployeeNotesCreate'
         description: Employee note data in JSON format
         required: true
+      operationId: postEmployeeNotesByIdByExternalEmployeeId
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+  responses:
+    ErrorResponseEmployeeNotFound:
+      description: Employee not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee not found.
+    ErrorResponseCreateNoteInvalidRequest:
+      description: Invalid data submitted for creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400,
+            message: Invalid note type
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
+    EmployeeNotesCreate:
+      description: Employee note data required for creation.
+      type: object
+      properties:
+        status:
+          type: string
+          default: active
+          description: Status of the employee note. Either `active` or `archived`.
+          example: active
+          enum:
+          - active
+          - archived
+        note_type:
+          type: string
+          description: Note type category of the employee note
+          example: employee_general
+        content:
+          type: string
+          description: Content of the employee note. A subset of HTML is accepted.
+          example: Employee requested additional training.
+      required:
+      - note_type
+      - content
     ErrorResponse:
       description: Error response
       type: object
@@ -163,16 +253,27 @@ components:
       required:
       - code
       - message
-    EmployeeNotesDetailsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of employee notes
+    PaginatedList:
+      description: Base model of all paginated lists
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmployeeNotesDetails'
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     EmployeeNotesDetails:
       description: An employee note
       type: object
@@ -206,95 +307,16 @@ components:
           type: integer
           description: AlayaCare ID of the employee who created the employee note.
           example: 1001
-    EmployeeNotesCreate:
-      description: Employee note data required for creation.
+    EmployeeNotesDetailsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of employee notes
       type: object
       properties:
-        status:
-          type: string
-          default: active
-          description: Status of the employee note. Either `active` or `archived`.
-          example: active
-          enum:
-          - active
-          - archived
-        note_type:
-          type: string
-          description: Note type category of the employee note
-          example: employee_general
-        content:
-          type: string
-          description: Content of the employee note. A subset of HTML is accepted.
-          example: Employee requested additional training.
-      required:
-      - note_type
-      - content
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-  responses:
-    ErrorResponseCreateNoteInvalidRequest:
-      description: Invalid data submitted for creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400,
-            message: Invalid note type
-    ErrorResponseEmployeeNotFound:
-      description: Employee not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee not found.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeNotesDetails'
   securitySchemes:
     basic_auth:
       type: http

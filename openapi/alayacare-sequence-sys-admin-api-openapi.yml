@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Get a paginated collection of sequences as a system admin.
-
-        '
+        Get a paginated collection of sequences as a system admin.'
       parameters:
       - in: query
         name: demand_persona_id
@@ -92,21 +90,19 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get sys admin sequences
+      x-summary-source: derived
+      operationId: getV1SysAdminSequences
+      x-operation-id-source: derived
 components:
   schemas:
-    DemographicLeanCore:
-      type: object
-      properties:
-        first_name:
-          type: string
-          minLength: 1
-        last_name:
-          type: string
-          minLength: 1
-      required:
-      - first_name
-      - last_name
-    SequenceLatestReferralResponse:
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    SequenceOfferResponse:
       type: object
       properties:
         id:
@@ -114,10 +110,6 @@ components:
           format: uuid
       required:
       - id
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
     SysAdminSequenceCollectionResponse:
       type: object
       properties:
@@ -149,20 +141,34 @@ components:
       - supply
       - client
       - service
-    SequenceClientResponse:
+    SequenceServiceResponse:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+      required:
+      - name
+      - outbox_id
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    SequenceLatestReferralResponse:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        outbox_id:
-          type: string
-          minLength: 1
-        demographics:
-          $ref: '#/components/schemas/DemographicLeanCore'
       required:
-      - outbox_id
-      - demographics
+      - id
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -182,23 +188,32 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    SysAdminSequencePageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
-        required:
-        - items
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
+    DemographicLeanCore:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+      required:
+      - first_name
+      - last_name
+    SequenceClientResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+          minLength: 1
+        demographics:
+          $ref: '#/components/schemas/DemographicLeanCore'
+      required:
+      - outbox_id
+      - demographics
     OrganizationLeanCore:
       type: object
       properties:
@@ -211,36 +226,18 @@ components:
       required:
       - id
       - name
-    SequenceOfferResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-      - id
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    SequenceServiceResponse:
-      type: object
-      properties:
-        outbox_id:
-          type: string
-          minLength: 1
-        name:
-          type: string
-          minLength: 1
-      required:
-      - name
-      - outbox_id
+    SysAdminSequencePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
+        required:
+        - items
   parameters:
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
     ItemsPerPageParam:
       in: query
       name: items_per_page
@@ -251,6 +248,11 @@ components:
       name: sort_order
       schema:
         $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

@@ -2,7 +2,38 @@ openapi: 3.2.0
 info:
   version: 1.0.4
   title: External Clinical Vitals API
-  description: "External Clinical API\n\n**Internal IDs**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- created_by\n- client_id\n- risk_id\n- medication_id\n- admin_id\n- vital_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_id\n- external_client_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n\n**Progress Notes**\n  API for creating and viewing client progress notes.\n\n**Risks**\nAPI for creating, viewing, updating, and removing client risks.\n\n**Medication**\n  API for creating, editing, and viewing medications and medication administrations.\n\n**Vitals**\n  API for creating, editing and viewing vitals.\n\nEach individual vital type is identified by a `name`. Dependent vitals are given the same `group`. Currently this is only used to link names `pressure_min` and `pressure_max` with the group `blood_pressure`, as these values should be recorded together.\n\nThe metadata of the vitals includes the configuration and thresholds, the default and available units, and any other required options for each vital type.\n"
+  description: 'External Clinical API
+
+
+    **Internal IDs**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - created_by
+
+    - client_id
+
+    - risk_id
+
+    - medication_id
+
+    - admin_id
+
+    - vital_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_id
+
+    - external_client_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 tags:
@@ -54,6 +85,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         400:
           $ref: '#/components/responses/InvalidRequest'
+      operationId: getVitalsClientByClientId
+      x-operation-id-source: derived
     post:
       tags:
       - Vitals
@@ -76,6 +109,8 @@ paths:
               $ref: '#/components/schemas/VitalCreate'
         description: Vital data in JSON format
         required: true
+      operationId: postVitalsClientByClientId
+      x-operation-id-source: derived
   /vitals/client/by_id/{external_client_id}:
     parameters:
     - description: External client ID
@@ -122,6 +157,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         400:
           $ref: '#/components/responses/InvalidRequest'
+      operationId: getVitalsClientByIdByExternalClientId
+      x-operation-id-source: derived
     post:
       tags:
       - Vitals
@@ -140,6 +177,8 @@ paths:
               $ref: '#/components/schemas/VitalCreate'
         description: Vital data
         required: true
+      operationId: postVitalsClientByIdByExternalClientId
+      x-operation-id-source: derived
   /vitals/{vital_id}:
     parameters:
     - description: Vital ID
@@ -166,6 +205,8 @@ paths:
           $ref: '#/components/responses/InvalidRequest'
         404:
           $ref: '#/components/responses/NotFound'
+      operationId: getVitalsByVitalId
+      x-operation-id-source: derived
     put:
       tags:
       - Vitals
@@ -186,59 +227,10 @@ paths:
               $ref: '#/components/schemas/VitalCreate'
         description: Medication data
         required: true
+      operationId: putVitalsByVitalId
+      x-operation-id-source: derived
 components:
-  responses:
-    NotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Progress note not found
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid request
   schemas:
-    VitalOptions:
-      type:
-      - object
-      - 'null'
-      description: Additional options required for some vital types.
-      properties:
-        position:
-          $ref: '#/components/schemas/VitalOptionPosition'
-        route:
-          $ref: '#/components/schemas/VitalOptionRoute'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     VitalList:
       type: object
       allOf:
@@ -309,6 +301,19 @@ components:
           type: number
           description: The value of the recorded vital.
           example: 38.4
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     VitalName:
       type: string
       description: The name identifying the vital type.
@@ -324,41 +329,6 @@ components:
       - spo2
       - temperature
       example: pressure_max
-    VitalUnits:
-      type: string
-      description: The unit used to record the vital.
-      enum:
-      - c
-      - f
-      - kgs
-      - lb
-      - bpm
-      - breaths_pm
-      - mmhg
-      - cm
-      - in
-      - mmol_l
-      - mg_dl
-      - kg_m2
-      - '%'
-      example: mmhg
-    VitalOptionRoute:
-      type: string
-      description: The route that awas used when recording a vital like `temperature`.
-      enum:
-      - axillary
-      - oral
-      - rectal
-      - tympanic
-      example: oral
-    VitalOptionPosition:
-      type: string
-      description: The position of the client when recording a vital like `blood_pressure` or `pulse`.
-      enum:
-      - lying
-      - sitting
-      - standing
-      example: sitting
     Vital:
       allOf:
       - $ref: '#/components/schemas/VitalCreate'
@@ -380,6 +350,15 @@ components:
           type: string
           description: The vital ID.
           example: adedb729-54fa-473e-b929-9c71ef5c248e
+    VitalOptionRoute:
+      type: string
+      description: The route that awas used when recording a vital like `temperature`.
+      enum:
+      - axillary
+      - oral
+      - rectal
+      - tympanic
+      example: oral
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -405,15 +384,71 @@ components:
       - page
       - total_pages
       - items
+    VitalOptions:
+      type:
+      - object
+      - 'null'
+      description: Additional options required for some vital types.
+      properties:
+        position:
+          $ref: '#/components/schemas/VitalOptionPosition'
+        route:
+          $ref: '#/components/schemas/VitalOptionRoute'
+    VitalUnits:
+      type: string
+      description: The unit used to record the vital.
+      enum:
+      - c
+      - f
+      - kgs
+      - lb
+      - bpm
+      - breaths_pm
+      - mmhg
+      - cm
+      - in
+      - mmol_l
+      - mg_dl
+      - kg_m2
+      - '%'
+      example: mmhg
+    VitalOptionPosition:
+      type: string
+      description: The position of the client when recording a vital like `blood_pressure` or `pulse`.
+      enum:
+      - lying
+      - sitting
+      - standing
+      example: sitting
+  responses:
+    NotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Progress note not found
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
   parameters:
-    count:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
     page:
       name: page
       in: query
@@ -422,6 +457,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

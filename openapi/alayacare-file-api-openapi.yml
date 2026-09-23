@@ -10,9 +10,7 @@ info:
 
     The following terms are used to reference IDs that identify resources in AlayaCare:
 
-    - id
-
-    '
+    - id'
 servers:
 - url: https://homecare.alayacare.com/ext/api/v2/files
 tags:
@@ -52,6 +50,8 @@ paths:
                     type: string
                     description: Detail on the error
                     example: File "file.pdf" to delete not found
+      operationId: getClientByIdByPath
+      x-operation-id-source: derived
     post:
       tags:
       - File
@@ -65,9 +65,7 @@ paths:
         **Note:** This consumes `multipart form-data` as defined in the parameters below.
 
 
-        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file.
-
-        '
+        **Note on content attributes:** When specifying the key that references the file, the key must be set as `file` in the request in order for the API to find the file.'
       responses:
         201:
           description: File uploaded
@@ -111,6 +109,8 @@ paths:
                   type: string
                   description: The file to upload
                   format: binary
+      operationId: postClientByIdByPath
+      x-operation-id-source: derived
     put:
       tags:
       - File
@@ -133,9 +133,7 @@ paths:
         and we want to copy `child1/` inside `dir2/` (the goal is to have `dir2/child1/`), the `path` in the url of the `PUT` request has to be: `dir2/child1/`. The `source` header of the request has to be `dir1/child1/`.
 
 
-        A 400 response will be returned for a request to move a folder in one of its own subfolders.
-
-        '
+        A 400 response will be returned for a request to move a folder in one of its own subfolders.'
       responses:
         200:
           description: File copied or moved
@@ -176,6 +174,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileNotFoundSchema'
+      operationId: putClientByIdByPath
+      x-operation-id-source: derived
     delete:
       tags:
       - File
@@ -190,6 +190,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileNotFoundSchema'
+      operationId: deleteClientByIdByPath
+      x-operation-id-source: derived
 components:
   schemas:
     FileNotFoundSchema:

@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -80,6 +78,8 @@ paths:
                 $ref: '#/components/schemas/VisitPremiumsList'
         '404':
           $ref: '#/components/responses/ErrorVisitNotFound'
+      operationId: getVisitsByVisitIdPremiums
+      x-operation-id-source: derived
     post:
       tags:
       - Visit Premiums
@@ -104,6 +104,8 @@ paths:
           $ref: '#/components/responses/ErrorVisitNotFound'
         '409':
           $ref: '#/components/responses/ErrorResponseVisitPremiumConflict'
+      operationId: postVisitsByVisitIdPremiums
+      x-operation-id-source: derived
   /visits/{visit_id}/premiums/{visit_premium_id}:
     parameters:
     - in: path
@@ -135,6 +137,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorVisitNotFound'
+      operationId: getVisitsByVisitIdPremiumsByVisitPremiumId
+      x-operation-id-source: derived
     put:
       tags:
       - Visit Premiums
@@ -159,6 +163,8 @@ paths:
           $ref: '#/components/responses/ErrorVisitNotFound'
         '409':
           $ref: '#/components/responses/ErrorResponseVisitPremiumConflict'
+      operationId: putVisitsByVisitIdPremiumsByVisitPremiumId
+      x-operation-id-source: derived
     delete:
       tags:
       - Visit Premiums
@@ -170,64 +176,10 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorVisitNotFound'
+      operationId: deleteVisitsByVisitIdPremiumsByVisitPremiumId
+      x-operation-id-source: derived
 components:
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    VisitPremiumUpdateSchema:
-      type: object
-      properties:
-        premium_id:
-          type: integer
-          description: AlayaCare premium ID
-          minimum: 1
-        quantity:
-          type: number
-          example: 1.01
-        description:
-          type: string
-          example: Mileage KMs
-    VisitPremiumCreateSchema:
-      type: object
-      required:
-      - premium_id
-      - quantity
-      properties:
-        premium_id:
-          type: integer
-          description: AlayaCare premium ID
-          minimum: 1
-        quantity:
-          type: number
-          example: 1.01
-        description:
-          type: string
-          example: Mileage KMs
-        override_locked_visit:
-          type: boolean
-          example: false
-          description: 'Flag to override a locked visit. A visit is considered "locked" in AlayaCare when it is included in a billing or payroll run.
-
-
-            Only users with the correct permissions enabled may edit a "locked" visit.
-
-
-            Note that if a visit is locked and this flag is sent as `true`, your organization may need to re-run billing or payroll in the AlayaCare web application to properly reflect the changes.
-
-            '
     BillCode:
       description: AlayaCare bill code
       type: object
@@ -267,19 +219,6 @@ components:
       - visit_premium_id
       - quantity
       - premium
-    PayCode:
-      description: AlayaCare pay code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare pay code ID
-          example: 3
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare pay code name
-          example: 783
     Premium:
       description: A premium configured in AlayaCare Accounting Settings
       type: object
@@ -308,6 +247,34 @@ components:
       required:
       - code
       - premium_id
+    VisitPremiumCreateSchema:
+      type: object
+      required:
+      - premium_id
+      - quantity
+      properties:
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          minimum: 1
+        quantity:
+          type: number
+          example: 1.01
+        description:
+          type: string
+          example: Mileage KMs
+        override_locked_visit:
+          type: boolean
+          example: false
+          description: 'Flag to override a locked visit. A visit is considered "locked" in AlayaCare when it is included in a billing or payroll run.
+
+
+            Only users with the correct permissions enabled may edit a "locked" visit.
+
+
+            Note that if a visit is locked and this flag is sent as `true`, your organization may need to re-run billing or payroll in the AlayaCare web application to properly reflect the changes.
+
+            '
     VisitPremiumsList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -318,6 +285,47 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VisitPremiumDetails'
+    PayCode:
+      description: AlayaCare pay code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare pay code ID
+          example: 3
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare pay code name
+          example: 783
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    VisitPremiumUpdateSchema:
+      type: object
+      properties:
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          minimum: 1
+        quantity:
+          type: number
+          example: 1.01
+        description:
+          type: string
+          example: Mileage KMs
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -358,17 +366,6 @@ components:
           description: Branch name
           example: AlayaCare Health
   responses:
-    ErrorResponseVisitPremiumConflict:
-      description: Conflict
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '409'
-                message: The funding configuration of this premium does not match that of the visit
     ErrorVisitNotFound:
       description: The visit referenced by visit_id was not found
       content:
@@ -380,6 +377,17 @@ components:
               value:
                 code: '404'
                 message: Visit not found
+    ErrorResponseVisitPremiumConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '409'
+                message: The funding configuration of this premium does not match that of the visit
     ErrorResponseAuthentication:
       description: Authorization required
       content:

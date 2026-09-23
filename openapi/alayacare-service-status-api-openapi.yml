@@ -22,35 +22,7 @@ info:
     - external_contact_id
 
 
-    External IDs are required to be unique.
-
-    No other assumptions are made regarding their format they are treated as strings.
-
-    External IDs are unique to a single profile_id.
-
-
-    **Profile IDs**
-
-    The following term is used to describe a profile resource in AlayaCare:
-
-    - profile_id
-
-
-    Profile IDs can be shared across clients, contacts, and employees in the
-
-    case that an entity shares one or more of those roles.
-
-
-    **Client Status Considerations**
-
-    - Clients can have multiple status configured depending on their business needs. Rules for configuring client status follow the internal AlayaCare application logic.
-
-    - Updating the `status` of a client will have repercussions in the AlayaCare application.
-
-
-    Please refer to this link for more information: https://alayacare.zendesk.com/hc/en-us/articles/360015538392
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -117,31 +89,13 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
 components:
-  responses:
-    ErrorResponseClientStatusInvalidRequest:
-      description: Invalid request
+  requestBodies:
+    ServiceStatusCreate:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                idstatus:
-                - Not a valid choice.
-                message: Validation error.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
+            $ref: '#/components/schemas/ServiceStatusCreate'
+      required: true
   schemas:
     ErrorResponse:
       description: Error response
@@ -192,13 +146,31 @@ components:
           description: End date of the status
       required:
       - status_id
-  requestBodies:
-    ServiceStatusCreate:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ServiceStatusCreate'
-      required: true
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseClientStatusInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                idstatus:
+                - Not a valid choice.
+                message: Validation error.
   securitySchemes:
     basic_auth:
       type: http

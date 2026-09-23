@@ -23,43 +23,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique.
-
-
-    No other assumptions are made regarding their format; they are treated as
-
-    strings.
-
-
-
-    **AlayaCare IDs:**
-
-
-    The following terms are used to reference ids that identify resources in
-
-    AlayaCare:
-
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-
-    **Remarks**
-
-
-    - All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 - url: https://homecare.uat.alayacare.ca/ext/api/v2/scheduler
@@ -77,9 +41,7 @@ paths:
       tags:
       - Service Tags
       summary: Get list of service tags
-      description: 'Get a list of service tags
-
-        '
+      description: Get a list of service tags
       responses:
         '200':
           description: The list of service tags
@@ -89,8 +51,41 @@ paths:
                 $ref: '#/components/schemas/ServiceTagList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getServicesTags
+      x-operation-id-source: derived
 components:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
   schemas:
+    ServiceTagList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of service tags
+      properties:
+        items:
+          type: array
+          example:
+          - Diabetes service
+          - Hospice care
+          items:
+            type: string
     ErrorResponse:
       description: Error response
       type: object
@@ -106,18 +101,6 @@ components:
       required:
       - code
       - message
-    ServiceTagList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of service tags
-      properties:
-        items:
-          type: array
-          example:
-          - Diabetes service
-          - Hospice care
-          items:
-            type: string
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -143,25 +126,6 @@ components:
       - page
       - total_pages
       - items
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

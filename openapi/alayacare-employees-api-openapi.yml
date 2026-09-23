@@ -2,7 +2,25 @@ openapi: 3.2.0
 info:
   title: External Employee Employees API
   version: 1.0.8
-  description: "**AlayaCare IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- employee_id\n- contact_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_employee_id\n- external_contact_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format with timezone data\n\n**Employee Status Considerations**\n- When updating the `status` of an employee to `terminated`, it is possible to add a `comment`. This `comment` is saved as an Employee Note with a `note_type` of type `terminated`.\n- Updating the `status` of an employee will have repercussions in the AlayaCare application. Please refer to this link for more information: \n  https://alayacare.zendesk.com/hc/en-us/articles/360020774691\n"
+  description: '**AlayaCare IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - employee_id
+
+    - contact_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_employee_id
+
+    - external_contact_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/employees
 tags:
@@ -12,9 +30,7 @@ paths:
     get:
       tags:
       - Employees
-      summary: 'Get a list of employees.
-
-        '
+      summary: Get a list of employees
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/count'
@@ -61,12 +77,12 @@ paths:
                 $ref: '#/components/schemas/EmployeeList'
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
+      operationId: getEmployees
+      x-operation-id-source: derived
     post:
       tags:
       - Employees
-      summary: 'Create an employee.
-
-        '
+      summary: Create an employee
       description: '- `branch_id` is optional, if omitted employee will be created in the default branch.
 
         - `status` is optional, if omitted employee will be created with an `active` status.
@@ -75,9 +91,7 @@ paths:
 
         - Only one of `profile_id` or a `demographics` object can be specified.
 
-        - Adding a `comment` when creating an employee with a `status` set to `terminated` is not supported by this endpoint. Any `comment` sent will be ignored.
-
-        '
+        - Adding a `comment` when creating an employee with a `status` set to `terminated` is not supported by this endpoint. Any `comment` sent will be ignored.'
       responses:
         '201':
           $ref: '#/components/responses/SuccessResponseEmployeeCreate'
@@ -106,6 +120,8 @@ paths:
               $ref: '#/components/schemas/EmployeeCreate'
         description: Employee definition in JSON format
         required: true
+      operationId: postEmployees
+      x-operation-id-source: derived
   /employees/{employee_id}:
     parameters:
     - name: employee_id
@@ -127,15 +143,15 @@ paths:
                 $ref: '#/components/schemas/EmployeeDetails'
         '404':
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeesByEmployeeId
+      x-operation-id-source: derived
     put:
       tags:
       - Employees
       summary: Modify employee details using its AlayaCare ID
       description: '* Changing the `branch_id` of an employee is not supported by this API. Any `branch_id` sent will be ignored.
 
-        * Changing the `status` of an employee is not supported by this endpoint. Any `status` sent will be ignored.
-
-        '
+        * Changing the `status` of an employee is not supported by this endpoint. Any `status` sent will be ignored.'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponseEmployeeUpdate'
@@ -147,6 +163,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeUpdate'
         description: Object with fields to be updated
+      operationId: putEmployeesByEmployeeId
+      x-operation-id-source: derived
   /employees/by_id/{external_employee_id}:
     parameters:
     - name: external_employee_id
@@ -158,9 +176,7 @@ paths:
     get:
       tags:
       - Employees
-      summary: 'Get employee using an external ID provided on creation
-
-        '
+      summary: Get employee using an external ID provided on creation
       responses:
         '200':
           description: Employee details
@@ -170,17 +186,15 @@ paths:
                 $ref: '#/components/schemas/EmployeeDetails'
         '404':
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeesByIdByExternalEmployeeId
+      x-operation-id-source: derived
     put:
       tags:
       - Employees
-      summary: 'Modify employee details using an external ID provided on creation
-
-        '
+      summary: Modify employee details using an external ID provided on creation
       description: '* Changing the `branch_id` of an employee is not supported by this API. Any `branch_id` sent will be ignored.
 
-        * Changing the `status` of an employee is not supported by this endpoint. Any `status` sent will be ignored.
-
-        '
+        * Changing the `status` of an employee is not supported by this endpoint. Any `status` sent will be ignored.'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponseEmployeeUpdate'
@@ -192,6 +206,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeUpdate'
         description: Object with fields to be updated
+      operationId: putEmployeesByIdByExternalEmployeeId
+      x-operation-id-source: derived
   /employees/{employee_id}/status:
     parameters:
     - name: employee_id
@@ -203,12 +219,8 @@ paths:
     put:
       tags:
       - Employees
-      summary: 'Update employee status using its AlayaCare ID
-
-        '
-      description: '* A `comment` can only be set when updating an employee status to `terminated`.
-
-        '
+      summary: Update employee status using its AlayaCare ID
+      description: '* A `comment` can only be set when updating an employee status to `terminated`.'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponseEmployeeUpdate'
@@ -229,6 +241,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeStatusUpdate'
         description: Object with status to be updated
+      operationId: putEmployeesByEmployeeIdStatus
+      x-operation-id-source: derived
   /employees/by_id/{external_employee_id}/status:
     parameters:
     - name: external_employee_id
@@ -240,12 +254,8 @@ paths:
     put:
       tags:
       - Employees
-      summary: 'Update employee status using an external ID provided on creation
-
-        '
-      description: '* A `comment` can only be set when updating an employee status to `terminated`.
-
-        '
+      summary: Update employee status using an external ID provided on creation
+      description: '* A `comment` can only be set when updating an employee status to `terminated`.'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponseEmployeeUpdate'
@@ -266,6 +276,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeStatusUpdate'
         description: Object with status to be updated
+      operationId: putEmployeesByIdByExternalEmployeeIdStatus
+      x-operation-id-source: derived
   /employees/{employee_id}/picture:
     parameters:
     - name: employee_id
@@ -277,7 +289,7 @@ paths:
     get:
       tags:
       - Employees
-      summary: Get employee profile picture pre-authorized URL.
+      summary: Get employee profile picture pre-authorized URL
       parameters:
       - $ref: '#/components/parameters/ttl'
       responses:
@@ -289,6 +301,8 @@ paths:
                 $ref: '#/components/schemas/ProfilePictureUrl'
         '404':
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeesByEmployeeIdPicture
+      x-operation-id-source: derived
   /employees/by_id/{external_employee_id}/picture:
     parameters:
     - name: external_employee_id
@@ -300,7 +314,7 @@ paths:
     get:
       tags:
       - Employees
-      summary: Get employee profile picture pre-authorized URL.
+      summary: Get employee profile picture pre-authorized URL
       parameters:
       - $ref: '#/components/parameters/ttl'
       responses:
@@ -312,28 +326,38 @@ paths:
                 $ref: '#/components/schemas/ProfilePictureUrl'
         '404':
           $ref: '#/components/responses/ErrorResponseEmployeeNotFound'
+      operationId: getEmployeesByIdByExternalEmployeeIdPicture
+      x-operation-id-source: derived
 components:
   schemas:
-    ErrorResponse:
-      description: Error response
+    Group:
+      description: AlayaCare group.
       type: object
       properties:
-        code:
+        id:
           type: integer
-          description: Response code
-        message:
+          description: AlayaCare group ID
+          example: 1
+        name:
           type: string
-          description: Detailed error message
+          description: AlayaCare group name
+          example: Group 1
       required:
-      - code
-      - message
-    ProfilePictureUrl:
-      type: object
-      properties:
-        url:
-          description: Pre-authorized profile picture url.
-          type: string
-          example: https://place-hold.it/200
+      - id
+      - name
+    EmployeeStatusCreate:
+      description: 'Enum of the status of an employee
+
+        '
+      type: string
+      enum:
+      - active
+      - pending
+      - on_hold
+      - suspended
+      - terminated
+      - applicant
+      - rejected
     EmployeeUpdate:
       description: AlayaCare employee entity data for creation
       type: object
@@ -438,20 +462,79 @@ components:
             '
           type: string
           example: America/Toronto
-    EmployeeStatus:
-      description: 'Enum of the status of an employee
-
-        '
-      type: string
-      enum:
-      - active
-      - pending
-      - on_hold
-      - suspended
-      - terminated
-      - applicant
-      - rejected
-      - unknown
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    Department:
+      description: AlayaCare department.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare department ID
+          example: 1
+        name:
+          type: string
+          description: AlayaCare department name
+          example: Nursing
+      required:
+      - id
+      - name
+    EmployeeStatusUpdate:
+      description: AlayaCare employee entity data for status update
+      type: object
+      properties:
+        status:
+          description: Updatable status of an employee
+          type: string
+          example: terminated
+          enum:
+          - active
+          - pending
+          - on_hold
+          - suspended
+          - terminated
+          - applicant
+          - rejected
+        comment:
+          description: Can only be set for employee termination
+          type: string
+          example: Employee is moving to another agency
+      required:
+      - status
+    SuccessResponse:
+      description: Success response.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare ID
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External ID
+      required:
+      - id
+      - external_id
     CostCentre:
       description: Details of a cost centre
       type:
@@ -474,63 +557,29 @@ components:
           type: string
           description: Cost centre status
           example: enabled
-    EmploymentType:
-      description: Employment Type
+    Role:
+      description: AlayaCare role
       type: object
       properties:
         id:
           type: integer
-          description: ID of the employment type
+          description: ID of the role
           example: 1
         name:
           type: string
-          description: Name of employment type
-          example: Full time
-      required:
-      - id
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
+          description: Name of the role
+          example: csc
+        description:
           type: string
-          description: Name of the branch
-          example: Headquarters
-    EmployeeList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: 'List of employees
-
-        '
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/Employee'
-            properties:
-              branch:
-                $ref: '#/components/schemas/BranchSummary'
-    SuccessResponse:
-      description: Success response.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare ID
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External ID
+          description: Name of the role in the web application
+          example: Coordinator
+        category:
+          type: string
+          description: Category of the role
+          example: admin
       required:
       - id
-      - external_id
+      - name
     Location:
       description: Location information
       type:
@@ -549,95 +598,6 @@ components:
           type: string
           description: postal code
           example: H0H 0H0
-    Group:
-      description: AlayaCare group.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare group ID
-          example: 1
-        name:
-          type: string
-          description: AlayaCare group name
-          example: Group 1
-      required:
-      - id
-      - name
-    Department:
-      description: AlayaCare department.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare department ID
-          example: 1
-        name:
-          type: string
-          description: AlayaCare department name
-          example: Nursing
-      required:
-      - id
-      - name
-    Employee:
-      description: 'AlayaCare employee list view
-
-        '
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        external_id:
-          type:
-          - string
-          - 'null'
-          example: external_id_1
-        profile_id:
-          type: integer
-          example: 7890
-        first_name:
-          type: string
-          example: John
-        last_name:
-          type:
-          - string
-          - 'null'
-          example: Smith
-        status:
-          $ref: '#/components/schemas/EmployeeStatus'
-        job_title:
-          type:
-          - string
-          - 'null'
-        email:
-          type: string
-          example: john@smith.com
-        phone:
-          type:
-          - string
-          - 'null'
-          example: '+15555555555'
-        phone_other:
-          type:
-          - string
-          - 'null'
-          example: '+15555555555'
-        designation:
-          type:
-          - string
-          - 'null'
-        departments:
-          type: array
-          items:
-            type: integer
-            description: ID of a department
-        _link:
-          type: string
     EmployeeDemographics:
       description: 'Collection of key/value pairs where keys are existing attributes in the employee profile, defined through the AlayaCare webapp.
 
@@ -719,6 +679,273 @@ components:
         email: john@doe.com
         salutation: Mr.
         gender: M
+    EmploymentType:
+      description: Employment Type
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the employment type
+          example: 1
+        name:
+          type: string
+          description: Name of employment type
+          example: Full time
+      required:
+      - id
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    Skill:
+      description: A skill or qualification associated to an employee
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1234
+        name:
+          type: string
+          example: Hoyer lift
+    EmployeeList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: 'List of employees
+
+        '
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/Employee'
+            properties:
+              branch:
+                $ref: '#/components/schemas/BranchSummary'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    EmployeeCreate:
+      allOf:
+      - $ref: '#/components/schemas/EmployeeUpdate'
+      properties:
+        branch_id:
+          type: integer
+          description: 'Set employee branch. If not specified, will default to branch of the user creating the employee.
+
+            '
+        profile_id:
+          description: 'Use an existing client or contact profile ID when creating an employee.
+
+            Demographics will be shared between this employee and the previously
+
+            existing entity.
+
+            A unique username is still required for any new employee.
+
+            '
+          type: integer
+          example: 7890
+        status:
+          $ref: '#/components/schemas/EmployeeStatusCreate'
+      required:
+      - username
+    EmployeeStatus:
+      description: 'Enum of the status of an employee
+
+        '
+      type: string
+      enum:
+      - active
+      - pending
+      - on_hold
+      - suspended
+      - terminated
+      - applicant
+      - rejected
+      - unknown
+    EmployeeContactDemographics:
+      description: 'Collection of key/value pairs where keys are existing attributes in the employee contact profile, defined through the AlayaCare web application.
+
+        On the example below default profile keys for the employeecontact are used.
+
+
+        Example profile attributes:
+
+        + `first_name`: string
+
+        + `last_name`: string
+
+        + `city`: string
+
+        + `title`: string
+
+        + `state`: string
+
+        + `gender`: string
+
+        + `relationship`: string
+
+        + `contact_type`: string
+
+        + `fax`: string
+
+        + `company`: string
+
+        + `phone_other`: string
+
+        + `phone_main`: string
+
+        + `address`: string
+
+        + `country`: string
+
+        + `zip`: string
+
+        + `address_suite`: string
+
+        + `remarks`: string
+
+        '
+      type: object
+      properties:
+        first_name:
+          description: Employee first name
+          type: string
+          example: Jane
+        last_name:
+          description: Employee last name
+          type: string
+          example: Smith
+    Employee:
+      description: 'AlayaCare employee list view
+
+        '
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        external_id:
+          type:
+          - string
+          - 'null'
+          example: external_id_1
+        profile_id:
+          type: integer
+          example: 7890
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type:
+          - string
+          - 'null'
+          example: Smith
+        status:
+          $ref: '#/components/schemas/EmployeeStatus'
+        job_title:
+          type:
+          - string
+          - 'null'
+        email:
+          type: string
+          example: john@smith.com
+        phone:
+          type:
+          - string
+          - 'null'
+          example: '+15555555555'
+        phone_other:
+          type:
+          - string
+          - 'null'
+          example: '+15555555555'
+        designation:
+          type:
+          - string
+          - 'null'
+        departments:
+          type: array
+          items:
+            type: integer
+            description: ID of a department
+        _link:
+          type: string
+    EmployeeContact:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Employee contact ID
+          example: 1
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        external_id:
+          type:
+          - string
+          - 'null'
+          example: crm_employee_contact_external_id_1
+          description: Employee contact external ID
+        status:
+          description: Status of a contact
+          type: string
+          enum:
+          - enabled
+          - disabled
+        contact_type:
+          type:
+          - string
+          - 'null'
+          example: Medical
+        relationship:
+          type:
+          - string
+          - 'null'
+          example: Doctor
+        language:
+          type: string
+          example: en
+        demographics:
+          $ref: '#/components/schemas/EmployeeContactDemographics'
+      required:
+      - id
+      - ac_id
+      - external_id
+      - status
+      - demographics
+    ProfilePictureUrl:
+      type: object
+      properties:
+        url:
+          description: Pre-authorized profile picture url.
+          type: string
+          example: https://place-hold.it/200
     EmployeeDetails:
       description: AlayaCare employee entity
       type: object
@@ -833,217 +1060,43 @@ components:
       - branch_id
       - status
       - contacts
-    Skill:
-      description: A skill or qualification associated to an employee
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1234
-        name:
-          type: string
-          example: Hoyer lift
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    EmployeeContactDemographics:
-      description: 'Collection of key/value pairs where keys are existing attributes in the employee contact profile, defined through the AlayaCare web application.
-
-        On the example below default profile keys for the employeecontact are used.
-
-
-        Example profile attributes:
-
-        + `first_name`: string
-
-        + `last_name`: string
-
-        + `city`: string
-
-        + `title`: string
-
-        + `state`: string
-
-        + `gender`: string
-
-        + `relationship`: string
-
-        + `contact_type`: string
-
-        + `fax`: string
-
-        + `company`: string
-
-        + `phone_other`: string
-
-        + `phone_main`: string
-
-        + `address`: string
-
-        + `country`: string
-
-        + `zip`: string
-
-        + `address_suite`: string
-
-        + `remarks`: string
-
-        '
-      type: object
-      properties:
-        first_name:
-          description: Employee first name
-          type: string
-          example: Jane
-        last_name:
-          description: Employee last name
-          type: string
-          example: Smith
-    Role:
-      description: AlayaCare role
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the role
-          example: 1
-        name:
-          type: string
-          description: Name of the role
-          example: csc
-        description:
-          type: string
-          description: Name of the role in the web application
-          example: Coordinator
-        category:
-          type: string
-          description: Category of the role
-          example: admin
-      required:
-      - id
-      - name
-    EmployeeStatusCreate:
-      description: 'Enum of the status of an employee
-
-        '
-      type: string
-      enum:
-      - active
-      - pending
-      - on_hold
-      - suspended
-      - terminated
-      - applicant
-      - rejected
-    EmployeeCreate:
-      allOf:
-      - $ref: '#/components/schemas/EmployeeUpdate'
-      properties:
-        branch_id:
-          type: integer
-          description: 'Set employee branch. If not specified, will default to branch of the user creating the employee.
-
-            '
-        profile_id:
-          description: 'Use an existing client or contact profile ID when creating an employee.
-
-            Demographics will be shared between this employee and the previously
-
-            existing entity.
-
-            A unique username is still required for any new employee.
-
-            '
-          type: integer
-          example: 7890
-        status:
-          $ref: '#/components/schemas/EmployeeStatusCreate'
-      required:
-      - username
-    EmployeeStatusUpdate:
-      description: AlayaCare employee entity data for status update
-      type: object
-      properties:
-        status:
-          description: Updatable status of an employee
-          type: string
-          example: terminated
-          enum:
-          - active
-          - pending
-          - on_hold
-          - suspended
-          - terminated
-          - applicant
-          - rejected
-        comment:
-          description: Can only be set for employee termination
-          type: string
-          example: Employee is moving to another agency
-      required:
-      - status
-    EmployeeContact:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Employee contact ID
-          example: 1
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        external_id:
-          type:
-          - string
-          - 'null'
-          example: crm_employee_contact_external_id_1
-          description: Employee contact external ID
-        status:
-          description: Status of a contact
-          type: string
-          enum:
-          - enabled
-          - disabled
-        contact_type:
-          type:
-          - string
-          - 'null'
-          example: Medical
-        relationship:
-          type:
-          - string
-          - 'null'
-          example: Doctor
-        language:
-          type: string
-          example: en
-        demographics:
-          $ref: '#/components/schemas/EmployeeContactDemographics'
-      required:
-      - id
-      - ac_id
-      - external_id
-      - status
-      - demographics
+  responses:
+    ErrorResponseEmployeeNotFound:
+      description: Employee not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee not found.
+    SuccessResponseEmployeeUpdate:
+      description: Employee updated successfuly
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          example:
+            id: 1001
+            external_id: sor_employee_external_id_1
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    SuccessResponseEmployeeCreate:
+      description: Employee created successfuly
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          example:
+            id: 1001
+            external_id: sor_employee_external_id_1
   parameters:
     page:
       description: Filter by page number.
@@ -1053,14 +1106,14 @@ components:
       schema:
         type: integer
         default: 1
-    ttl:
-      description: 'Pre-authorized URL time to live in seconds. `(default: 86400)`'
-      name: ttl
+    count:
+      description: Number of items per page.
+      name: count
       in: query
       required: false
       schema:
         type: integer
-        default: 86400
+        default: 100
     status:
       description: Filter by employee status, one or more using **OR**
       name: status
@@ -1087,51 +1140,14 @@ components:
       required: false
       schema:
         type: integer
-    count:
-      description: Number of items per page.
-      name: count
+    ttl:
+      description: 'Pre-authorized URL time to live in seconds. `(default: 86400)`'
+      name: ttl
       in: query
       required: false
       schema:
         type: integer
-        default: 100
-  responses:
-    SuccessResponseEmployeeUpdate:
-      description: Employee updated successfuly
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          example:
-            id: 1001
-            external_id: sor_employee_external_id_1
-    ErrorResponseEmployeeNotFound:
-      description: Employee not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee not found.
-    SuccessResponseEmployeeCreate:
-      description: Employee created successfuly
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          example:
-            id: 1001
-            external_id: sor_employee_external_id_1
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+        default: 86400
   securitySchemes:
     basic_auth:
       type: http

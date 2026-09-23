@@ -19,31 +19,7 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
-
-
-    **AlayaCare IDs:**
-
-    The following terms are used to reference ids that identify resources in AlayaCare:
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-    **Remarks**
-
-    All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
@@ -74,6 +50,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getVisitsByAlayacareVisitIdAccounting
+      x-operation-id-source: derived
   /visits/by_id/{visit_id}/accounting:
     parameters:
     - name: visit_id
@@ -97,6 +75,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getVisitsByIdByVisitIdAccounting
+      x-operation-id-source: derived
   /facility_visits/{alayacare_visit_id}/accounting:
     parameters:
     - name: alayacare_visit_id
@@ -120,6 +100,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getFacilityVisitsByAlayacareVisitIdAccounting
+      x-operation-id-source: derived
   /facility_visits/by_id/{visit_id}/accounting:
     parameters:
     - name: visit_id
@@ -143,6 +125,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '404':
           $ref: '#/components/responses/ErrorResponseVisitNotFound'
+      operationId: getFacilityVisitsByIdByVisitIdAccounting
+      x-operation-id-source: derived
 components:
   responses:
     ErrorResponseVisitNotFound:
@@ -164,6 +148,29 @@ components:
             code: 401
             message: Authorization required.
   schemas:
+    PayCode:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Pay Code ID
+          example: 1
+        code:
+          type: string
+          description: Pay Code Code
+          example: '1'
+        description:
+          type: string
+          description: Pay Code Description
+          example: '1'
+        rate:
+          type: number
+          description: Rate
+          example: 23.345
+        unit:
+          type: string
+          description: Unit
+          example: hours | visits | amount
     ErrorResponse:
       description: Error response
       type: object
@@ -194,29 +201,6 @@ components:
           $ref: '#/components/schemas/PayCode'
         pay_code_overtime:
           $ref: '#/components/schemas/PayCode'
-    PayCode:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Pay Code ID
-          example: 1
-        code:
-          type: string
-          description: Pay Code Code
-          example: '1'
-        description:
-          type: string
-          description: Pay Code Description
-          example: '1'
-        rate:
-          type: number
-          description: Rate
-          example: 23.345
-        unit:
-          type: string
-          description: Unit
-          example: hours | visits | amount
   securitySchemes:
     basic_auth:
       type: http

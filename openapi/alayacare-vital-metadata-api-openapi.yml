@@ -2,7 +2,38 @@ openapi: 3.2.0
 info:
   version: 1.0.4
   title: External Clinical Vital Metadata API
-  description: "External Clinical API\n\n**Internal IDs**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- id\n- created_by\n- client_id\n- risk_id\n- medication_id\n- admin_id\n- vital_id\n\n**External IDs**\nThe following terms are used to reference IDs that identify resources systems external to AlayaCare:\n- external_id\n- external_client_id\n\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their format they are treated as strings.\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n\n**Progress Notes**\n  API for creating and viewing client progress notes.\n\n**Risks**\nAPI for creating, viewing, updating, and removing client risks.\n\n**Medication**\n  API for creating, editing, and viewing medications and medication administrations.\n\n**Vitals**\n  API for creating, editing and viewing vitals.\n\nEach individual vital type is identified by a `name`. Dependent vitals are given the same `group`. Currently this is only used to link names `pressure_min` and `pressure_max` with the group `blood_pressure`, as these values should be recorded together.\n\nThe metadata of the vitals includes the configuration and thresholds, the default and available units, and any other required options for each vital type.\n"
+  description: 'External Clinical API
+
+
+    **Internal IDs**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - id
+
+    - created_by
+
+    - client_id
+
+    - risk_id
+
+    - medication_id
+
+    - admin_id
+
+    - vital_id
+
+
+    **External IDs**
+
+    The following terms are used to reference IDs that identify resources systems external to AlayaCare:
+
+    - external_id
+
+    - external_client_id
+
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 tags:
@@ -31,6 +62,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         404:
           $ref: '#/components/responses/NotFound'
+      operationId: getVitalsClientByClientIdMetadata
+      x-operation-id-source: derived
   /vitals/client/by_id/{external_client_id}/metadata:
     parameters:
     - description: External client ID
@@ -54,6 +87,8 @@ paths:
           $ref: '#/components/responses/AuthChallenge'
         404:
           $ref: '#/components/responses/NotFound'
+      operationId: getVitalsClientByIdByExternalClientIdMetadata
+      x-operation-id-source: derived
 components:
   responses:
     NotFound:
@@ -88,6 +123,16 @@ components:
       required:
       - code
       - message
+    VitalMetadataList:
+      type: object
+      description: A list of vital metadata
+      required:
+      - metadata
+      properties:
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/VitalMetadata'
     VitalName:
       type: string
       description: The name identifying the vital type.
@@ -103,59 +148,6 @@ components:
       - spo2
       - temperature
       example: pressure_max
-    VitalMetadataList:
-      type: object
-      description: A list of vital metadata
-      required:
-      - metadata
-      properties:
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/VitalMetadata'
-    VitalMetadata:
-      type: object
-      description: Vital metadata
-      required:
-      - active
-      - label
-      - groups
-      - max
-      - min
-      - name
-      - options
-      - unit
-      properties:
-        active:
-          type: boolean
-          description: Whether the vital is active.
-          example: true
-        groups:
-          type: array
-          description: The groups to which the vital belongs. If no groups are set, this will be set to `name`.
-          items:
-            type: string
-            example: blood_pressure
-        label:
-          type: string
-          description: The vital label.
-          example: Systolic Blood pressure
-        max:
-          type: number
-          description: The maximum threshold for the vital.
-          example: 120
-        min:
-          type: number
-          description: The minimum threshold for the vital.
-          example: 60
-        name:
-          $ref: '#/components/schemas/VitalName'
-        options:
-          $ref: '#/components/schemas/VitalMetadataOptions'
-        unit:
-          type: string
-          description: The default unit used for the vital.
-          example: mmhg
     VitalMetadataOptions:
       type: object
       description: The metadata options available for the vital.
@@ -216,6 +208,49 @@ components:
                 type: string
                 description: The unit code.
                 example: mmhg
+    VitalMetadata:
+      type: object
+      description: Vital metadata
+      required:
+      - active
+      - label
+      - groups
+      - max
+      - min
+      - name
+      - options
+      - unit
+      properties:
+        active:
+          type: boolean
+          description: Whether the vital is active.
+          example: true
+        groups:
+          type: array
+          description: The groups to which the vital belongs. If no groups are set, this will be set to `name`.
+          items:
+            type: string
+            example: blood_pressure
+        label:
+          type: string
+          description: The vital label.
+          example: Systolic Blood pressure
+        max:
+          type: number
+          description: The maximum threshold for the vital.
+          example: 120
+        min:
+          type: number
+          description: The minimum threshold for the vital.
+          example: 60
+        name:
+          $ref: '#/components/schemas/VitalName'
+        options:
+          $ref: '#/components/schemas/VitalMetadataOptions'
+        unit:
+          type: string
+          description: The default unit used for the vital.
+          example: mmhg
   securitySchemes:
     basic_auth:
       type: http

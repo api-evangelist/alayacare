@@ -38,9 +38,7 @@ paths:
         Get a collection of Visits for a given referral or service.
 
 
-        One of `referral_id`, `service_id`, or `service_outbox_id` must be provided.
-
-        '
+        One of `referral_id`, `service_id`, or `service_outbox_id` must be provided.'
       parameters:
       - $ref: '#/components/parameters/ReferralIdQueryParam'
       - $ref: '#/components/parameters/ServiceIdQueryParam'
@@ -74,6 +72,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox visits
+      x-summary-source: derived
+      operationId: getV1OutboxVisits
+      x-operation-id-source: derived
   /v1/outbox/visits/{visit_id}:
     get:
       tags:
@@ -85,9 +87,7 @@ paths:
 
         # Description
 
-        Get the details of a Visit for a given Visit ID.
-
-        '
+        Get the details of a Visit for a given Visit ID.'
       parameters:
       - $ref: '#/components/parameters/VisitIdPathParam'
       responses:
@@ -103,44 +103,12 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get outbox visits by visit id
+      x-summary-source: derived
+      operationId: getV1OutboxVisitsByVisitId
+      x-operation-id-source: derived
 components:
   schemas:
-    VisitCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        referral_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        status:
-          type: string
-          enum:
-          - scheduled
-          - deleted
-          - cancelled
-          - on_hold
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-      required:
-      - status
-      - id
-      - referral_id
-      - service_id
-      - start_at
-      - end_at
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
     OutboxVisitCore:
       allOf:
       - $ref: '#/components/schemas/VisitCore'
@@ -227,6 +195,26 @@ components:
       - supply
       - visit
       - tasks
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    OutboxVisitCollectionResponse:
+      allOf:
+      - $ref: '#/components/schemas/OutboxVisitCore'
+    OutboxVisitPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutboxVisitCollectionResponse'
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -246,45 +234,56 @@ components:
       - items_per_page
       - total_items
       - total_pages
+    VisitCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        referral_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+          - scheduled
+          - deleted
+          - cancelled
+          - on_hold
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+      required:
+      - status
+      - id
+      - referral_id
+      - service_id
+      - start_at
+      - end_at
     SortOrderCore:
       type: string
       enum:
       - asc
       - desc
       default: desc
-    OutboxVisitCollectionResponse:
-      allOf:
-      - $ref: '#/components/schemas/OutboxVisitCore'
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    OutboxVisitPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/OutboxVisitCollectionResponse'
   parameters:
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
     ReferralIdQueryParam:
       in: query
       name: referral_id
       schema:
         type: string
         format: uuid
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
     VisitIdPathParam:
       in: path
       name: visit_id
@@ -298,6 +297,11 @@ components:
       name: sort_order
       schema:
         $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
     ServiceIdQueryParam:
       in: query
       name: service_id

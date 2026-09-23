@@ -2,7 +2,27 @@ openapi: 3.2.0
 info:
   title: External Tasks 2.0 Comments API
   version: 1.0.0
-  description: "**Internal IDs:**\nThe following terms are used to reference IDs that identify resources in AlayaCare:\n- client_id\n- comment_id\n- employee_id\n- form_id\n- subtask_id\n- task_id\n- \n**External IDs**\nExternal IDs are required to be unique.\nNo other assumptions are made regarding their form; they are treated as strings.\n\nThe following terms are used to reference IDs that identify resources in systems external to AlayaCare:\n- external_client_id\n- external_employee_id\n\n**Remarks**\n- All dates must be in ISO 8601 format.\n- Required fields marked with `*` cannot be null.\n- Currently filtering by date is timezone-naive and will assume any filters to be provided in the timezone of branch associated to the task.\n"
+  description: '**Internal IDs:**
+
+    The following terms are used to reference IDs that identify resources in AlayaCare:
+
+    - client_id
+
+    - comment_id
+
+    - employee_id
+
+    - form_id
+
+    - subtask_id
+
+    - task_id
+
+    -
+
+    **External IDs**
+
+    External IDs are required to be unique.'
 servers:
 - url: https://homecare.alayacare.com
   description: Production server
@@ -38,6 +58,8 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         '404':
           $ref: '#/components/responses/404NotFound'
+      operationId: getTasksByTaskIdComments
+      x-operation-id-source: derived
     post:
       summary: Add a comment to a task
       description: Add a comment to a task.
@@ -67,6 +89,8 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         '404':
           $ref: '#/components/responses/404NotFound'
+      operationId: postTasksByTaskIdComments
+      x-operation-id-source: derived
   /tasks/{task_id}/comments/{comment_id}:
     get:
       summary: Retrieve specific comment for a task
@@ -91,6 +115,8 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         '404':
           $ref: '#/components/responses/404NotFound'
+      operationId: getTasksByTaskIdCommentsByCommentId
+      x-operation-id-source: derived
     put:
       summary: Update a specific comment for a task
       description: Update a specific comment for a task.
@@ -121,6 +147,8 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         '404':
           $ref: '#/components/responses/404NotFound'
+      operationId: putTasksByTaskIdCommentsByCommentId
+      x-operation-id-source: derived
     delete:
       summary: Delete a specific comment for a task
       description: Delete a comment for a task.
@@ -140,27 +168,54 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         '404':
           $ref: '#/components/responses/404NotFound'
+      operationId: deleteTasksByTaskIdCommentsByCommentId
+      x-operation-id-source: derived
 components:
-  responses:
-    404NotFound:
-      description: Entity not found
-    403Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    400BadRequest:
-      description: Bad request
+  parameters:
+    comment_id:
+      name: comment_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The uniqut task comment identifier
+      example: 11111
+    task_id:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The task identifier
   schemas:
+    TaskComment:
+      type: object
+      description: Comments on a task.
+      title: Task Comment
+      properties:
+        comment_id:
+          type: integer
+          example: 1
+          description: Primary Key
+        comment:
+          type: string
+          example: Comment
+        created_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:45.000Z'
+          description: When the comment was created
+        created_by:
+          $ref: '#/components/schemas/Person'
+          description: Who created the comment.
+        updated_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:58.000Z'
+          description: When the comment was most recently updated.
+        updated_by:
+          $ref: '#/components/schemas/Person'
+          description: Who updated the comment
     ErrorResponse:
       title: Error response
       type: object
@@ -185,6 +240,10 @@ components:
       required:
       - message
       - request_id
+    TaskCommentList:
+      type: object
+      items:
+        $ref: '#/components/schemas/TaskComment'
     Person:
       type: object
       description: Encapsulates the bare details of a person
@@ -223,51 +282,22 @@ components:
         profile_photo_url:
           type: string
           description: URL to profile photo
-    TaskCommentList:
-      type: object
-      items:
-        $ref: '#/components/schemas/TaskComment'
-    TaskComment:
-      type: object
-      description: Comments on a task.
-      title: Task Comment
-      properties:
-        comment_id:
-          type: integer
-          example: 1
-          description: Primary Key
-        comment:
-          type: string
-          example: Comment
-        created_at:
-          type: string
-          format: datetime
-          example: '2023-02-02T19:00:45.000Z'
-          description: When the comment was created
-        created_by:
-          $ref: '#/components/schemas/Person'
-          description: Who created the comment.
-        updated_at:
-          type: string
-          format: datetime
-          example: '2023-02-02T19:00:58.000Z'
-          description: When the comment was most recently updated.
-        updated_by:
-          $ref: '#/components/schemas/Person'
-          description: Who updated the comment
-  parameters:
-    task_id:
-      name: task_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The task identifier
-    comment_id:
-      name: comment_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The uniqut task comment identifier
-      example: 11111
+  responses:
+    404NotFound:
+      description: Entity not found
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    400BadRequest:
+      description: Bad request

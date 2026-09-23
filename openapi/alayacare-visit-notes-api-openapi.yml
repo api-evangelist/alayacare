@@ -19,37 +19,13 @@ info:
     - facility_id
 
 
-    External IDs are required to be unique. No other assumptions are made regarding their format; they are treated as strings.
-
-
-    **AlayaCare IDs:**
-
-    The following terms are used to reference ids that identify resources in AlayaCare:
-
-    - alayacare_client_id
-
-    - alayacare_employee_id
-
-    - alayacare_service_id
-
-    - alayacare_funder_id
-
-    - alayacare_visit_id
-
-    - alayacare_facility_id
-
-
-    **Remarks**
-
-    All dates must be in ISO 8601 format with timezone data
-
-    '
+    External IDs are required to be unique.'
   contact:
     name: AlayaCare
 servers:
 - url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 tags:
-- name: Visit notes
+- name: Visit Notes
 paths:
   /visits/{alayacare_visit_id}/notes:
     parameters:
@@ -61,7 +37,7 @@ paths:
         type: integer
     post:
       tags:
-      - Visit notes
+      - Visit Notes
       summary: Add note to a visit using AlayaCare ID
       responses:
         '201':
@@ -81,6 +57,8 @@ paths:
               $ref: '#/components/schemas/VisitNoteCreate'
         description: Visit note data in JSON format
         required: true
+      operationId: postVisitsByAlayacareVisitIdNotes
+      x-operation-id-source: derived
   /visits/by_id/{visit_id}/notes:
     parameters:
     - name: visit_id
@@ -91,7 +69,7 @@ paths:
         type: string
     post:
       tags:
-      - Visit notes
+      - Visit Notes
       summary: Add note to a visit using External ID
       responses:
         '201':
@@ -111,27 +89,41 @@ paths:
               $ref: '#/components/schemas/VisitNoteCreate'
         description: Visit note data in JSON format
         required: true
+      operationId: postVisitsByIdByVisitIdNotes
+      x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
+    VisitTag:
+      type: string
+      description: Name of tag.
+      example: First visit
+    Visit:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisit'
+      properties:
+        alayacare_client_id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        client_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_client_id_1
+      required:
+      - alayacare_client_id
+    VisitNote:
+      allOf:
+      - $ref: '#/components/schemas/VisitNoteCreate'
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time of the note
+          example: '2017-07-08T13:30:00+00:00'
+      required:
+      - created_at
     ErrorResponse:
       description: Error response
       type: object
@@ -147,10 +139,6 @@ components:
       required:
       - code
       - message
-    VisitTag:
-      type: string
-      description: Name of tag.
-      example: First visit
     VisitCancelCode:
       description: Visit cancellation code
       type:
@@ -174,22 +162,6 @@ components:
       required:
       - id
       - code
-    Visit:
-      allOf:
-      - $ref: '#/components/schemas/BaseVisit'
-      properties:
-        alayacare_client_id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        client_id:
-          type:
-          - string
-          - 'null'
-          description: External client ID
-          example: sor_client_id_1
-      required:
-      - alayacare_client_id
     VisitNoteCreate:
       description: Visit note
       type: object
@@ -281,17 +253,25 @@ components:
       - end_at
       - cancelled
       - cancel_code
-    VisitNote:
-      allOf:
-      - $ref: '#/components/schemas/VisitNoteCreate'
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          description: Creation time of the note
-          example: '2017-07-08T13:30:00+00:00'
-      required:
-      - created_at
+  responses:
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

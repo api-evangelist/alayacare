@@ -38,6 +38,8 @@ paths:
       - $ref: '#/components/parameters/sort_order'
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/count'
+      operationId: getMedicationSettingsByBranchId
+      x-operation-id-source: derived
   /medication_settings/{branch_id}/{type}:
     get:
       tags:
@@ -96,6 +98,8 @@ paths:
       - $ref: '#/components/parameters/sort_order'
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/count'
+      operationId: getMedicationSettingsByBranchIdByType
+      x-operation-id-source: derived
   /medication_settings/{branch_id}/{type}/{name}:
     get:
       tags:
@@ -139,8 +143,41 @@ paths:
         schema:
           type: string
       - $ref: '#/components/parameters/lang'
+      operationId: getMedicationSettingsByBranchIdByTypeByName
+      x-operation-id-source: derived
 components:
   parameters:
+    is_dosage_quantity:
+      name: is_dosage_quantity
+      in: query
+      schema:
+        type: boolean
+    is_dosage_form:
+      name: is_dosage_form
+      in: query
+      schema:
+        type: boolean
+    is_ingredient_strength:
+      name: is_ingredient_strength
+      in: query
+      schema:
+        type: boolean
+    page:
+      name: page
+      schema:
+        type: integer
+        default: 1
+      in: query
+      required: false
+      description: Page number to filter by
+    count:
+      name: count
+      schema:
+        type: integer
+        default: 10
+      in: query
+      required: false
+      description: Max number of items to filter by
     settings_sort_by:
       name: sort_by
       schema:
@@ -155,21 +192,8 @@ components:
       in: query
       required: false
       description: Parameter to sort items by
-    page:
-      name: page
-      schema:
-        type: integer
-        default: 1
-      in: query
-      required: false
-      description: Page number to filter by
-    is_enabled:
-      name: is_enabled
-      in: query
-      schema:
-        type: boolean
-    default_label:
-      name: default_label
+    code_term:
+      name: code_term
       in: query
       schema:
         type: string
@@ -178,43 +202,11 @@ components:
       in: query
       schema:
         type: string
-    is_dosage_quantity:
-      name: is_dosage_quantity
+    is_enabled:
+      name: is_enabled
       in: query
       schema:
         type: boolean
-    is_ingredient_strength:
-      name: is_ingredient_strength
-      in: query
-      schema:
-        type: boolean
-    sort_order:
-      name: sort_order
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-      in: query
-      required: false
-      description: 'Order in which the items should be sorted by. Ex: asc, desc'
-    is_override:
-      name: is_override
-      in: query
-      schema:
-        type: boolean
-    label:
-      name: label
-      in: query
-      schema:
-        type: string
-    branch_id:
-      name: branch_id
-      in: path
-      required: true
-      description: ID of the branch
-      schema:
-        type: integer
     lang:
       name: lang
       in: query
@@ -226,38 +218,81 @@ components:
         - en
         - fr
         - es
-    is_dosage_form:
-      name: is_dosage_form
+    branch_id:
+      name: branch_id
+      in: path
+      required: true
+      description: ID of the branch
+      schema:
+        type: integer
+    is_override:
+      name: is_override
       in: query
       schema:
         type: boolean
+    label:
+      name: label
+      in: query
+      schema:
+        type: string
+    default_label:
+      name: default_label
+      in: query
+      schema:
+        type: string
+    sort_order:
+      name: sort_order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      in: query
+      required: false
+      description: 'Order in which the items should be sorted by. Ex: asc, desc'
     is_infusion:
       name: is_infusion
       schema:
         type: boolean
       in: query
-    code_term:
-      name: code_term
-      in: query
-      schema:
-        type: string
-    count:
-      name: count
-      schema:
-        type: integer
-        default: 10
-      in: query
-      required: false
-      description: Max number of items to filter by
-  examples:
-    MedicationSettings:
-      value:
-        name: Setting name
+  responses:
+    MedicationSetting:
+      description: Medication setting objectF
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettings'
+    MedicationSettingList:
+      description: Medication settings list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettingList'
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequest:
+              $ref: '#/components/examples/AuthChallenge'
     InvalidRequest:
-      value:
-        code: '400'
-        message: There was a problem with your request.
-      summary: Invalid data.
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequestExample:
+              $ref: '#/components/examples/InvalidRequest'
+  examples:
     MedicationSettingList:
       value:
         count: 745
@@ -277,6 +312,14 @@ components:
         items_per_page: 15
         page: 1
         total_pages: 745
+    MedicationSettings:
+      value:
+        name: Setting name
+    InvalidRequest:
+      value:
+        code: '400'
+        message: There was a problem with your request.
+      summary: Invalid data.
     AuthChallenge:
       value:
         code: '401'
@@ -455,6 +498,21 @@ components:
           example: allowed
           x-nullable: false
           default: allowed
+    APIError:
+      type: object
+      description: Error returned from the API
+      properties:
+        code:
+          type: string
+          description: The error code
+          example: '500'
+        message:
+          type: string
+          example: An error occurred
+          description: The error description
+      required:
+      - code
+      - message
     MedicationSettingList:
       type: object
       properties:
@@ -471,58 +529,6 @@ components:
         total_pages:
           type: integer
           description: Total number of pages available
-    APIError:
-      type: object
-      description: Error returned from the API
-      properties:
-        code:
-          type: string
-          description: The error code
-          example: '500'
-        message:
-          type: string
-          example: An error occurred
-          description: The error description
-      required:
-      - code
-      - message
-  responses:
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/APIError'
-          examples:
-            InvalidRequest:
-              $ref: '#/components/examples/AuthChallenge'
-    MedicationSetting:
-      description: Medication setting objectF
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MedicationSettingList'
-          examples:
-            MedicationSetting:
-              $ref: '#/components/examples/MedicationSettings'
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/APIError'
-          examples:
-            InvalidRequestExample:
-              $ref: '#/components/examples/InvalidRequest'
-    MedicationSettingList:
-      description: Medication settings list
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MedicationSettingList'
-          examples:
-            MedicationSetting:
-              $ref: '#/components/examples/MedicationSettingList'
   securitySchemes:
     basicAuth:
       type: http

@@ -32,9 +32,7 @@ info:
 
     External IDs are required to be unique.
 
-    No other assumptions are made regarding their format they are treated as strings.
-
-    '
+    No other assumptions are made regarding their format they are treated as strings.'
 servers:
 - url: https://example.alayacare.com/ext/api/v2/accounting
 security:
@@ -46,7 +44,7 @@ paths:
     get:
       tags:
       - EVV Export
-      summary: Get a list of EVV exports created filter by `claim_destination_system`, `export_type` and `status_of_background_jobs`
+      summary: Get a list of EVV exports created filter by `claim_destination_system`…
       parameters:
       - name: claim_destination_system
         in: query
@@ -78,10 +76,12 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '403':
           $ref: '#/components/responses/ErrorResponseAccessDenied'
+      operationId: getEvvExports
+      x-operation-id-source: derived
     post:
       tags:
       - EVV Export
-      summary: Create an initial EVV export record for the `claim_destination_system` and `export_type` selected for a specific `branch_id` or default branch if none specified.  The returned schema's `created_at` date will be used as the end of the date range for visits retrieval.
+      summary: Create an initial EVV export record for the `claim_destination_system` and…
       requestBody:
         content:
           application/json:
@@ -132,6 +132,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAuthentication'
         '403':
           $ref: '#/components/responses/ErrorResponseAccessDenied'
+      operationId: postEvvExports
+      x-operation-id-source: derived
   /evv_exports/{evv_export_id}:
     parameters:
     - in: path
@@ -144,7 +146,7 @@ paths:
     get:
       tags:
       - EVV Export
-      summary: Get full EVV export record.  This can be called for a "retry export" event, in case of initial failure.
+      summary: Get full EVV export record.
       responses:
         '200':
           description: Full EVV export record
@@ -158,10 +160,12 @@ paths:
           $ref: '#/components/responses/ErrorResponseAccessDenied'
         '404':
           $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+      operationId: getEvvExportsByEvvExportId
+      x-operation-id-source: derived
     put:
       tags:
       - EVV Export
-      summary: Update EVV export record.  This will only be called once, after the EVV export is complete (either as success or failure), and will contain all the information about the export.
+      summary: Update EVV export record.
       requestBody:
         content:
           application/json:
@@ -218,11 +222,13 @@ paths:
           $ref: '#/components/responses/ErrorResponseAccessDenied'
         '404':
           $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+      operationId: putEvvExportsByEvvExportId
+      x-operation-id-source: derived
   /evv_exports/latest_export_date:
     get:
       tags:
       - EVV Export
-      summary: Get the date and time of the latest EVV export for the `branch_id`, `claim_destination_system` and `export_type` selected, returned from the record of the most recent file that was exported, regardless of its status.  If no record is found a default date is returned instead.
+      summary: Get the date and time of the latest EVV export for the `branch_id`…
       parameters:
       - in: query
         name: branch_id
@@ -282,6 +288,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseAccessDenied'
         '404':
           $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+      operationId: getEvvExportsLatestExportDate
+      x-operation-id-source: derived
   /evv_exports/latest_export_date/{evv_export_id}:
     parameters:
     - in: path
@@ -295,7 +303,7 @@ paths:
       tags:
       - EVV Export
       summary: Get the date and time of the latest EVV export using the Export ID
-      description: Returns the date and time from the record of the most recent file that was exported prior to `evv_export_id`, regardless of its status.  If no record is found the default date is returned.
+      description: Returns the date and time from the record of the most recent file that was exported prior to `evv_export_id`, regardless of its status. If no record is found the default date is returned.
       responses:
         '200':
           description: End date of the latest EVV export record prior to `evv_export_id` in UTC format regardless of its state, or default date if no record is found.
@@ -311,40 +319,55 @@ paths:
           $ref: '#/components/responses/ErrorResponseAccessDenied'
         '404':
           $ref: '#/components/responses/ErrorResponseEVVExportNotFound'
+      operationId: getEvvExportsLatestExportDateByEvvExportId
+      x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseInvalidEVVExportParams:
+      description: Invalid Claim destination system or Export type parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Invalid request
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseEVVExportNotFound:
+      description: The EVV export record for the referenced `evv_export_id` param was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '404'
+                message: EVVExport record not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    EVVExportList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of EVV Export
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EVVExport'
-    EVVExportLatestExportDate:
-      description: Latest EVV export date in UTC format for the specified branch ID, claim destination and export type regardless of its state or default date if no record is found
-      type: object
-      properties:
-        latest_export_date:
-          type: string
-          description: Date and time in UTC format of the last export
-          example: 2020-01-01 00:00:00+00:00
     EVVExport:
       description: EVV Export
       type: object
@@ -434,6 +457,30 @@ components:
           type: boolean
           description: if export is related to an is_activation
           example: true
+    EVVExportList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of EVV Export
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EVVExport'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -460,51 +507,14 @@ components:
       - page
       - total_pages
       - items
-  responses:
-    ErrorResponseEVVExportNotFound:
-      description: The EVV export record for the referenced `evv_export_id` param was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '404'
-                message: EVVExport record not found
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
-    ErrorResponseInvalidEVVExportParams:
-      description: Invalid Claim destination system or Export type parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Invalid request
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
+    EVVExportLatestExportDate:
+      description: Latest EVV export date in UTC format for the specified branch ID, claim destination and export type regardless of its state or default date if no record is found
+      type: object
+      properties:
+        latest_export_date:
+          type: string
+          description: Date and time in UTC format of the last export
+          example: 2020-01-01 00:00:00+00:00
   securitySchemes:
     basic_auth:
       type: http

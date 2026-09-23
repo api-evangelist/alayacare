@@ -35,9 +35,7 @@ paths:
 
         # Description
 
-        Get a collection of Referrals matched to the Supply Organization.
-
-        '
+        Get a collection of Referrals matched to the Supply Organization.'
       parameters:
       - in: query
         name: referral_status
@@ -68,6 +66,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get inbox referrals
+      x-summary-source: derived
+      operationId: getV1InboxReferrals
+      x-operation-id-source: derived
   /v1/inbox/referrals/{referral_id}:
     parameters:
     - $ref: '#/components/parameters/ReferralIdPathParam'
@@ -83,9 +85,7 @@ paths:
 
         Get the anonymized details of Referrals matched to the Supply
 
-        organization. This must contain no PHI.
-
-        '
+        organization. This must contain no PHI.'
       responses:
         200:
           description: Successfully returned Referral Inbox Scalar
@@ -99,6 +99,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Get inbox referrals by referral id
+      x-summary-source: derived
+      operationId: getV1InboxReferralsByReferralId
+      x-operation-id-source: derived
   /v1/inbox/referrals/{referral_id}/mark_processed:
     parameters:
     - $ref: '#/components/parameters/ReferralIdPathParam'
@@ -117,9 +121,7 @@ paths:
 
         Acknowledges that the Supply organization has received and processed the assigned Referral.
 
-        This will mark the Referral as `processed` and will inform the Demand organization.
-
-        '
+        This will mark the Referral as `processed` and will inform the Demand organization.'
       responses:
         204:
           description: Successfully marked Referral as Processed.
@@ -129,13 +131,26 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create inbox referrals by referral id mark processed
+      x-summary-source: derived
+      operationId: postV1InboxReferralsByReferralIdMarkProcessed
+      x-operation-id-source: derived
   /v1/inbox/referrals/{referral_id}/cancel:
     parameters:
     - $ref: '#/components/parameters/ReferralIdPathParam'
     post:
       tags:
       - referral inbox
-      description: "# Authorization\nRequired role: `org_admin`\n\n# Description\nCancel an Referral after it's assigned to the Supply Organization.  \nA Referral can only be Cancelled if the status is `assigned` or `processed`.\n"
+      description: '# Authorization
+
+        Required role: `org_admin`
+
+
+        # Description
+
+        Cancel an Referral after it''s assigned to the Supply Organization.
+
+        A Referral can only be Cancelled if the status is `assigned` or `processed`.'
       requestBody:
         required: true
         content:
@@ -151,6 +166,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create inbox referrals by referral id cancel
+      x-summary-source: derived
+      operationId: postV1InboxReferralsByReferralIdCancel
+      x-operation-id-source: derived
   /v1/inbox/referrals/{referral_id}/tasks/update:
     parameters:
     - $ref: '#/components/parameters/ReferralIdPathParam'
@@ -164,9 +183,7 @@ paths:
 
         # Description
 
-        Update referral tasks for a given referral.
-
-        '
+        Update referral tasks for a given referral.'
       requestBody:
         required: true
         content:
@@ -182,47 +199,118 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create inbox referrals by referral id tasks update
+      x-summary-source: derived
+      operationId: postV1InboxReferralsByReferralIdTasksUpdate
+      x-operation-id-source: derived
 components:
   schemas:
-    ReferralReasonCodeCore:
-      description: '`reason_code` associated to a cancelled or closed referral.
-
-        '
+    PriceCore:
       type: object
       properties:
-        reason_code:
+        rate:
+          type: number
+          format: decimal
+          description: The dollar amount for offer per unit.
+          example: 30.0
+        unit:
           type: string
+          description: The unit for the rate.
           enum:
-          - datetime_change
-          - client_request
-          - client_hospitalization
-          - client_passed_away
-          - client_refused_service
-          - processing_error
-          - other
-    InboxReferralCarePlanInterventionResponse:
-      allOf:
-      - $ref: '#/components/schemas/CarePlanInterventionCore'
-      - type: object
-        properties:
-          goals:
-            type: array
-            items:
-              title: InboxCarePlanInterventionGoalCore
-              type: object
-              properties:
-                name:
-                  type: string
-              required:
-              - name
-          client_task_id:
-            type: string
-            format: uuid
-    CareTypeCore:
-      type: string
-      enum:
-      - psw
-      - nursing
+          - per_visit
+          - per_hour
+          - amount
+      required:
+      - rate
+      - unit
+    AllergyCore:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        severity:
+          type: string
+        start_date:
+          type: string
+          format: date
+        treatment:
+          type: string
+    AuthorizationCore:
+      type: object
+      properties:
+        authorization_number:
+          type: string
+        authorization_status:
+          type: string
+        end_date:
+          type: string
+          format: date
+        first_day_of_week:
+          type: integer
+        id:
+          type: integer
+        import_id:
+          type: string
+        member_number:
+          type: string
+        notes:
+          type: string
+        program_id:
+          type: string
+        custom_number_of_days:
+          type: integer
+        rule_type:
+          type: string
+        rule_custom:
+          type: number
+          format: decimal
+        rule_daily:
+          type: number
+          format: decimal
+        rule_weekly:
+          type: number
+          format: decimal
+        rule_monthly:
+          type: number
+          format: decimal
+        rule_period:
+          type: number
+          format: decimal
+        rule_monday:
+          type: number
+          format: decimal
+        rule_tuesday:
+          type: number
+          format: decimal
+        rule_wednesday:
+          type: number
+          format: decimal
+        rule_thursday:
+          type: number
+          format: decimal
+        rule_friday:
+          type: number
+          format: decimal
+        rule_saturday:
+          type: number
+          format: decimal
+        rule_sunday:
+          type: number
+          format: decimal
+        start_date:
+          type: string
+          format: date
+      required:
+      - authorization_status
+      - first_day_of_week
+      - rule_type
+      - start_date
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
     InboxReferralDetailResponse:
       description: 'API response for the complete representation of an assigned referral on the inbox API.
 
@@ -341,345 +429,65 @@ components:
       - service
       - client
       - revision
-    InboxReferralCarePlanResponse:
+    RiskCore:
       type: object
       properties:
         name:
           type: string
+        category:
+          type: string
+          example: allergy
+        severity:
+          type: integer
         start_date:
           type: string
           format: date
-        end_date:
-          type: string
-          format: date
-        status:
-          type: string
-        diagnoses:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanDiagnosisCore'
-        goals:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxCarePlanGoalResponse'
-        interventions:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxReferralCarePlanInterventionResponse'
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - name
-      - start_date
-    PriceCore:
+    FormTemplateFieldCore:
       type: object
       properties:
-        rate:
-          type: number
-          format: decimal
-          description: The dollar amount for offer per unit.
-          example: 30.0
-        unit:
+        field_tag:
           type: string
-          description: The unit for the rate.
-          enum:
-          - per_visit
-          - per_hour
-          - amount
-      required:
-      - rate
-      - unit
-    CarePlanInterventionCore:
-      type: object
-      properties:
-        description:
+        field_type:
           type: string
-        end_date:
+        id:
+          type: integer
+        instructions:
           type: string
-          format: date
-        external_link:
-          title: CarePlanInterventionExternalLinkCore
+        json_logic:
           type: object
-          properties:
-            label:
-              type: string
-            url:
-              type: string
-          required:
-          - label
-          - url
-        has_duration:
-          type: boolean
-        is_from_library:
-          type: boolean
-        is_required:
-          type: boolean
-        name:
+        label:
           type: string
+        parent_id:
+          type: integer
         rank:
           type: integer
-        recurrence:
-          title: CarePlanInterventionRecurrenceCore
+        required:
+          type: boolean
+        settings:
           type: object
-          properties:
-            count:
-              type: integer
-            frequency:
-              type: string
-            interval:
-              type: integer
-            weekdays:
-              type: array
-              items:
-                type: string
-            monthday:
-              type: integer
-            available_from:
-              type: string
-            available_to:
-              type: string
-          required:
-          - frequency
-          - interval
-        recurrence_type:
-          type: string
-        start_date:
-          type: string
-          format: date
-        status:
-          type: string
-        timezone:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
       required:
-      - has_duration
-      - is_required
-      - name
+      - field_type
+      - id
+      - label
+      - parent_id
       - rank
-      - recurrence_type
-      - start_date
-      - status
-      - type
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    CaseManagerCore:
-      type: object
-      properties:
-        name:
-          type: string
-        phone_number:
-          type: string
-        fax_number:
-          type: string
-        email:
-          type: string
-    InboxFormTemplateFieldResponse:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateFieldCore'
-      - type: object
-        properties:
-          field_id:
-            type: string
-            format: uuid
-    InboxReferralAlayaCareResponse:
-      type: object
-      properties:
-        authorizations:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuthorizationCore'
-        care_plan:
-          $ref: '#/components/schemas/InboxReferralCarePlanResponse'
-        form_templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxFormTemplateDetailResponse'
-    InboxReferralCollectionResponse:
-      description: 'API response for the core representation of a referral response on the inbox API.
+      - required
+    ReferralReasonCodeCore:
+      description: '`reason_code` associated to a cancelled or closed referral.
 
         '
       type: object
       properties:
-        referral:
-          title: InboxReferralCollectionReferralResponse
-          allOf:
-          - $ref: '#/components/schemas/ReferralReasonCodeCore'
-          - type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              sequence_id:
-                type: string
-                format: uuid
-              offer_id:
-                type: string
-                format: uuid
-              shift_id:
-                type: string
-                format: uuid
-              care_type:
-                $ref: '#/components/schemas/CareTypeCore'
-              referral_type:
-                $ref: '#/components/schemas/ReferralTypeCore'
-              start_at:
-                type: string
-                format: date-time
-              end_at:
-                type: string
-                format: date-time
-              status:
-                $ref: '#/components/schemas/ReferralStatusCore'
-              created_at:
-                type: string
-                format: date-time
-              updated_at:
-                type: string
-                format: date-time
-            required:
-            - id
-            - care_type
-            - referral_type
-            - start_at
-            - status
-            - created_at
-        revision:
-          title: InboxReferralCollectionRevisionResponse
-          type: object
-          properties:
-            revision_group_id:
-              type: string
-              format: uuid
-            revision_number:
-              type: integer
-              minimum: 1
-          required:
-          - revision_group_id
-          - revision_number
-      required:
-      - referral
-      - revision
-    AuthorizationCore:
-      type: object
-      properties:
-        authorization_number:
+        reason_code:
           type: string
-        authorization_status:
-          type: string
-        end_date:
-          type: string
-          format: date
-        first_day_of_week:
-          type: integer
-        id:
-          type: integer
-        import_id:
-          type: string
-        member_number:
-          type: string
-        notes:
-          type: string
-        program_id:
-          type: string
-        custom_number_of_days:
-          type: integer
-        rule_type:
-          type: string
-        rule_custom:
-          type: number
-          format: decimal
-        rule_daily:
-          type: number
-          format: decimal
-        rule_weekly:
-          type: number
-          format: decimal
-        rule_monthly:
-          type: number
-          format: decimal
-        rule_period:
-          type: number
-          format: decimal
-        rule_monday:
-          type: number
-          format: decimal
-        rule_tuesday:
-          type: number
-          format: decimal
-        rule_wednesday:
-          type: number
-          format: decimal
-        rule_thursday:
-          type: number
-          format: decimal
-        rule_friday:
-          type: number
-          format: decimal
-        rule_saturday:
-          type: number
-          format: decimal
-        rule_sunday:
-          type: number
-          format: decimal
-        start_date:
-          type: string
-          format: date
-      required:
-      - authorization_status
-      - first_day_of_week
-      - rule_type
-      - start_date
-    CarePlanGoalCore:
-      type: object
-      properties:
-        description:
-          type: string
-        end_date:
-          type: string
-          format: date
-        is_from_library:
-          type: boolean
-        is_primary:
-          type: boolean
-        last_updated_progress:
-          title: GoalLastUpdatedProgressCore
-          type: object
-          properties:
-            comment:
-              type: string
-            percentage:
-              type: integer
-            completed:
-              type: boolean
-        name:
-          type: string
-        progress_type:
-          type: string
-        rank:
-          type: integer
-        start_date:
-          type: string
-          format: date
-        status:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - name
-      - start_date
-      - is_primary
-      - type
-      - progress_type
+          enum:
+          - datetime_change
+          - client_request
+          - client_hospitalization
+          - client_passed_away
+          - client_refused_service
+          - processing_error
+          - other
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -699,55 +507,6 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    CustomFieldCore:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-    AllergyCore:
-      type: object
-      properties:
-        name:
-          type: string
-        category:
-          type: string
-        severity:
-          type: string
-        start_date:
-          type: string
-          format: date
-        treatment:
-          type: string
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    InboxReferralVisitTaskResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-        description:
-          type: string
-        is_required:
-          type: boolean
-      required:
-      - id
-      - name
-      - is_required
     InboxClientTasksUpdateRequest:
       type: object
       properties:
@@ -768,6 +527,201 @@ components:
             - inbox_id
       required:
       - client_tasks
+    ReferralStatusCore:
+      type: string
+      enum:
+      - assigned
+      - processed
+      - cancelled
+    InboxCarePlanGoalResponse:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanGoalCore'
+      - type: object
+        properties:
+          diagnoses:
+            type: array
+            items:
+              title: InboxCarePlanGoalDiagnosisCore
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
+    InboxFormTemplateDetailResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateCore'
+      - type: object
+        properties:
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/InboxFormTemplateFieldResponse'
+          form_template_id:
+            type: string
+            format: uuid
+          demand_persona_id:
+            type: string
+            format: uuid
+    InboxFormTemplateFieldResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateFieldCore'
+      - type: object
+        properties:
+          field_id:
+            type: string
+            format: uuid
+    InboxReferralVisitTaskResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        is_required:
+          type: boolean
+      required:
+      - id
+      - name
+      - is_required
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    CarePlanDiagnosisCore:
+      type: object
+      properties:
+        description:
+          type: string
+        end_date:
+          type: string
+          format: date
+        is_from_library:
+          type: boolean
+        is_primary:
+          type: boolean
+        name:
+          type: string
+        rank:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        status:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - start_date
+      - is_primary
+    FormTemplateCore:
+      type: object
+      properties:
+        admin_eyes_only:
+          type: boolean
+        approve_automatically:
+          type: boolean
+        clinical_event_name:
+          type: string
+        display_instructions_in_pdf:
+          type: boolean
+        display_report:
+          type: boolean
+        exclude_from_shift_report:
+          type: boolean
+        form_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        language_code:
+          type: string
+        name:
+          type: string
+        notify_alert_queue:
+          type: boolean
+        pre_populate:
+          type: boolean
+        requires_clock_in:
+          type: boolean
+        schema_id:
+          type: string
+          format: uuid
+        schema_version:
+          type: integer
+        visit_link_required:
+          type: boolean
+      required:
+      - admin_eyes_only
+      - approve_automatically
+      - display_instructions_in_pdf
+      - display_report
+      - exclude_from_shift_report
+      - form_type
+      - id
+      - language_code
+      - name
+      - notify_alert_queue
+      - pre_populate
+      - requires_clock_in
+      - schema_id
+      - schema_version
+      - visit_link_required
+    CustomFieldCore:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    InboxReferralCarePlanInterventionResponse:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanInterventionCore'
+      - type: object
+        properties:
+          goals:
+            type: array
+            items:
+              title: InboxCarePlanInterventionGoalCore
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
+          client_task_id:
+            type: string
+            format: uuid
     ClientCore:
       type: object
       properties:
@@ -912,6 +866,11 @@ components:
       required:
       - demographics
       - address
+    CareTypeCore:
+      type: string
+      enum:
+      - psw
+      - nursing
     InboxReferralPageResponse:
       allOf:
       - $ref: '#/components/schemas/PageCore'
@@ -923,41 +882,134 @@ components:
               $ref: '#/components/schemas/InboxReferralCollectionResponse'
         required:
         - items
-    ReferralStatusCore:
+    ReferralTypeCore:
       type: string
       enum:
-      - assigned
-      - processed
-      - cancelled
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    InboxFormTemplateDetailResponse:
+      - visit
+      - service
+    InboxReferralCarePlanResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+        diagnoses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanDiagnosisCore'
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxCarePlanGoalResponse'
+        interventions:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxReferralCarePlanInterventionResponse'
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - start_date
+    CarePlanGoalCore:
+      type: object
+      properties:
+        description:
+          type: string
+        end_date:
+          type: string
+          format: date
+        is_from_library:
+          type: boolean
+        is_primary:
+          type: boolean
+        last_updated_progress:
+          title: GoalLastUpdatedProgressCore
+          type: object
+          properties:
+            comment:
+              type: string
+            percentage:
+              type: integer
+            completed:
+              type: boolean
+        name:
+          type: string
+        progress_type:
+          type: string
+        rank:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        status:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - start_date
+      - is_primary
+      - type
+      - progress_type
+    ReferralRevisionResponse:
+      type: object
+      properties:
+        revision_group_id:
+          type: string
+          format: uuid
+        revision_number:
+          type: integer
+          minimum: 1
+        revision_reasons:
+          type: array
+          items:
+            type: string
+        revision_comment:
+          type: string
+        is_latest_revision:
+          type: boolean
+      required:
+      - revision_group_id
+      - revision_number
+      - is_latest_revision
+    InboxReferralCancelRequest:
       allOf:
-      - $ref: '#/components/schemas/FormTemplateCore'
-      - type: object
-        properties:
-          fields:
-            type: array
-            items:
-              $ref: '#/components/schemas/InboxFormTemplateFieldResponse'
-          form_template_id:
-            type: string
-            format: uuid
-          demand_persona_id:
-            type: string
-            format: uuid
-    InboxClientResponse:
-      allOf:
-      - $ref: '#/components/schemas/ClientCore'
-      - type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-        required:
-        - id
+      - $ref: '#/components/schemas/ReferralReasonCodeCore'
+    CaseManagerCore:
+      type: object
+      properties:
+        name:
+          type: string
+        phone_number:
+          type: string
+        fax_number:
+          type: string
+        email:
+          type: string
+    InboxReferralAlayaCareResponse:
+      type: object
+      properties:
+        authorizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationCore'
+        care_plan:
+          $ref: '#/components/schemas/InboxReferralCarePlanResponse'
+        form_templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxFormTemplateDetailResponse'
     InboxReferralVisitResponse:
       type: object
       properties:
@@ -980,7 +1032,12 @@ components:
       - id
       - start_at
       - end_at
-    CarePlanDiagnosisCore:
+    SortByCore:
+      type: string
+      enum:
+      - last_modified
+      default: last_modified
+    CarePlanInterventionCore:
       type: object
       properties:
         description:
@@ -988,179 +1045,148 @@ components:
         end_date:
           type: string
           format: date
+        external_link:
+          title: CarePlanInterventionExternalLinkCore
+          type: object
+          properties:
+            label:
+              type: string
+            url:
+              type: string
+          required:
+          - label
+          - url
+        has_duration:
+          type: boolean
         is_from_library:
           type: boolean
-        is_primary:
+        is_required:
           type: boolean
         name:
           type: string
         rank:
           type: integer
+        recurrence:
+          title: CarePlanInterventionRecurrenceCore
+          type: object
+          properties:
+            count:
+              type: integer
+            frequency:
+              type: string
+            interval:
+              type: integer
+            weekdays:
+              type: array
+              items:
+                type: string
+            monthday:
+              type: integer
+            available_from:
+              type: string
+            available_to:
+              type: string
+          required:
+          - frequency
+          - interval
+        recurrence_type:
+          type: string
         start_date:
           type: string
           format: date
         status:
           type: string
+        timezone:
+          type: string
+        type:
+          type: string
         updated_at:
           type: string
           format: date-time
       required:
+      - has_duration
+      - is_required
       - name
+      - rank
+      - recurrence_type
       - start_date
-      - is_primary
-    FormTemplateCore:
-      type: object
-      properties:
-        admin_eyes_only:
-          type: boolean
-        approve_automatically:
-          type: boolean
-        clinical_event_name:
-          type: string
-        display_instructions_in_pdf:
-          type: boolean
-        display_report:
-          type: boolean
-        exclude_from_shift_report:
-          type: boolean
-        form_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        language_code:
-          type: string
-        name:
-          type: string
-        notify_alert_queue:
-          type: boolean
-        pre_populate:
-          type: boolean
-        requires_clock_in:
-          type: boolean
-        schema_id:
-          type: string
-          format: uuid
-        schema_version:
-          type: integer
-        visit_link_required:
-          type: boolean
-      required:
-      - admin_eyes_only
-      - approve_automatically
-      - display_instructions_in_pdf
-      - display_report
-      - exclude_from_shift_report
-      - form_type
-      - id
-      - language_code
-      - name
-      - notify_alert_queue
-      - pre_populate
-      - requires_clock_in
-      - schema_id
-      - schema_version
-      - visit_link_required
-    RiskCore:
-      type: object
-      properties:
-        name:
-          type: string
-        category:
-          type: string
-          example: allergy
-        severity:
-          type: integer
-        start_date:
-          type: string
-          format: date
-    InboxCarePlanGoalResponse:
+      - status
+      - type
+    InboxClientResponse:
       allOf:
-      - $ref: '#/components/schemas/CarePlanGoalCore'
+      - $ref: '#/components/schemas/ClientCore'
       - type: object
         properties:
-          diagnoses:
-            type: array
-            items:
-              title: InboxCarePlanGoalDiagnosisCore
-              type: object
-              properties:
-                name:
-                  type: string
-              required:
-              - name
-    ReferralRevisionResponse:
-      type: object
-      properties:
-        revision_group_id:
-          type: string
-          format: uuid
-        revision_number:
-          type: integer
-          minimum: 1
-        revision_reasons:
-          type: array
-          items:
+          id:
             type: string
-        revision_comment:
-          type: string
-        is_latest_revision:
-          type: boolean
-      required:
-      - revision_group_id
-      - revision_number
-      - is_latest_revision
-    ReferralTypeCore:
-      type: string
-      enum:
-      - visit
-      - service
-    FormTemplateFieldCore:
-      type: object
-      properties:
-        field_tag:
-          type: string
-        field_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        json_logic:
-          type: object
-        label:
-          type: string
-        parent_id:
-          type: integer
-        rank:
-          type: integer
+            format: uuid
         required:
-          type: boolean
-        settings:
-          type: object
-      required:
-      - field_type
-      - id
-      - label
-      - parent_id
-      - rank
-      - required
-    OrganizationLeanCore:
+        - id
+    InboxReferralCollectionResponse:
+      description: 'API response for the core representation of a referral response on the inbox API.
+
+        '
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
+        referral:
+          title: InboxReferralCollectionReferralResponse
+          allOf:
+          - $ref: '#/components/schemas/ReferralReasonCodeCore'
+          - type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              sequence_id:
+                type: string
+                format: uuid
+              offer_id:
+                type: string
+                format: uuid
+              shift_id:
+                type: string
+                format: uuid
+              care_type:
+                $ref: '#/components/schemas/CareTypeCore'
+              referral_type:
+                $ref: '#/components/schemas/ReferralTypeCore'
+              start_at:
+                type: string
+                format: date-time
+              end_at:
+                type: string
+                format: date-time
+              status:
+                $ref: '#/components/schemas/ReferralStatusCore'
+              created_at:
+                type: string
+                format: date-time
+              updated_at:
+                type: string
+                format: date-time
+            required:
+            - id
+            - care_type
+            - referral_type
+            - start_at
+            - status
+            - created_at
+        revision:
+          title: InboxReferralCollectionRevisionResponse
+          type: object
+          properties:
+            revision_group_id:
+              type: string
+              format: uuid
+            revision_number:
+              type: integer
+              minimum: 1
+          required:
+          - revision_group_id
+          - revision_number
       required:
-      - id
-      - name
-    InboxReferralCancelRequest:
-      allOf:
-      - $ref: '#/components/schemas/ReferralReasonCodeCore'
+      - referral
+      - revision
     AddressCore:
       type: object
       properties:
@@ -1199,23 +1225,12 @@ components:
       - state
       - zip
       - country
-    SortByCore:
-      type: string
-      enum:
-      - last_modified
-      default: last_modified
   parameters:
-    ItemsPerPageParam:
+    SortByParam:
       in: query
-      name: items_per_page
+      name: sort_by
       schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    ShiftIdQueryParam:
-      in: query
-      name: shift_id
-      schema:
-        type: string
-        format: uuid
+        $ref: '#/components/schemas/SortByCore'
     RevisionsQueryParam:
       in: query
       name: revisions
@@ -1227,16 +1242,22 @@ components:
         - latest
         - archived
         default: latest
+    ShiftIdQueryParam:
+      in: query
+      name: shift_id
+      schema:
+        type: string
+        format: uuid
     PageNumberParam:
       in: query
       name: page
       schema:
         $ref: '#/components/schemas/PageNumberCore'
-    SortOrderParam:
+    ItemsPerPageParam:
       in: query
-      name: sort_order
+      name: items_per_page
       schema:
-        $ref: '#/components/schemas/SortOrderCore'
+        $ref: '#/components/schemas/ItemsPerPageCore'
     OfferIdQueryParam:
       in: query
       name: offer_id
@@ -1250,11 +1271,11 @@ components:
         type: string
         format: uuid
       required: true
-    SortByParam:
+    SortOrderParam:
       in: query
-      name: sort_by
+      name: sort_order
       schema:
-        $ref: '#/components/schemas/SortByCore'
+        $ref: '#/components/schemas/SortOrderCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

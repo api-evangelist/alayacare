@@ -38,9 +38,7 @@ paths:
         Save a form submission.
 
 
-        One of `service_id` or `visit_id` must be provided.
-
-        '
+        One of `service_id` or `visit_id` must be provided.'
       requestBody:
         required: true
         content:
@@ -60,6 +58,10 @@ paths:
         httpMethod: POST
         passthroughBehavior: when_no_match
         type: aws_proxy
+      summary: Create inbox form submissions
+      x-summary-source: derived
+      operationId: postV1InboxFormSubmissions
+      x-operation-id-source: derived
 components:
   schemas:
     FormSubmissionHiddenFieldCore:
@@ -70,6 +72,26 @@ components:
           format: uuid
       required:
       - field_id
+    InboxFormSubmissionFieldCore:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+        value_type:
+          type: string
+          enum:
+          - attachment
+          - boolean
+          - decimal
+          - json
+          - string
+        value:
+          type: string
+      required:
+      - field_id
+      - value_type
+      - value
     InboxFormSubmissionCreationResponse:
       type: object
       properties:
@@ -101,26 +123,6 @@ components:
       - id
       - form_template_id
       - fields
-    InboxFormSubmissionFieldCore:
-      type: object
-      properties:
-        field_id:
-          type: string
-          format: uuid
-        value_type:
-          type: string
-          enum:
-          - attachment
-          - boolean
-          - decimal
-          - json
-          - string
-        value:
-          type: string
-      required:
-      - field_id
-      - value_type
-      - value
     InboxFormSubmissionCreationRequest:
       type: object
       properties:
