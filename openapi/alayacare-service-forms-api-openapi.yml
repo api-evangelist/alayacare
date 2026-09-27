@@ -66,16 +66,17 @@ paths:
       operationId: getServicesForms
       x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
     count:
       description: Number of items per page.
       name: count
@@ -85,6 +86,15 @@ components:
         default: 100
         type: integer
         minimum: 0
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
   schemas:
     ServiceFormList:
       allOf:
@@ -95,21 +105,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ServiceForm'
-    ErrorResponse:
-      description: Error response
+    ServiceForm:
+      description: Details of forms
       type: object
       properties:
-        code:
+        branch:
+          $ref: '#/components/schemas/Branch'
+        id:
           type: integer
-          example: 400
-          description: Response code
-        message:
+          minimum: 1
+          description: Service code id
+          example: 1
+        name:
           type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
+          description: Service Code name
+          example: SC1
+        status:
+          type: string
+          description: service form status
+          example: active
+        version:
+          type: string
+          description: service form version
+          example: 1
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -135,29 +153,6 @@ components:
       - page
       - total_pages
       - items
-    ServiceForm:
-      description: Details of forms
-      type: object
-      properties:
-        branch:
-          $ref: '#/components/schemas/Branch'
-        id:
-          type: integer
-          minimum: 1
-          description: Service code id
-          example: 1
-        name:
-          type: string
-          description: Service Code name
-          example: SC1
-        status:
-          type: string
-          description: service form status
-          example: active
-        version:
-          type: string
-          description: service form version
-          example: 1
     Branch:
       description: AlayaCare branch
       type: object
@@ -171,16 +166,21 @@ components:
           type: string
           description: Branch name
           example: Toronto branch
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
   securitySchemes:
     basicAuth:
       type: http

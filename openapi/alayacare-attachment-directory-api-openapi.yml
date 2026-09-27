@@ -273,139 +273,7 @@ paths:
       operationId: deleteEmployeesByIdByExternalEmployeeIdAttachmentsByDirectoryPath
       x-operation-id-source: derived
 components:
-  schemas:
-    DirectoryNotFoundSchema:
-      type: object
-      properties:
-        code:
-          type: integer
-          description: http status response code
-          example: 404
-        message:
-          type: string
-          description: Detail on the error
-          example: Directory "Ghost Directory" not found
-    AttachmentAction:
-      description: Attachment actions
-      type: object
-      properties:
-        action:
-          type: string
-          example: move
-          enum:
-          - move
-          - copy
-          - rename
-        destination:
-          type: string
-          example: dir2/child1/
-    DeleteDirectoryActionSchema:
-      type: object
-      properties:
-        forced-delete:
-          type: boolean
-          description: required to delete a non-empty directory
-          example: true
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
   responses:
-    ErrorResponseDirectoryStructureInvalidRequest:
-      description: Can't move a directory to one of its own sub-directories
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Can't move a directory to one of its own sub-directories
-    ErrorResponseEmployeeNotFound:
-      description: Employee not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee not found.
-    ErrorResponseDirectoryInvalidRequest:
-      description: Can't post a file when creating a directory
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Can't post a file when creating a directory
-    SuccessResponseAttachmentDirectoryCreate:
-      description: Directory created
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 201
-              name:
-                type: string
-                description: Url to the directory created
-                example: /new_directory/
-    ErrorResponseDirectoryAlreadyExists:
-      description: Directory already exists.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 409
-              message:
-                type: string
-                description: Detail on the error
-                example: Directory "Ghost Directory" already exists.
-    ErrorResponseHeaderMissing:
-      description: 'Missing `forced-delete` set to true in body.
-
-        '
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: This action will delete the directory and its content. Please confirm.
     SuccessResponseDirectoryContent:
       description: Content of a directory
       content:
@@ -444,6 +312,15 @@ components:
             - last_modified: '2020-01-14T18:58:44+00:00'
               name: Physician Order/file.pdf
               size: 123456
+    ErrorResponseEmployeeNotFound:
+      description: Employee not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee not found.
     SuccessResponseAttachmentDirectoryUpdate:
       description: Directory copied, moved or renamed
       content:
@@ -461,6 +338,129 @@ components:
 
                   '
                 example: /new_directory_copied/
+    ErrorResponseDirectoryAlreadyExists:
+      description: Directory already exists.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 409
+              message:
+                type: string
+                description: Detail on the error
+                example: Directory "Ghost Directory" already exists.
+    ErrorResponseDirectoryStructureInvalidRequest:
+      description: Can't move a directory to one of its own sub-directories
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Can't move a directory to one of its own sub-directories
+    ErrorResponseDirectoryInvalidRequest:
+      description: Can't post a file when creating a directory
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Can't post a file when creating a directory
+    SuccessResponseAttachmentDirectoryCreate:
+      description: Directory created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 201
+              name:
+                type: string
+                description: Url to the directory created
+                example: /new_directory/
+    ErrorResponseHeaderMissing:
+      description: 'Missing `forced-delete` set to true in body.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: This action will delete the directory and its content. Please confirm.
+  schemas:
+    AttachmentAction:
+      description: Attachment actions
+      type: object
+      properties:
+        action:
+          type: string
+          example: move
+          enum:
+          - move
+          - copy
+          - rename
+        destination:
+          type: string
+          example: dir2/child1/
+    DeleteDirectoryActionSchema:
+      type: object
+      properties:
+        forced-delete:
+          type: boolean
+          description: required to delete a non-empty directory
+          example: true
+    DirectoryNotFoundSchema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 404
+        message:
+          type: string
+          description: Detail on the error
+          example: Directory "Ghost Directory" not found
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
   securitySchemes:
     basic_auth:
       type: http

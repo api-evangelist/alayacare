@@ -171,6 +171,25 @@ paths:
       operationId: deleteTasksByTaskIdCommentsByCommentId
       x-operation-id-source: derived
 components:
+  responses:
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    404NotFound:
+      description: Entity not found
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    400BadRequest:
+      description: Bad request
   parameters:
     comment_id:
       name: comment_id
@@ -188,6 +207,48 @@ components:
         type: integer
       description: The task identifier
   schemas:
+    TaskCommentList:
+      type: object
+      items:
+        $ref: '#/components/schemas/TaskComment'
+    Person:
+      type: object
+      description: Encapsulates the bare details of a person
+      properties:
+        id:
+          type: integer
+          nullable: false
+          description: Primary ID (Employee ID, User ID etc.) of person
+        external_id:
+          type: string
+          nullable: true
+          description: External ID of person
+        guid:
+          type: integer
+          nullable: true
+          description: GUID
+        profile_id:
+          type: integer
+          nullable: true
+          description: Profile ID
+        last_name:
+          type: string
+          description: Last Name/Family Name
+        first_name:
+          type: string
+          description: First Name
+        full_name:
+          type: string
+          description: Full Name
+        status:
+          type: string
+          description: Status of person
+        deep_link:
+          type: string
+          description: Deep link to person
+        profile_photo_url:
+          type: string
+          description: URL to profile photo
     TaskComment:
       type: object
       description: Comments on a task.
@@ -240,64 +301,3 @@ components:
       required:
       - message
       - request_id
-    TaskCommentList:
-      type: object
-      items:
-        $ref: '#/components/schemas/TaskComment'
-    Person:
-      type: object
-      description: Encapsulates the bare details of a person
-      properties:
-        id:
-          type: integer
-          nullable: false
-          description: Primary ID (Employee ID, User ID etc.) of person
-        external_id:
-          type: string
-          nullable: true
-          description: External ID of person
-        guid:
-          type: integer
-          nullable: true
-          description: GUID
-        profile_id:
-          type: integer
-          nullable: true
-          description: Profile ID
-        last_name:
-          type: string
-          description: Last Name/Family Name
-        first_name:
-          type: string
-          description: First Name
-        full_name:
-          type: string
-          description: Full Name
-        status:
-          type: string
-          description: Status of person
-        deep_link:
-          type: string
-          description: Deep link to person
-        profile_photo_url:
-          type: string
-          description: URL to profile photo
-  responses:
-    404NotFound:
-      description: Entity not found
-    403Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    400BadRequest:
-      description: Bad request

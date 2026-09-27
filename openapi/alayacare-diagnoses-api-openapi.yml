@@ -254,154 +254,22 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    UpdateCarePlanDiagnosis:
-      description: JSON schema for creating care plan diagnosis
-      type: object
-      properties:
-        name:
-          description: Title of the care plan diagnosis
-          type: string
-          example: Title example
-        start_date:
-          description: Start date of the diagnosis
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: End date of the diagnosis
-          type: string
-          example: '2018-01-10'
-        description:
-          description: Description of the care plan diagnosis
-          type: string
-          example: Description of diagnosis
-        is_primary:
-          description: Define that this diagnosis is primary
-          type: boolean
-          example: true
-        department_id:
-          description: The ID of selected department
-          type:
-          - integer
-          - 'null'
-          example: 1
-        service_ids:
-          description: The list of service ID's that is linked to created diagnosis.Only services assigned to the client can be linked to the diagnosis.
-          type: array
-          items:
-            type: integer
-          example:
-          - 1
-          - 4
-          - 6
-        external_service_ids:
-          description: The list of external service external ID's that is linked to a diagnosis. Only services assigned to the client can be linked to the diagnosis.
-          type: array
-          items:
-            type: string
-          example:
-          - sor_service_id_1
-          - sor_service_id_2
-          - sor_service_id_3
-        tag_ids:
-          description: The list of tag ID's that is linked to created diagnosis
-          type: array
-          items:
-            type: integer
-          example:
-          - 2
-          - 4
-          - 8
-    EntitySummaryList:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntitySummary'
-    User:
-      description: User id, first and last names
-      type: object
+    ServiceDetails:
+      description: Service details
+      type:
+      - object
+      - 'null'
       properties:
         id:
-          description: The id of user
           type: integer
-          example: 5
+          description: AlayaCare service ID
+          example: 1001
         external_id:
-          description: The id of user
-          type: string
-          example: sor_external_id_1
-    ClientDiagnosis:
-      description: Care plan diagnosis
-      type: object
-      properties:
-        id:
-          description: Care Plan Diagnosis ID
-          type: integer
-          example: 100
-        name:
-          description: A title of care plan diagnosis
-          type: string
-          example: Diabetes
-        plan_id:
-          description: Care Plan ID
-          type: integer
-          example: 345
-        plan_name:
-          description: Care plan name
-          type: string
-          example: 'Episode #4'
-        start_date:
-          description: A start date of diagnosis
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: A end date of diagnosis
-          type: string
-          example: '2018-01-10'
-        description:
-          description: A description of care plan diagnosis
-          type: string
-          example: Description of diagnosis
-        is_primary:
-          description: Define that this diagnosis is primary
-          type: boolean
-          example: true
-        rank:
-          description: Used for ordering of diagnoses in list. The smaller, the higher ranked will the diagnosis be returned
-          type: integer
-          example: 0
-        status:
-          $ref: '#/components/schemas/CareplanItemStatus'
-        department:
-          $ref: '#/components/schemas/EntitySummary'
-        updated_at:
-          description: Datetime for the last update for this diagnosis
-          type: string
-          example: '2018-01-23T23:56:13+00:00'
-        updated_by:
-          $ref: '#/components/schemas/User'
-        created_at:
-          description: Datetime for the creation of this diagnosis
-          type: string
-          example: '2017-12-20T23:56:13+00:00'
-        created_by:
-          $ref: '#/components/schemas/User'
-        completed_at:
-          description: Datetime when the diagnosis was completed
           type:
           - string
           - 'null'
-          example: '2017-12-20T23:56:13+00:00'
-        completed_by:
-          $ref: '#/components/schemas/User'
-        completion_note:
-          description: Completion note of the diagnosis
-          type:
-          - string
-          - 'null'
-        services:
-          description: The list of services that are linked to created diagnosis
-          $ref: '#/components/schemas/EntitySummaryList'
-        tags:
-          description: The list of tags that are linked to created diagnosis
-          $ref: '#/components/schemas/EntitySummaryList'
+          description: External service ID
+          example: sor_service_id_1
     EntitySummary:
       type: object
       required:
@@ -420,22 +288,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ServiceDetails'
-    ServiceDetails:
-      description: Service details
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_id_1
     CreateCarePlanDiagnosis:
       description: JSON schema for creating care plan diagnosis.
       type: object
@@ -495,6 +347,22 @@ components:
           - 2
           - 4
           - 8
+    EntitySummaryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntitySummary'
+    User:
+      description: User id, first and last names
+      type: object
+      properties:
+        id:
+          description: The id of user
+          type: integer
+          example: 5
+        external_id:
+          description: The id of user
+          type: string
+          example: sor_external_id_1
     ErrorResponse:
       description: Error response
       type: object
@@ -508,6 +376,12 @@ components:
       required:
       - code
       - message
+    CareplanItemStatus:
+      type: string
+      enum:
+      - active
+      - completed
+      - archived
     CarePlanDiagnosis:
       description: Care plan diagnosis
       type: object
@@ -583,6 +457,81 @@ components:
         tag:
           description: The list of tags that are linked to a diagnosis
           $ref: '#/components/schemas/EntitySummaryList'
+    ClientDiagnosis:
+      description: Care plan diagnosis
+      type: object
+      properties:
+        id:
+          description: Care Plan Diagnosis ID
+          type: integer
+          example: 100
+        name:
+          description: A title of care plan diagnosis
+          type: string
+          example: Diabetes
+        plan_id:
+          description: Care Plan ID
+          type: integer
+          example: 345
+        plan_name:
+          description: Care plan name
+          type: string
+          example: 'Episode #4'
+        start_date:
+          description: A start date of diagnosis
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: A end date of diagnosis
+          type: string
+          example: '2018-01-10'
+        description:
+          description: A description of care plan diagnosis
+          type: string
+          example: Description of diagnosis
+        is_primary:
+          description: Define that this diagnosis is primary
+          type: boolean
+          example: true
+        rank:
+          description: Used for ordering of diagnoses in list. The smaller, the higher ranked will the diagnosis be returned
+          type: integer
+          example: 0
+        status:
+          $ref: '#/components/schemas/CareplanItemStatus'
+        department:
+          $ref: '#/components/schemas/EntitySummary'
+        updated_at:
+          description: Datetime for the last update for this diagnosis
+          type: string
+          example: '2018-01-23T23:56:13+00:00'
+        updated_by:
+          $ref: '#/components/schemas/User'
+        created_at:
+          description: Datetime for the creation of this diagnosis
+          type: string
+          example: '2017-12-20T23:56:13+00:00'
+        created_by:
+          $ref: '#/components/schemas/User'
+        completed_at:
+          description: Datetime when the diagnosis was completed
+          type:
+          - string
+          - 'null'
+          example: '2017-12-20T23:56:13+00:00'
+        completed_by:
+          $ref: '#/components/schemas/User'
+        completion_note:
+          description: Completion note of the diagnosis
+          type:
+          - string
+          - 'null'
+        services:
+          description: The list of services that are linked to created diagnosis
+          $ref: '#/components/schemas/EntitySummaryList'
+        tags:
+          description: The list of tags that are linked to created diagnosis
+          $ref: '#/components/schemas/EntitySummaryList'
     CarePlanDiagnosisList:
       description: List of diagnosis
       type: object
@@ -591,49 +540,64 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ClientDiagnosis'
-    CareplanItemStatus:
-      type: string
-      enum:
-      - active
-      - completed
-      - archived
+    UpdateCarePlanDiagnosis:
+      description: JSON schema for creating care plan diagnosis
+      type: object
+      properties:
+        name:
+          description: Title of the care plan diagnosis
+          type: string
+          example: Title example
+        start_date:
+          description: Start date of the diagnosis
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: End date of the diagnosis
+          type: string
+          example: '2018-01-10'
+        description:
+          description: Description of the care plan diagnosis
+          type: string
+          example: Description of diagnosis
+        is_primary:
+          description: Define that this diagnosis is primary
+          type: boolean
+          example: true
+        department_id:
+          description: The ID of selected department
+          type:
+          - integer
+          - 'null'
+          example: 1
+        service_ids:
+          description: The list of service ID's that is linked to created diagnosis.Only services assigned to the client can be linked to the diagnosis.
+          type: array
+          items:
+            type: integer
+          example:
+          - 1
+          - 4
+          - 6
+        external_service_ids:
+          description: The list of external service external ID's that is linked to a diagnosis. Only services assigned to the client can be linked to the diagnosis.
+          type: array
+          items:
+            type: string
+          example:
+          - sor_service_id_1
+          - sor_service_id_2
+          - sor_service_id_3
+        tag_ids:
+          description: The list of tag ID's that is linked to created diagnosis
+          type: array
+          items:
+            type: integer
+          example:
+          - 2
+          - 4
+          - 8
   responses:
-    ErrorResponseCarePlanNotFound:
-      description: Care plan not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Care plan not found
-    ErrorResponseInvalidEndDate:
-      description: Invalid data submitted for item deletion.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The field 'end_date' is required
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
-    ErrorResponseInvalidUpdateForRootItemType:
-      description: The root item type cannot be deleted once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be deleted in current status
     AuthChallenge:
       description: Authentication required.
       content:
@@ -643,15 +607,6 @@ components:
           example:
             status_code: 401
             message: Please verify your access level for this url.
-    ErrorResponseInvalidRequest:
-      description: Invalid data submitted for item creation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The field 'start_date' is required.
     ErrorResponseInvalidArchivalForRootItemType:
       description: The root item type cannot be archived once it has been completed
       content:
@@ -661,6 +616,42 @@ components:
           example:
             status_code: 400
             message: The root item type cannot be archived once it has been completed
+    ErrorResponseInvalidUpdateForRootItemType:
+      description: The root item type cannot be deleted once it has been completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The root item type cannot be deleted in current status
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
+    ErrorResponseCarePlanNotFound:
+      description: Care plan not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Care plan not found
+    ErrorResponseInvalidRequest:
+      description: Invalid data submitted for item creation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The field 'start_date' is required.
     ErrorResponseDiagnosisNotFound:
       description: Diagnosis not found
       content:
@@ -670,6 +661,15 @@ components:
           example:
             status_code: 404
             message: Diagnosis not found
+    ErrorResponseInvalidEndDate:
+      description: Invalid data submitted for item deletion.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The field 'end_date' is required
   securitySchemes:
     basic_auth:
       type: http

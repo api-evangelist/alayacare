@@ -178,6 +178,13 @@ components:
           $ref: '#/components/schemas/TakeRateCore'
       required:
       - rate
+    DemandTakeRateCollectionResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DemandTakeRateCore'
     DemandTakeRateCore:
       type: object
       properties:
@@ -189,13 +196,6 @@ components:
       required:
       - demand_persona_id
       - rate
-    RegionalTakeRateUpdateRequest:
-      type: object
-      properties:
-        rate:
-          $ref: '#/components/schemas/TakeRateCore'
-      required:
-      - rate
     TakeRateCore:
       type: number
       format: decimal
@@ -206,18 +206,18 @@ components:
         between 0 and 1. For example, a regional take rate of 0.1 is 10%.
 
         '
+    RegionalTakeRateUpdateRequest:
+      type: object
+      properties:
+        rate:
+          $ref: '#/components/schemas/TakeRateCore'
+      required:
+      - rate
     DemandTakeRateCreateRequest:
       type: object
       properties:
         rate:
           $ref: '#/components/schemas/TakeRateCore'
-    DemandTakeRateCollectionResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/DemandTakeRateCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

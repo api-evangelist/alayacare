@@ -283,116 +283,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VisitTag'
-    VisitTag:
-      type: string
-      description: Name of tag.
-      example: First visit
-    Visit:
-      allOf:
-      - $ref: '#/components/schemas/BaseVisit'
-      properties:
-        alayacare_client_id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        client_id:
-          type:
-          - string
-          - 'null'
-          description: External client ID
-          example: sor_client_id_1
-      required:
-      - alayacare_client_id
-    VisitNote:
-      allOf:
-      - $ref: '#/components/schemas/VisitNoteCreate'
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          description: Creation time of the note
-          example: '2017-07-08T13:30:00+00:00'
-      required:
-      - created_at
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    VisitTagCreate:
-      type: array
-      description: An array of visit tags.
-      items:
-        $ref: '#/components/schemas/VisitTag'
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    VisitCancelCode:
-      description: Visit cancellation code
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare cancel code ID
-          example: 1
-        code:
-          type: string
-          description: Cancel code
-          example: CLNT_REQ_RESCHEDULE
-        description:
-          type:
-          - string
-          - 'null'
-          description: Cancel code description
-          example: Client requested reschedule
-      required:
-      - id
-      - code
-    VisitNoteCreate:
-      description: Visit note
-      type: object
-      properties:
-        text:
-          type: string
-          description: Content of the visit note
-          maxLength: 1000
-          example: A sample visit note.
-      required:
-      - text
     BaseVisit:
       type: object
       properties:
@@ -473,7 +363,126 @@ components:
       - end_at
       - cancelled
       - cancel_code
+    VisitTagCreate:
+      type: array
+      description: An array of visit tags.
+      items:
+        $ref: '#/components/schemas/VisitTag'
+    VisitCancelCode:
+      description: Visit cancellation code
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare cancel code ID
+          example: 1
+        code:
+          type: string
+          description: Cancel code
+          example: CLNT_REQ_RESCHEDULE
+        description:
+          type:
+          - string
+          - 'null'
+          description: Cancel code description
+          example: Client requested reschedule
+      required:
+      - id
+      - code
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    Visit:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisit'
+      properties:
+        alayacare_client_id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        client_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_client_id_1
+      required:
+      - alayacare_client_id
+    VisitNoteCreate:
+      description: Visit note
+      type: object
+      properties:
+        text:
+          type: string
+          description: Content of the visit note
+          maxLength: 1000
+          example: A sample visit note.
+      required:
+      - text
+    VisitNote:
+      allOf:
+      - $ref: '#/components/schemas/VisitNoteCreate'
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time of the note
+          example: '2017-07-08T13:30:00+00:00'
+      required:
+      - created_at
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    VisitTag:
+      type: string
+      description: Name of tag.
+      example: First visit
   responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
     ErrorResponseVisitTagInvalidRequest:
       description: Invalid data submitted for visit tag creation
       content:
@@ -492,15 +501,6 @@ components:
           example:
             code: 404
             message: Visit not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

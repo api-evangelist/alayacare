@@ -275,6 +275,15 @@ components:
           example:
             code: 400
             message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
     CreateNoteInvalidRequest:
       description: Invalid data submitted for creation
       content:
@@ -293,35 +302,7 @@ components:
           example:
             code: 404
             message: Client not found.
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
   schemas:
-    ProgressNoteCreate:
-      description: Progress note data required for creation.
-      type: object
-      required:
-      - note_type
-      - content
-      properties:
-        is_hidden:
-          type: boolean
-          default: false
-        note_type:
-          type: string
-          description: Note type category of the progress note
-          example: progress_nursing
-        content:
-          type: string
-          format: html
-          description: Content of the progress note.  A subset of HTML is accepted.
-          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
     SuccessProgressNoteCreate:
       type: object
       description: Progress note created successfully
@@ -372,19 +353,6 @@ components:
           type: string
           description: Content of the progress note as simple text (only if include_textonly is true)
           example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     ProgressNoteDetails:
       description: A progress note
       type: object
@@ -460,6 +428,38 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProgressNote'
+    ProgressNoteCreate:
+      description: Progress note data required for creation.
+      type: object
+      required:
+      - note_type
+      - content
+      properties:
+        is_hidden:
+          type: boolean
+          default: false
+        note_type:
+          type: string
+          description: Note type category of the progress note
+          example: progress_nursing
+        content:
+          type: string
+          format: html
+          description: Content of the progress note.  A subset of HTML is accepted.
+          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
   securitySchemes:
     basic_auth:
       type: http

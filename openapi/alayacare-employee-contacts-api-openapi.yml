@@ -228,24 +228,82 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    EmployeeContactCreate:
-      allOf:
-      - $ref: '#/components/schemas/EmployeeContactUpdate'
+    EmployeeContactRelationship:
+      description: AlayaCare employee contact relationship specific properties details
       type: object
-      description: 'When creating an employee contact, either `employee_id` or
-
-        `external_employee_id` must be provided; that will be the
-
-        employee to which the contact is associated.
-
-        If a `profile_id` is provided
-
-        '
       properties:
-        profile_id:
-          description: AlayaCare profile ID
+        contact_type:
+          type:
+          - string
+          - 'null'
+          example: Medical
+        relationship:
+          type:
+          - string
+          - 'null'
+          example: Doctor
+        status:
+          $ref: '#/components/schemas/EmployeeContactStatus'
+    EmployeeContactListDetails:
+      description: Employee contact list details
+      type: object
+      properties:
+        id:
+          description: AlayaCare employee ID
           type: integer
-          example: 7890
+          example: 1000
+        ac_id:
+          type: string
+          description: AlayaCare employee ID for display in-app
+          example: AC000000024
+        branch:
+          type: object
+          description: AlayaCare branch
+          properties:
+            id:
+              description: Branch ID
+              type: integer
+              example: 1000
+            name:
+              description: Branch name
+              type: string
+              example: Toronto branch
+        email:
+          type: string
+          description: employee email address
+          example: employee@homecare.com
+        external_id:
+          description: External employee ID
+          type:
+          - string
+          - 'null'
+          example: employee_external_id_1
+        first_name:
+          description: employee first name
+          type: string
+          example: John
+        last_name:
+          description: employee last name
+          type: string
+          example: Smith
+        status:
+          $ref: '#/components/schemas/EmployeeStatus'
+        contact_relationship:
+          $ref: '#/components/schemas/EmployeeContactRelationship'
+        _link:
+          description: employee link on the web application
+          type: string
+          example: https://demo3.alayacare.ca/permalink/employee/b1
+    EmployeeContactDetails:
+      description: AlayaCare employee list item
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EmployeeContact'
+      properties:
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeContactListDetails'
     EmployeeContactUpdate:
       type: object
       properties:
@@ -275,60 +333,40 @@ components:
           example: sor_employee_external_id_1
         demographics:
           $ref: '#/components/schemas/EmployeeContactDemographics'
-    EmployeeContact:
+    EmployeeStatus:
+      description: 'Enum of the status of an employee
+
+        '
+      type: string
+      enum:
+      - active
+      - pending
+      - on_hold
+      - suspended
+      - terminated
+      - applicant
+      - rejected
+      - unknown
+    EmployeeContactStatus:
+      type: string
+      enum:
+      - enabled
+      - disabled
+    SuccessResponse:
+      description: Success response.
       type: object
       properties:
         id:
           type: integer
-          description: Employee contact ID
-          example: 1
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
+          description: AlayaCare ID
         external_id:
           type:
           - string
           - 'null'
-          example: crm_employee_contact_external_id_1
-          description: Employee contact external ID
-        status:
-          description: Status of a contact
-          type: string
-          enum:
-          - enabled
-          - disabled
-        contact_type:
-          type:
-          - string
-          - 'null'
-          example: Medical
-        relationship:
-          type:
-          - string
-          - 'null'
-          example: Doctor
-        language:
-          type: string
-          example: en
-        demographics:
-          $ref: '#/components/schemas/EmployeeContactDemographics'
+          description: External ID
       required:
       - id
-      - ac_id
       - external_id
-      - status
-      - demographics
-    EmployeeContactDetails:
-      description: AlayaCare employee list item
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EmployeeContact'
-      properties:
-        employees:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmployeeContactListDetails'
     EmployeeContactDemographics:
       description: 'Collection of key/value pairs where keys are existing attributes in the employee contact profile, defined through the AlayaCare web application.
 
@@ -382,6 +420,68 @@ components:
           description: Employee last name
           type: string
           example: Smith
+    EmployeeContact:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Employee contact ID
+          example: 1
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        external_id:
+          type:
+          - string
+          - 'null'
+          example: crm_employee_contact_external_id_1
+          description: Employee contact external ID
+        status:
+          description: Status of a contact
+          type: string
+          enum:
+          - enabled
+          - disabled
+        contact_type:
+          type:
+          - string
+          - 'null'
+          example: Medical
+        relationship:
+          type:
+          - string
+          - 'null'
+          example: Doctor
+        language:
+          type: string
+          example: en
+        demographics:
+          $ref: '#/components/schemas/EmployeeContactDemographics'
+      required:
+      - id
+      - ac_id
+      - external_id
+      - status
+      - demographics
+    EmployeeContactCreate:
+      allOf:
+      - $ref: '#/components/schemas/EmployeeContactUpdate'
+      type: object
+      description: 'When creating an employee contact, either `employee_id` or
+
+        `external_employee_id` must be provided; that will be the
+
+        employee to which the contact is associated.
+
+        If a `profile_id` is provided
+
+        '
+      properties:
+        profile_id:
+          description: AlayaCare profile ID
+          type: integer
+          example: 7890
     ErrorResponse:
       description: Error response
       type: object
@@ -395,106 +495,6 @@ components:
       required:
       - code
       - message
-    EmployeeStatus:
-      description: 'Enum of the status of an employee
-
-        '
-      type: string
-      enum:
-      - active
-      - pending
-      - on_hold
-      - suspended
-      - terminated
-      - applicant
-      - rejected
-      - unknown
-    EmployeeContactListDetails:
-      description: Employee contact list details
-      type: object
-      properties:
-        id:
-          description: AlayaCare employee ID
-          type: integer
-          example: 1000
-        ac_id:
-          type: string
-          description: AlayaCare employee ID for display in-app
-          example: AC000000024
-        branch:
-          type: object
-          description: AlayaCare branch
-          properties:
-            id:
-              description: Branch ID
-              type: integer
-              example: 1000
-            name:
-              description: Branch name
-              type: string
-              example: Toronto branch
-        email:
-          type: string
-          description: employee email address
-          example: employee@homecare.com
-        external_id:
-          description: External employee ID
-          type:
-          - string
-          - 'null'
-          example: employee_external_id_1
-        first_name:
-          description: employee first name
-          type: string
-          example: John
-        last_name:
-          description: employee last name
-          type: string
-          example: Smith
-        status:
-          $ref: '#/components/schemas/EmployeeStatus'
-        contact_relationship:
-          $ref: '#/components/schemas/EmployeeContactRelationship'
-        _link:
-          description: employee link on the web application
-          type: string
-          example: https://demo3.alayacare.ca/permalink/employee/b1
-    SuccessResponse:
-      description: Success response.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare ID
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External ID
-      required:
-      - id
-      - external_id
-    EmployeeContactStatus:
-      type: string
-      enum:
-      - enabled
-      - disabled
-    EmployeeContactRelationship:
-      description: AlayaCare employee contact relationship specific properties details
-      type: object
-      properties:
-        contact_type:
-          type:
-          - string
-          - 'null'
-          example: Medical
-        relationship:
-          type:
-          - string
-          - 'null'
-          example: Doctor
-        status:
-          $ref: '#/components/schemas/EmployeeContactStatus'
   responses:
     ErrorResponseEmployeeNotFound:
       description: Employee not found
@@ -505,24 +505,6 @@ components:
           example:
             code: 404
             message: Employee not found.
-    ErrorResponseEmployeeContactInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Only employee_id or external_employee_id can be specified
-    SuccessResponseEmployeeContactCreate:
-      description: Employee contact created successfuly
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          example:
-            id: 1001
-            external_id: crm_employee_contact_external_id_1
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -541,6 +523,15 @@ components:
           example:
             code: 404
             message: Employee contact not found.
+    SuccessResponseEmployeeContactCreate:
+      description: Employee contact created successfuly
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          example:
+            id: 1001
+            external_id: crm_employee_contact_external_id_1
     SuccessResponseEmployeeContactUpdate:
       description: Employee contact updated successfuly
       content:
@@ -550,6 +541,15 @@ components:
           example:
             id: 1001
             external_id: crm_employee_contact_external_id_1
+    ErrorResponseEmployeeContactInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Only employee_id or external_employee_id can be specified
   securitySchemes:
     basic_auth:
       type: http

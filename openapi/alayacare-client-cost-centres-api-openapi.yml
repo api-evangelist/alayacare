@@ -167,6 +167,18 @@ components:
                 code: '400'
                 message: Client with ID 1010 and Cost Centre ID 10 not found
   schemas:
+    CostCentreClientCreate:
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        client_external_id:
+          type: string
+          description: client external ID
+          example: john.1010
     CostCentreClientResponse:
       description: Client to cost centre link
       type: object
@@ -196,18 +208,6 @@ components:
       required:
       - code
       - message
-    CostCentreClientCreate:
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: client ID
-          example: 1010
-          minimum: 1
-        client_external_id:
-          type: string
-          description: client external ID
-          example: john.1010
   securitySchemes:
     basic_auth:
       type: http

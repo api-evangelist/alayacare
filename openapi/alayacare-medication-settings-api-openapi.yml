@@ -147,37 +147,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    is_dosage_quantity:
-      name: is_dosage_quantity
-      in: query
-      schema:
-        type: boolean
-    is_dosage_form:
-      name: is_dosage_form
-      in: query
-      schema:
-        type: boolean
-    is_ingredient_strength:
-      name: is_ingredient_strength
-      in: query
-      schema:
-        type: boolean
-    page:
-      name: page
-      schema:
-        type: integer
-        default: 1
-      in: query
-      required: false
-      description: Page number to filter by
-    count:
-      name: count
-      schema:
-        type: integer
-        default: 10
-      in: query
-      required: false
-      description: Max number of items to filter by
     settings_sort_by:
       name: sort_by
       schema:
@@ -192,54 +161,6 @@ components:
       in: query
       required: false
       description: Parameter to sort items by
-    code_term:
-      name: code_term
-      in: query
-      schema:
-        type: string
-    code_collection_term:
-      name: code_collection_term
-      in: query
-      schema:
-        type: string
-    is_enabled:
-      name: is_enabled
-      in: query
-      schema:
-        type: boolean
-    lang:
-      name: lang
-      in: query
-      description: Current UI language
-      schema:
-        type: string
-        default: en
-        enum:
-        - en
-        - fr
-        - es
-    branch_id:
-      name: branch_id
-      in: path
-      required: true
-      description: ID of the branch
-      schema:
-        type: integer
-    is_override:
-      name: is_override
-      in: query
-      schema:
-        type: boolean
-    label:
-      name: label
-      in: query
-      schema:
-        type: string
-    default_label:
-      name: default_label
-      in: query
-      schema:
-        type: string
     sort_order:
       name: sort_order
       schema:
@@ -255,25 +176,86 @@ components:
       schema:
         type: boolean
       in: query
+    lang:
+      name: lang
+      in: query
+      description: Current UI language
+      schema:
+        type: string
+        default: en
+        enum:
+        - en
+        - fr
+        - es
+    default_label:
+      name: default_label
+      in: query
+      schema:
+        type: string
+    count:
+      name: count
+      schema:
+        type: integer
+        default: 10
+      in: query
+      required: false
+      description: Max number of items to filter by
+    page:
+      name: page
+      schema:
+        type: integer
+        default: 1
+      in: query
+      required: false
+      description: Page number to filter by
+    is_override:
+      name: is_override
+      in: query
+      schema:
+        type: boolean
+    is_dosage_form:
+      name: is_dosage_form
+      in: query
+      schema:
+        type: boolean
+    label:
+      name: label
+      in: query
+      schema:
+        type: string
+    branch_id:
+      name: branch_id
+      in: path
+      required: true
+      description: ID of the branch
+      schema:
+        type: integer
+    is_dosage_quantity:
+      name: is_dosage_quantity
+      in: query
+      schema:
+        type: boolean
+    code_collection_term:
+      name: code_collection_term
+      in: query
+      schema:
+        type: string
+    is_enabled:
+      name: is_enabled
+      in: query
+      schema:
+        type: boolean
+    is_ingredient_strength:
+      name: is_ingredient_strength
+      in: query
+      schema:
+        type: boolean
+    code_term:
+      name: code_term
+      in: query
+      schema:
+        type: string
   responses:
-    MedicationSetting:
-      description: Medication setting objectF
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MedicationSettingList'
-          examples:
-            MedicationSetting:
-              $ref: '#/components/examples/MedicationSettings'
-    MedicationSettingList:
-      description: Medication settings list
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MedicationSettingList'
-          examples:
-            MedicationSetting:
-              $ref: '#/components/examples/MedicationSettingList'
     AuthChallenge:
       description: Authentication required.
       content:
@@ -283,6 +265,15 @@ components:
           examples:
             InvalidRequest:
               $ref: '#/components/examples/AuthChallenge'
+    MedicationSettingList:
+      description: Medication settings list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettingList'
     InvalidRequest:
       description: Invalid data.
       content:
@@ -292,40 +283,32 @@ components:
           examples:
             InvalidRequestExample:
               $ref: '#/components/examples/InvalidRequest'
-  examples:
-    MedicationSettingList:
-      value:
-        count: 745
-        items:
-        - branch_id: 1000
-          codes:
-          - code: a
-            collection: FHIR
-          is_enabled: true
-          is_override: false
-          labels:
-          - default_label: None
-            label: None
-            lang: en
-          name: none
-          type: medication_administration_reason_setting
-        items_per_page: 15
-        page: 1
-        total_pages: 745
-    MedicationSettings:
-      value:
-        name: Setting name
-    InvalidRequest:
-      value:
-        code: '400'
-        message: There was a problem with your request.
-      summary: Invalid data.
-    AuthChallenge:
-      value:
-        code: '401'
-        message: Please verify your access level for this url.
-      summary: Authentication required.
+    MedicationSetting:
+      description: Medication setting objectF
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettings'
   schemas:
+    MedicationSettingList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicationSettings'
+        page:
+          type: integer
+          description: Current page number
+        total_pages:
+          type: integer
+          description: Total number of pages available
     MedicationSettings:
       type: object
       properties:
@@ -513,22 +496,39 @@ components:
       required:
       - code
       - message
+  examples:
+    MedicationSettings:
+      value:
+        name: Setting name
+    AuthChallenge:
+      value:
+        code: '401'
+        message: Please verify your access level for this url.
+      summary: Authentication required.
     MedicationSettingList:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
+      value:
+        count: 745
         items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MedicationSettings'
-        page:
-          type: integer
-          description: Current page number
-        total_pages:
-          type: integer
-          description: Total number of pages available
+        - branch_id: 1000
+          codes:
+          - code: a
+            collection: FHIR
+          is_enabled: true
+          is_override: false
+          labels:
+          - default_label: None
+            label: None
+            lang: en
+          name: none
+          type: medication_administration_reason_setting
+        items_per_page: 15
+        page: 1
+        total_pages: 745
+    InvalidRequest:
+      value:
+        code: '400'
+        message: There was a problem with your request.
+      summary: Invalid data.
   securitySchemes:
     basicAuth:
       type: http

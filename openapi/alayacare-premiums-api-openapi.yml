@@ -186,35 +186,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Branch:
-      description: AlayaCare branch
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Branch ID
-          example: 1000
-          minimum: 1
-        name:
-          type: string
-          description: Branch name
-          example: AlayaCare Health
-    BillCode:
-      description: AlayaCare bill code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare bill code ID
-          example: 783
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare bill code name
-          example: MEDIBILL
-      required:
-      - id
-      - code
     Premium:
       description: A premium configured in AlayaCare Accounting Settings
       type: object
@@ -243,16 +214,6 @@ components:
       required:
       - code
       - premium_id
-    PremiumsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      type: object
-      description: Paginated list of premiums
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Premium'
     PremiumUpdateSchema:
       type: object
       properties:
@@ -267,60 +228,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BillCodeStub'
-    PayCode:
-      description: AlayaCare pay code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare pay code ID
-          example: 3
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare pay code name
-          example: 783
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    BillCodeQuerySchema:
-      properties:
-        branch:
-          $ref: '#/components/schemas/Branch'
-        code:
-          type: string
-        excluded_from_billing:
-          type: boolean
-        guid:
-          type: integer
-        id:
-          type: integer
-        is_disabled:
-          type: boolean
-        name:
-          type: string
-        units:
-          type: string
-      required:
-      - id
-      - code
-      - name
-      - excluded_from_billing
-      - is_disabled
-      - units
-      type: object
     PremiumCreateSchema:
       type: object
       required:
@@ -341,31 +248,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BillCodeStub'
-    PremiumExtendedSchema:
+    PayCode:
+      description: AlayaCare pay code
       type: object
       properties:
         id:
           type: integer
-          example: 453
-        guid:
-          type: integer
-          example: 356689
+          description: AlayCare pay code ID
+          example: 3
+          minimum: 1
         code:
           type: string
-          example: TESTCODE
-        pay_code:
-          $ref: '#/components/schemas/PayCodeSchema'
-        rule:
-          type: string
-          example: Evening
-        rule_data:
-          description: Not really supported but returned as is, the rule data is stored as a json
-          type: string
-          example: null
-        bill_codes:
+          description: AlayCare pay code name
+          example: 783
+    PremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      type: object
+      description: Paginated list of premiums
+      properties:
+        items:
           type: array
           items:
-            $ref: '#/components/schemas/BillCodeQuerySchema'
+            $ref: '#/components/schemas/Premium'
+    BillCode:
+      description: AlayaCare bill code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare bill code ID
+          example: 783
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare bill code name
+          example: MEDIBILL
+      required:
+      - id
+      - code
     BillCodeStub:
       type: object
       description: Only one of id or guid should be present
@@ -412,18 +333,86 @@ components:
         code:
           type: string
           example: SP
+    PremiumExtendedSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 453
+        guid:
+          type: integer
+          example: 356689
+        code:
+          type: string
+          example: TESTCODE
+        pay_code:
+          $ref: '#/components/schemas/PayCodeSchema'
+        rule:
+          type: string
+          example: Evening
+        rule_data:
+          description: Not really supported but returned as is, the rule data is stored as a json
+          type: string
+          example: null
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeQuerySchema'
+    Branch:
+      description: AlayaCare branch
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Branch ID
+          example: 1000
+          minimum: 1
+        name:
+          type: string
+          description: Branch name
+          example: AlayaCare Health
+    BillCodeQuerySchema:
+      properties:
+        branch:
+          $ref: '#/components/schemas/Branch'
+        code:
+          type: string
+        excluded_from_billing:
+          type: boolean
+        guid:
+          type: integer
+        id:
+          type: integer
+        is_disabled:
+          type: boolean
+        name:
+          type: string
+        units:
+          type: string
+      required:
+      - id
+      - code
+      - name
+      - excluded_from_billing
+      - is_disabled
+      - units
+      type: object
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
   responses:
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -446,6 +435,17 @@ components:
               value:
                 code: '404'
                 message: Premium not found
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
   securitySchemes:
     basic_auth:
       type: http

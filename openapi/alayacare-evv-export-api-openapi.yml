@@ -322,52 +322,42 @@ paths:
       operationId: getEvvExportsLatestExportDateByEvvExportId
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseInvalidEVVExportParams:
-      description: Invalid Claim destination system or Export type parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Invalid request
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
-    ErrorResponseEVVExportNotFound:
-      description: The EVV export record for the referenced `evv_export_id` param was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '404'
-                message: EVVExport record not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   schemas:
+    EVVExportList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of EVV Export
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EVVExport'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     EVVExport:
       description: EVV Export
       type: object
@@ -457,15 +447,14 @@ components:
           type: boolean
           description: if export is related to an is_activation
           example: true
-    EVVExportList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of EVV Export
+    EVVExportLatestExportDate:
+      description: Latest EVV export date in UTC format for the specified branch ID, claim destination and export type regardless of its state or default date if no record is found
+      type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EVVExport'
+        latest_export_date:
+          type: string
+          description: Date and time in UTC format of the last export
+          example: 2020-01-01 00:00:00+00:00
     ErrorResponse:
       description: Error response
       type: object
@@ -481,40 +470,51 @@ components:
       required:
       - code
       - message
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    EVVExportLatestExportDate:
-      description: Latest EVV export date in UTC format for the specified branch ID, claim destination and export type regardless of its state or default date if no record is found
-      type: object
-      properties:
-        latest_export_date:
-          type: string
-          description: Date and time in UTC format of the last export
-          example: 2020-01-01 00:00:00+00:00
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseInvalidEVVExportParams:
+      description: Invalid Claim destination system or Export type parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Invalid request
+    ErrorResponseEVVExportNotFound:
+      description: The EVV export record for the referenced `evv_export_id` param was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '404'
+                message: EVVExport record not found
   securitySchemes:
     basic_auth:
       type: http

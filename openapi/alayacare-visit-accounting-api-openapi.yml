@@ -129,15 +129,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -147,7 +138,31 @@ components:
           example:
             code: 401
             message: Authorization required.
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
   schemas:
+    VisitAccounting:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Visit ID
+          example: 1
+        hours_approved:
+          type: number
+          description: Hours Approved
+          example: 1.0
+        pay_code_regular:
+          $ref: '#/components/schemas/PayCode'
+        pay_code_overtime:
+          $ref: '#/components/schemas/PayCode'
     PayCode:
       type: object
       properties:
@@ -186,21 +201,6 @@ components:
       required:
       - code
       - message
-    VisitAccounting:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Visit ID
-          example: 1
-        hours_approved:
-          type: number
-          description: Hours Approved
-          example: 1.0
-        pay_code_regular:
-          $ref: '#/components/schemas/PayCode'
-        pay_code_overtime:
-          $ref: '#/components/schemas/PayCode'
   securitySchemes:
     basic_auth:
       type: http

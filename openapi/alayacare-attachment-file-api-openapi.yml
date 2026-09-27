@@ -275,6 +275,93 @@ paths:
       operationId: deleteEmployeesByIdByExternalEmployeeIdAttachmentsByFilePath
       x-operation-id-source: derived
 components:
+  responses:
+    SuccessResponseFileUpload:
+      description: File uploaded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 201
+              name:
+                type: string
+                description: Url to the file uploaded
+                example: Physician Order/file.pdf
+    ErrorResponseEmployeeNotFound:
+      description: Employee not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee not found.
+    ErrorResponseFileAlreadyExists:
+      description: File already exists.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 409
+              message:
+                type: string
+                description: Detail on the error
+                example: File "/path/file.txt" already exists
+    SuccessResponseAttachmentFileUpdate:
+      description: File copied, moved or renamed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 200
+              name:
+                type: string
+                description: 'Url to the new location of the copied or move file
+
+                  '
+                example: /new_location.txt
+    ErrorResponseInvalidFileName:
+      description: The file name contains unsupported characters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Invalid file name
+    ErrorResponseFileMissing:
+      description: File missing
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 400
+              message:
+                type: string
+                description: Detail on the error
+                example: Could not find a file to upload
   schemas:
     AttachmentAction:
       description: Attachment actions
@@ -314,93 +401,6 @@ components:
       required:
       - code
       - message
-  responses:
-    ErrorResponseEmployeeNotFound:
-      description: Employee not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee not found.
-    SuccessResponseAttachmentFileUpdate:
-      description: File copied, moved or renamed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 200
-              name:
-                type: string
-                description: 'Url to the new location of the copied or move file
-
-                  '
-                example: /new_location.txt
-    ErrorResponseFileMissing:
-      description: File missing
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Could not find a file to upload
-    ErrorResponseInvalidFileName:
-      description: The file name contains unsupported characters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Invalid file name
-    ErrorResponseFileAlreadyExists:
-      description: File already exists.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 409
-              message:
-                type: string
-                description: Detail on the error
-                example: File "/path/file.txt" already exists
-    SuccessResponseFileUpload:
-      description: File uploaded
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 201
-              name:
-                type: string
-                description: Url to the file uploaded
-                example: Physician Order/file.pdf
   securitySchemes:
     basic_auth:
       type: http

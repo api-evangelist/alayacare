@@ -84,17 +84,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -117,7 +106,34 @@ components:
               value:
                 code: '404'
                 message: Premium not found
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
   schemas:
+    BillCodeStub:
+      type: object
+      description: Only one of id or guid should be present
+      properties:
+        id:
+          type: integer
+          example: 3
+        guid:
+          type: integer
+          example: 3
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Success
     ErrorResponse:
       description: Error response
       type: object
@@ -133,22 +149,6 @@ components:
       required:
       - code
       - message
-    Success:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Success
-    BillCodeStub:
-      type: object
-      description: Only one of id or guid should be present
-      properties:
-        id:
-          type: integer
-          example: 3
-        guid:
-          type: integer
-          example: 3
   securitySchemes:
     basic_auth:
       type: http

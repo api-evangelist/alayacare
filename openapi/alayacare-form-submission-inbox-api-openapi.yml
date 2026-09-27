@@ -92,6 +92,33 @@ components:
       - field_id
       - value_type
       - value
+    InboxFormSubmissionCreationRequest:
+      type: object
+      properties:
+        form_template_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        visit_id:
+          type: string
+          format: uuid
+        work_session_id:
+          type: string
+          format: uuid
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxFormSubmissionFieldCore'
+          minItems: 1
+        hidden_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
+      required:
+      - form_template_id
+      - fields
     InboxFormSubmissionCreationResponse:
       type: object
       properties:
@@ -121,33 +148,6 @@ components:
             $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
       required:
       - id
-      - form_template_id
-      - fields
-    InboxFormSubmissionCreationRequest:
-      type: object
-      properties:
-        form_template_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        visit_id:
-          type: string
-          format: uuid
-        work_session_id:
-          type: string
-          format: uuid
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxFormSubmissionFieldCore'
-          minItems: 1
-        hidden_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
-      required:
       - form_template_id
       - fields
   securitySchemes:

@@ -51,49 +51,7 @@ paths:
     servers:
     - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 components:
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page_2:
-      name: page
-      in: query
-      required: false
-      description: Filter by page number. If not specified will default to 1.
-      schema:
-        type: integer
-        default: 1
-    count_2:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
   responses:
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
     ErrorResponseFormNotFound:
       description: Form not found
       content:
@@ -103,6 +61,15 @@ components:
           example:
             status_code: 404
             message: Form not found
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
     AuthChallenge:
       description: Authentication required.
       content:
@@ -121,6 +88,39 @@ components:
           example:
             code: 401
             message: Please verify your access level for this url.
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count_2:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
+    page_2:
+      name: page
+      in: query
+      required: false
+      description: Filter by page number. If not specified will default to 1.
+      schema:
+        type: integer
+        default: 1
   schemas:
     Form:
       type: object
@@ -140,31 +140,6 @@ components:
           example: New Client Assessment
         branch:
           $ref: '#/components/schemas/Branch'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        status_code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    Branch:
-      description: AlayaCare Branch
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Branch ID
-          example: 1000
-        name:
-          type: string
-          description: Branch name
-          example: AlayaCare Health
     FormList:
       required:
       - count
@@ -189,6 +164,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Form'
+    Branch:
+      description: AlayaCare Branch
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Branch ID
+          example: 1000
+        name:
+          type: string
+          description: Branch name
+          example: AlayaCare Health
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        status_code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     Form_2:
       type: object
       required:

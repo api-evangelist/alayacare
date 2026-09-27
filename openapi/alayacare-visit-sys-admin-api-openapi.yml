@@ -134,6 +134,17 @@ components:
       name: items_per_page
       schema:
         $ref: '#/components/schemas/ItemsPerPageCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    ServiceIdQueryParam:
+      in: query
+      name: service_id
+      schema:
+        type: string
+        format: uuid
     ReferralIdQueryParam:
       in: query
       name: referral_id
@@ -148,90 +159,25 @@ components:
         format: uuid
       required: true
       description: ID of a visit.
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
     PageNumberParam:
       in: query
       name: page
       schema:
         $ref: '#/components/schemas/PageNumberCore'
-    ServiceIdQueryParam:
-      in: query
-      name: service_id
-      schema:
-        type: string
-        format: uuid
   schemas:
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
     PageNumberCore:
       type: integer
       minimum: 1
       default: 1
-    SysAdminVisitCollectionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        outbox_id:
-          type: string
-        inbox_id:
-          type: string
-        referral_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        service_outbox_id:
-          type: string
-          minLength: 1
-        status:
-          type: string
-          enum:
-          - scheduled
-          - deleted
-          - cancelled
-          - on_hold
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-      required:
-      - status
-      - id
-      - referral_id
-      - service_id
-      - service_outbox_id
-      - start_at
-      - end_at
-    PageCore:
-      description: Root page schema for returning collections.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/PageNumberCore'
-        items_per_page:
-          $ref: '#/components/schemas/ItemsPerPageCore'
-        total_items:
-          type: integer
-          minimum: 0
-        total_pages:
-          type: integer
-          minimum: 0
-      required:
-      - page
-      - items_per_page
-      - total_items
-      - total_pages
+    SysAdminVisitPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminVisitCollectionResponse'
     SysAdminVisitDetailResponse:
       type: object
       properties:
@@ -345,21 +291,75 @@ components:
       - supply
       - visit
       - tasks
+    PageCore:
+      description: Root page schema for returning collections.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageNumberCore'
+        items_per_page:
+          $ref: '#/components/schemas/ItemsPerPageCore'
+        total_items:
+          type: integer
+          minimum: 0
+        total_pages:
+          type: integer
+          minimum: 0
+      required:
+      - page
+      - items_per_page
+      - total_items
+      - total_pages
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    SysAdminVisitCollectionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+        inbox_id:
+          type: string
+        referral_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        service_outbox_id:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          enum:
+          - scheduled
+          - deleted
+          - cancelled
+          - on_hold
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+      required:
+      - status
+      - id
+      - referral_id
+      - service_id
+      - service_outbox_id
+      - start_at
+      - end_at
     SortOrderCore:
       type: string
       enum:
       - asc
       - desc
       default: desc
-    SysAdminVisitPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminVisitCollectionResponse'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

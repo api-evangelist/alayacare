@@ -171,23 +171,6 @@ paths:
       operationId: postEmployeeNotesByIdByExternalEmployeeId
       x-operation-id-source: derived
 components:
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   responses:
     ErrorResponseEmployeeNotFound:
       description: Employee not found
@@ -198,15 +181,6 @@ components:
           example:
             code: 404
             message: Employee not found.
-    ErrorResponseCreateNoteInvalidRequest:
-      description: Invalid data submitted for creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400,
-            message: Invalid note type
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -216,6 +190,15 @@ components:
           example:
             code: 401
             message: Authorization required.
+    ErrorResponseCreateNoteInvalidRequest:
+      description: Invalid data submitted for creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400,
+            message: Invalid note type
   schemas:
     EmployeeNotesCreate:
       description: Employee note data required for creation.
@@ -240,19 +223,6 @@ components:
       required:
       - note_type
       - content
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -274,6 +244,16 @@ components:
       - page
       - total_pages
       - items
+    EmployeeNotesDetailsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of employee notes
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeNotesDetails'
     EmployeeNotesDetails:
       description: An employee note
       type: object
@@ -307,16 +287,36 @@ components:
           type: integer
           description: AlayaCare ID of the employee who created the employee note.
           example: 1001
-    EmployeeNotesDetailsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of employee notes
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmployeeNotesDetails'
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basic_auth:
       type: http

@@ -253,7 +253,79 @@ paths:
       operationId: putVisitsByIdByVisitIdInterventions
       x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required due to feature flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
   schemas:
+    Intervention:
+      type: object
+      properties:
+        careplan_id:
+          type: integer
+          description: ID of the client's careplan
+          example: 709
+        client_id:
+          type: string
+          description: Alayacare client external ID
+          example: external_id_client_123
+        alayacare_client_id:
+          type: integer
+          description: Alayacare client ID
+          example: 1001
+        name:
+          type: string
+          description: Name of the intervention
+          example: Blood pressure measurement
+        completions:
+          type: array
+          description: Date-time of completion of the intervention (ISO 8601)
+          items:
+            type: object
+        is_required:
+          type: boolean
+          description: Intervention is required or not to clock out of the visit
+        module:
+          type: string
+          description: Alayacare Module to which the intervention is attached
+          example: Vitals
+        status:
+          type: string
+          description: Status of the intervention in the Careplan
+          example: active
+          enum:
+          - draft
+          - active
+          - completed
+          - archived
+        type:
+          type: string
+          description: One of the types defined in the setting "Care Documentation > Care Plan Intervention Types"
+          example: Nursing
     VisitInterventionsList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -339,29 +411,31 @@ components:
           description: Alayacare ID of the visit
           type: integer
           example: 2384
-    VisitInterventionsUpdate:
-      description: Interventions
+    PaginatedList:
+      description: Base model of all paginated lists
       type: object
       properties:
-        interventions:
-          type: string
-          description: list of visit intervention ids
-          example: '[1, 2, 3, 4]'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
+        count:
           type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
       required:
-      - code
-      - message
+      - count
+      - page
+      - total_pages
+      - items
     IvrVisitInterventions:
       description: A list of visit interventions
       type: object
@@ -399,103 +473,29 @@ components:
           - string
           - 'null'
           example: uuid
-    PaginatedList:
-      description: Base model of all paginated lists
+    VisitInterventionsUpdate:
+      description: Interventions
       type: object
       properties:
-        count:
+        interventions:
+          type: string
+          description: list of visit intervention ids
+          example: '[1, 2, 3, 4]'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
           type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
       required:
-      - count
-      - page
-      - total_pages
-      - items
-    Intervention:
-      type: object
-      properties:
-        careplan_id:
-          type: integer
-          description: ID of the client's careplan
-          example: 709
-        client_id:
-          type: string
-          description: Alayacare client external ID
-          example: external_id_client_123
-        alayacare_client_id:
-          type: integer
-          description: Alayacare client ID
-          example: 1001
-        name:
-          type: string
-          description: Name of the intervention
-          example: Blood pressure measurement
-        completions:
-          type: array
-          description: Date-time of completion of the intervention (ISO 8601)
-          items:
-            type: object
-        is_required:
-          type: boolean
-          description: Intervention is required or not to clock out of the visit
-        module:
-          type: string
-          description: Alayacare Module to which the intervention is attached
-          example: Vitals
-        status:
-          type: string
-          description: Status of the intervention in the Careplan
-          example: active
-          enum:
-          - draft
-          - active
-          - completed
-          - archived
-        type:
-          type: string
-          description: One of the types defined in the setting "Care Documentation > Care Plan Intervention Types"
-          example: Nursing
-  responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required due to feature flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+      - code
+      - message
   securitySchemes:
     basic_auth:
       type: http

@@ -193,166 +193,160 @@ paths:
       operationId: getEvvVisits
       x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
-    EVVVisit_Exception:
+    EVVVisit_Attribute:
       type: object
       properties:
-        id:
-          type: integer
-          description: Visit exception ID
-        created_on:
+        tag:
           type: string
-          format: date-time
-          description: Creation time of the visit exception
-          example: '2017-07-08T13:30:00+00:00'
-        code:
+          description: Attribute tag
+        value:
           type: string
-          description: Exception type code
-        category:
-          type: string
-          description: Exception type category
-        name:
-          type: string
-          description: Exception type name
-        is_acknowledged:
-          type: boolean
-          description: Exception has been acknowledged
-          example: true
-        status:
-          type: string
-          description: Visit exception status
-        details:
-          type: string
-          description: Visit exception details
-        comments:
-          type: string
-          description: Visit exception comments
-        reason_code:
-          type: string
-          description: Visit exception reason code
-        reason_name:
-          type: string
-          description: Visit exception reason name
-        reason_category:
-          type: string
-          description: Visit exception reason category
-        resolution_code:
-          type: string
-          description: Visit exception resolution code
-        resolution_name:
-          type: string
-          description: Visit exception resolution name
-        change_by:
-          type: string
-          description: Visit exception change made by
-    EVVVisit_WorkSession:
+          description: Attribute value
+    EVVVisit_Employee:
       type: object
-      description: Visit work session
       properties:
-        clock_in:
-          description: Work session start time
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        attributes:
+          type: array
+          description: Employee attributes
+          items:
+            $ref: '#/components/schemas/EVVVisit_Attribute'
+          example:
+          - tag: SSN
+            value: '1407958499'
+          - tag: registration_id
+            value: '123'
+          - tag: rendering_provider_npi
+            value: 26NH18121900
+          - tag: caregiver_type
+            value: both
+          - tag: start_date
+            value: '2020-05-25'
+        birthday:
+          type: string
+          description: Employee birthday
+        email:
+          type: string
+          description: Employee email
+        first_name:
+          type: string
+          description: Employee first name
+          example: John
+        gender:
+          type: string
+          description: Employee gender
+        last_name:
+          type: string
+          description: Employee last name
+          example: Smith
+        phone:
+          type: string
+          description: Employee phone
+        updated_by:
+          type: object
+          description: User who last updated the employee
+          properties:
+            id:
+              type: integer
+              example: 100
+        updated_on:
           type: string
           format: date-time
-          example: '2017-07-08T13:30:00+00:00'
-        clock_out:
-          description: Work session end time
+          description: Datetime of last time the employee was updated
+    EVVVisit_Timekeeping:
+      type: object
+      description: It contains information related to the Visit Timekeeping object associated with the EVV Visit.
+      properties:
+        first_clock_in_time:
           type:
           - string
           - 'null'
           format: date-time
+          description: This field will always have the first clock-in time from the visit work sessions, regardless if it was overwritten or not.
           example: '2017-07-08T14:30:00+00:00'
-        clock_in_location:
-          $ref: '#/components/schemas/Location'
-        clock_out_location:
-          $ref: '#/components/schemas/Location'
-        clock_in_phone:
-          description: Work session Phone with IVR
-          type: string
-          example: '+1454515475'
-        clock_out_phone:
-          description: Work session Phone with IVR
-          type: string
-          example: '+1454515475'
-    EVVVisit_ReferringProvider:
-      type: object
-      properties:
-        npi:
-          type: string
-          description: Referring Provider NPI
-          example: '679363'
-        first_name:
-          type: string
-          description: Referring Provider first name
-        last_name:
-          type: string
-          description: Referring Provider last name
-    EVVVisit_Service:
-      type: object
-      properties:
-        name:
-          description: Service name
-          type: string
-          example: Wound Care
-        start_date:
-          description: Service start date
-          type: string
+        last_clock_out_time:
+          type:
+          - string
+          - 'null'
           format: date-time
-          example: '2017-07-08T13:30:00+00:00'
-        projected_end_date:
-          description: Projected end date
-          type: string
+          description: This field will always have the last clock-out time from the visit work sessions, regardless if it was overwritten or it's is null.
+          example: '2017-07-08T15:30:00+00:00'
+        adjusted_start_time:
+          type:
+          - string
+          - 'null'
           format: date-time
-          example: '2022-08-08T13:30:00+00:00'
-        service_code_id:
-          description: AlayaCare service code id
-          type: integer
-          example: 1
-        service_code_name:
-          description: AlayaCare service code name
-          type: string
-          example: WOUND-CARE
-        attributes:
-          type: array
-          description: Client attributes
-          items:
-            $ref: '#/components/schemas/EVVVisit_Attribute'
-          example:
-          - tag: medicaid_prior_authorization_number
-            value: '100'
-        status:
-          description: Service current status
-          type: string
-          example: active
-          enum:
-          - active
-          - discharged
-          - on_hold
-          - waiting_list
-    PaginatedList:
-      description: Base model of all paginated lists
+          description: This field contains adjusted start time, if the end time isn't adjusted it will be populated with the first clock-in time, it will only be null if there's no worksession and no adjusted start time.
+          example: '2017-07-08T14:30:00+00:00'
+        adjusted_end_time:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: This field contains adjusted end time, if the end time isn't adjusted it will be populated with the last clock-out time, it will only be null if there's no worksession and no adjusted end time.
+          example: '2017-07-08T15:45:00+00:00'
+        is_adjusted_start_time:
+          type: boolean
+          description: It will be true if the start time is adjusted.
+          example: false
+        is_adjusted_end_time:
+          type: boolean
+          description: It will be true if the end time is adjusted.
+          example: true
+    EVVVisit_BillCode:
       type: object
       properties:
-        count:
+        code:
+          type: string
+          description: Bill code
+          example: HSW
+        description:
+          type: string
+          description: Bill code description
+          example: HSW
+        id:
           type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
+          description: Bill code Id
+        units:
+          type: string
+          description: Bill code units
+        is_midnight_rule_applicable:
+          type: boolean
+          description: Whether or not the visits associated to this bill code will be split into two billable items in overnight schedules.
+    EVVVisit_Authorizations:
+      type: object
+      properties:
+        authorization_number:
+          type: string
+          description: Authorization Number
+          example: '123456789'
+        member_number:
+          type: string
+          description: Member Number
+          example: '123456789'
+    EVVVisitList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of evv visits
+      properties:
         items:
           type: array
           items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
+            $ref: '#/components/schemas/EVVVisit'
     EVVVisit_Funder:
       type: object
       properties:
@@ -424,6 +418,130 @@ components:
         zip:
           type: string
           description: Funder address zip
+    EVVVisit_Exception:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Visit exception ID
+        created_on:
+          type: string
+          format: date-time
+          description: Creation time of the visit exception
+          example: '2017-07-08T13:30:00+00:00'
+        code:
+          type: string
+          description: Exception type code
+        category:
+          type: string
+          description: Exception type category
+        name:
+          type: string
+          description: Exception type name
+        is_acknowledged:
+          type: boolean
+          description: Exception has been acknowledged
+          example: true
+        status:
+          type: string
+          description: Visit exception status
+        details:
+          type: string
+          description: Visit exception details
+        comments:
+          type: string
+          description: Visit exception comments
+        reason_code:
+          type: string
+          description: Visit exception reason code
+        reason_name:
+          type: string
+          description: Visit exception reason name
+        reason_category:
+          type: string
+          description: Visit exception reason category
+        resolution_code:
+          type: string
+          description: Visit exception resolution code
+        resolution_name:
+          type: string
+          description: Visit exception resolution name
+        change_by:
+          type: string
+          description: Visit exception change made by
+    EVVVisit_Diagnoses:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Diagnosis name
+          example: A028
+        is_primary:
+          type: boolean
+          description: Diagnosis is primary or not primary
+          example: true
+    EVVVisit_Interventions:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Visit's intervention name
+          example: DINN
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    EVVVisit_ClientFunderActiveServiceSchema:
+      type: object
+      properties:
+        name:
+          description: Service name
+          type: string
+          example: Wound Care
+        status:
+          description: Service Status
+          type: string
+          example: active
+          enum:
+          - active
+          - discharged
+          - on_hold
+          - waiting_list
+        start_date:
+          description: Service start date
+          type: string
+          format: date-time
+          example: '2021-07-08T13:30:00+00:00'
+        projected_end_date:
+          description: Projected end date
+          type: string
+          format: date-time
+          example: '2022-07-08T13:30:00+00:00'
+    Location:
+      description: User location information
+      type:
+      - object
+      - 'null'
+      properties:
+        lat:
+          type: number
+          description: latitude
+          example: 45.518
+        lng:
+          type: number
+          description: longitude
+          example: -73.582
     EVVVisit_Client:
       type: object
       properties:
@@ -500,46 +618,34 @@ components:
           description: Client diagnoses
           items:
             $ref: '#/components/schemas/EVVVisit_Diagnoses'
-    EVVVisit_Timekeeping:
-      type: object
-      description: It contains information related to the Visit Timekeeping object associated with the EVV Visit.
+    EVVVisit_CancelCode:
+      description: Visit cancellation code
+      type:
+      - object
+      - 'null'
       properties:
-        first_clock_in_time:
+        id:
+          type: integer
+          description: AlayaCare cancel code ID
+          example: 1
+        code:
+          type: string
+          description: Cancel code
+          example: CLNT_REQ_RESCHEDULE
+        description:
           type:
           - string
           - 'null'
-          format: date-time
-          description: This field will always have the first clock-in time from the visit work sessions, regardless if it was overwritten or not.
-          example: '2017-07-08T14:30:00+00:00'
-        last_clock_out_time:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: This field will always have the last clock-out time from the visit work sessions, regardless if it was overwritten or it's is null.
-          example: '2017-07-08T15:30:00+00:00'
-        adjusted_start_time:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: This field contains adjusted start time, if the end time isn't adjusted it will be populated with the first clock-in time, it will only be null if there's no worksession and no adjusted start time.
-          example: '2017-07-08T14:30:00+00:00'
-        adjusted_end_time:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: This field contains adjusted end time, if the end time isn't adjusted it will be populated with the last clock-out time, it will only be null if there's no worksession and no adjusted end time.
-          example: '2017-07-08T15:45:00+00:00'
-        is_adjusted_start_time:
+          description: Cancel code description
+          example: Client requested reschedule
+        is_billable:
           type: boolean
-          description: It will be true if the start time is adjusted.
-          example: false
-        is_adjusted_end_time:
-          type: boolean
-          description: It will be true if the end time is adjusted.
+          description: Cancel Code is billable or not billable
           example: true
+      required:
+      - id
+      - code
+      - is_billable
     EVVVisit:
       type: object
       properties:
@@ -745,20 +851,114 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EVVVisit_ClientFunderActiveServiceSchema'
-    Location:
-      description: User location information
-      type:
-      - object
-      - 'null'
+    EVVVisit_ReferringProvider:
+      type: object
       properties:
-        lat:
-          type: number
-          description: latitude
-          example: 45.518
-        lng:
-          type: number
-          description: longitude
-          example: -73.582
+        npi:
+          type: string
+          description: Referring Provider NPI
+          example: '679363'
+        first_name:
+          type: string
+          description: Referring Provider first name
+        last_name:
+          type: string
+          description: Referring Provider last name
+    EVVVisit_WorkSession:
+      type: object
+      description: Visit work session
+      properties:
+        clock_in:
+          description: Work session start time
+          type: string
+          format: date-time
+          example: '2017-07-08T13:30:00+00:00'
+        clock_out:
+          description: Work session end time
+          type:
+          - string
+          - 'null'
+          format: date-time
+          example: '2017-07-08T14:30:00+00:00'
+        clock_in_location:
+          $ref: '#/components/schemas/Location'
+        clock_out_location:
+          $ref: '#/components/schemas/Location'
+        clock_in_phone:
+          description: Work session Phone with IVR
+          type: string
+          example: '+1454515475'
+        clock_out_phone:
+          description: Work session Phone with IVR
+          type: string
+          example: '+1454515475'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    EVVVisit_Service:
+      type: object
+      properties:
+        name:
+          description: Service name
+          type: string
+          example: Wound Care
+        start_date:
+          description: Service start date
+          type: string
+          format: date-time
+          example: '2017-07-08T13:30:00+00:00'
+        projected_end_date:
+          description: Projected end date
+          type: string
+          format: date-time
+          example: '2022-08-08T13:30:00+00:00'
+        service_code_id:
+          description: AlayaCare service code id
+          type: integer
+          example: 1
+        service_code_name:
+          description: AlayaCare service code name
+          type: string
+          example: WOUND-CARE
+        attributes:
+          type: array
+          description: Client attributes
+          items:
+            $ref: '#/components/schemas/EVVVisit_Attribute'
+          example:
+          - tag: medicaid_prior_authorization_number
+            value: '100'
+        status:
+          description: Service current status
+          type: string
+          example: active
+          enum:
+          - active
+          - discharged
+          - on_hold
+          - waiting_list
     EVVVisit_Note:
       type: object
       properties:
@@ -772,205 +972,7 @@ components:
           description: Content of the visit note
           maxLength: 1000
           example: A sample visit note.
-    EVVVisit_Attribute:
-      type: object
-      properties:
-        tag:
-          type: string
-          description: Attribute tag
-        value:
-          type: string
-          description: Attribute value
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    EVVVisit_Authorizations:
-      type: object
-      properties:
-        authorization_number:
-          type: string
-          description: Authorization Number
-          example: '123456789'
-        member_number:
-          type: string
-          description: Member Number
-          example: '123456789'
-    EVVVisit_Employee:
-      type: object
-      properties:
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        attributes:
-          type: array
-          description: Employee attributes
-          items:
-            $ref: '#/components/schemas/EVVVisit_Attribute'
-          example:
-          - tag: SSN
-            value: '1407958499'
-          - tag: registration_id
-            value: '123'
-          - tag: rendering_provider_npi
-            value: 26NH18121900
-          - tag: caregiver_type
-            value: both
-          - tag: start_date
-            value: '2020-05-25'
-        birthday:
-          type: string
-          description: Employee birthday
-        email:
-          type: string
-          description: Employee email
-        first_name:
-          type: string
-          description: Employee first name
-          example: John
-        gender:
-          type: string
-          description: Employee gender
-        last_name:
-          type: string
-          description: Employee last name
-          example: Smith
-        phone:
-          type: string
-          description: Employee phone
-        updated_by:
-          type: object
-          description: User who last updated the employee
-          properties:
-            id:
-              type: integer
-              example: 100
-        updated_on:
-          type: string
-          format: date-time
-          description: Datetime of last time the employee was updated
-    EVVVisit_Diagnoses:
-      type: object
-      properties:
-        code:
-          type: string
-          description: Diagnosis name
-          example: A028
-        is_primary:
-          type: boolean
-          description: Diagnosis is primary or not primary
-          example: true
-    EVVVisit_Interventions:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Visit's intervention name
-          example: DINN
-    EVVVisit_BillCode:
-      type: object
-      properties:
-        code:
-          type: string
-          description: Bill code
-          example: HSW
-        description:
-          type: string
-          description: Bill code description
-          example: HSW
-        id:
-          type: integer
-          description: Bill code Id
-        units:
-          type: string
-          description: Bill code units
-        is_midnight_rule_applicable:
-          type: boolean
-          description: Whether or not the visits associated to this bill code will be split into two billable items in overnight schedules.
-    EVVVisit_ClientFunderActiveServiceSchema:
-      type: object
-      properties:
-        name:
-          description: Service name
-          type: string
-          example: Wound Care
-        status:
-          description: Service Status
-          type: string
-          example: active
-          enum:
-          - active
-          - discharged
-          - on_hold
-          - waiting_list
-        start_date:
-          description: Service start date
-          type: string
-          format: date-time
-          example: '2021-07-08T13:30:00+00:00'
-        projected_end_date:
-          description: Projected end date
-          type: string
-          format: date-time
-          example: '2022-07-08T13:30:00+00:00'
-    EVVVisit_CancelCode:
-      description: Visit cancellation code
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare cancel code ID
-          example: 1
-        code:
-          type: string
-          description: Cancel code
-          example: CLNT_REQ_RESCHEDULE
-        description:
-          type:
-          - string
-          - 'null'
-          description: Cancel code description
-          example: Client requested reschedule
-        is_billable:
-          type: boolean
-          description: Cancel Code is billable or not billable
-          example: true
-      required:
-      - id
-      - code
-      - is_billable
-    EVVVisitList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of evv visits
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EVVVisit'
   parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
     count:
       description: Number of items per page.
       name: count
@@ -979,6 +981,14 @@ components:
       schema:
         type: integer
         default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
     branch_id:
       description: 'Filter by branch ID `(default: current user branch)`
 
@@ -988,16 +998,6 @@ components:
       required: false
       schema:
         type: integer
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

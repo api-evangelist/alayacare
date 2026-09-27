@@ -46,36 +46,27 @@ paths:
       operationId: getEmploymentTypes
       x-operation-id-source: derived
 components:
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
-    BranchSummary:
-      description: Branch summary
+    EmploymentTypeDetailsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of employment types
       type: object
       properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmploymentTypeDetails'
     EmploymentTypeDetails:
       description: Employment Type Details
       type: object
@@ -90,19 +81,18 @@ components:
           example: Full time
         branch:
           $ref: '#/components/schemas/BranchSummary'
-    ErrorResponse:
-      description: Error response
+    BranchSummary:
+      description: Branch summary
       type: object
       properties:
-        code:
+        id:
           type: integer
-          description: Response code
-        message:
+          description: ID of the branch
+          example: 1
+        name:
           type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+          description: Name of the branch
+          example: Headquarters
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -124,26 +114,36 @@ components:
       - page
       - total_pages
       - items
-    EmploymentTypeDetailsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of employment types
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmploymentTypeDetails'
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basic_auth:
       type: http

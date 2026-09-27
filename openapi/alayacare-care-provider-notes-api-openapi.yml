@@ -496,82 +496,7 @@ paths:
         '500':
           description: Internal server error.
 components:
-  responses:
-    ErrorResponseCareProviderNoteInvalidRequest:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                message: Validation error.
-    ErrorResponseClientNotFound:
-      description: Client not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Client not found.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
-    ErrorResponseCareProviderNoteNotFound:
-      description: Care provider note not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Note with id 1 was not found
   schemas:
-    CareProviderNoteCreate:
-      type: object
-      properties:
-        category_id:
-          type: integer
-          description: 'ID of the category.
-
-            Either category_id or category_description is required.
-
-            '
-        category_description:
-          type: string
-          description: 'Description of the category.
-
-            Either category_id or category_description is required.
-
-            '
-        content:
-          type: string
-          description: Content of the note
-        share_category_with_branch:
-          type: boolean
-          description: 'Whether the new category should be shared with the branch or specific to the client.
-
-            Only applicable if category_description is provided with a new string.
-
-            '
-          default: true
-      required:
-      - content
     CareProviderNoteCursorList:
       type: object
       description: Cursor-based paginated list of care provider notes
@@ -580,43 +505,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareProviderNoteDetail'
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: Cursor to the next page. Will be null when there are no more items.
-    CareProviderNoteCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the category
-        description:
-          type: string
-          description: Description of the category
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    CareProviderNoteCategoryCursorList:
-      type: object
-      description: Cursor-based paginated list of care provider note categories
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CareProviderNoteCategory'
         next_cursor:
           type:
           - string
@@ -664,6 +552,118 @@ components:
         is_archived:
           type: boolean
           description: Whether the note is archived
+    CareProviderNoteCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the category
+        description:
+          type: string
+          description: Description of the category
+    CareProviderNoteCategoryCursorList:
+      type: object
+      description: Cursor-based paginated list of care provider note categories
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareProviderNoteCategory'
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: Cursor to the next page. Will be null when there are no more items.
+    CareProviderNoteCreate:
+      type: object
+      properties:
+        category_id:
+          type: integer
+          description: 'ID of the category.
+
+            Either category_id or category_description is required.
+
+            '
+        category_description:
+          type: string
+          description: 'Description of the category.
+
+            Either category_id or category_description is required.
+
+            '
+        content:
+          type: string
+          description: Content of the note
+        share_category_with_branch:
+          type: boolean
+          description: 'Whether the new category should be shared with the branch or specific to the client.
+
+            Only applicable if category_description is provided with a new string.
+
+            '
+          default: true
+      required:
+      - content
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseCareProviderNoteNotFound:
+      description: Care provider note not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Note with id 1 was not found
+    ErrorResponseCareProviderNoteInvalidRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: Validation error.
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client not found.
   requestBodies:
     CareProviderNoteCreate:
       content:

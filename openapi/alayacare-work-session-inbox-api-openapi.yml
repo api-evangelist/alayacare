@@ -100,17 +100,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    InboxWorkSessionStartResponse:
-      allOf:
-      - $ref: '#/components/schemas/InboxWorkSessionStartRequest'
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Work Session ID.
-      required:
-      - id
     InboxWorkSessionStartRequest:
       type: object
       properties:
@@ -138,6 +127,17 @@ components:
       required:
       - start_at
       - inbox_id
+    InboxWorkSessionStartResponse:
+      allOf:
+      - $ref: '#/components/schemas/InboxWorkSessionStartRequest'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Work Session ID.
+      required:
+      - id
     InboxWorkSessionEndRequest:
       type: object
       properties:

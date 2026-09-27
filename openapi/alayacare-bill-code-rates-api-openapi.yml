@@ -192,7 +192,179 @@ paths:
       operationId: deleteBillcodesByBillcodeIdRatesByBillcodeRateId
       x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    BillCodeNotFound:
+      description: The Billcode referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    BillCodeRateNotFound:
+      description: The Bill Code Rate Recurrence Rule referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
   schemas:
+    BillCodeRateTierQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
+    BillCodeRateTierCreateSchema:
+      type: object
+      properties:
+        rate:
+          description: The rate to apply to the time period
+          type: number
+          example: 12.5
+        start_minute:
+          description: The minute the unit of time starts
+          type: integer
+          example: 1
+          minimum: 1
+        end_minute:
+          description: The minute the unit of time ends
+          type: integer
+          example: 59
+          minimum: 2
+        unit:
+          description: 'An integer representing the unit of time, this field should ascend in the same order as start_at
+
+            '
+          type: integer
+          minimum: 1
+          example: 1
+      required:
+      - rate
+      - start_at
+      - unit
+    BillCodeRateUpdateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
+      - type: object
+        properties:
+          tiered_rates:
+            $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
+    RRuleSchema:
+      type: object
+      description: A recurrence rule for a Bill Code Rate
+      properties:
+        duration:
+          type: integer
+        rrule:
+          type: string
+          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
+          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
+          description: A recurrence rule string following RFC-5545
+        start_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+        end_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+    BillCodeRateRRuleBaseSchema:
+      type: object
+      properties:
+        rate:
+          type: number
+          example: 12.5
+        external_id:
+          type: string
+          pattern: (^$|^[0-9a-zA-Z\\-_]+$)
+          example: '123'
+        order:
+          type: integer
+          example: 1
+        override_holiday_multiplicator:
+          type: integer
+          description: effectively a boolean
+          enum:
+          - 0
+          - 1
+          example: 1
+        duration:
+          type: integer
+          example: 10
+        rrule:
+          $ref: '#/components/schemas/RRuleSchema'
+    BillCodeRateRRuleCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        required:
+        - rate
+        - order
+        - override_holiday_multiplicator
+    BillCodeRateRRuleQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+        required:
+        - id
+        - rate
+        - external_id
+        - duration
+        - order
+        - override_holiday_multiplicator
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Entity not found
+      required:
+      - code
+      - message
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    BillCodeRateQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+          rrules:
+            $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+          tiered_rates:
+            $ref: '#/components/schemas/BillCodeRateTierQuerySchema'
+      required:
+      - id
     BillCodeRateCreateSchema:
       type: object
       properties:
@@ -224,31 +396,6 @@ components:
       - rate
       - units
       - start_at
-    BillCodeRateRRuleBaseSchema:
-      type: object
-      properties:
-        rate:
-          type: number
-          example: 12.5
-        external_id:
-          type: string
-          pattern: (^$|^[0-9a-zA-Z\\-_]+$)
-          example: '123'
-        order:
-          type: integer
-          example: 1
-        override_holiday_multiplicator:
-          type: integer
-          description: effectively a boolean
-          enum:
-          - 0
-          - 1
-          example: 1
-        duration:
-          type: integer
-          example: 10
-        rrule:
-          $ref: '#/components/schemas/RRuleSchema'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -275,160 +422,21 @@ components:
       - page
       - total_pages
       - items
-    BillCodeRateTierCreateSchema:
-      type: object
-      properties:
-        rate:
-          description: The rate to apply to the time period
-          type: number
-          example: 12.5
-        start_minute:
-          description: The minute the unit of time starts
-          type: integer
-          example: 1
-          minimum: 1
-        end_minute:
-          description: The minute the unit of time ends
-          type: integer
-          example: 59
-          minimum: 2
-        unit:
-          description: 'An integer representing the unit of time, this field should ascend in the same order as start_at
-
-            '
-          type: integer
-          minimum: 1
-          example: 1
-      required:
-      - rate
-      - start_at
-      - unit
-    BillCodeRateTierQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
-    NotFound:
-      type: object
-      properties:
-        code:
-          type: string
-          example: 404
-        message:
-          type: string
-          example: Entity not found
-      required:
-      - code
-      - message
-    RRuleSchema:
-      type: object
-      description: A recurrence rule for a Bill Code Rate
-      properties:
-        duration:
-          type: integer
-        rrule:
-          type: string
-          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
-          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
-          description: A recurrence rule string following RFC-5545
-        start_at:
-          type: string
-          format: date-time
-          example: '2019-01-01T00:00:00+00:00'
-          description: Date the Rate begins to apply
-        end_at:
-          type: string
-          format: date-time
-          example: '2019-01-01T00:00:00+00:00'
-          description: Date the Rate begins to apply
-    BillCodeRateRRuleQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
-      - type: object
-        properties:
-          id:
-            type: integer
-            example: 12
-        required:
-        - id
-        - rate
-        - external_id
-        - duration
-        - order
-        - override_holiday_multiplicator
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    BillCodeRateUpdateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
-      - type: object
-        properties:
-          tiered_rates:
-            $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
-    BillCodeRateQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
-      - type: object
-        properties:
-          id:
-            type: integer
-            example: 12
-          rrules:
-            $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
-          tiered_rates:
-            $ref: '#/components/schemas/BillCodeRateTierQuerySchema'
-      required:
-      - id
-    BillCodeRateRRuleCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
-      - type: object
-        required:
-        - rate
-        - order
-        - override_holiday_multiplicator
-  responses:
-    BillCodeRateNotFound:
-      description: The Bill Code Rate Recurrence Rule referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    BillCodeNotFound:
-      description: The Billcode referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   parameters:
-    billcodeId:
-      name: billcode_id
+    billcodeRateId:
+      name: billcode_rate_id
       in: path
       required: true
       schema:
         type: integer
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
     page:
       description: Filter by page number.
       name: page
@@ -438,16 +446,8 @@ components:
         type: integer
         default: 1
         minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    billcodeRateId:
-      name: billcode_rate_id
+    billcodeId:
+      name: billcode_id
       in: path
       required: true
       schema:

@@ -94,18 +94,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    OutboxFormSubmissionHiddenFieldCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        field_outbox_id:
-          type: string
-          description: ID of the form template field provided by the demand organization.
-      required:
-      - id
-      - field_outbox_id
     OutboxFormSubmissionDetailResponse:
       type: object
       properties:
@@ -162,6 +150,18 @@ components:
           type: string
       required:
       - url
+    OutboxFormSubmissionHiddenFieldCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        field_outbox_id:
+          type: string
+          description: ID of the form template field provided by the demand organization.
+      required:
+      - id
+      - field_outbox_id
     OutboxFormSubmissionFieldCore:
       type: object
       properties:
@@ -187,14 +187,6 @@ components:
       - value_type
       - value
   parameters:
-    FormSubmissionFieldIdPathParam:
-      in: path
-      name: form_submission_field_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a form submission field.
     FormSubmissionIdPathParam:
       in: path
       name: form_submission_id
@@ -203,6 +195,14 @@ components:
         format: uuid
       required: true
       description: ID of a form submission.
+    FormSubmissionFieldIdPathParam:
+      in: path
+      name: form_submission_field_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a form submission field.
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

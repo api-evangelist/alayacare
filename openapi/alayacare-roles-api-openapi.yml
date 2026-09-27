@@ -46,23 +46,16 @@ paths:
       operationId: getRoles
       x-operation-id-source: derived
 components:
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
     BranchSummary:
       description: Branch summary
@@ -76,33 +69,6 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
-    RoleList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of roles
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/Role'
-            properties:
-              branch:
-                $ref: '#/components/schemas/BranchSummary'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     Role:
       description: AlayaCare role
       type: object
@@ -147,16 +113,50 @@ components:
       - page
       - total_pages
       - items
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+    RoleList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of roles
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/Role'
+            properties:
+              branch:
+                $ref: '#/components/schemas/BranchSummary'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basic_auth:
       type: http

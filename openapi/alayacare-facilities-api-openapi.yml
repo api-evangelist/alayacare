@@ -282,24 +282,203 @@ paths:
       operationId: putFacilityVisitsByIdByVisitId
       x-operation-id-source: derived
 components:
+  parameters:
+    service_id:
+      name: service_id
+      in: query
+      required: false
+      description: Filter by external service ID
+      schema:
+        type: string
+    alayacare_service_id:
+      name: alayacare_service_id
+      in: query
+      required: false
+      description: Filter by AlayaCare service ID
+      schema:
+        type: integer
+    employee_id:
+      name: employee_id
+      in: query
+      required: false
+      description: 'Filter by external employee ID
+
+        External employee ID is the employee ID in the system of record.
+
+        Ex. HR employee number
+
+        '
+      schema:
+        type: string
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    alayacare_employee_id:
+      name: alayacare_employee_id
+      in: query
+      required: false
+      description: Filter by AlayaCare employee ID
+      schema:
+        type: integer
+    alayacare_facility_id:
+      name: alayacare_facility_id
+      in: query
+      required: false
+      description: Filter by AlayaCare facility ID
+      schema:
+        type: string
+    branch_id:
+      description: 'Filter by branch ID `(default: current user branch)`
+
+        '
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+    facility_id:
+      name: facility_id
+      in: query
+      required: false
+      description: 'Filter by external facility ID
+
+        External facility ID is the facility ID in the system of record.
+
+        Ex. CRM facility identifier
+
+        '
+      schema:
+        type: string
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseVisitCreateInvalidRequest:
+      description: Invalid data submitted for visit creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: client_id and alayacare_client_id are mutually exclusive
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseVisitUpdateInvalidRequest:
+      description: Invalid data submitted for visit creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: client_id and alayacare_client_id are mutually exclusive
   schemas:
-    VisitTag:
-      type: string
-      description: Name of tag.
-      example: First visit
-    VisitSkill:
+    Address:
+      type: object
+      properties:
+        order:
+          type: integer
+          description: Order of location in route
+          example: 1
+        is_home_address:
+          type: boolean
+          description: If address defined matches the client address from the client profile, this value is true. Otherwise, the value is false.
+          example: true
+        latitude:
+          type: number
+          description: Latitude of the address
+          example: 45.5017
+        longitude:
+          type: number
+          description: Longitude of the address
+          example: 73.5673
+        address_1:
+          type: string
+          description: First line of the address
+          example: 4200 St Laurent Blvd
+        address_2:
+          type: string
+          description: Second line of the address
+          example: '800'
+        city:
+          type: string
+          description: City
+          example: Montreal
+        state:
+          type: string
+          description: State or province
+          example: QC
+        zip_code:
+          type: string
+          description: ZIP or postal code
+          example: H2W 2R2
+        country:
+          type: string
+          description: Country
+          example: Canada
+    VisitFunderDetails:
+      description: Visit funder details
       type: object
       properties:
         id:
+          description: AlayaCare funder ID
           type: integer
-          description: AlayaCare activity code ID
           example: 1
-        description:
+        external_id:
+          description: External funder ID
+          type:
+          - string
+          - 'null'
+          example: sor_funder_id_1
+        name:
+          description: Funder name
           type: string
-          description: Skill description
-          example: Driver License
+          example: Insurance Company
+        code:
+          description: Funder code
+          type: string
+          example: IC-1
+        organization:
+          description: Organization
+          type: string
+          example: Home Healthcare Agency
+        organization_code:
+          description: Organization code
+          type: string
+          example: HHC-0101
+        percentage:
+          type: integer
+          example: 100
       required:
       - id
+      - name
     FacilityVisitList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -327,31 +506,73 @@ components:
           - 'null'
           description: Reason why the ADL was not completed, in case it wasn't
           example: Not a garbage day
-    PaginatedList:
-      description: Base model of all paginated lists
+    VisitCancelCode:
+      description: Visit cancellation code
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare cancel code ID
+          example: 1
+        code:
+          type: string
+          description: Cancel code
+          example: CLNT_REQ_RESCHEDULE
+        description:
+          type:
+          - string
+          - 'null'
+          description: Cancel code description
+          example: Client requested reschedule
+      required:
+      - id
+      - code
+    VisitServiceDetails:
+      description: Visit service details
       type: object
       properties:
-        count:
+        id:
+          description: AlayaCare service ID
           type: integer
-          description: Number of items in the response
           example: 1
-        page:
+        external_id:
+          description: External service ID
+          type:
+          - string
+          - 'null'
+          example: sor_service_record_1
+        name:
+          description: Service name
+          type: string
+          example: Wound Care
+        service_code_id:
+          description: AlayaCare service code id
           type: integer
-          description: Current page number
           example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
+        service_code_name:
+          description: AlayaCare service code name
+          type: string
+          example: WOUND-CARE
       required:
-      - count
-      - page
-      - total_pages
-      - items
+      - id
+      - name
+      - service_code_id
+      - service_code_name
+    VisitSkill:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare activity code ID
+          example: 1
+        description:
+          type: string
+          description: Skill description
+          example: Driver License
+      required:
+      - id
     FacilityProfile:
       description: 'Collection of key/value pairs where keys are existing attributes in the agency profile, defined through
 
@@ -396,24 +617,6 @@ components:
           description: Facility name
           type: string
           example: Alayacare
-    VisitActivityCode:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare activity code ID
-          example: 1
-        code:
-          type: string
-          description: Activity code
-          example: 01- Assessment
-        description:
-          type: string
-          description: Activity code description
-          example: New client assessment
-      required:
-      - id
-      - code
     FacilityVisit:
       allOf:
       - $ref: '#/components/schemas/BaseVisit'
@@ -436,6 +639,110 @@ components:
           example: 10
       required:
       - alayacare_facility_id
+    VisitNoteCreate:
+      description: Visit note
+      type: object
+      properties:
+        text:
+          type: string
+          description: Content of the visit note
+          maxLength: 1000
+          example: A sample visit note.
+      required:
+      - text
+    EmployeeDetails:
+      description: Visit employee details
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare employee ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External employee ID
+          example: sor_employee_id_1
+        profile_id:
+          type: integer
+          description: AlayaCare client profile ID
+          example: 7891
+        full_name:
+          type: string
+          description: Employee full name
+          example: Jane Smith
+        email:
+          type: string
+          description: Employee email
+          example: employee_1@workplace.com
+        timezone:
+          type: string
+          description: Time Zone name in IANA format (iana.org/time-zones)
+          example: America/Toronto
+      required:
+      - id
+      - full_name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    ClientDetails:
+      description: Visit client details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_client_id_1
+        profile_id:
+          type: integer
+          description: AlayaCare client profile ID
+          example: 7890
+        full_name:
+          type: string
+          description: Client full name
+          example: John Smith
+        timezone:
+          type: string
+          description: Time Zone name in IANA format (iana.org/time-zones)
+          example: America/Toronto
+      required:
+      - id
+      - full_name
+    Location:
+      description: User location information
+      type:
+      - object
+      - 'null'
+      properties:
+        lat:
+          type: number
+          description: latitude
+          example: 45.518
+        lng:
+          type: number
+          description: longitude
+          example: -73.582
     BaseVisit:
       type: object
       properties:
@@ -516,70 +823,82 @@ components:
       - end_at
       - cancelled
       - cancel_code
-    VisitServiceDetails:
-      description: Visit service details
+    Branch:
+      description: AlayaCare branch
       type: object
       properties:
         id:
-          description: AlayaCare service ID
           type: integer
-          example: 1
-        external_id:
-          description: External service ID
-          type:
-          - string
-          - 'null'
-          example: sor_service_record_1
+          description: Branch ID
+          example: 1000
         name:
-          description: Service name
           type: string
-          example: Wound Care
-        service_code_id:
-          description: AlayaCare service code id
+          description: Branch name
+          example: Toronto branch
+    FacilityVisitUpdate:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisitUpdate'
+    VisitActivityCode:
+      type: object
+      properties:
+        id:
           type: integer
+          description: AlayaCare activity code ID
           example: 1
-        service_code_name:
-          description: AlayaCare service code name
+        code:
           type: string
-          example: WOUND-CARE
+          description: Activity code
+          example: 01- Assessment
+        description:
+          type: string
+          description: Activity code description
+          example: New client assessment
       required:
       - id
-      - name
-      - service_code_id
-      - service_code_name
-    VisitFunderDetails:
-      description: Visit funder details
+      - code
+    FacilityList:
       type: object
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
       properties:
-        id:
-          description: AlayaCare funder ID
-          type: integer
-          example: 1
-        external_id:
-          description: External funder ID
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Facility'
+    FacilityVisitCreate:
+      allOf:
+      - $ref: '#/components/schemas/FacilityVisitUpdate'
+      description: date for creating a facility visit
+      properties:
+        alayacare_facility_id:
+          format: int64
+          description: AlayaCare ID of the facility
+          example: 1001
+        facility_id:
           type:
           - string
           - 'null'
-          example: sor_funder_id_1
-        name:
-          description: Funder name
-          type: string
-          example: Insurance Company
-        code:
-          description: Funder code
-          type: string
-          example: IC-1
-        organization:
-          description: Organization
-          type: string
-          example: Home Healthcare Agency
-        organization_code:
-          description: Organization code
-          type: string
-          example: HHC-0101
-        percentage:
+          description: External ID of the facility
+          example: facility_ext_id
+      required:
+      - start_at
+      - end_at
+    Facility:
+      description: AlayaCare facility
+      type: object
+      properties:
+        id:
           type: integer
-          example: 100
+          description: AlayaCare facility ID
+          example: 1
+        name:
+          type: string
+          description: AlayaCare facility name
+          example: Toronto Facility
+        profile:
+          $ref: '#/components/schemas/FacilityProfile'
+        branch:
+          $ref: '#/components/schemas/Branch'
       required:
       - id
       - name
@@ -721,48 +1040,31 @@ components:
       - activity_codes
       - tags
       - service_instructions
-    FacilityList:
+    PaginatedList:
+      description: Base model of all paginated lists
       type: object
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
       properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Facility'
-    Facility:
-      description: AlayaCare facility
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare facility ID
-          example: 1
-        name:
-          type: string
-          description: AlayaCare facility name
-          example: Toronto Facility
-        profile:
-          $ref: '#/components/schemas/FacilityProfile'
-        branch:
-          $ref: '#/components/schemas/Branch'
+            type: object
       required:
-      - id
-      - name
-    Location:
-      description: User location information
-      type:
-      - object
-      - 'null'
-      properties:
-        lat:
-          type: number
-          description: latitude
-          example: 45.518
-        lng:
-          type: number
-          description: longitude
-          example: -73.582
+      - count
+      - page
+      - total_pages
+      - items
     FacilityVisitDetails:
       allOf:
       - $ref: '#/components/schemas/BaseVisitDetails'
@@ -782,148 +1084,6 @@ components:
       required:
       - alayacare_facility_id
       - facility_id
-    ClientDetails:
-      description: Visit client details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External client ID
-          example: sor_client_id_1
-        profile_id:
-          type: integer
-          description: AlayaCare client profile ID
-          example: 7890
-        full_name:
-          type: string
-          description: Client full name
-          example: John Smith
-        timezone:
-          type: string
-          description: Time Zone name in IANA format (iana.org/time-zones)
-          example: America/Toronto
-      required:
-      - id
-      - full_name
-    VisitNoteCreate:
-      description: Visit note
-      type: object
-      properties:
-        text:
-          type: string
-          description: Content of the visit note
-          maxLength: 1000
-          example: A sample visit note.
-      required:
-      - text
-    FacilityVisitUpdate:
-      allOf:
-      - $ref: '#/components/schemas/BaseVisitUpdate'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    Branch:
-      description: AlayaCare branch
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Branch ID
-          example: 1000
-        name:
-          type: string
-          description: Branch name
-          example: Toronto branch
-    Address:
-      type: object
-      properties:
-        order:
-          type: integer
-          description: Order of location in route
-          example: 1
-        is_home_address:
-          type: boolean
-          description: If address defined matches the client address from the client profile, this value is true. Otherwise, the value is false.
-          example: true
-        latitude:
-          type: number
-          description: Latitude of the address
-          example: 45.5017
-        longitude:
-          type: number
-          description: Longitude of the address
-          example: 73.5673
-        address_1:
-          type: string
-          description: First line of the address
-          example: 4200 St Laurent Blvd
-        address_2:
-          type: string
-          description: Second line of the address
-          example: '800'
-        city:
-          type: string
-          description: City
-          example: Montreal
-        state:
-          type: string
-          description: State or province
-          example: QC
-        zip_code:
-          type: string
-          description: ZIP or postal code
-          example: H2W 2R2
-        country:
-          type: string
-          description: Country
-          example: Canada
-    VisitNote:
-      allOf:
-      - $ref: '#/components/schemas/VisitNoteCreate'
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          description: Creation time of the note
-          example: '2017-07-08T13:30:00+00:00'
-      required:
-      - created_at
-    FacilityVisitCreate:
-      allOf:
-      - $ref: '#/components/schemas/FacilityVisitUpdate'
-      description: date for creating a facility visit
-      properties:
-        alayacare_facility_id:
-          format: int64
-          description: AlayaCare ID of the facility
-          example: 1001
-        facility_id:
-          type:
-          - string
-          - 'null'
-          description: External ID of the facility
-          example: facility_ext_id
-      required:
-      - start_at
-      - end_at
     BaseVisitUpdate:
       description: AlayaCare visit entity data for updates
       type: object
@@ -1006,29 +1166,6 @@ components:
           - string
           - 'null'
           example: Call in the morning to confirm each visit
-    VisitCancelCode:
-      description: Visit cancellation code
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare cancel code ID
-          example: 1
-        code:
-          type: string
-          description: Cancel code
-          example: CLNT_REQ_RESCHEDULE
-        description:
-          type:
-          - string
-          - 'null'
-          description: Cancel code description
-          example: Client requested reschedule
-      required:
-      - id
-      - code
     VisitWorkSession:
       type: object
       description: Visit work session
@@ -1053,158 +1190,21 @@ components:
           $ref: '#/components/schemas/Location'
         clock_out_location:
           $ref: '#/components/schemas/Location'
-    EmployeeDetails:
-      description: Visit employee details
-      type:
-      - object
-      - 'null'
+    VisitNote:
+      allOf:
+      - $ref: '#/components/schemas/VisitNoteCreate'
       properties:
-        id:
-          type: integer
-          description: AlayaCare employee ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External employee ID
-          example: sor_employee_id_1
-        profile_id:
-          type: integer
-          description: AlayaCare client profile ID
-          example: 7891
-        full_name:
+        created_at:
           type: string
-          description: Employee full name
-          example: Jane Smith
-        email:
-          type: string
-          description: Employee email
-          example: employee_1@workplace.com
-        timezone:
-          type: string
-          description: Time Zone name in IANA format (iana.org/time-zones)
-          example: America/Toronto
+          format: date-time
+          description: Creation time of the note
+          example: '2017-07-08T13:30:00+00:00'
       required:
-      - id
-      - full_name
-  parameters:
-    alayacare_facility_id:
-      name: alayacare_facility_id
-      in: query
-      required: false
-      description: Filter by AlayaCare facility ID
-      schema:
-        type: string
-    service_id:
-      name: service_id
-      in: query
-      required: false
-      description: Filter by external service ID
-      schema:
-        type: string
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    branch_id:
-      description: 'Filter by branch ID `(default: current user branch)`
-
-        '
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-    alayacare_employee_id:
-      name: alayacare_employee_id
-      in: query
-      required: false
-      description: Filter by AlayaCare employee ID
-      schema:
-        type: integer
-    facility_id:
-      name: facility_id
-      in: query
-      required: false
-      description: 'Filter by external facility ID
-
-        External facility ID is the facility ID in the system of record.
-
-        Ex. CRM facility identifier
-
-        '
-      schema:
-        type: string
-    alayacare_service_id:
-      name: alayacare_service_id
-      in: query
-      required: false
-      description: Filter by AlayaCare service ID
-      schema:
-        type: integer
-    employee_id:
-      name: employee_id
-      in: query
-      required: false
-      description: 'Filter by external employee ID
-
-        External employee ID is the employee ID in the system of record.
-
-        Ex. HR employee number
-
-        '
-      schema:
-        type: string
-  responses:
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseVisitUpdateInvalidRequest:
-      description: Invalid data submitted for visit creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: client_id and alayacare_client_id are mutually exclusive
-    ErrorResponseVisitCreateInvalidRequest:
-      description: Invalid data submitted for visit creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: client_id and alayacare_client_id are mutually exclusive
+      - created_at
+    VisitTag:
+      type: string
+      description: Name of tag.
+      example: First visit
   securitySchemes:
     basic_auth:
       type: http

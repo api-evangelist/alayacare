@@ -274,88 +274,57 @@ paths:
       operationId: putCareplansInterventionsByInterventionIdStatusCompleted
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseCarePlanNotFound:
-      description: Care plan not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Care plan not found
-    ErrorResponseInterventionNotFound:
-      description: Intervention not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Intervention not found
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
-    ErrorResponseInvalidUpdateForRootItemType:
-      description: The root item type cannot be deleted once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be deleted in current status
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 401
-            message: Please verify your access level for this url.
-    ErrorResponseInterventionTypeNotFound:
-      description: Intervention type not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Intervention type not found
-    ErrorResponseInvalidRequest:
-      description: Invalid data submitted for item creation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The field 'start_date' is required.
-    ErrorResponseInvalidArchivalForRootItemType:
-      description: The root item type cannot be archived once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be archived once it has been completed
   schemas:
-    InterventionList:
-      description: List of interventions
+    ServiceDetails:
+      description: Service details
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_id_1
+    EntitySummary:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          description: AlayaCare entity ID
+          example: 1001
+        name:
+          type: string
+          description: Alayacare entity name
+          example: entity name
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServiceDetails'
+    EntitySummaryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntitySummary'
+    User:
+      description: User id, first and last names
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Intervention'
+        id:
+          description: The id of user
+          type: integer
+          example: 5
+        external_id:
+          description: The id of user
+          type: string
+          example: sor_external_id_1
     CreateCarePlanIntervention:
       description: New intervention to create
       type: object
@@ -456,36 +425,6 @@ components:
           description: Include the intervention in 485 report. Is only required if the 485 feature flag is ON.
           type: boolean
           example: true
-    EntitySummaryList:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntitySummary'
-    User:
-      description: User id, first and last names
-      type: object
-      properties:
-        id:
-          description: The id of user
-          type: integer
-          example: 5
-        external_id:
-          description: The id of user
-          type: string
-          example: sor_external_id_1
-    EntitySummary:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: integer
-          description: AlayaCare entity ID
-          example: 1001
-        name:
-          type: string
-          description: Alayacare entity name
-          example: entity name
     InterventionModule:
       description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
       type: object
@@ -511,71 +450,31 @@ components:
             '
           type: string
           example: 3948
-    ServiceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/ServiceDetails'
-    ServiceDetails:
-      description: Service details
-      type:
-      - object
-      - 'null'
+    ErrorResponse:
+      description: Error response
+      type: object
       properties:
-        id:
+        status_code:
           type: integer
-          description: AlayaCare service ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_id_1
-    DeconstructedFrequency:
-      description: "Definition of the intervention frequency. \n- Is only required if `recurrence_type` is set to `custom`\n- `available_from` and `available_to` allow to define the Time of day when the intervention is available. Only present for `daily`, `weekly` and `monthly` frequencies. if not set will be defaulted to `any time of the day`.\n"
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    ExternalLink:
       type: object
       required:
-      - frequency
-      - interval
+      - label
+      - url
       properties:
-        frequency:
-          description: The frequency type of the intervention. Additionnal information are required for `daily`, `weekly` and `monthly` frequencies.
+        label:
           type: string
-          enum:
-          - daily
-          - weekly
-          - monthly
-        count:
-          description: The number of time the intervention must be executed. Only required for `daily`, `weekly` and `monthly` frequencies.
-          type: integer
-          example: 3
-        interval:
-          description: Only required for `daily`, `weekly` and `monthly` frequencies
-          type: integer
-          example: 2
-        weekdays:
-          description: Only present when the 'frequency' field is set to 'weekly'
-          type: array
-          items:
-            type: string
-            enum:
-            - monday
-            - tuesday
-            - wednesday
-            - thursday
-            - friday
-            - saturday
-            - sunday
-        monthday:
-          description: Only present when the 'frequency' field is set to 'monthly'
-          type: integer
-          example: 25
-        available_from:
+          example: How to use a catheter
+        url:
           type: string
-          example: '13:00:00'
-        available_to:
-          type: string
-          example: '15:00:00'
+          example: www.youtube.com/catheter
     Intervention:
       description: Careplan intervention
       type: object
@@ -688,31 +587,72 @@ components:
           type:
           - string
           - 'null'
-    ExternalLink:
+    CareplanItemStatus:
+      type: string
+      enum:
+      - active
+      - completed
+      - archived
+    DeconstructedFrequency:
+      description: "Definition of the intervention frequency. \n- Is only required if `recurrence_type` is set to `custom`\n- `available_from` and `available_to` allow to define the Time of day when the intervention is available. Only present for `daily`, `weekly` and `monthly` frequencies. if not set will be defaulted to `any time of the day`.\n"
       type: object
       required:
-      - label
-      - url
+      - frequency
+      - interval
       properties:
-        label:
+        frequency:
+          description: The frequency type of the intervention. Additionnal information are required for `daily`, `weekly` and `monthly` frequencies.
           type: string
-          example: How to use a catheter
-        url:
-          type: string
-          example: www.youtube.com/catheter
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        status_code:
+          enum:
+          - daily
+          - weekly
+          - monthly
+        count:
+          description: The number of time the intervention must be executed. Only required for `daily`, `weekly` and `monthly` frequencies.
           type: integer
-          description: Response code
-        message:
+          example: 3
+        interval:
+          description: Only required for `daily`, `weekly` and `monthly` frequencies
+          type: integer
+          example: 2
+        weekdays:
+          description: Only present when the 'frequency' field is set to 'weekly'
+          type: array
+          items:
+            type: string
+            enum:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+        monthday:
+          description: Only present when the 'frequency' field is set to 'monthly'
+          type: integer
+          example: 25
+        available_from:
           type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+          example: '13:00:00'
+        available_to:
+          type: string
+          example: '15:00:00'
+    InterventionType:
+      description: Type of the care plan intervention
+      type: object
+      example:
+      - Therapy
+      - Support
+      - Nutrition/Dietary
+    InterventionList:
+      description: List of interventions
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intervention'
     InterventionTypeList:
       description: List of intervention types
       type: object
@@ -721,19 +661,79 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InterventionType'
-    InterventionType:
-      description: Type of the care plan intervention
-      type: object
-      example:
-      - Therapy
-      - Support
-      - Nutrition/Dietary
-    CareplanItemStatus:
-      type: string
-      enum:
-      - active
-      - completed
-      - archived
+  responses:
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 401
+            message: Please verify your access level for this url.
+    ErrorResponseInvalidArchivalForRootItemType:
+      description: The root item type cannot be archived once it has been completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The root item type cannot be archived once it has been completed
+    ErrorResponseInvalidUpdateForRootItemType:
+      description: The root item type cannot be deleted once it has been completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The root item type cannot be deleted in current status
+    ErrorResponseInterventionNotFound:
+      description: Intervention not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Intervention not found
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
+    ErrorResponseCarePlanNotFound:
+      description: Care plan not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Care plan not found
+    ErrorResponseInvalidRequest:
+      description: Invalid data submitted for item creation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The field 'start_date' is required.
+    ErrorResponseInterventionTypeNotFound:
+      description: Intervention type not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Intervention type not found
   securitySchemes:
     basic_auth:
       type: http

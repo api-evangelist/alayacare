@@ -109,7 +109,55 @@ components:
       description: Filter by AlayaCare service ID
       schema:
         type: integer
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required due to feature flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseAdlsInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: service_id and alayacare_service_id are mutually exclusive
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found
   schemas:
+    DailyActivityCategory:
+      description: Daily activity category
+      type: string
+      enum:
+      - adl_personal_care
+      - adl_mobility
+      - adl_equipment
+      - adl_nutrition
+      - adl_household_management
+      - adl_support
+      - adl_medication
     DailyActivityList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -119,55 +167,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DailyActivity'
-    DailyActivityService:
-      description: Daily activity service
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_external_id_1
-        alayacare_id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    DailyActivity:
-      type: object
-      properties:
-        category:
-          $ref: '#/components/schemas/DailyActivityCategory'
-        name:
-          type: string
-          description: Activity name.
-          example: brush teeth
-        rrule:
-          type: string
-          description: Recurrence rule applied to the daily activity.
-          example: FREQ=WEEKLY;DTSTART=20180204T180000Z;UNTIL=20180304T180000Z;WKST=MO;BYDAY=MO,WE,FR
-        services:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyActivityService'
-      required:
-      - category
-      - name
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -193,54 +192,55 @@ components:
       - page
       - total_pages
       - items
-    DailyActivityCategory:
-      description: Daily activity category
-      type: string
-      enum:
-      - adl_personal_care
-      - adl_mobility
-      - adl_equipment
-      - adl_nutrition
-      - adl_household_management
-      - adl_support
-      - adl_medication
-  responses:
-    ErrorResponseClientNotFound:
-      description: Client not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required due to feature flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseAdlsInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: service_id and alayacare_service_id are mutually exclusive
+    DailyActivityService:
+      description: Daily activity service
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_external_id_1
+        alayacare_id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
+    DailyActivity:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/DailyActivityCategory'
+        name:
+          type: string
+          description: Activity name.
+          example: brush teeth
+        rrule:
+          type: string
+          description: Recurrence rule applied to the daily activity.
+          example: FREQ=WEEKLY;DTSTART=20180204T180000Z;UNTIL=20180304T180000Z;WKST=MO;BYDAY=MO,WE,FR
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyActivityService'
+      required:
+      - category
+      - name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
   securitySchemes:
     basic_auth:
       type: http
