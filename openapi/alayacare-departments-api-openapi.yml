@@ -47,29 +47,7 @@ paths:
       operationId: getDepartments
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     DepartmentList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -95,6 +73,29 @@ components:
       required:
       - id
       - name
+    DepartmentListItem:
+      allOf:
+      - $ref: '#/components/schemas/Department'
+      description: AlayaCare department.
+      type: object
+      properties:
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
+      required:
+      - id
+      - name
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -116,17 +117,6 @@ components:
       - page
       - total_pages
       - items
-    DepartmentListItem:
-      allOf:
-      - $ref: '#/components/schemas/Department'
-      description: AlayaCare department.
-      type: object
-      properties:
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
-      required:
-      - id
-      - name
     ErrorResponse:
       description: Error response
       type: object
@@ -141,6 +131,14 @@ components:
       - code
       - message
   parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
     count:
       description: Number of items per page.
       name: count
@@ -156,14 +154,16 @@ components:
       required: false
       schema:
         type: integer
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

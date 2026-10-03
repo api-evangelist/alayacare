@@ -78,54 +78,6 @@ components:
                 code: '401'
                 message: Authorization required.
   schemas:
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
-    ActivityCode:
-      description: Details of a cost centre
-      type:
-      - object
-      - 'null'
-      properties:
-        description:
-          type: string
-          description: Activity Code description
-          example: Some description
-        id:
-          type: integer
-          description: Activity Code ID
-          example: 2
-        code:
-          type: string
-          description: Activity Code code field
-          example: '5555'
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -152,6 +104,19 @@ components:
       - page
       - total_pages
       - items
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
     ActivityCodeList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -162,15 +127,42 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ActivityCode'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    ActivityCode:
+      description: Details of a cost centre
+      type:
+      - object
+      - 'null'
+      properties:
+        description:
+          type: string
+          description: Activity Code description
+          example: Some description
+        id:
+          type: integer
+          description: Activity Code ID
+          example: 2
+        code:
+          type: string
+          description: Activity Code code field
+          example: '5555'
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
   parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
     page:
       description: Filter by page number.
       name: page
@@ -180,6 +172,14 @@ components:
         type: integer
         default: 1
         minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

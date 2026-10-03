@@ -145,17 +145,6 @@ components:
               value:
                 code: '400'
                 message: Cost centre is disabled
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
     ErrorResponseEmployeeCostCentreNotFound:
       description: The employee with the referenced cost_centre_id was not found
       content:
@@ -167,6 +156,17 @@ components:
               value:
                 code: '400'
                 message: Employee with ID 1010 and Cost Centre ID 10 not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
     CostCentreEmployeeResponse:
       description: Employee to cost centre link

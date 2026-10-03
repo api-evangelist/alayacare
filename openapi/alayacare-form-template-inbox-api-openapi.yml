@@ -59,39 +59,7 @@ paths:
       operationId: getV1InboxFormTemplatesByDemandPersonaIdByDemandPersonaIdBySchemaIdBySchemaIdLatest
       x-operation-id-source: derived
 components:
-  parameters:
-    FormSchemaIdPathParam:
-      in: path
-      name: schema_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: Schema id of a form.
-    DemandPersonaIdPathParam:
-      in: path
-      name: demand_persona_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a demand organization.
   schemas:
-    InboxFormTemplateDetailResponse:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateCore'
-      - type: object
-        properties:
-          fields:
-            type: array
-            items:
-              $ref: '#/components/schemas/InboxFormTemplateFieldResponse'
-          form_template_id:
-            type: string
-            format: uuid
-          demand_persona_id:
-            type: string
-            format: uuid
     FormTemplateFieldCore:
       type: object
       properties:
@@ -184,6 +152,38 @@ components:
           field_id:
             type: string
             format: uuid
+    InboxFormTemplateDetailResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateCore'
+      - type: object
+        properties:
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/InboxFormTemplateFieldResponse'
+          form_template_id:
+            type: string
+            format: uuid
+          demand_persona_id:
+            type: string
+            format: uuid
+  parameters:
+    FormSchemaIdPathParam:
+      in: path
+      name: schema_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Schema id of a form.
+    DemandPersonaIdPathParam:
+      in: path
+      name: demand_persona_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a demand organization.
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

@@ -100,6 +100,23 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
+    SequenceIdQueryParam:
+      in: query
+      name: sequence_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
     ItemsPerPageParam:
       in: query
       name: items_per_page
@@ -110,18 +127,11 @@ components:
       name: category
       schema:
         $ref: '#/components/schemas/MessageCategoryCore'
-    SortOrderParam:
+    MessageSenderTypeQueryParam:
       in: query
-      name: sort_order
+      name: sender_type
       schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    SequenceIdQueryParam:
-      in: query
-      name: sequence_id
-      schema:
-        type: string
-        format: uuid
-      required: true
+        $ref: '#/components/schemas/MessageSenderTypeCore'
     FileIdPathParam:
       in: path
       name: file_id
@@ -130,21 +140,18 @@ components:
         format: uuid
       required: true
       description: ID of a file.
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    MessageSenderTypeQueryParam:
-      in: query
-      name: sender_type
-      schema:
-        $ref: '#/components/schemas/MessageSenderTypeCore'
   schemas:
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    MessageSenderTypeCore:
+      type: string
+      enum:
+      - demand
+      - supply
     SysAdminMessageDetailResponse:
       properties:
         message:
@@ -223,11 +230,30 @@ components:
       - message
       - sender
       - recipient
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
     MessageCategoryCore:
       type: string
       enum:
       - client_attachment
       - comment
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    SysAdminMessagePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminMessageDetailResponse'
+        required:
+        - items
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -247,32 +273,6 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    SysAdminMessagePageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminMessageDetailResponse'
-        required:
-        - items
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    MessageSenderTypeCore:
-      type: string
-      enum:
-      - demand
-      - supply
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

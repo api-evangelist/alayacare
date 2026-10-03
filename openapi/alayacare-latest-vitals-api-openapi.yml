@@ -96,25 +96,51 @@ paths:
       operationId: getVitalsClientByIdByExternalClientIdLatest
       x-operation-id-source: derived
 components:
+  responses:
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
   schemas:
-    VitalUnits:
-      type: string
-      description: The unit used to record the vital.
-      enum:
-      - c
-      - f
-      - kgs
-      - lb
-      - bpm
-      - breaths_pm
-      - mmhg
-      - cm
-      - in
-      - mmol_l
-      - mg_dl
-      - kg_m2
-      - '%'
-      example: mmhg
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     VitalLatest:
       type: object
       description: Latest vital details
@@ -180,31 +206,6 @@ components:
           properties:
             presure_max:
               $ref: '#/components/schemas/VitalLatest'
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
     VitalName:
       type: string
       description: The name identifying the vital type.
@@ -220,6 +221,24 @@ components:
       - spo2
       - temperature
       example: pressure_max
+    VitalUnits:
+      type: string
+      description: The unit used to record the vital.
+      enum:
+      - c
+      - f
+      - kgs
+      - lb
+      - bpm
+      - breaths_pm
+      - mmhg
+      - cm
+      - in
+      - mmol_l
+      - mg_dl
+      - kg_m2
+      - '%'
+      example: mmhg
     ErrorResponse:
       description: Error response
       type: object
@@ -233,34 +252,7 @@ components:
       required:
       - code
       - message
-  responses:
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid request
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
   parameters:
-    count:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
     page:
       name: page
       in: query
@@ -269,6 +261,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

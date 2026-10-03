@@ -64,61 +64,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FormSubmissionHiddenFieldCore:
-      type: object
-      properties:
-        field_id:
-          type: string
-          format: uuid
-      required:
-      - field_id
-    InboxFormSubmissionFieldCore:
-      type: object
-      properties:
-        field_id:
-          type: string
-          format: uuid
-        value_type:
-          type: string
-          enum:
-          - attachment
-          - boolean
-          - decimal
-          - json
-          - string
-        value:
-          type: string
-      required:
-      - field_id
-      - value_type
-      - value
-    InboxFormSubmissionCreationRequest:
-      type: object
-      properties:
-        form_template_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        visit_id:
-          type: string
-          format: uuid
-        work_session_id:
-          type: string
-          format: uuid
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxFormSubmissionFieldCore'
-          minItems: 1
-        hidden_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
-      required:
-      - form_template_id
-      - fields
     InboxFormSubmissionCreationResponse:
       type: object
       properties:
@@ -150,6 +95,61 @@ components:
       - id
       - form_template_id
       - fields
+    FormSubmissionHiddenFieldCore:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+      required:
+      - field_id
+    InboxFormSubmissionCreationRequest:
+      type: object
+      properties:
+        form_template_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        visit_id:
+          type: string
+          format: uuid
+        work_session_id:
+          type: string
+          format: uuid
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxFormSubmissionFieldCore'
+          minItems: 1
+        hidden_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormSubmissionHiddenFieldCore'
+      required:
+      - form_template_id
+      - fields
+    InboxFormSubmissionFieldCore:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+        value_type:
+          type: string
+          enum:
+          - attachment
+          - boolean
+          - decimal
+          - json
+          - string
+        value:
+          type: string
+      required:
+      - field_id
+      - value_type
+      - value
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

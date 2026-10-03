@@ -107,26 +107,44 @@ paths:
       operationId: deleteUnavailabilitiesByUnavailabilityId
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required
-    ErrorResponseEmployeeUnavailabilityNotFound:
-      description: Employee unavailability relationship not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee unavailability relationship not found
   schemas:
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    EmployeeDetails:
+      description: Employee details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare ID of the employee
+          example: 1
+        external_id:
+          type: string
+          description: External ID of the employee
+          example: external_id_1
     UnavailabilityCreated:
       description: Unavailability created details
       type: object
@@ -203,18 +221,6 @@ components:
           example: null
         branch:
           $ref: '#/components/schemas/BranchSummary'
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     TimeOffTypeDetails:
       description: Time Off Type details
       type: object
@@ -232,34 +238,28 @@ components:
           description: Time off type usable payable scheduled hours for payroll configuration
           example: Visit_Pay_Code
           enum:
-          - false
+          - 'No'
           - Time_Off_Pay_Code
           - Visit_Pay_Code
-    EmployeeDetails:
-      description: Employee details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare ID of the employee
-          example: 1
-        external_id:
-          type: string
-          description: External ID of the employee
-          example: external_id_1
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+  responses:
+    ErrorResponseEmployeeUnavailabilityNotFound:
+      description: Employee unavailability relationship not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee unavailability relationship not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required
   securitySchemes:
     basic_auth:
       type: http

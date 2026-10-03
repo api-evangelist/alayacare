@@ -137,7 +137,71 @@ paths:
       operationId: getMedicationsByMedicationIdAdministrationsByAdminId
       x-operation-id-source: derived
 components:
+  responses:
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    NotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Progress note not found
   schemas:
+    MedicationAdministration:
+      allOf:
+      - $ref: '#/components/schemas/MedicationAdministrationCreate'
+      type: object
+      description: Medication admninistration details
+      required:
+      - medication_id
+      - created_employee_id
+      - date_complete
+      - id
+      - updated_employee_id
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     MedicationAdministrationCreate:
       type: object
       description: Medication admninistration details
@@ -289,60 +353,15 @@ components:
         updated_employee_id:
           type: integer
           description: The ID of the employee that last updated the entity.
-    MedicationAdministrationList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of the medication administration
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MedicationAdministration'
     YesNo:
       type:
       - string
       - 'null'
       description: Whether the action was performed.
       enum:
-      - true
-      - false
-      example: true
-    MedicationAdministration:
-      allOf:
-      - $ref: '#/components/schemas/MedicationAdministrationCreate'
-      type: object
-      description: Medication admninistration details
-      required:
-      - medication_id
-      - created_employee_id
-      - date_complete
-      - id
-      - updated_employee_id
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
+      - 'yes'
+      - 'no'
+      example: 'yes'
     ErrorResponse:
       description: Error response
       type: object
@@ -356,43 +375,16 @@ components:
       required:
       - code
       - message
-  responses:
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid request
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    NotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Progress note not found
+    MedicationAdministrationList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of the medication administration
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicationAdministration'
   parameters:
-    count:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
     page:
       name: page
       in: query
@@ -401,6 +393,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

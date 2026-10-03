@@ -180,34 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Premium:
-      description: A premium configured in AlayaCare Accounting Settings
-      type: object
-      properties:
-        code:
-          type: string
-          description: AlayaCare premium code name
-          example: MILEAGE
-        premium_id:
-          type: integer
-          description: AlayaCare premium ID
-          example: 643
-          minimum: 1
-        pay_code:
-          $ref: '#/components/schemas/PayCode'
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCode'
-        rule:
-          type: string
-          description: AlayaCare premium rule name
-          example: Weekends
-        branch:
-          $ref: '#/components/schemas/Branch'
-      required:
-      - code
-      - premium_id
     PayCode:
       description: AlayaCare pay code
       type: object
@@ -221,22 +193,6 @@ components:
           type: string
           description: AlayCare pay code name
           example: 783
-    BillCode:
-      description: AlayaCare bill code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare bill code ID
-          example: 783
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare bill code name
-          example: MEDIBILL
-      required:
-      - id
-      - code
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -286,16 +242,19 @@ components:
       - visit_premium_id
       - quantity
       - premium
-    VisitPremiumsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
+    VisitPremiumUpdateSchema:
       type: object
-      description: Paginated list of premiums
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisitPremiumDetails'
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          minimum: 1
+        quantity:
+          type: number
+          example: 1.01
+        description:
+          type: string
+          example: Mileage KMs
     VisitPremiumCreateSchema:
       type: object
       required:
@@ -324,6 +283,44 @@ components:
             Note that if a visit is locked and this flag is sent as `true`, your organization may need to re-run billing or payroll in the AlayaCare web application to properly reflect the changes.
 
             '
+    Premium:
+      description: A premium configured in AlayaCare Accounting Settings
+      type: object
+      properties:
+        code:
+          type: string
+          description: AlayaCare premium code name
+          example: MILEAGE
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          example: 643
+          minimum: 1
+        pay_code:
+          $ref: '#/components/schemas/PayCode'
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCode'
+        rule:
+          type: string
+          description: AlayaCare premium rule name
+          example: Weekends
+        branch:
+          $ref: '#/components/schemas/Branch'
+      required:
+      - code
+      - premium_id
+    VisitPremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      type: object
+      description: Paginated list of premiums
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitPremiumDetails'
     Branch:
       description: AlayaCare branch
       type: object
@@ -337,19 +334,6 @@ components:
           type: string
           description: Branch name
           example: AlayaCare Health
-    VisitPremiumUpdateSchema:
-      type: object
-      properties:
-        premium_id:
-          type: integer
-          description: AlayaCare premium ID
-          minimum: 1
-        quantity:
-          type: number
-          example: 1.01
-        description:
-          type: string
-          example: Mileage KMs
     ErrorResponse:
       description: Error response
       type: object
@@ -365,6 +349,22 @@ components:
       required:
       - code
       - message
+    BillCode:
+      description: AlayaCare bill code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare bill code ID
+          example: 783
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare bill code name
+          example: MEDIBILL
+      required:
+      - id
+      - code
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

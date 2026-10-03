@@ -230,25 +230,60 @@ paths:
       operationId: putVitalsByVitalId
       x-operation-id-source: derived
 components:
+  responses:
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    NotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Progress note not found
   schemas:
-    VitalUnits:
-      type: string
-      description: The unit used to record the vital.
-      enum:
-      - c
-      - f
-      - kgs
-      - lb
-      - bpm
-      - breaths_pm
-      - mmhg
-      - cm
-      - in
-      - mmol_l
-      - mg_dl
-      - kg_m2
-      - '%'
-      example: mmhg
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     VitalOptions:
       type:
       - object
@@ -319,15 +354,29 @@ components:
           type: number
           description: The value of the recorded vital.
           example: 38.4
-    VitalOptionRoute:
+    VitalName:
       type: string
-      description: The route that awas used when recording a vital like `temperature`.
+      description: The name identifying the vital type.
       enum:
-      - axillary
-      - oral
-      - rectal
-      - tympanic
-      example: oral
+      - blood_glucose
+      - bmi
+      - height
+      - pulse
+      - pressure_min
+      - pressure_max
+      - weight
+      - respiratory_rate
+      - spo2
+      - temperature
+      example: pressure_max
+    VitalOptionPosition:
+      type: string
+      description: The position of the client when recording a vital like `blood_pressure` or `pulse`.
+      enum:
+      - lying
+      - sitting
+      - standing
+      example: sitting
     Vital:
       allOf:
       - $ref: '#/components/schemas/VitalCreate'
@@ -349,64 +398,33 @@ components:
           type: string
           description: The vital ID.
           example: adedb729-54fa-473e-b929-9c71ef5c248e
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    VitalList:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: A list of vitals
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Vital'
-    VitalOptionPosition:
+    VitalUnits:
       type: string
-      description: The position of the client when recording a vital like `blood_pressure` or `pulse`.
+      description: The unit used to record the vital.
       enum:
-      - lying
-      - sitting
-      - standing
-      example: sitting
-    VitalName:
+      - c
+      - f
+      - kgs
+      - lb
+      - bpm
+      - breaths_pm
+      - mmhg
+      - cm
+      - in
+      - mmol_l
+      - mg_dl
+      - kg_m2
+      - '%'
+      example: mmhg
+    VitalOptionRoute:
       type: string
-      description: The name identifying the vital type.
+      description: The route that awas used when recording a vital like `temperature`.
       enum:
-      - blood_glucose
-      - bmi
-      - height
-      - pulse
-      - pressure_min
-      - pressure_max
-      - weight
-      - respiratory_rate
-      - spo2
-      - temperature
-      example: pressure_max
+      - axillary
+      - oral
+      - rectal
+      - tympanic
+      example: oral
     ErrorResponse:
       description: Error response
       type: object
@@ -420,43 +438,17 @@ components:
       required:
       - code
       - message
-  responses:
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid request
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    NotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Progress note not found
+    VitalList:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: A list of vitals
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vital'
   parameters:
-    count:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
     page:
       name: page
       in: query
@@ -465,6 +457,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

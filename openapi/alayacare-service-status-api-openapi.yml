@@ -89,31 +89,13 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
+  requestBodies:
+    ServiceStatusCreate:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
-    ErrorResponseClientStatusInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                idstatus:
-                - Not a valid choice.
-                message: Validation error.
+            $ref: '#/components/schemas/ServiceStatusCreate'
+      required: true
   schemas:
     ServiceStatusCreate:
       type: object
@@ -164,13 +146,31 @@ components:
       required:
       - code
       - message
-  requestBodies:
-    ServiceStatusCreate:
+  responses:
+    ErrorResponseClientStatusInvalidRequest:
+      description: Invalid request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ServiceStatusCreate'
-      required: true
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                idstatus:
+                - Not a valid choice.
+                message: Validation error.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

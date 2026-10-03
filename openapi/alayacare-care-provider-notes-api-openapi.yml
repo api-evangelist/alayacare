@@ -497,19 +497,6 @@ paths:
           description: Internal server error.
 components:
   schemas:
-    CareProviderNoteCursorList:
-      type: object
-      description: Cursor-based paginated list of care provider notes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CareProviderNoteDetail'
-        next_cursor:
-          type:
-          - string
-          - 'null'
-          description: Cursor to the next page. Will be null when there are no more items.
     CareProviderNoteDetail:
       type: object
       description: 'Details about the care provider note.
@@ -552,15 +539,6 @@ components:
         is_archived:
           type: boolean
           description: Whether the note is archived
-    CareProviderNoteCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the category
-        description:
-          type: string
-          description: Description of the category
     CareProviderNoteCategoryCursorList:
       type: object
       description: Cursor-based paginated list of care provider note categories
@@ -569,6 +547,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareProviderNoteCategory'
+        next_cursor:
+          type:
+          - string
+          - 'null'
+          description: Cursor to the next page. Will be null when there are no more items.
+    CareProviderNoteCursorList:
+      type: object
+      description: Cursor-based paginated list of care provider notes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareProviderNoteDetail'
         next_cursor:
           type:
           - string
@@ -604,6 +595,15 @@ components:
           default: true
       required:
       - content
+    CareProviderNoteCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the category
+        description:
+          type: string
+          description: Description of the category
     ErrorResponse:
       description: Error response
       type: object
@@ -620,28 +620,6 @@ components:
       - code
       - message
   responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
-    ErrorResponseCareProviderNoteNotFound:
-      description: Care provider note not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Note with id 1 was not found
     ErrorResponseCareProviderNoteInvalidRequest:
       description: Validation error
       content:
@@ -653,6 +631,17 @@ components:
               value:
                 code: 400
                 message: Validation error.
+    ErrorResponseCareProviderNoteNotFound:
+      description: Care provider note not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Note with id 1 was not found
     ErrorResponseClientNotFound:
       description: Client not found
       content:
@@ -664,6 +653,17 @@ components:
               value:
                 code: 404
                 message: Client not found.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
   requestBodies:
     CareProviderNoteCreate:
       content:

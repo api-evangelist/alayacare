@@ -34,7 +34,52 @@ paths:
     servers:
     - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 components:
+  responses:
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
+    NoteTypesList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of a client's progress notes
+      properties:
+        items:
+          type: array
+          items:
+            properties:
+              note_type:
+                type: string
+                description: Progress note type
+                example: progress_nursing
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -60,23 +105,10 @@ components:
       - page
       - total_pages
       - items
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    NoteTypesList:
+    NoteTypesList_2:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of a client's progress notes
+      - $ref: '#/components/schemas/PaginatedList_2'
+      description: Paginated list of a employee note types
       properties:
         items:
           type: array
@@ -84,8 +116,12 @@ components:
             properties:
               note_type:
                 type: string
-                description: Progress note type
-                example: progress_nursing
+                description: Employee note type code
+                example: employee_general
+              name:
+                type: string
+                description: Employee note type display name
+                example: General
     PaginatedList_2:
       description: Base model of all paginated lists
       type: object
@@ -107,42 +143,6 @@ components:
       - page
       - total_pages
       - items
-    NoteTypesList_2:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList_2'
-      description: Paginated list of a employee note types
-      properties:
-        items:
-          type: array
-          items:
-            properties:
-              note_type:
-                type: string
-                description: Employee note type code
-                example: employee_general
-              name:
-                type: string
-                description: Employee note type display name
-                example: General
-  responses:
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

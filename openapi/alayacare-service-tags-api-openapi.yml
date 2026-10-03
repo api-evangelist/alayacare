@@ -54,35 +54,6 @@ paths:
       operationId: getServicesTags
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
   schemas:
     PaginatedList:
       description: Base model of all paginated lists
@@ -109,6 +80,18 @@ components:
       - page
       - total_pages
       - items
+    ServiceTagList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of service tags
+      properties:
+        items:
+          type: array
+          example:
+          - Diabetes service
+          - Hospice care
+          items:
+            type: string
     ErrorResponse:
       description: Error response
       type: object
@@ -124,18 +107,35 @@ components:
       required:
       - code
       - message
-    ServiceTagList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of service tags
-      properties:
-        items:
-          type: array
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - Diabetes service
-          - Hospice care
-          items:
-            type: string
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basicAuth:
       type: http

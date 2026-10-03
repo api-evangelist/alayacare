@@ -257,15 +257,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    NotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Progress note not found
     InvalidRequest:
       description: Invalid data.
       content:
@@ -275,24 +266,6 @@ components:
           example:
             code: 400
             message: Invalid request
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    CreateNoteInvalidRequest:
-      description: Invalid data submitted for creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400,
-            message: Invalid note type
     ClientNotFound:
       description: Not found.
       content:
@@ -302,57 +275,34 @@ components:
           example:
             code: 404
             message: Client not found.
+    CreateNoteInvalidRequest:
+      description: Invalid data submitted for creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400,
+            message: Invalid note type
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    NotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Progress note not found
   schemas:
-    SuccessProgressNoteCreate:
-      type: object
-      description: Progress note created successfully
-      properties:
-        id:
-          type: string
-          description: The entity ID.
-          example: 70ad613a-376c-4389-bb45-78374dddd03e
-        type:
-          type: string
-          description: The clinical document type.
-          example: progress_note
-        uri:
-          type: string
-          description: The entity URI.
-          example: /progress_note/70ad613a-376c-4389-bb45-78374dddd03e
-    ProgressNote:
-      description: A progress note
-      type: object
-      properties:
-        id:
-          type: string
-          description: uuid of the progress note
-          format: uuid
-          example: 5aea440b-7e10-4b5d-8b44-fda4efb2dc95
-        is_hidden:
-          type: boolean
-          default: false
-        note_type:
-          type: string
-          description: Note type category of the progress note
-          example: progress_nursing
-        content:
-          type: string
-          format: html
-          description: Content of the progress note. A subset of HTML is accepted.
-          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
-        created_at:
-          type: string
-          format: date-time
-          description: Date progress note was created (ISO 8601)
-          example: '2017-07-08T13:30:00+00:00'
-        created_by:
-          type: integer
-          description: AlayaCare ID of the employee who created the progress note.
-          example: 1001
-        textonly:
-          type: string
-          description: Content of the progress note as simple text (only if include_textonly is true)
-          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
     ProgressNoteDetails:
       description: A progress note
       type: object
@@ -419,15 +369,6 @@ components:
       - page
       - total_pages
       - items
-    ProgressNotesList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of a client's progress notes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProgressNote'
     ProgressNoteCreate:
       description: Progress note data required for creation.
       type: object
@@ -446,6 +387,65 @@ components:
           type: string
           format: html
           description: Content of the progress note.  A subset of HTML is accepted.
+          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+    ProgressNotesList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of a client's progress notes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressNote'
+    SuccessProgressNoteCreate:
+      type: object
+      description: Progress note created successfully
+      properties:
+        id:
+          type: string
+          description: The entity ID.
+          example: 70ad613a-376c-4389-bb45-78374dddd03e
+        type:
+          type: string
+          description: The clinical document type.
+          example: progress_note
+        uri:
+          type: string
+          description: The entity URI.
+          example: /progress_note/70ad613a-376c-4389-bb45-78374dddd03e
+    ProgressNote:
+      description: A progress note
+      type: object
+      properties:
+        id:
+          type: string
+          description: uuid of the progress note
+          format: uuid
+          example: 5aea440b-7e10-4b5d-8b44-fda4efb2dc95
+        is_hidden:
+          type: boolean
+          default: false
+        note_type:
+          type: string
+          description: Note type category of the progress note
+          example: progress_nursing
+        content:
+          type: string
+          format: html
+          description: Content of the progress note. A subset of HTML is accepted.
+          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+        created_at:
+          type: string
+          format: date-time
+          description: Date progress note was created (ISO 8601)
+          example: '2017-07-08T13:30:00+00:00'
+        created_by:
+          type: integer
+          description: AlayaCare ID of the employee who created the progress note.
+          example: 1001
+        textonly:
+          type: string
+          description: Content of the progress note as simple text (only if include_textonly is true)
           example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
     ErrorResponse:
       description: Error response

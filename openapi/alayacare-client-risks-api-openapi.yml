@@ -252,43 +252,6 @@ paths:
       operationId: deleteClientsByIdByExternalClientIdRisksByRiskId
       x-operation-id-source: derived
 components:
-  responses:
-    ClientRiskInvalidRequest:
-      description: Invalid data submitted for client risk creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid risk category
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    ClientNotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found.
-    ClientRiskNotFound:
-      description: Client risk not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client risk uid not found
   schemas:
     RiskDetails:
       description: Details of the client risk
@@ -336,6 +299,70 @@ components:
           format: date-time
           description: Date client risk was created (ISO 8601) - Time saved at `T00:00:00+00:00`
           example: '2017-07-08T00:00:00+00:00'
+    RiskSeverity:
+      description: Risk severity - 0 to 5
+      type: integer
+      example: 3
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    RiskUpdate:
+      description: Client risk data
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/RiskCategory'
+        risk:
+          type: string
+          description: Free text description of the client risk
+          example: Allergic to penicillin
+        severity:
+          $ref: '#/components/schemas/RiskSeverity'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    RiskCreate:
+      description: Client risk data
+      type: object
+      required:
+      - category
+      - risk
+      - severity
+      properties:
+        category:
+          $ref: '#/components/schemas/RiskCategory'
+        risk:
+          type: string
+          description: Free text description of the client risk
+          example: Allergic to penicillin
+          minLength: 1
+        severity:
+          $ref: '#/components/schemas/RiskSeverity'
+    RiskCategory:
+      description: Risk category (case-sensitive)
+      type: string
+      example: Allergy
+      enum:
+      - Allergy
+      - Environment
+      - Infectious Diseases
+      - Funder
+      - General
+      - Pets
     RiskList:
       description: A list of client risks
       type: object
@@ -356,79 +383,44 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RiskDetails'
-    RiskUpdate:
-      description: Client risk data
-      type: object
-      properties:
-        category:
-          $ref: '#/components/schemas/RiskCategory'
-        risk:
-          type: string
-          description: Free text description of the client risk
-          example: Allergic to penicillin
-        severity:
-          $ref: '#/components/schemas/RiskSeverity'
-    RiskCreate:
-      description: Client risk data
-      type: object
-      required:
-      - category
-      - risk
-      - severity
-      properties:
-        category:
-          $ref: '#/components/schemas/RiskCategory'
-        risk:
-          type: string
-          description: Free text description of the client risk
-          example: Allergic to penicillin
-          minLength: 1
-        severity:
-          $ref: '#/components/schemas/RiskSeverity'
-    RiskSeverity:
-      description: Risk severity - 0 to 5
-      type: integer
-      example: 3
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    RiskCategory:
-      description: Risk category (case-sensitive)
-      type: string
-      example: Allergy
-      enum:
-      - Allergy
-      - Environment
-      - Infectious Diseases
-      - Funder
-      - General
-      - Pets
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+  responses:
+    ClientNotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found.
+    ClientRiskInvalidRequest:
+      description: Invalid data submitted for client risk creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid risk category
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    ClientRiskNotFound:
+      description: Client risk not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client risk uid not found
   parameters:
-    count:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
     page:
       name: page
       in: query
@@ -437,6 +429,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

@@ -254,24 +254,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required due to feature flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
     ErrorResponseVisitNotFound:
       description: Visit not found
       content:
@@ -281,7 +263,59 @@ components:
           example:
             code: 404
             message: Visit not found
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required due to feature flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    VisitInterventionsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of visits
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitInterventions'
     Intervention:
       type: object
       properties:
@@ -326,15 +360,14 @@ components:
           type: string
           description: One of the types defined in the setting "Care Documentation > Care Plan Intervention Types"
           example: Nursing
-    VisitInterventionsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of visits
+    VisitInterventionsUpdate:
+      description: Interventions
+      type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisitInterventions'
+        interventions:
+          type: string
+          description: list of visit intervention ids
+          example: '[1, 2, 3, 4]'
     VisitInterventions:
       description: A list of visit interventions
       type: object
@@ -411,31 +444,6 @@ components:
           description: Alayacare ID of the visit
           type: integer
           example: 2384
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
     IvrVisitInterventions:
       description: A list of visit interventions
       type: object
@@ -473,14 +481,6 @@ components:
           - string
           - 'null'
           example: uuid
-    VisitInterventionsUpdate:
-      description: Interventions
-      type: object
-      properties:
-        interventions:
-          type: string
-          description: list of visit intervention ids
-          example: '[1, 2, 3, 4]'
     ErrorResponse:
       description: Error response
       type: object

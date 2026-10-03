@@ -57,41 +57,6 @@ components:
             code: 401
             message: Authorization required.
   schemas:
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
-    Role:
-      description: AlayaCare role
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the role
-          example: 1
-        name:
-          type: string
-          description: Name of the role
-          example: csc
-        description:
-          type: string
-          description: Name of the role in the web application
-          example: Coordinator
-        category:
-          type: string
-          description: Category of the role
-          example: admin
-      required:
-      - id
-      - name
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -113,6 +78,18 @@ components:
       - page
       - total_pages
       - items
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
     RoleList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -140,15 +117,30 @@ components:
       required:
       - code
       - message
+    Role:
+      description: AlayaCare role
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the role
+          example: 1
+        name:
+          type: string
+          description: Name of the role
+          example: csc
+        description:
+          type: string
+          description: Name of the role in the web application
+          example: Coordinator
+        category:
+          type: string
+          description: Category of the role
+          example: admin
+      required:
+      - id
+      - name
   parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
     page:
       description: Filter by page number.
       name: page
@@ -157,6 +149,14 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

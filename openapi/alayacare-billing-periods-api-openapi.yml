@@ -211,6 +211,39 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    searchId:
+      in: query
+      name: search_id
+      description: Partial search on the id field.
+      required: false
+      schema:
+        type: integer
+    billingPeriodTo:
+      in: query
+      name: billing_period_to
+      description: Returns all billing periods that overlap with the entered date range.
+      required: false
+      schema:
+        type: string
+    clientTags:
+      name: client_tags
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
     sortOrder:
       in: query
       name: sort_order
@@ -222,6 +255,26 @@ components:
         - ASC
         - DESC
         default: ASC
+    invoiceSearch:
+      name: invoice_search
+      in: query
+      required: false
+      schema:
+        type: string
+    branchId:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    balanceFrom:
+      name: balance_from
+      in: query
+      required: false
+      schema:
+        type: number
     status:
       name: status
       in: query
@@ -243,24 +296,20 @@ components:
           - written_off
           - suspended
           - rejected
-    invoiceDateTo:
+    billingPeriodFrom:
       in: query
-      name: invoice_date_to
-      description: Returns all billing periods using that Invoice Date within the date range.
+      name: billing_period_from
+      description: Returns all billing periods that overlap with the entered date range.
       required: false
       schema:
         type: string
         format: date
-    clientTags:
-      name: client_tags
+    billToParty:
+      name: bill_to_party
       in: query
       required: false
-      style: form
-      explode: false
       schema:
-        type: array
-        items:
-          type: string
+        type: string
     frequency:
       in: query
       name: frequency
@@ -272,14 +321,12 @@ components:
         - 1
         - 2
         - 3
-    count:
-      description: Number of items per page.
-      name: count
+    clientSearch:
+      name: client_search
       in: query
       required: false
       schema:
-        type: integer
-        default: 100
+        type: string
     sortBy:
       in: query
       name: sort_by
@@ -292,75 +339,20 @@ components:
         - end_date
         - invoice_date
         default: start_date
-    branchId:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
-    invoiceDateFrom:
-      in: query
-      name: invoice_date_from
-      description: Returns all billing periods using that Invoice Date within the date range.
-      required: false
-      schema:
-        type: string
-        format: date
-    balanceFrom:
-      name: balance_from
-      in: query
-      required: false
-      schema:
-        type: number
-    unpaidBalance:
-      name: unpaid_balance
-      in: query
-      required: false
-      schema:
-        type: boolean
     balanceTo:
       name: balance_to
       in: query
       required: false
       schema:
         type: number
-    clientSearch:
-      name: client_search
+    invoiceDateTo:
       in: query
+      name: invoice_date_to
+      description: Returns all billing periods using that Invoice Date within the date range.
       required: false
       schema:
         type: string
-    searchId:
-      in: query
-      name: search_id
-      description: Partial search on the id field.
-      required: false
-      schema:
-        type: integer
-    invoiceSearch:
-      name: invoice_search
-      in: query
-      required: false
-      schema:
-        type: string
-    billingPeriodTo:
-      in: query
-      name: billing_period_to
-      description: Returns all billing periods that overlap with the entered date range.
-      required: false
-      schema:
-        type: string
+        format: date
     clientTagMode:
       name: client_tag_mode
       in: query
@@ -370,259 +362,48 @@ components:
         enum:
         - all
         - any
-    billToParty:
-      name: bill_to_party
+    unpaidBalance:
+      name: unpaid_balance
       in: query
       required: false
       schema:
-        type: string
-    billingPeriodFrom:
+        type: boolean
+    count:
+      description: Number of items per page.
+      name: count
       in: query
-      name: billing_period_from
-      description: Returns all billing periods that overlap with the entered date range.
+      required: false
+      schema:
+        type: integer
+        default: 100
+    invoiceDateFrom:
+      in: query
+      name: invoice_date_from
+      description: Returns all billing periods using that Invoice Date within the date range.
       required: false
       schema:
         type: string
         format: date
   schemas:
-    PrivateInvoicesSchema:
-      type: object
-      properties:
-        invoice_number:
-          type: integer
-          example: 2348
-        invoice_version:
-          type: integer
-          example: 0
-        master_invoice_id:
-          type: integer
-          example: 12345
-          minimum: 1
-        status:
-          type: string
-          example: draft
-        balance:
-          type: string
-          example: '5.00'
-        payments:
-          type: string
-          example: '2.00'
-        adjustments:
-          type: string
-          example: '3.00'
-        total:
-          type: string
-          example: '10.00'
-        pdf_url:
-          type: string
-          example: https://alayacare.com/invoice5283_20190625.pdf
-        pdf_url_create_time:
-          type: string
-          format: date-time
-          example: 2018-01-16T14:17:05-0500
-        id:
-          type: integer
-          example: 12
-          minimum: 1
-        emailed:
-          type: boolean
-          example: true
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        program:
-          $ref: '#/components/schemas/ProgramSchema'
-        payor:
-          $ref: '#/components/schemas/PayorSchema'
-    PayorSchema:
+    FunderStub:
       type: object
       properties:
         id:
           type: integer
-          example: 1
+          example: 8
           minimum: 1
-        checksum:
-          type: integer
-          example: 7
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        funder:
-          $ref: '#/components/schemas/FunderStub'
-        billing_contact:
-          $ref: '#/components/schemas/BillingContactSchema'
-    PayorInvoicingBillingPeriod:
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-        branch:
-          $ref: '#/components/schemas/Branch'
-        create_user:
-          $ref: '#/components/schemas/User'
-        update_user:
-          $ref: '#/components/schemas/User'
-        close_user:
-          $ref: '#/components/schemas/User'
-        create_time:
+        code:
           type: string
-          format: date-time
-        update_time:
-          type: string
-          format: date-time
-        closed_at:
-          type: string
-          format: date-time
-        guid:
-          type: integer
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        back_billing_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          example: null
-        invoice_date:
-          type: string
-          format: date
-        idstatus:
-          type: integer
-          example: null
-        overtime_check:
-          type: boolean
-          example: null
-        is_closed:
-          type: boolean
-          example: false
-        allow_shift_creation:
-          type: boolean
-          example: true
-        type:
-          type: string
-          enum:
-          - legacy
-          - payor_invoicing
-          example: payor_invoicing
-        frequency:
-          type: integer
-          description: Displays the Billing Frequency selected
-        job_id:
-          type: integer
-        invoice_count:
-          type: integer
-          description: Count of invoices in any status
-        draft_invoice_count:
-          type: integer
-          description: Count of invoices in Draft status
-        sent_invoice_count:
-          type: integer
-          description: Count of invoices in Sent status = Sent, Paid, Write-Off
-        deleted_invoice_count:
-          type: integer
-          description: Count of invoices in Deleted status
-        is_first:
-          type: boolean
-          description: Boolean indicating if the program billing period is the first for that Branch - Frequency
-        is_latest:
-          type: boolean
-          description: Boolean indicating if the program billing period is the latest for that Branch - Frequency
-        funder_filters:
-          type: array
-          items:
-            $ref: '#/components/schemas/FunderWithGuidSchema'
-        payor_type_filters:
-          type: array
-          items:
-            type: string
-            example: individual_invoices
-    FunderWithGuidSchema:
-      allOf:
-      - $ref: '#/components/schemas/FunderStub'
-      - type: object
-        properties:
-          guid:
-            type: integer
-            example: 9
-    ProgramSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 12345
-          minimum: 1
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        program_type:
-          type: string
-          example: LTCI
+          example: Some Funder
         name:
           type: string
-          example: Long Term Care Insurance
-        guarantor_funder:
-          type: object
-          properties:
-            id:
-              type: integer
-              example: 111
-            code:
-              type: string
-              example: GF1
-            name:
-              type: string
-              example: Some Funder
-        guarantor_billing_contact:
-          type: object
-          properties:
-            id:
-              type: integer
-              example: 111
-            first_name:
-              type: string
-              example: Bruce
-            last_name:
-              type: string
-              example: Lee
-        client_billing_cycle:
-          type: integer
-          example: 999
-          minimum: 1
-    BillToSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 12
-        name:
+          example: Some Funder
+        description:
           type: string
-          example: Funder
-        guid:
+          example: Some Funder
+        invoicing_model:
           type: string
-          example: '27990'
-        guid_to:
-          type: string
-          example: '27991'
-        is_active:
-          type: boolean
-          example: true
-        import_id:
-          type: integer
-          example: 123
-        remarks:
-          type: string
-          example: falls prevention program
-        contact_type:
-          type: string
-          example: Referral Contact
-        lang:
-          type: string
-          example: english
-        list:
-          type: string
-          example: Funder List (System)
+          example: funder_individual
     InvoiceItemSchema:
       type: object
       properties:
@@ -722,15 +503,6 @@ components:
           minimum: 1
         payor:
           $ref: '#/components/schemas/PayorSchema'
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        first_name:
-          type: string
-        last_name:
-          type: string
     PayorInvoicingBillingPeriodCollection:
       type: object
       properties:
@@ -747,14 +519,99 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PayorInvoicingBillingPeriod'
-    TaxesSchema:
+    User:
       type: object
       properties:
-        taxtotal:
-          type: number
-          example: 2
-        types:
-          $ref: '#/components/schemas/TaxTypesSchema'
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+    BillToSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: Funder
+        guid:
+          type: string
+          example: '27990'
+        guid_to:
+          type: string
+          example: '27991'
+        is_active:
+          type: boolean
+          example: true
+        import_id:
+          type: integer
+          example: 123
+        remarks:
+          type: string
+          example: falls prevention program
+        contact_type:
+          type: string
+          example: Referral Contact
+        lang:
+          type: string
+          example: english
+        list:
+          type: string
+          example: Funder List (System)
+    ProgramSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12345
+          minimum: 1
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        program_type:
+          type: string
+          example: LTCI
+        name:
+          type: string
+          example: Long Term Care Insurance
+        guarantor_funder:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 111
+            code:
+              type: string
+              example: GF1
+            name:
+              type: string
+              example: Some Funder
+        guarantor_billing_contact:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 111
+            first_name:
+              type: string
+              example: Bruce
+            last_name:
+              type: string
+              example: Lee
+        client_billing_cycle:
+          type: integer
+          example: 999
+          minimum: 1
+    FunderWithGuidSchema:
+      allOf:
+      - $ref: '#/components/schemas/FunderStub'
+      - type: object
+        properties:
+          guid:
+            type: integer
+            example: 9
     TaxTypesSchema:
       type: object
       properties:
@@ -764,25 +621,22 @@ components:
         total:
           type: number
           example: 2
-    FunderStub:
+    PayorSchema:
       type: object
       properties:
         id:
           type: integer
-          example: 8
+          example: 1
           minimum: 1
-        code:
-          type: string
-          example: Some Funder
-        name:
-          type: string
-          example: Some Funder
-        description:
-          type: string
-          example: Some Funder
-        invoicing_model:
-          type: string
-          example: funder_individual
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
     Branch:
       description: AlayaCare branch
       type: object
@@ -796,6 +650,96 @@ components:
           type: string
           description: Branch name
           example: AlayaCare Health
+    PayorInvoicingBillingPeriod:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        branch:
+          $ref: '#/components/schemas/Branch'
+        create_user:
+          $ref: '#/components/schemas/User'
+        update_user:
+          $ref: '#/components/schemas/User'
+        close_user:
+          $ref: '#/components/schemas/User'
+        create_time:
+          type: string
+          format: date-time
+        update_time:
+          type: string
+          format: date-time
+        closed_at:
+          type: string
+          format: date-time
+        guid:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        back_billing_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          example: null
+        invoice_date:
+          type: string
+          format: date
+        idstatus:
+          type: integer
+          example: null
+        overtime_check:
+          type: boolean
+          example: null
+        is_closed:
+          type: boolean
+          example: false
+        allow_shift_creation:
+          type: boolean
+          example: true
+        type:
+          type: string
+          enum:
+          - legacy
+          - payor_invoicing
+          example: payor_invoicing
+        frequency:
+          type: integer
+          description: Displays the Billing Frequency selected
+        job_id:
+          type: integer
+        invoice_count:
+          type: integer
+          description: Count of invoices in any status
+        draft_invoice_count:
+          type: integer
+          description: Count of invoices in Draft status
+        sent_invoice_count:
+          type: integer
+          description: Count of invoices in Sent status = Sent, Paid, Write-Off
+        deleted_invoice_count:
+          type: integer
+          description: Count of invoices in Deleted status
+        is_first:
+          type: boolean
+          description: Boolean indicating if the program billing period is the first for that Branch - Frequency
+        is_latest:
+          type: boolean
+          description: Boolean indicating if the program billing period is the latest for that Branch - Frequency
+        funder_filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunderWithGuidSchema'
+        payor_type_filters:
+          type: array
+          items:
+            type: string
+            example: individual_invoices
     InvoiceQuerySchema:
       type: object
       properties:
@@ -896,6 +840,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InvoiceItemSchema'
+    TaxesSchema:
+      type: object
+      properties:
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
     BillingContactSchema:
       type: object
       properties:
@@ -942,6 +894,54 @@ components:
         last_name:
           type: string
           example: Jones
+    PrivateInvoicesSchema:
+      type: object
+      properties:
+        invoice_number:
+          type: integer
+          example: 2348
+        invoice_version:
+          type: integer
+          example: 0
+        master_invoice_id:
+          type: integer
+          example: 12345
+          minimum: 1
+        status:
+          type: string
+          example: draft
+        balance:
+          type: string
+          example: '5.00'
+        payments:
+          type: string
+          example: '2.00'
+        adjustments:
+          type: string
+          example: '3.00'
+        total:
+          type: string
+          example: '10.00'
+        pdf_url:
+          type: string
+          example: https://alayacare.com/invoice5283_20190625.pdf
+        pdf_url_create_time:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        emailed:
+          type: boolean
+          example: true
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        program:
+          $ref: '#/components/schemas/ProgramSchema'
+        payor:
+          $ref: '#/components/schemas/PayorSchema'
   securitySchemes:
     basic_auth:
       type: http

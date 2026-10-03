@@ -259,114 +259,43 @@ paths:
     servers:
     - url: https://example.alayacare.com/ext/api/v2/accounting
 components:
-  responses:
-    ErrorResponseMutuallyExclusive:
-      description: Mutually exclusive
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                message: funder_id and alayacare_funder_id are mutually exclusive
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
-    ErrorResponseInvalidServiceCodeParams:
-      description: Invalid service code parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
-    ErrorResponseServiceCodeNotFound:
-      description: The service code referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ErrorResponseMutuallyExclusive_2:
-      description: Mutually exclusive
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: client_id and alayacare_client_id are mutually exclusive
-    ErrorResponseAuthentication_2:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseMutuallyExclusive_3:
-      description: Mutually exclusive
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: client_id and alayacare_client_id are mutually exclusive
-    ErrorResponseAuthentication_3:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
-    ServiceCodeCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/ServiceCodeEditSchema'
-      - type: object
-        properties:
-          rating_methodology_type:
-            type: string
-            enum:
-            - funder_driven
-            - non_billable
-            example: funder_driven
-          branch_id:
-            type: integer
-            description: Branch ID
-            minimum: 1
-          rating_methodology_data:
-            $ref: '#/components/schemas/ServiceCodeRatingMethodologyData'
-    ServiceCodeRatingMethodologyData:
+    PayCodeSchema:
       type: object
       properties:
-        bill_code_ids:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
           type: array
           items:
-            type: integer
-            example: 1
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     BillCodeSchema:
       type: object
       properties:
@@ -385,6 +314,126 @@ components:
         is_disabled:
           type: boolean
           example: false
+    ServiceCodeEditSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Sick Paid
+        description:
+          type: string
+          example: Sick Paid
+        paycoderegular_id:
+          type: integer
+          example: 1
+        paycodeovertime_id:
+          type: integer
+          example: 1
+        paycodeholiday_id:
+          type: integer
+          example: 1
+        expense_code_id:
+          type: integer
+          example: 1
+        department_id:
+          type: integer
+          example: 1
+          minimum: 1
+        duration:
+          type: integer
+          example: 10
+        care_duration:
+          type: integer
+          example: 10
+        visits_can_overlap:
+          type: boolean
+          example: true
+        disregard_employee_capacity:
+          type: boolean
+          example: true
+        allow_virtual_care:
+          type: boolean
+          example: true
+        matching_shift_late_start:
+          type: integer
+          example: 10
+        matching_shift_coverage:
+          type: number
+          example: 10.0
+        disregard_start_time:
+          type: boolean
+          example: true
+        disregard_shift_coverage:
+          type: boolean
+          example: true
+        ot_exempt:
+          type: boolean
+          example: true
+    ServiceCodeRatingMethodologyData:
+      type: object
+      properties:
+        bill_code_ids:
+          type: array
+          items:
+            type: integer
+            example: 1
+    ServiceCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        description:
+          type: string
+          example: Sick Paid
+        name:
+          type: string
+          example: Sick Paid
+        label:
+          type: string
+          example: Sick Paid
+        is_disabled:
+          type: boolean
+          example: false
+        rating_methodology_type:
+          type: string
+          example: funder_driven
+        branch:
+          $ref: '#/components/schemas/BranchSchema'
+        department:
+          $ref: '#/components/schemas/DepartmentSchema'
+        pay_code_regular:
+          $ref: '#/components/schemas/PayCodeSchema'
+        pay_code_overtime:
+          $ref: '#/components/schemas/PayCodeSchema'
+        pay_code_holiday:
+          $ref: '#/components/schemas/PayCodeSchema'
+        expense_code:
+          $ref: '#/components/schemas/PayCodeSchema'
+        billcodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeSchema'
+    FunderStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+          minimum: 1
+        code:
+          type: string
+          example: Some Funder
+        name:
+          type: string
+          example: Some Funder
+        description:
+          type: string
+          example: Some Funder
+        invoicing_model:
+          type: string
+          example: funder_individual
     ServiceCodeScalarSchema:
       allOf:
       - $ref: '#/components/schemas/ServiceCodeSchema'
@@ -454,127 +503,25 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/BillCodeSchema'
-    ServiceCodeEditSchema:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Sick Paid
-        description:
-          type: string
-          example: Sick Paid
-        paycoderegular_id:
-          type: integer
-          example: 1
-        paycodeovertime_id:
-          type: integer
-          example: 1
-        paycodeholiday_id:
-          type: integer
-          example: 1
-        expense_code_id:
-          type: integer
-          example: 1
-        department_id:
-          type: integer
-          example: 1
-          minimum: 1
-        duration:
-          type: integer
-          example: 10
-        care_duration:
-          type: integer
-          example: 10
-        visits_can_overlap:
-          type: boolean
-          example: true
-        disregard_employee_capacity:
-          type: boolean
-          example: true
-        allow_virtual_care:
-          type: boolean
-          example: true
-        matching_shift_late_start:
-          type: integer
-          example: 10
-        matching_shift_coverage:
-          type: number
-          example: 10.0
-        disregard_start_time:
-          type: boolean
-          example: true
-        disregard_shift_coverage:
-          type: boolean
-          example: true
-        ot_exempt:
-          type: boolean
-          example: true
-    ServiceCodeListSchema:
+    ServiceCodeCreateSchema:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      type: object
-      description: Paginated list of service codes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceCodeSchema'
-    PayCodeSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        code:
-          type: string
-          example: SP
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    FunderStub:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 8
-          minimum: 1
-        code:
-          type: string
-          example: Some Funder
-        name:
-          type: string
-          example: Some Funder
-        description:
-          type: string
-          example: Some Funder
-        invoicing_model:
-          type: string
-          example: funder_individual
-    DepartmentSchema:
+      - $ref: '#/components/schemas/ServiceCodeEditSchema'
+      - type: object
+        properties:
+          rating_methodology_type:
+            type: string
+            enum:
+            - funder_driven
+            - non_billable
+            example: funder_driven
+          branch_id:
+            type: integer
+            description: Branch ID
+            minimum: 1
+          rating_methodology_data:
+            $ref: '#/components/schemas/ServiceCodeRatingMethodologyData'
+    BranchSchema:
+      description: The branch associated with the Billcode
       type: object
       properties:
         id:
@@ -584,46 +531,7 @@ components:
         name:
           type: string
           example: AlayaCare Health
-    ServiceCodeSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        description:
-          type: string
-          example: Sick Paid
-        name:
-          type: string
-          example: Sick Paid
-        label:
-          type: string
-          example: Sick Paid
-        is_disabled:
-          type: boolean
-          example: false
-        rating_methodology_type:
-          type: string
-          example: funder_driven
-        branch:
-          $ref: '#/components/schemas/BranchSchema'
-        department:
-          $ref: '#/components/schemas/DepartmentSchema'
-        pay_code_regular:
-          $ref: '#/components/schemas/PayCodeSchema'
-        pay_code_overtime:
-          $ref: '#/components/schemas/PayCodeSchema'
-        pay_code_holiday:
-          $ref: '#/components/schemas/PayCodeSchema'
-        expense_code:
-          $ref: '#/components/schemas/PayCodeSchema'
-        billcodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeSchema'
-    BranchSchema:
-      description: The branch associated with the Billcode
+    DepartmentSchema:
       type: object
       properties:
         id:
@@ -648,20 +556,16 @@ components:
       required:
       - code
       - message
-    ServiceCode:
-      description: Details of service codes
+    ServiceCodeListSchema:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
       type: object
+      description: Paginated list of service codes
       properties:
-        id:
-          type: integer
-          description: Service code id
-          example: 1
-        name:
-          type: string
-          description: Service Code name
-          example: SC1
-        branch:
-          $ref: '#/components/schemas/Branch'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceCodeSchema'
     PaginatedList_2:
       description: Base model of all paginated lists
       type: object
@@ -687,6 +591,29 @@ components:
       - page
       - total_pages
       - items
+    ServiceCode:
+      description: Details of service codes
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Service code id
+          example: 1
+        name:
+          type: string
+          description: Service Code name
+          example: SC1
+        branch:
+          $ref: '#/components/schemas/Branch'
+    ServiceCodeList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList_2'
+      description: Paginated list of service codes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceCode'
     Branch:
       description: AlayaCare branch
       type: object
@@ -699,30 +626,6 @@ components:
           type: string
           description: Branch name
           example: Toronto branch
-    ServiceCodeList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList_2'
-      description: Paginated list of service codes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceCode'
-    ServiceCode_2:
-      description: Details of service codes
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-          description: Service code id
-          example: 1
-        name:
-          type: string
-          description: Service Code name
-          example: SC1
-        branch:
-          $ref: '#/components/schemas/Branch_2'
     PaginatedList_3:
       description: Base model of all paginated lists
       type: object
@@ -748,6 +651,30 @@ components:
       - page
       - total_pages
       - items
+    ServiceCode_2:
+      description: Details of service codes
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: Service code id
+          example: 1
+        name:
+          type: string
+          description: Service Code name
+          example: SC1
+        branch:
+          $ref: '#/components/schemas/Branch_2'
+    ServiceCodeList_2:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList_3'
+      description: Paginated list of service codes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceCode_2'
     Branch_2:
       description: AlayaCare branch
       type: object
@@ -761,24 +688,89 @@ components:
           type: string
           description: Branch name
           example: Toronto branch
-    ServiceCodeList_2:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList_3'
-      description: Paginated list of service codes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceCode_2'
+  responses:
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseMutuallyExclusive:
+      description: Mutually exclusive
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                message: funder_id and alayacare_funder_id are mutually exclusive
+    ErrorResponseInvalidServiceCodeParams:
+      description: Invalid service code parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ErrorResponseServiceCodeNotFound:
+      description: The service code referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorResponseMutuallyExclusive_2:
+      description: Mutually exclusive
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: client_id and alayacare_client_id are mutually exclusive
+    ErrorResponseAuthentication_2:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseMutuallyExclusive_3:
+      description: Mutually exclusive
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: client_id and alayacare_client_id are mutually exclusive
+    ErrorResponseAuthentication_3:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
     page:
       description: Filter by page number.
       name: page
@@ -787,6 +779,23 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page_2:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
     count_2:
       description: Number of items per page.
       name: count
@@ -804,15 +813,6 @@ components:
       in: query
       required: false
       schema:
-        type: integer
-        minimum: 1
-    page_2:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
         type: integer
         minimum: 1
   securitySchemes:

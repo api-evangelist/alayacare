@@ -144,17 +144,6 @@ components:
               value:
                 code: '400'
                 message: Cost centre is disabled
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
     ErrorResponseClientCostCentreNotFound:
       description: The client with the referenced cost_centre_id was not found
       content:
@@ -166,6 +155,17 @@ components:
               value:
                 code: '400'
                 message: Client with ID 1010 and Cost Centre ID 10 not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
     CostCentreClientCreate:
       type: object
@@ -179,20 +179,6 @@ components:
           type: string
           description: client external ID
           example: john.1010
-    CostCentreClientResponse:
-      description: Client to cost centre link
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: client ID
-          example: 1010
-          minimum: 1
-        cost_centre_id:
-          type: integer
-          description: Cost centre ID
-          example: 10
-          minimum: 1
     ErrorResponse:
       description: Error response
       type: object
@@ -208,6 +194,20 @@ components:
       required:
       - code
       - message
+    CostCentreClientResponse:
+      description: Client to cost centre link
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        cost_centre_id:
+          type: integer
+          description: Cost centre ID
+          example: 10
+          minimum: 1
   securitySchemes:
     basic_auth:
       type: http

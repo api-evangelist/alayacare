@@ -54,7 +54,7 @@ paths:
         schema:
           type: string
           enum:
-          - false
+          - 'No'
           - Time_Off_Pay_Code
           - Visit_Pay_Code
       - name: employee_role
@@ -99,44 +99,33 @@ paths:
       operationId: getTimeOffTypes
       x-operation-id-source: derived
 components:
+  parameters:
+    branchId:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
-    TimeOffList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: List of time off types
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/TimeOff'
-    ServiceCodeDetails:
-      description: Service details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the service code
-          example: 1
-          minimum: 1
-        service_code_name:
-          type: string
-          description: Name of the service code
-          example: SICKPAID
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -163,6 +152,30 @@ components:
       - page
       - total_pages
       - items
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    TimeOffList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: List of time off types
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/TimeOff'
     TimeOff:
       description: Time off type details
       type: object
@@ -178,9 +191,9 @@ components:
         pay_schedule_time:
           type: string
           description: Time off type usable payable scheduled hours for payroll configuration
-          example: false
+          example: 'No'
           enum:
-          - false
+          - 'No'
           - Time_Off_Pay_Code
           - Visit_Pay_Code
         all_day_duration:
@@ -191,6 +204,19 @@ components:
           $ref: '#/components/schemas/ServiceCodeDetails'
         branch:
           $ref: '#/components/schemas/BranchSummary'
+    ServiceCodeDetails:
+      description: Service details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the service code
+          example: 1
+          minimum: 1
+        service_code_name:
+          type: string
+          description: Name of the service code
+          example: SICKPAID
     ErrorResponse:
       description: Error response
       type: object
@@ -218,32 +244,6 @@ components:
               value:
                 code: '401'
                 message: Authorization required
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    branchId:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
   securitySchemes:
     basic_auth:
       type: http

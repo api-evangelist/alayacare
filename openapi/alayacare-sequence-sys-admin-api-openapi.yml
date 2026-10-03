@@ -95,27 +95,19 @@ paths:
       operationId: getV1SysAdminSequences
       x-operation-id-source: derived
 components:
-  parameters:
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
   schemas:
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
+    SequenceServiceResponse:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+      required:
+      - name
+      - outbox_id
     DemographicLeanCore:
       type: object
       properties:
@@ -128,6 +120,50 @@ components:
       required:
       - first_name
       - last_name
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    SequenceLatestReferralResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+      - id
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    SequenceClientResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+          minLength: 1
+        demographics:
+          $ref: '#/components/schemas/DemographicLeanCore'
+      required:
+      - outbox_id
+      - demographics
     ItemsPerPageCore:
       type: integer
       minimum: 1
@@ -151,7 +187,7 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    SequenceLatestReferralResponse:
+    SequenceOfferResponse:
       type: object
       properties:
         id:
@@ -159,18 +195,6 @@ components:
           format: uuid
       required:
       - id
-    SequenceServiceResponse:
-      type: object
-      properties:
-        outbox_id:
-          type: string
-          minLength: 1
-        name:
-          type: string
-          minLength: 1
-      required:
-      - name
-      - outbox_id
     SysAdminSequencePageResponse:
       allOf:
       - $ref: '#/components/schemas/PageCore'
@@ -182,40 +206,6 @@ components:
               $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
         required:
         - items
-    SequenceClientResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        outbox_id:
-          type: string
-          minLength: 1
-        demographics:
-          $ref: '#/components/schemas/DemographicLeanCore'
-      required:
-      - outbox_id
-      - demographics
-    OrganizationLeanCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-      required:
-      - id
-      - name
-    SequenceOfferResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-      - id
     SysAdminSequenceCollectionResponse:
       type: object
       properties:
@@ -247,12 +237,22 @@ components:
       - supply
       - client
       - service
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
+  parameters:
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

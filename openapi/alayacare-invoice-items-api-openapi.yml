@@ -93,36 +93,7 @@ paths:
       operationId: getBillingPeriodsInvoiceByInvoiceIdDetails
       x-operation-id-source: derived
 components:
-  parameters:
-    sortOrder:
-      in: query
-      name: sort_order
-      description: Order to sort by
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASC
-        - DESC
-        default: ASC
   schemas:
-    TaxesSchema:
-      type: object
-      properties:
-        taxtotal:
-          type: number
-          example: 2
-        types:
-          $ref: '#/components/schemas/TaxTypesSchema'
-    TaxTypesSchema:
-      type: object
-      properties:
-        name:
-          type: string
-          example: HST
-        total:
-          type: number
-          example: 2
     InvoiceQuerySchema:
       type: object
       properties:
@@ -223,74 +194,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InvoiceItemSchema'
-    FunderStub:
+    TaxTypesSchema:
       type: object
       properties:
-        id:
-          type: integer
-          example: 8
-          minimum: 1
-        code:
-          type: string
-          example: Some Funder
         name:
           type: string
-          example: Some Funder
-        description:
-          type: string
-          example: Some Funder
-        invoicing_model:
-          type: string
-          example: funder_individual
-    PayorSchema:
+          example: HST
+        total:
+          type: number
+          example: 2
+    TaxesSchema:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        checksum:
-          type: integer
-          example: 7
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        funder:
-          $ref: '#/components/schemas/FunderStub'
-        billing_contact:
-          $ref: '#/components/schemas/BillingContactSchema'
-    BillToSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 12
-        name:
-          type: string
-          example: Funder
-        guid:
-          type: string
-          example: '27990'
-        guid_to:
-          type: string
-          example: '27991'
-        is_active:
-          type: boolean
-          example: true
-        import_id:
-          type: integer
-          example: 123
-        remarks:
-          type: string
-          example: falls prevention program
-        contact_type:
-          type: string
-          example: Referral Contact
-        lang:
-          type: string
-          example: english
-        list:
-          type: string
-          example: Funder List (System)
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
     InvoiceItemSchema:
       type: object
       properties:
@@ -390,6 +310,41 @@ components:
           minimum: 1
         payor:
           $ref: '#/components/schemas/PayorSchema'
+    FunderStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+          minimum: 1
+        code:
+          type: string
+          example: Some Funder
+        name:
+          type: string
+          example: Some Funder
+        description:
+          type: string
+          example: Some Funder
+        invoicing_model:
+          type: string
+          example: funder_individual
+    PayorSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
     BillingContactSchema:
       type: object
       properties:
@@ -436,6 +391,51 @@ components:
         last_name:
           type: string
           example: Jones
+    BillToSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: Funder
+        guid:
+          type: string
+          example: '27990'
+        guid_to:
+          type: string
+          example: '27991'
+        is_active:
+          type: boolean
+          example: true
+        import_id:
+          type: integer
+          example: 123
+        remarks:
+          type: string
+          example: falls prevention program
+        contact_type:
+          type: string
+          example: Referral Contact
+        lang:
+          type: string
+          example: english
+        list:
+          type: string
+          example: Funder List (System)
+  parameters:
+    sortOrder:
+      in: query
+      name: sort_order
+      description: Order to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: ASC
   securitySchemes:
     basic_auth:
       type: http

@@ -229,49 +229,7 @@ paths:
       operationId: putAccountsById
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseInvalidAccountParams:
-      description: Invalid account parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
   schemas:
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -298,15 +256,6 @@ components:
       - page
       - total_pages
       - items
-    AccountList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of accounts
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
     Account:
       description: Account details
       type: object
@@ -348,6 +297,28 @@ components:
           - equity
           - revenue
           - expense
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    AccountList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of accounts
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
     ErrorResponse:
       description: Error response
       type: object
@@ -363,6 +334,35 @@ components:
       required:
       - code
       - message
+  responses:
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
+    ErrorResponseInvalidAccountParams:
+      description: Invalid account parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

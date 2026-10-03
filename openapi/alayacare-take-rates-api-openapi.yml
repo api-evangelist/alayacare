@@ -185,16 +185,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DemandTakeRateCore'
-    DemandTakeRateCore:
+    RegionalTakeRateUpdateRequest:
       type: object
       properties:
-        demand_persona_id:
-          type: string
-          format: uuid
         rate:
           $ref: '#/components/schemas/TakeRateCore'
       required:
-      - demand_persona_id
       - rate
     TakeRateCore:
       type: number
@@ -206,12 +202,16 @@ components:
         between 0 and 1. For example, a regional take rate of 0.1 is 10%.
 
         '
-    RegionalTakeRateUpdateRequest:
+    DemandTakeRateCore:
       type: object
       properties:
+        demand_persona_id:
+          type: string
+          format: uuid
         rate:
           $ref: '#/components/schemas/TakeRateCore'
       required:
+      - demand_persona_id
       - rate
     DemandTakeRateCreateRequest:
       type: object

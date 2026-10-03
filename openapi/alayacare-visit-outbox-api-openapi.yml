@@ -109,25 +109,9 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
     ServiceIdQueryParam:
       in: query
       name: service_id
-      schema:
-        type: string
-        format: uuid
-    ReferralIdQueryParam:
-      in: query
-      name: referral_id
       schema:
         type: string
         format: uuid
@@ -139,28 +123,43 @@ components:
         format: uuid
       required: true
       description: ID of a visit.
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    ReferralIdQueryParam:
+      in: query
+      name: referral_id
+      schema:
+        type: string
+        format: uuid
     PageNumberParam:
       in: query
       name: page
       schema:
         $ref: '#/components/schemas/PageNumberCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
   schemas:
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    OutboxVisitCore:
+    OutboxVisitPageResponse:
       allOf:
-      - $ref: '#/components/schemas/VisitCore'
+      - $ref: '#/components/schemas/PageCore'
       - type: object
         properties:
-          visit_outbox_id:
-            type: string
-          service_outbox_id:
-            type: string
-            minLength: 1
-        required:
-        - service_outbox_id
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutboxVisitCollectionResponse'
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -180,54 +179,22 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    VisitCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        referral_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        status:
-          type: string
-          enum:
-          - scheduled
-          - deleted
-          - cancelled
-          - on_hold
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-      required:
-      - status
-      - id
-      - referral_id
-      - service_id
-      - start_at
-      - end_at
-    OutboxVisitPageResponse:
+    OutboxVisitCore:
       allOf:
-      - $ref: '#/components/schemas/PageCore'
+      - $ref: '#/components/schemas/VisitCore'
       - type: object
         properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/OutboxVisitCollectionResponse'
-    OutboxVisitCollectionResponse:
-      allOf:
-      - $ref: '#/components/schemas/OutboxVisitCore'
+          visit_outbox_id:
+            type: string
+          service_outbox_id:
+            type: string
+            minLength: 1
+        required:
+        - service_outbox_id
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
     OutboxVisitDetailResponse:
       type: object
       properties:
@@ -302,12 +269,45 @@ components:
       - supply
       - visit
       - tasks
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    OutboxVisitCollectionResponse:
+      allOf:
+      - $ref: '#/components/schemas/OutboxVisitCore'
+    VisitCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        referral_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+          - scheduled
+          - deleted
+          - cancelled
+          - on_hold
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+      required:
+      - status
+      - id
+      - referral_id
+      - service_id
+      - start_at
+      - end_at
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

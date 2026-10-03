@@ -46,27 +46,7 @@ paths:
       operationId: getDesignations
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   schemas:
-    DesignationList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of designations
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Designation'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -98,6 +78,16 @@ components:
           example: RN
       required:
       - designation
+    DesignationList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of designations
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Designation'
     ErrorResponse:
       description: Error response
       type: object
@@ -112,14 +102,6 @@ components:
       - code
       - message
   parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
     page:
       description: Filter by page number.
       name: page
@@ -128,6 +110,24 @@ components:
       schema:
         type: integer
         default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

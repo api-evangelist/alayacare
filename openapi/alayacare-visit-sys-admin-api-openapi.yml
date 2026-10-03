@@ -129,22 +129,22 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
     ServiceIdQueryParam:
       in: query
       name: service_id
       schema:
         type: string
         format: uuid
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
     ReferralIdQueryParam:
       in: query
       name: referral_id
@@ -159,25 +159,12 @@ components:
         format: uuid
       required: true
       description: ID of a visit.
-    PageNumberParam:
+    ItemsPerPageParam:
       in: query
-      name: page
+      name: items_per_page
       schema:
-        $ref: '#/components/schemas/PageNumberCore'
+        $ref: '#/components/schemas/ItemsPerPageCore'
   schemas:
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    SysAdminVisitPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminVisitCollectionResponse'
     SysAdminVisitDetailResponse:
       type: object
       properties:
@@ -291,6 +278,29 @@ components:
       - supply
       - visit
       - tasks
+    SysAdminVisitPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminVisitCollectionResponse'
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -310,10 +320,6 @@ components:
       - items_per_page
       - total_items
       - total_pages
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
     SysAdminVisitCollectionResponse:
       type: object
       properties:
@@ -354,12 +360,6 @@ components:
       - service_outbox_id
       - start_at
       - end_at
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

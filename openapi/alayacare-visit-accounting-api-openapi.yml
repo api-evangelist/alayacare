@@ -128,41 +128,7 @@ paths:
       operationId: getFacilityVisitsByIdByVisitIdAccounting
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
   schemas:
-    VisitAccounting:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Visit ID
-          example: 1
-        hours_approved:
-          type: number
-          description: Hours Approved
-          example: 1.0
-        pay_code_regular:
-          $ref: '#/components/schemas/PayCode'
-        pay_code_overtime:
-          $ref: '#/components/schemas/PayCode'
     PayCode:
       type: object
       properties:
@@ -186,6 +152,21 @@ components:
           type: string
           description: Unit
           example: hours | visits | amount
+    VisitAccounting:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Visit ID
+          example: 1
+        hours_approved:
+          type: number
+          description: Hours Approved
+          example: 1.0
+        pay_code_regular:
+          $ref: '#/components/schemas/PayCode'
+        pay_code_overtime:
+          $ref: '#/components/schemas/PayCode'
     ErrorResponse:
       description: Error response
       type: object
@@ -201,6 +182,25 @@ components:
       required:
       - code
       - message
+  responses:
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

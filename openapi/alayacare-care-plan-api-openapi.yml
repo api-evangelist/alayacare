@@ -885,22 +885,81 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ServiceDetails:
-      description: Service details
-      type:
-      - object
-      - 'null'
+    CarePlanDiagnosis:
+      description: Care plan diagnosis
+      type: object
       properties:
         id:
+          description: Care Plan Diagnosis ID
           type: integer
-          description: AlayaCare service ID
-          example: 1001
-        external_id:
+          example: 100
+        plan_id:
+          description: Care Plan ID
+          type: integer
+          example: 345
+        plan_name:
+          description: Care plan name
+          type: string
+          example: 'Episode #4'
+        name:
+          description: A title of care plan diagnosis
+          type: string
+          example: Title example
+        start_date:
+          description: A start date of diagnosis
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: A end date of diagnosis
+          type: string
+          example: '2018-01-10'
+        description:
+          description: A description of care plan diagnosis
+          type: string
+          example: Description of diagnosis
+        is_primary:
+          description: Define that this diagnosis is primary
+          type: boolean
+          example: true
+        rank:
+          description: Used for ordering of diagnoses in list. The smaller, the higher ranked will the diagnosis be returned
+          type: integer
+          example: 0
+        status:
+          $ref: '#/components/schemas/CareplanItemStatus'
+        department:
+          $ref: '#/components/schemas/EntitySummary'
+        updated_at:
+          description: Datetime for the last update of the diagnosis
+          type: string
+          example: '2018-01-23T23:56:13+00:00'
+        updated_by:
+          $ref: '#/components/schemas/User'
+        created_at:
+          description: Datetime of the creation of the diagnosis
+          type: string
+          example: '2017-12-20T23:56:13+00:00'
+        created_by:
+          $ref: '#/components/schemas/User'
+        completed_at:
+          description: Datetime when the diagnosis was completed
           type:
           - string
           - 'null'
-          description: External service ID
-          example: sor_service_id_1
+          example: '2017-12-20T23:56:13+00:00'
+        completed_by:
+          $ref: '#/components/schemas/User'
+        completion_note:
+          description: Completion note of the diagnosis
+          type:
+          - string
+          - 'null'
+        service:
+          description: The list of services that are linked to a diagnosis
+          $ref: '#/components/schemas/ServiceList'
+        tag:
+          description: The list of tags that are linked to a diagnosis
+          $ref: '#/components/schemas/EntitySummaryList'
     EntitySummary:
       type: object
       required:
@@ -915,6 +974,100 @@ components:
           type: string
           description: Alayacare entity name
           example: entity name
+    ClientDetails:
+      description: Careplan client details
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_employee_id_1
+        branch_id:
+          type: integer
+          description: AlayaCare branch ID
+          example: 1000
+    GoalProgress:
+      description: Goal progress information
+      properties:
+        comment:
+          type: string
+        percentage:
+          type: integer
+        completed:
+          type: boolean
+      example:
+        comment: That was hard
+        completed: false
+    GoalMethod:
+      description: Progress tracking method of goal
+      type: string
+      enum:
+      - none
+      - per_visits
+      - percentage
+      example: percentage
+    CarePlanCreate:
+      description: Create a Care Plan
+      type: object
+      required:
+      - name
+      - start_date
+      properties:
+        name:
+          description: The title of the care plan
+          type: string
+          example: Test care plan
+        start_date:
+          description: The start date of the care plan
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: The end date of the care plan
+          type: string
+          example: '2018-01-10'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+    CarePlanList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: A list of Care Plans
+      type: object
+      properties:
+        total_pages:
+          description: Totalnumber of pages available
+          type: integer
+          example: 10
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanSummary'
     CarePlanGoal:
       description: Care plan goal
       type: object
@@ -1001,10 +1154,22 @@ components:
           type:
           - string
           - 'null'
-    ServiceList:
+    User:
+      description: User id, first and last names
+      type: object
+      properties:
+        id:
+          description: The id of user
+          type: integer
+          example: 5
+        external_id:
+          description: The id of user
+          type: string
+          example: sor_external_id_1
+    EntitySummaryList:
       type: array
       items:
-        $ref: '#/components/schemas/ServiceDetails'
+        $ref: '#/components/schemas/EntitySummary'
     CarePlanUpdate:
       description: Create a Care Plan
       type: object
@@ -1021,47 +1186,139 @@ components:
           description: A end date of care plan
           type: string
           example: '2018-01-10'
-    EntitySummaryList:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntitySummary'
-    User:
-      description: User id, first and last names
+    CarePlanDetails:
+      description: Care plan including all root items (`diagnoses`, `goals`, `interventions`)
       type: object
       properties:
         id:
-          description: The id of user
+          description: Care Plan ID
           type: integer
-          example: 5
-        external_id:
-          description: The id of user
+          example: 100
+        created_at:
+          description: Date of care plan creation (ISO Date format)
           type: string
-          example: sor_external_id_1
-    InterventionModule:
-      description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
-      type: object
-      properties:
+          example: '2018-01-01T23:56:13+00:00'
+        updated_at:
+          description: Date of the last update thi care plan (ISO Date format)
+          type: string
+          example: '2018-01-23T23:56:13+00:00'
+        status:
+          $ref: '#/components/schemas/CareplanStatus'
         name:
-          description: Alayacare module name linked to the intervention
+          description: The title of care plan
+          type: string
+          example: Test care plan
+        start_date:
+          description: A start date of care plan
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: A end date of care plan
+          type: string
+          example: '2018-01-10'
+        client:
+          description: The client details
+          $ref: '#/components/schemas/ClientDetails'
+        diagnoses:
+          description: The list of diagnoses in the care plan
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanDiagnosis'
+        goals:
+          description: The list of goals in the care plan
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanGoal'
+        interventions:
+          description: the list of interventions in the care plan
+          type: array
+          items:
+            $ref: '#/components/schemas/Intervention'
+        created_by:
+          description: User that create this plan
+          $ref: '#/components/schemas/User'
+        updated_by:
+          description: User that modified this plan
+          $ref: '#/components/schemas/User'
+        completed_at:
+          description: Datetime when the diagnosis was completed
           type:
           - string
           - 'null'
-          enum:
-          - form
-          - medication
-          - vital
-        id:
-          description: '`id` is the ID on the entity selected in the module and assigned to the client
-
-            - Form ID of the linked form. Is required to be set if `form` module is selected.
-
-            - vital ID of the linked vital. Can only be set if `vital` module is selected. Will be defaulted to `all` if no `vital_id` is sent.
-
-            - Medication ID of the linked medication. Can only be set if `medication` module is selected. Will be defaulted to `all` if no `medication_id` is sent.
-
-            '
+          example: '2017-12-20T23:56:13+00:00'
+        completed_by:
+          $ref: '#/components/schemas/User'
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServiceDetails'
+    CareplanStatus:
+      type: string
+      enum:
+      - draft
+      - active
+      - completed
+      - archived
+    ExternalLink:
+      type: object
+      required:
+      - label
+      - url
+      properties:
+        label:
           type: string
-          example: 3948
+          example: How to use a catheter
+        url:
+          type: string
+          example: www.youtube.com/catheter
+    CarePlanSummary:
+      description: Describe care plan without inner objects (diagnoses, goals, etc)
+      type: object
+      properties:
+        id:
+          description: Care PlanID
+          type: integer
+          example: 100
+        created_at:
+          description: Care plan creation date (ISO date format)
+          type: string
+          example: '2018-01-01T23:56:13+00:00'
+        updated_at:
+          description: Last Careplan updated date (ISO date format)
+          type: string
+          example: '2018-01-23T23:56:13+00:00'
+        status:
+          $ref: '#/components/schemas/CareplanStatus'
+        name:
+          description: The title of care plan
+          type: string
+          example: Test care plan
+        start_date:
+          description: The start date of the care plan
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: The end date of the care plan
+          type: string
+          example: '2018-01-10'
+        client:
+          description: The client details
+          $ref: '#/components/schemas/ClientDetails'
+        created_by:
+          description: Alayacare user that created the care plan
+          $ref: '#/components/schemas/User'
+        updated_by:
+          description: Alayacare user that last modified the care plan
+          $ref: '#/components/schemas/User'
+        completed_at:
+          description: Careplan completion datetime (ISO date format)
+          type:
+          - string
+          - 'null'
+          example: '2017-12-20T23:56:13+00:00'
+        completed_by:
+          description: Alayacare user that completed the care plan
+          $ref: '#/components/schemas/User'
     ErrorResponse:
       description: Error response
       type: object
@@ -1075,45 +1332,6 @@ components:
       required:
       - code
       - message
-    ClientDetails:
-      description: Careplan client details
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External client ID
-          example: sor_employee_id_1
-        branch_id:
-          type: integer
-          description: AlayaCare branch ID
-          example: 1000
-    CarePlanCreate:
-      description: Create a Care Plan
-      type: object
-      required:
-      - name
-      - start_date
-      properties:
-        name:
-          description: The title of the care plan
-          type: string
-          example: Test care plan
-        start_date:
-          description: The start date of the care plan
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: The end date of the care plan
-          type: string
-          example: '2018-01-10'
     Intervention:
       description: Careplan intervention
       type: object
@@ -1226,99 +1444,31 @@ components:
           type:
           - string
           - 'null'
-    CareplanItemStatus:
-      type: string
-      enum:
-      - active
-      - completed
-      - archived
-    CarePlanDiagnosis:
-      description: Care plan diagnosis
+    InterventionModule:
+      description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
       type: object
       properties:
-        id:
-          description: Care Plan Diagnosis ID
-          type: integer
-          example: 100
-        plan_id:
-          description: Care Plan ID
-          type: integer
-          example: 345
-        plan_name:
-          description: Care plan name
-          type: string
-          example: 'Episode #4'
         name:
-          description: A title of care plan diagnosis
-          type: string
-          example: Title example
-        start_date:
-          description: A start date of diagnosis
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: A end date of diagnosis
-          type: string
-          example: '2018-01-10'
-        description:
-          description: A description of care plan diagnosis
-          type: string
-          example: Description of diagnosis
-        is_primary:
-          description: Define that this diagnosis is primary
-          type: boolean
-          example: true
-        rank:
-          description: Used for ordering of diagnoses in list. The smaller, the higher ranked will the diagnosis be returned
-          type: integer
-          example: 0
-        status:
-          $ref: '#/components/schemas/CareplanItemStatus'
-        department:
-          $ref: '#/components/schemas/EntitySummary'
-        updated_at:
-          description: Datetime for the last update of the diagnosis
-          type: string
-          example: '2018-01-23T23:56:13+00:00'
-        updated_by:
-          $ref: '#/components/schemas/User'
-        created_at:
-          description: Datetime of the creation of the diagnosis
-          type: string
-          example: '2017-12-20T23:56:13+00:00'
-        created_by:
-          $ref: '#/components/schemas/User'
-        completed_at:
-          description: Datetime when the diagnosis was completed
+          description: Alayacare module name linked to the intervention
           type:
           - string
           - 'null'
-          example: '2017-12-20T23:56:13+00:00'
-        completed_by:
-          $ref: '#/components/schemas/User'
-        completion_note:
-          description: Completion note of the diagnosis
-          type:
-          - string
-          - 'null'
-        service:
-          description: The list of services that are linked to a diagnosis
-          $ref: '#/components/schemas/ServiceList'
-        tag:
-          description: The list of tags that are linked to a diagnosis
-          $ref: '#/components/schemas/EntitySummaryList'
-    ExternalLink:
-      type: object
-      required:
-      - label
-      - url
-      properties:
-        label:
+          enum:
+          - form
+          - medication
+          - vital
+        id:
+          description: '`id` is the ID on the entity selected in the module and assigned to the client
+
+            - Form ID of the linked form. Is required to be set if `form` module is selected.
+
+            - vital ID of the linked vital. Can only be set if `vital` module is selected. Will be defaulted to `all` if no `vital_id` is sent.
+
+            - Medication ID of the linked medication. Can only be set if `medication` module is selected. Will be defaulted to `all` if no `medication_id` is sent.
+
+            '
           type: string
-          example: How to use a catheter
-        url:
-          type: string
-          example: www.youtube.com/catheter
+          example: 3948
     DeconstructedFrequency:
       description: "Definition of the intervention frequency. \n- Is only required if `recurrence_type` is set to `custom`\n- `available_from` and `available_to` allow to define the Time of day when the intervention is available. Only present for `daily`, `weekly` and `monthly` frequencies. if not set will be defaulted to `any time of the day`.\n"
       type: object
@@ -1364,197 +1514,46 @@ components:
         available_to:
           type: string
           example: '15:00:00'
-    CareplanStatus:
+    ServiceDetails:
+      description: Service details
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_id_1
+    CareplanItemStatus:
       type: string
       enum:
-      - draft
       - active
       - completed
       - archived
-    CarePlanDetails:
-      description: Care plan including all root items (`diagnoses`, `goals`, `interventions`)
-      type: object
-      properties:
-        id:
-          description: Care Plan ID
-          type: integer
-          example: 100
-        created_at:
-          description: Date of care plan creation (ISO Date format)
-          type: string
-          example: '2018-01-01T23:56:13+00:00'
-        updated_at:
-          description: Date of the last update thi care plan (ISO Date format)
-          type: string
-          example: '2018-01-23T23:56:13+00:00'
-        status:
-          $ref: '#/components/schemas/CareplanStatus'
-        name:
-          description: The title of care plan
-          type: string
-          example: Test care plan
-        start_date:
-          description: A start date of care plan
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: A end date of care plan
-          type: string
-          example: '2018-01-10'
-        client:
-          description: The client details
-          $ref: '#/components/schemas/ClientDetails'
-        diagnoses:
-          description: The list of diagnoses in the care plan
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanDiagnosis'
-        goals:
-          description: The list of goals in the care plan
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanGoal'
-        interventions:
-          description: the list of interventions in the care plan
-          type: array
-          items:
-            $ref: '#/components/schemas/Intervention'
-        created_by:
-          description: User that create this plan
-          $ref: '#/components/schemas/User'
-        updated_by:
-          description: User that modified this plan
-          $ref: '#/components/schemas/User'
-        completed_at:
-          description: Datetime when the diagnosis was completed
-          type:
-          - string
-          - 'null'
-          example: '2017-12-20T23:56:13+00:00'
-        completed_by:
-          $ref: '#/components/schemas/User'
-    GoalProgress:
-      description: Goal progress information
-      properties:
-        comment:
-          type: string
-        percentage:
-          type: integer
-        completed:
-          type: boolean
-      example:
-        comment: That was hard
-        completed: false
-    GoalMethod:
-      description: Progress tracking method of goal
-      type: string
-      enum:
-      - none
-      - per_visits
-      - percentage
-      example: percentage
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-    CarePlanSummary:
-      description: Describe care plan without inner objects (diagnoses, goals, etc)
-      type: object
-      properties:
-        id:
-          description: Care PlanID
-          type: integer
-          example: 100
-        created_at:
-          description: Care plan creation date (ISO date format)
-          type: string
-          example: '2018-01-01T23:56:13+00:00'
-        updated_at:
-          description: Last Careplan updated date (ISO date format)
-          type: string
-          example: '2018-01-23T23:56:13+00:00'
-        status:
-          $ref: '#/components/schemas/CareplanStatus'
-        name:
-          description: The title of care plan
-          type: string
-          example: Test care plan
-        start_date:
-          description: The start date of the care plan
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: The end date of the care plan
-          type: string
-          example: '2018-01-10'
-        client:
-          description: The client details
-          $ref: '#/components/schemas/ClientDetails'
-        created_by:
-          description: Alayacare user that created the care plan
-          $ref: '#/components/schemas/User'
-        updated_by:
-          description: Alayacare user that last modified the care plan
-          $ref: '#/components/schemas/User'
-        completed_at:
-          description: Careplan completion datetime (ISO date format)
-          type:
-          - string
-          - 'null'
-          example: '2017-12-20T23:56:13+00:00'
-        completed_by:
-          description: Alayacare user that completed the care plan
-          $ref: '#/components/schemas/User'
-    CarePlanList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: A list of Care Plans
-      type: object
-      properties:
-        total_pages:
-          description: Totalnumber of pages available
-          type: integer
-          example: 10
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanSummary'
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   responses:
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 401
-            message: Please verify your access level for this url.
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
     ErrorResponseCarePlanNotFound:
       description: Care plan not found
       content:
@@ -1564,15 +1563,6 @@ components:
           example:
             status_code: 404
             message: Care plan not found
-    ErrorResponseInvalidRequest:
-      description: Invalid data submitted for item creation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The field 'start_date' is required.
     ErrorResponseClientNotFound:
       description: Client not found.
       content:
@@ -1582,6 +1572,33 @@ components:
           example:
             status_code: 404
             message: Client not found
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 401
+            message: Please verify your access level for this url.
+    ErrorResponseInvalidRequest:
+      description: Invalid data submitted for item creation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The field 'start_date' is required.
     ErrorResponseInvalidStatusUpdate:
       description: Invalid status update
       content:
@@ -1591,23 +1608,6 @@ components:
           example:
             status_code: 400
             message: Invalid status update
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
   securitySchemes:
     basic_auth:
       type: http

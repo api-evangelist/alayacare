@@ -234,26 +234,139 @@ paths:
       operationId: patchTasksByTaskIdSubTasksBySubtaskIdStatusByStatus
       x-operation-id-source: derived
 components:
-  responses:
-    403Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    404NotFound:
-      description: Entity not found
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    400BadRequest:
-      description: Bad request
   schemas:
+    TaskContext:
+      type: object
+      description: Context to which a task applies.
+      title: Task Context
+      properties:
+        type:
+          type: string
+          example: api.patients.client
+          description: 'Type of the context. Domain services define their contexts and provide
+
+            instructions on how to connect to them through the component registry.'
+          nullable: false
+        primary_id:
+          type: string
+          example: 27
+          description: Identifies the referenced context.
+          nullable: false
+        display_name:
+          type: string
+          example: John Doe
+          description: Display name of the context.
+          nullable: true
+        deep_link:
+          type: string
+          example: /#/employees/2s/overview
+          description: 'Deep link to the context. Domain services define their deep links and
+
+            provide instructions on how to connect to them through the component
+
+            registry.'
+          nullable: true
+        is_visible:
+          type: boolean
+          example: true
+          description: 'Indicates whether the context is visible. If set to False, the context
+
+            will not be displayed in the frontend.'
+        props:
+          type: object
+          additionalProperties: true
+          description: 'Contents are context-dependent. Has the most important fields from a context.
+
+            For examples, a Client context may contain `first_name` and `last_name`.
+
+            Depending on the context type, this field may be two-way.'
+          example:
+            name.last: Doe
+            name.first: John
+    Person:
+      type: object
+      description: Encapsulates the bare details of a person
+      properties:
+        id:
+          type: integer
+          nullable: false
+          description: Primary ID (Employee ID, User ID etc.) of person
+        external_id:
+          type: string
+          nullable: true
+          description: External ID of person
+        guid:
+          type: integer
+          nullable: true
+          description: GUID
+        profile_id:
+          type: integer
+          nullable: true
+          description: Profile ID
+        last_name:
+          type: string
+          description: Last Name/Family Name
+        first_name:
+          type: string
+          description: First Name
+        full_name:
+          type: string
+          description: Full Name
+        status:
+          type: string
+          description: Status of person
+        deep_link:
+          type: string
+          description: Deep link to person
+        profile_photo_url:
+          type: string
+          description: URL to profile photo
+    Status:
+      type: integer
+      oneOf:
+      - title: Open
+        const: 1
+      - title: In Progress
+        const: 3
+      - title: Completed
+        const: 5
+      - title: Closed
+        const: 7
+      example: 1
+      description: Status of a Task or Sub Task
+    SubTaskPatchRequest:
+      type: object
+      description: 'Request body for patching a sub task. The request contains one or more fields to update in a sub task. The fields are optional, but at least one field must be provided.
+
+        It should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the sub task will retain its current value. If a field is set to `null`, the value will be blanked out in the sub task object.'
+      title: Sub Task Patch Request
+      properties:
+        name:
+          type: string
+          example: Check vitals for Mrs. Doe
+          nullable: false
+          description: Free-form name of the task as entered by the user.
+        due_at:
+          type: string
+          format: date-time
+          example: '2023-01-31T22:00:00.000Z'
+          nullable: true
+          description: When the task is due.
+        status:
+          $ref: '#/components/schemas/Status'
+        details:
+          type: string
+          example: 'Check Blood Pressure and Heart Rate.
+
+            Recent readings were out of range.
+
+            If readings are out of range again, alert nursing staff.'
+          description: Free text entered by user to provide more detail.
+        contexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskContext'
+          description: Applicable contexts.
     SubTask:
       type: object
       description: 'Tasks can have 0 or more sub tasks. Progress on a parent task is tracked by
@@ -305,130 +418,6 @@ components:
           items:
             $ref: '#/components/schemas/TaskContext'
           description: Applicable contexts.
-    PaginatedSubTaskList:
-      $reg: '#/components/schemas/PaginatedResults'
-      properties:
-        items:
-          $ref: '#/components/schemas/SubTask'
-    Person:
-      type: object
-      description: Encapsulates the bare details of a person
-      properties:
-        id:
-          type: integer
-          nullable: false
-          description: Primary ID (Employee ID, User ID etc.) of person
-        external_id:
-          type: string
-          nullable: true
-          description: External ID of person
-        guid:
-          type: integer
-          nullable: true
-          description: GUID
-        profile_id:
-          type: integer
-          nullable: true
-          description: Profile ID
-        last_name:
-          type: string
-          description: Last Name/Family Name
-        first_name:
-          type: string
-          description: First Name
-        full_name:
-          type: string
-          description: Full Name
-        status:
-          type: string
-          description: Status of person
-        deep_link:
-          type: string
-          description: Deep link to person
-        profile_photo_url:
-          type: string
-          description: URL to profile photo
-    SubTaskPatchRequest:
-      type: object
-      description: 'Request body for patching a sub task. The request contains one or more fields to update in a sub task. The fields are optional, but at least one field must be provided.
-
-        It should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the sub task will retain its current value. If a field is set to `null`, the value will be blanked out in the sub task object.'
-      title: Sub Task Patch Request
-      properties:
-        name:
-          type: string
-          example: Check vitals for Mrs. Doe
-          nullable: false
-          description: Free-form name of the task as entered by the user.
-        due_at:
-          type: string
-          format: date-time
-          example: '2023-01-31T22:00:00.000Z'
-          nullable: true
-          description: When the task is due.
-        status:
-          $ref: '#/components/schemas/Status'
-        details:
-          type: string
-          example: 'Check Blood Pressure and Heart Rate.
-
-            Recent readings were out of range.
-
-            If readings are out of range again, alert nursing staff.'
-          description: Free text entered by user to provide more detail.
-        contexts:
-          type: array
-          items:
-            $ref: '#/components/schemas/TaskContext'
-          description: Applicable contexts.
-    TaskContext:
-      type: object
-      description: Context to which a task applies.
-      title: Task Context
-      properties:
-        type:
-          type: string
-          example: api.patients.client
-          description: 'Type of the context. Domain services define their contexts and provide
-
-            instructions on how to connect to them through the component registry.'
-          nullable: false
-        primary_id:
-          type: string
-          example: 27
-          description: Identifies the referenced context.
-          nullable: false
-        display_name:
-          type: string
-          example: John Doe
-          description: Display name of the context.
-          nullable: true
-        deep_link:
-          type: string
-          example: /#/employees/2s/overview
-          description: 'Deep link to the context. Domain services define their deep links and
-
-            provide instructions on how to connect to them through the component
-
-            registry.'
-          nullable: true
-        is_visible:
-          type: boolean
-          example: true
-          description: 'Indicates whether the context is visible. If set to False, the context
-
-            will not be displayed in the frontend.'
-        props:
-          type: object
-          additionalProperties: true
-          description: 'Contents are context-dependent. Has the most important fields from a context.
-
-            For examples, a Client context may contain `first_name` and `last_name`.
-
-            Depending on the context type, this field may be two-way.'
-          example:
-            name.last: Doe
-            name.first: John
     ErrorResponse:
       title: Error response
       type: object
@@ -453,44 +442,12 @@ components:
       required:
       - message
       - request_id
-    Status:
-      type: integer
-      oneOf:
-      - title: Open
-        const: 1
-      - title: In Progress
-        const: 3
-      - title: Completed
-        const: 5
-      - title: Closed
-        const: 7
-      example: 1
-      description: Status of a Task or Sub Task
+    PaginatedSubTaskList:
+      $reg: '#/components/schemas/PaginatedResults'
+      properties:
+        items:
+          $ref: '#/components/schemas/SubTask'
   parameters:
-    task_id:
-      name: task_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The task identifier
-    count:
-      name: count
-      in: query
-      schema:
-        type: integer
-        maxLength: 100
-        minLength: 1
-      description: Number of items per page to return
-      example: 50
-    page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      example: 1
     status_in_path:
       name: status
       in: path
@@ -504,6 +461,30 @@ components:
       schema:
         type: boolean
       description: Whether to update contexts from the payload
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      example: 1
+    count:
+      name: count
+      in: query
+      schema:
+        type: integer
+        maxLength: 100
+        minLength: 1
+      description: Number of items per page to return
+      example: 50
+    task_id:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The task identifier
     subtask_id:
       name: subtask_id
       in: path
@@ -511,3 +492,22 @@ components:
       schema:
         type: integer
       description: The sub task identifier
+  responses:
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    400BadRequest:
+      description: Bad request
+    404NotFound:
+      description: Entity not found
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}

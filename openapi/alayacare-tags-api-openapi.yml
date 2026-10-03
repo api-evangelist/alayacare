@@ -69,15 +69,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
     ErrorResponseInvalidTagId:
       description: Field 'tag_id' is invalid
       content:
@@ -96,34 +87,16 @@ components:
           example:
             status_code: 401
             message: Please verify your access level for this url.
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
   schemas:
-    CarePlanTags:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of care plan tags
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanTagList'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -170,6 +143,33 @@ components:
       required:
       - code
       - message
+    CarePlanTags:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of care plan tags
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanTagList'
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http
