@@ -357,28 +357,58 @@ paths:
       operationId: postEmployeeByIdByExternalEmployeeIdUnavailabilities
       x-operation-id-source: derived
 components:
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
   schemas:
-    PaginatedList:
-      description: Base model of all paginated lists
+    Unavailability:
+      description: Unavailability details
       type: object
       properties:
-        count:
+        id:
           type: integer
-          description: Number of items in the response
+          description: ID of the unavailability
           example: 1
-        page:
+        employee:
+          $ref: '#/components/schemas/EmployeeDetails'
+        time_off_type:
+          $ref: '#/components/schemas/TimeOffTypeDetails'
+        description:
+          type: string
+          description: Free text comment on the employee unavailability
+          example: Daily unavailability used for paid sick leaves.
+        duration:
           type: integer
-          description: Current page number
-          example: 1
-        total_pages:
+          description: Unavailability duration in minutes. The duration will be set to 0 for an all day unavailability
+          example: 60
+        all_day:
+          type: boolean
+          description: Specifies if the unavailability is applicable for the entire day
+          example: false
+        rrule:
+          type: string
+          description: "Recurrence rule applied to the employee unavailability, configured based on the below parameters:\n  - `FREQ` is mandatory and can only be set to `DAILY`,`WEEKLY`or`MONTHLY`.\n  - `DTSTART` is mandatory \n    - The format will be ISO 8601 converted to employee timezone\n  - `UNTIL` is not mandatory\n    - The format will be ISO 8601 converted to employee timezone\n  - `INTERVAL` is mandatory. \n    - When `FREQ` is set to `DAILY`, `INTERVAL` can be set to a value between `1` to `365`\n    - When `FREQ` is set to `WEEKLY`, `INTERVAL` can be set to a value between `1` to `52`\n    - When `FREQ` is set to `MONTHLY`, `INTERVAL` can be set to a value between `1` to `12`\n  - `BYDAY` is mandatory and can only be set when `FREQ` is set to `WEEKLY`. `BYDAY` can be set to either `MO`,`TU`,`WE`,`TH`,`FR`,`SA`and/or`SU`. If multiple values are selected, separate them with a comma (i.e.: `BYDAY=TU,TH,SA`)\n  - `BYMONTHDAY` is mandatory and can only be set when `FREQ` is set to `MONTHLY`. `BYMONTHDAY` can be set to a value between `1` to `28`.\n  - `TIMEZONE` is the timezone of the employee.\n\nRefer to https://tools.ietf.org/html/rfc5545 for more information.\n"
+          example: FREQ=DAILY;DTSTART=20200130T050000Z;UNTIL=20200130T050000Z;INTERVAL=1;TIMEZONE=America/Toronto
+        duration_paid_per_day:
           type: integer
-          description: Total number of pages availbale
-          example: 1
-      required:
-      - count
-      - page
-      - total_pages
-      - items
+          description: "Payable portion of the day for an all day unavailability. For example, an 8 hours work day will be represented as 480 minutes of `duration_paid_per_day`. \nOverwrites the `all_day_duration` setting of the Time Off Type. Only available when `pay_schedule_time` of the Time Off Type is set to 'No' and the unavailability `all_day` is set to `true`.\n"
+          example: null
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
     BranchSummary:
       description: Branch summary
       type: object
@@ -391,17 +421,6 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
-    UnavailabilitiesList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: List of an employee unavailabilities
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/Unavailability'
     EmployeeDetails:
       description: Employee details
       type: object
@@ -424,6 +443,51 @@ components:
           type: integer
           description: ID of the unavailability
           example: 1
+    UnavailabilitiesList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: List of an employee unavailabilities
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/Unavailability'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     UnavailabilityCreate:
       description: Unavailability creation details
       type: object
@@ -459,53 +523,6 @@ components:
           type: integer
           description: "Payable portion of the day for an all day unavailability. For example, an 8 hours work day will be represented as 480 minutes of `duration_paid_per_day`. \nOverwrites the `all_day_duration` setting of the Time Off Type. Only available when `pay_schedule_time` of the Time Off Type is set to 'No' and the unavailability `all_day` is set to `true`.\n"
           example: null
-    Unavailability:
-      description: Unavailability details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the unavailability
-          example: 1
-        employee:
-          $ref: '#/components/schemas/EmployeeDetails'
-        time_off_type:
-          $ref: '#/components/schemas/TimeOffTypeDetails'
-        description:
-          type: string
-          description: Free text comment on the employee unavailability
-          example: Daily unavailability used for paid sick leaves.
-        duration:
-          type: integer
-          description: Unavailability duration in minutes. The duration will be set to 0 for an all day unavailability
-          example: 60
-        all_day:
-          type: boolean
-          description: Specifies if the unavailability is applicable for the entire day
-          example: false
-        rrule:
-          type: string
-          description: "Recurrence rule applied to the employee unavailability, configured based on the below parameters:\n  - `FREQ` is mandatory and can only be set to `DAILY`,`WEEKLY`or`MONTHLY`.\n  - `DTSTART` is mandatory \n    - The format will be ISO 8601 converted to employee timezone\n  - `UNTIL` is not mandatory\n    - The format will be ISO 8601 converted to employee timezone\n  - `INTERVAL` is mandatory. \n    - When `FREQ` is set to `DAILY`, `INTERVAL` can be set to a value between `1` to `365`\n    - When `FREQ` is set to `WEEKLY`, `INTERVAL` can be set to a value between `1` to `52`\n    - When `FREQ` is set to `MONTHLY`, `INTERVAL` can be set to a value between `1` to `12`\n  - `BYDAY` is mandatory and can only be set when `FREQ` is set to `WEEKLY`. `BYDAY` can be set to either `MO`,`TU`,`WE`,`TH`,`FR`,`SA`and/or`SU`. If multiple values are selected, separate them with a comma (i.e.: `BYDAY=TU,TH,SA`)\n  - `BYMONTHDAY` is mandatory and can only be set when `FREQ` is set to `MONTHLY`. `BYMONTHDAY` can be set to a value between `1` to `28`.\n  - `TIMEZONE` is the timezone of the employee.\n\nRefer to https://tools.ietf.org/html/rfc5545 for more information.\n"
-          example: FREQ=DAILY;DTSTART=20200130T050000Z;UNTIL=20200130T050000Z;INTERVAL=1;TIMEZONE=America/Toronto
-        duration_paid_per_day:
-          type: integer
-          description: "Payable portion of the day for an all day unavailability. For example, an 8 hours work day will be represented as 480 minutes of `duration_paid_per_day`. \nOverwrites the `all_day_duration` setting of the Time Off Type. Only available when `pay_schedule_time` of the Time Off Type is set to 'No' and the unavailability `all_day` is set to `true`.\n"
-          example: null
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     TimeOffTypeDetails:
       description: Time Off Type details
       type: object
@@ -526,33 +543,7 @@ components:
           - 'No'
           - Time_Off_Pay_Code
           - Visit_Pay_Code
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   responses:
-    ErrorResponseEmployeeNotFound:
-      description: Employee not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee not found
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -562,6 +553,15 @@ components:
           example:
             code: 401
             message: Authorization required
+    ErrorResponseEmployeeNotFound:
+      description: Employee not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee not found
   securitySchemes:
     basic_auth:
       type: http

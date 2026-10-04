@@ -126,7 +126,58 @@ paths:
       operationId: getInterventionsClientByIdByExternalClientId
       x-operation-id-source: derived
 components:
+  parameters:
+    service_id:
+      name: service_id
+      in: query
+      required: false
+      description: Filter by alayacare service ID
+      schema:
+        type: integer
+    external_service_id:
+      name: external_service_id
+      in: query
+      required: false
+      description: Filter by external service ID
+      schema:
+        type: string
   schemas:
+    InterventionList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of interventions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intervention'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    InterventionService:
+      description: Intervention service
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_external_id_1
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -188,61 +239,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InterventionService'
-    InterventionList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of interventions
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Intervention'
-    InterventionService:
-      description: Intervention service
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_external_id_1
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
   responses:
-    ClientNotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found.
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
     ErrorResponseCareplanFeatureFlagState:
       description: Authorization required
       content:
@@ -252,6 +249,24 @@ components:
           example:
             code: 403
             message: You do not have the required permissions to perform this action.
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    ClientNotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found.
     ErrorResponseAdlsInvalidRequest:
       description: Invalid request
       content:
@@ -261,21 +276,6 @@ components:
           example:
             code: 400
             message: service_id and external_service_id are mutually exclusive
-  parameters:
-    service_id:
-      name: service_id
-      in: query
-      required: false
-      description: Filter by alayacare service ID
-      schema:
-        type: integer
-    external_service_id:
-      name: external_service_id
-      in: query
-      required: false
-      description: Filter by external service ID
-      schema:
-        type: string
   securitySchemes:
     basic_auth:
       type: http

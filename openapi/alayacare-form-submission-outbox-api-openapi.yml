@@ -94,6 +94,48 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    OutboxFormSubmissionHiddenFieldCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        field_outbox_id:
+          type: string
+          description: ID of the form template field provided by the demand organization.
+      required:
+      - id
+      - field_outbox_id
+    OrgAdminFilePresignedDetailResponse:
+      properties:
+        url:
+          type: string
+      required:
+      - url
+    OutboxFormSubmissionFieldCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        field_outbox_id:
+          type: string
+          description: ID of the form template field provided by the demand organization.
+        value_type:
+          type: string
+          enum:
+          - attachment
+          - boolean
+          - decimal
+          - json
+          - string
+        value:
+          type: string
+      required:
+      - id
+      - field_outbox_id
+      - value_type
+      - value
     OutboxFormSubmissionDetailResponse:
       type: object
       properties:
@@ -144,57 +186,7 @@ components:
       - client_id
       - client_outbox_id
       - fields
-    OutboxFormSubmissionFieldCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        field_outbox_id:
-          type: string
-          description: ID of the form template field provided by the demand organization.
-        value_type:
-          type: string
-          enum:
-          - attachment
-          - boolean
-          - decimal
-          - json
-          - string
-        value:
-          type: string
-      required:
-      - id
-      - field_outbox_id
-      - value_type
-      - value
-    OutboxFormSubmissionHiddenFieldCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        field_outbox_id:
-          type: string
-          description: ID of the form template field provided by the demand organization.
-      required:
-      - id
-      - field_outbox_id
-    OrgAdminFilePresignedDetailResponse:
-      properties:
-        url:
-          type: string
-      required:
-      - url
   parameters:
-    FormSubmissionIdPathParam:
-      in: path
-      name: form_submission_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a form submission.
     FormSubmissionFieldIdPathParam:
       in: path
       name: form_submission_field_id
@@ -203,6 +195,14 @@ components:
         format: uuid
       required: true
       description: ID of a form submission field.
+    FormSubmissionIdPathParam:
+      in: path
+      name: form_submission_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a form submission.
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

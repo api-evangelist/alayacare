@@ -66,15 +66,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
     InvalidRequest:
       description: Invalid data.
       content:
@@ -84,6 +75,15 @@ components:
           example:
             code: 400
             message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
   schemas:
     ErrorResponse:
       description: Error response

@@ -100,6 +100,14 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
     branchId:
       description: Filter by branch ID
       name: branch_id
@@ -117,41 +125,18 @@ components:
         type: integer
         default: 1
         minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   schemas:
-    PaginatedList:
-      description: Base model of all paginated lists
+    TimeOffList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: List of time off types
       type: object
       properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
         items:
           type: array
           items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
+            allOf:
+            - $ref: '#/components/schemas/TimeOff'
     BranchSummary:
       description: Branch summary
       type: object
@@ -165,17 +150,6 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
-    TimeOffList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: List of time off types
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/TimeOff'
     TimeOff:
       description: Time off type details
       type: object
@@ -232,6 +206,32 @@ components:
       required:
       - code
       - message
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
   responses:
     ErrorAuthentication:
       description: Authorization required

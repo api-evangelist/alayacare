@@ -275,35 +275,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    InterventionTypeList:
-      description: List of intervention types
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/InterventionType'
-    EntitySummary:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: integer
-          description: AlayaCare entity ID
-          example: 1001
-        name:
-          type: string
-          description: Alayacare entity name
-          example: entity name
-    InterventionType:
-      description: Type of the care plan intervention
-      type: object
-      example:
-      - Therapy
-      - Support
-      - Nutrition/Dietary
     InterventionList:
       description: List of interventions
       type: object
@@ -312,18 +283,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Intervention'
-    User:
-      description: User id, first and last names
-      type: object
-      properties:
-        id:
-          description: The id of user
-          type: integer
-          example: 5
-        external_id:
-          description: The id of user
-          type: string
-          example: sor_external_id_1
     CreateCarePlanIntervention:
       description: New intervention to create
       type: object
@@ -424,39 +383,48 @@ components:
           description: Include the intervention in 485 report. Is only required if the 485 feature flag is ON.
           type: boolean
           example: true
-    EntitySummaryList:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntitySummary'
-    ServiceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/ServiceDetails'
-    ExternalLink:
-      type: object
-      required:
-      - label
-      - url
-      properties:
-        label:
-          type: string
-          example: How to use a catheter
-        url:
-          type: string
-          example: www.youtube.com/catheter
-    ErrorResponse:
-      description: Error response
+    User:
+      description: User id, first and last names
       type: object
       properties:
-        status_code:
+        id:
+          description: The id of user
           type: integer
-          description: Response code
-        message:
+          example: 5
+        external_id:
+          description: The id of user
           type: string
-          description: Detailed error message
+          example: sor_external_id_1
+    ServiceDetails:
+      description: Service details
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_id_1
+    EntitySummary:
+      type: object
       required:
-      - code
-      - message
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          description: AlayaCare entity ID
+          example: 1001
+        name:
+          type: string
+          description: Alayacare entity name
+          example: entity name
     Intervention:
       description: Careplan intervention
       type: object
@@ -569,31 +537,36 @@ components:
           type:
           - string
           - 'null'
-    InterventionModule:
-      description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
+    CareplanItemStatus:
+      type: string
+      enum:
+      - active
+      - completed
+      - archived
+    InterventionType:
+      description: Type of the care plan intervention
+      type: object
+      example:
+      - Therapy
+      - Support
+      - Nutrition/Dietary
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        name:
-          description: Alayacare module name linked to the intervention
-          type:
-          - string
-          - 'null'
-          enum:
-          - form
-          - medication
-          - vital
-        id:
-          description: '`id` is the ID on the entity selected in the module and assigned to the client
-
-            - Form ID of the linked form. Is required to be set if `form` module is selected.
-
-            - vital ID of the linked vital. Can only be set if `vital` module is selected. Will be defaulted to `all` if no `vital_id` is sent.
-
-            - Medication ID of the linked medication. Can only be set if `medication` module is selected. Will be defaulted to `all` if no `medication_id` is sent.
-
-            '
+        status_code:
+          type: integer
+          description: Response code
+        message:
           type: string
-          example: 3948
+          description: Detailed error message
+      required:
+      - code
+      - message
+    EntitySummaryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntitySummary'
     DeconstructedFrequency:
       description: "Definition of the intervention frequency. \n- Is only required if `recurrence_type` is set to `custom`\n- `available_from` and `available_to` allow to define the Time of day when the intervention is available. Only present for `daily`, `weekly` and `monthly` frequencies. if not set will be defaulted to `any time of the day`.\n"
       type: object
@@ -639,65 +612,56 @@ components:
         available_to:
           type: string
           example: '15:00:00'
-    ServiceDetails:
-      description: Service details
-      type:
-      - object
-      - 'null'
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServiceDetails'
+    InterventionTypeList:
+      description: List of intervention types
+      type: object
       properties:
-        id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1001
-        external_id:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InterventionType'
+    ExternalLink:
+      type: object
+      required:
+      - label
+      - url
+      properties:
+        label:
+          type: string
+          example: How to use a catheter
+        url:
+          type: string
+          example: www.youtube.com/catheter
+    InterventionModule:
+      description: Alayacare module attached to care plan intervention. If not set no alayacare module will be linked to the intervention.
+      type: object
+      properties:
+        name:
+          description: Alayacare module name linked to the intervention
           type:
           - string
           - 'null'
-          description: External service ID
-          example: sor_service_id_1
-    CareplanItemStatus:
-      type: string
-      enum:
-      - active
-      - completed
-      - archived
+          enum:
+          - form
+          - medication
+          - vital
+        id:
+          description: '`id` is the ID on the entity selected in the module and assigned to the client
+
+            - Form ID of the linked form. Is required to be set if `form` module is selected.
+
+            - vital ID of the linked vital. Can only be set if `vital` module is selected. Will be defaulted to `all` if no `vital_id` is sent.
+
+            - Medication ID of the linked medication. Can only be set if `medication` module is selected. Will be defaulted to `all` if no `medication_id` is sent.
+
+            '
+          type: string
+          example: 3948
   responses:
-    ErrorResponseCarePlanNotFound:
-      description: Care plan not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Care plan not found
-    ErrorResponseInvalidArchivalForRootItemType:
-      description: The root item type cannot be archived once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be archived once it has been completed
-    ErrorResponseInvalidUpdateForRootItemType:
-      description: The root item type cannot be deleted once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be deleted in current status
-    ErrorResponseInterventionTypeNotFound:
-      description: Intervention type not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Intervention type not found
     ErrorInsufficientAccess:
       description: You do not have the required permissions to perform this action
       content:
@@ -707,15 +671,42 @@ components:
           example:
             status_code: 403
             message: Access required
-    AuthChallenge:
-      description: Authentication required.
+    ErrorResponseInvalidArchivalForRootItemType:
+      description: The root item type cannot be archived once it has been completed
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
-            status_code: 401
-            message: Please verify your access level for this url.
+            status_code: 400
+            message: The root item type cannot be archived once it has been completed
+    ErrorResponseInterventionTypeNotFound:
+      description: Intervention type not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Intervention type not found
+    ErrorResponseInvalidUpdateForRootItemType:
+      description: The root item type cannot be deleted once it has been completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 400
+            message: The root item type cannot be deleted in current status
+    ErrorResponseCarePlanNotFound:
+      description: Care plan not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Care plan not found
     ErrorResponseInvalidRequest:
       description: Invalid data submitted for item creation.
       content:
@@ -734,6 +725,15 @@ components:
           example:
             status_code: 404
             message: Intervention not found
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 401
+            message: Please verify your access level for this url.
   securitySchemes:
     basic_auth:
       type: http

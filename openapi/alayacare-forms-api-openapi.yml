@@ -51,52 +51,7 @@ paths:
     servers:
     - url: https://homecare.alayacare.ca/ext/api/v2/clinical
 components:
-  responses:
-    ErrorResponseFormNotFound:
-      description: Form not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Form not found
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 401
-            message: Please verify your access level for this url.
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
-    AuthChallenge_2:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse_2'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
   parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
     count:
       description: Number of items per page.
       name: count
@@ -105,11 +60,11 @@ components:
       schema:
         type: integer
         default: 100
-    page_2:
+    page:
+      description: Filter by page number.
       name: page
       in: query
       required: false
-      description: Filter by page number. If not specified will default to 1.
       schema:
         type: integer
         default: 1
@@ -121,7 +76,52 @@ components:
       schema:
         type: integer
         default: 100
+    page_2:
+      name: page
+      in: query
+      required: false
+      description: Filter by page number. If not specified will default to 1.
+      schema:
+        type: integer
+        default: 1
   schemas:
+    FormList:
+      required:
+      - count
+      - page
+      - total_pages
+      - items
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: null
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Form'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        status_code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     Form:
       type: object
       required:
@@ -152,11 +152,11 @@ components:
           type: string
           description: Branch name
           example: AlayaCare Health
-    ErrorResponse:
+    ErrorResponse_2:
       description: Error response
       type: object
       properties:
-        status_code:
+        code:
           type: integer
           description: Response code
         message:
@@ -165,30 +165,6 @@ components:
       required:
       - code
       - message
-    FormList:
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: null
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Form'
     Form_2:
       type: object
       required:
@@ -240,19 +216,43 @@ components:
           items:
             type: string
             example: Moderate pain
-    ErrorResponse_2:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
+  responses:
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 401
+            message: Please verify your access level for this url.
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
+    ErrorResponseFormNotFound:
+      description: Form not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 404
+            message: Form not found
+    AuthChallenge_2:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
   securitySchemes:
     basic_auth:
       type: http

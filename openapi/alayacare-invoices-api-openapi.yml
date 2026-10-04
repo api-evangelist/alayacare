@@ -297,112 +297,267 @@ paths:
       operationId: getBillingPeriodsInvoiceByInvoiceIdDetails
       x-operation-id-source: derived
 components:
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
-    clientTags:
-      name: client_tags
-      in: query
-      required: false
-      style: form
-      explode: false
-      schema:
-        type: array
-        items:
-          type: string
-    sortOrder:
-      in: query
-      name: sort_order
-      description: Order to sort by
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASC
-        - DESC
-        default: ASC
-    invoiceSearch:
-      name: invoice_search
-      in: query
-      required: false
-      schema:
-        type: string
-    balanceFrom:
-      name: balance_from
-      in: query
-      required: false
-      schema:
-        type: number
-    status:
-      name: status
-      in: query
-      required: false
-      style: form
-      explode: false
-      schema:
-        type: array
-        items:
-          type: string
-          enum:
-          - draft
-          - revised
-          - sent
-          - void
-          - deleted
-          - copy
-          - paid
-          - written_off
-          - suspended
-          - rejected
-    billToParty:
-      name: bill_to_party
-      in: query
-      required: false
-      schema:
-        type: string
-    clientSearch:
-      name: client_search
-      in: query
-      required: false
-      schema:
-        type: string
-    balanceTo:
-      name: balance_to
-      in: query
-      required: false
-      schema:
-        type: number
-    clientTagMode:
-      name: client_tag_mode
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - all
-        - any
-    unpaidBalance:
-      name: unpaid_balance
-      in: query
-      required: false
-      schema:
-        type: boolean
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   schemas:
+    PayorSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        checksum:
+          type: integer
+          example: 7
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        funder:
+          $ref: '#/components/schemas/FunderStub'
+        billing_contact:
+          $ref: '#/components/schemas/BillingContactSchema'
+    InvoiceQuerySchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        status:
+          type: string
+          example: draft
+        invoice_number:
+          type: integer
+          example: 2348
+        invoice_version:
+          type: integer
+          example: 0
+        invoice_date:
+          type: string
+          format: date
+          example: 2018-01-16
+        updated_at:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        balance:
+          type: number
+          example: 5
+        total:
+          type: number
+          example: 10
+        can_be_written_off:
+          type: boolean
+          example: false
+        can_be_voided:
+          type: boolean
+          example: false
+        can_be_regenerated:
+          type: boolean
+          example: false
+        can_be_paid:
+          type: boolean
+          example: false
+        can_be_deleted:
+          type: boolean
+          example: false
+        can_add_transaction:
+          type: boolean
+          example: false
+        is_ccac_funder:
+          type: boolean
+          example: false
+        is_funder_batched_funder:
+          type: boolean
+          example: false
+        total_visits:
+          type: integer
+          example: 2
+        total_premiums:
+          type: integer
+          example: 3
+        total_supplies:
+          type: integer
+          example: 4
+        total_client_premiums:
+          type: integer
+          example: 5
+        total_income_items:
+          type: integer
+          example: 6
+        visits_and_premiums_subtotal:
+          type: number
+          example: 10
+        supplies_subtotal:
+          type: number
+          example: 0
+        client_premiums_subtotal:
+          type: number
+          example: 5
+        income_items_subtotal:
+          type: number
+          example: 6
+        client_id:
+          type: integer
+          example: 2
+          minimum: 1
+        crn:
+          type: string
+          example: '10009'
+          description: Has value only if BPAY FF is ON and is already generated
+        taxes:
+          $ref: '#/components/schemas/TaxesSchema'
+        bill_to:
+          $ref: '#/components/schemas/BillToSchema'
+        pdf_url:
+          type: string
+          example: /path/to/file.pdf
+        invoice_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemSchema'
+    ClientSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 16
+          minimum: 1
+        first_name:
+          type: string
+          example: Jane
+        last_name:
+          type: string
+          example: Jones
+    TaxTypesSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: HST
+        total:
+          type: number
+          example: 2
+    BillToSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: Funder
+        guid:
+          type: string
+          example: '27990'
+        guid_to:
+          type: string
+          example: '27991'
+        is_active:
+          type: boolean
+          example: true
+        import_id:
+          type: integer
+          example: 123
+        remarks:
+          type: string
+          example: falls prevention program
+        contact_type:
+          type: string
+          example: Referral Contact
+        lang:
+          type: string
+          example: english
+        list:
+          type: string
+          example: Funder List (System)
+    BillingContactSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 16
+        first_name:
+          type: string
+          example: Jane
+        last_name:
+          type: string
+          example: Jones
+        address:
+          type: string
+          example: 12 crescent street
+        address_suite:
+          type: string
+          example: app. 1B
+        city:
+          type: string
+          example: Cityville
+        state:
+          type: string
+          example: Quebec
+        zip:
+          type: string
+          example: H1H1H1
+        country:
+          type: string
+          example: Canada
+        phone_main:
+          type: string
+          example: '5141234567'
+    PrivateInvoicesSchema:
+      type: object
+      properties:
+        invoice_number:
+          type: integer
+          example: 2348
+        invoice_version:
+          type: integer
+          example: 0
+        master_invoice_id:
+          type: integer
+          example: 12345
+          minimum: 1
+        status:
+          type: string
+          example: draft
+        balance:
+          type: string
+          example: '5.00'
+        payments:
+          type: string
+          example: '2.00'
+        adjustments:
+          type: string
+          example: '3.00'
+        total:
+          type: string
+          example: '10.00'
+        pdf_url:
+          type: string
+          example: https://alayacare.com/invoice5283_20190625.pdf
+        pdf_url_create_time:
+          type: string
+          format: date-time
+          example: 2018-01-16T14:17:05-0500
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        emailed:
+          type: boolean
+          example: true
+        client:
+          $ref: '#/components/schemas/ClientSchema'
+        program:
+          $ref: '#/components/schemas/ProgramSchema'
+        payor:
+          $ref: '#/components/schemas/PayorSchema'
+    TaxesSchema:
+      type: object
+      properties:
+        taxtotal:
+          type: number
+          example: 2
+        types:
+          $ref: '#/components/schemas/TaxTypesSchema'
     FunderStub:
       type: object
       properties:
@@ -521,39 +676,6 @@ components:
           minimum: 1
         payor:
           $ref: '#/components/schemas/PayorSchema'
-    BillToSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 12
-        name:
-          type: string
-          example: Funder
-        guid:
-          type: string
-          example: '27990'
-        guid_to:
-          type: string
-          example: '27991'
-        is_active:
-          type: boolean
-          example: true
-        import_id:
-          type: integer
-          example: 123
-        remarks:
-          type: string
-          example: falls prevention program
-        contact_type:
-          type: string
-          example: Referral Contact
-        lang:
-          type: string
-          example: english
-        list:
-          type: string
-          example: Funder List (System)
     ProgramSchema:
       type: object
       properties:
@@ -597,233 +719,111 @@ components:
           type: integer
           example: 999
           minimum: 1
-    TaxTypesSchema:
-      type: object
-      properties:
-        name:
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    clientTagMode:
+      name: client_tag_mode
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - all
+        - any
+    unpaidBalance:
+      name: unpaid_balance
+      in: query
+      required: false
+      schema:
+        type: boolean
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    sortOrder:
+      in: query
+      name: sort_order
+      description: Order to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: ASC
+    billToParty:
+      name: bill_to_party
+      in: query
+      required: false
+      schema:
+        type: string
+    clientSearch:
+      name: client_search
+      in: query
+      required: false
+      schema:
+        type: string
+    clientTags:
+      name: client_tags
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
           type: string
-          example: HST
-        total:
-          type: number
-          example: 2
-    PayorSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        checksum:
-          type: integer
-          example: 7
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        funder:
-          $ref: '#/components/schemas/FunderStub'
-        billing_contact:
-          $ref: '#/components/schemas/BillingContactSchema'
-    InvoiceQuerySchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 12
-          minimum: 1
-        status:
+    balanceTo:
+      name: balance_to
+      in: query
+      required: false
+      schema:
+        type: number
+    status:
+      name: status
+      in: query
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
           type: string
-          example: draft
-        invoice_number:
-          type: integer
-          example: 2348
-        invoice_version:
-          type: integer
-          example: 0
-        invoice_date:
-          type: string
-          format: date
-          example: 2018-01-16
-        updated_at:
-          type: string
-          format: date-time
-          example: 2018-01-16T14:17:05-0500
-        balance:
-          type: number
-          example: 5
-        total:
-          type: number
-          example: 10
-        can_be_written_off:
-          type: boolean
-          example: false
-        can_be_voided:
-          type: boolean
-          example: false
-        can_be_regenerated:
-          type: boolean
-          example: false
-        can_be_paid:
-          type: boolean
-          example: false
-        can_be_deleted:
-          type: boolean
-          example: false
-        can_add_transaction:
-          type: boolean
-          example: false
-        is_ccac_funder:
-          type: boolean
-          example: false
-        is_funder_batched_funder:
-          type: boolean
-          example: false
-        total_visits:
-          type: integer
-          example: 2
-        total_premiums:
-          type: integer
-          example: 3
-        total_supplies:
-          type: integer
-          example: 4
-        total_client_premiums:
-          type: integer
-          example: 5
-        total_income_items:
-          type: integer
-          example: 6
-        visits_and_premiums_subtotal:
-          type: number
-          example: 10
-        supplies_subtotal:
-          type: number
-          example: 0
-        client_premiums_subtotal:
-          type: number
-          example: 5
-        income_items_subtotal:
-          type: number
-          example: 6
-        client_id:
-          type: integer
-          example: 2
-          minimum: 1
-        crn:
-          type: string
-          example: '10009'
-          description: Has value only if BPAY FF is ON and is already generated
-        taxes:
-          $ref: '#/components/schemas/TaxesSchema'
-        bill_to:
-          $ref: '#/components/schemas/BillToSchema'
-        pdf_url:
-          type: string
-          example: /path/to/file.pdf
-        invoice_items:
-          type: array
-          items:
-            $ref: '#/components/schemas/InvoiceItemSchema'
-    TaxesSchema:
-      type: object
-      properties:
-        taxtotal:
-          type: number
-          example: 2
-        types:
-          $ref: '#/components/schemas/TaxTypesSchema'
-    BillingContactSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 16
-        first_name:
-          type: string
-          example: Jane
-        last_name:
-          type: string
-          example: Jones
-        address:
-          type: string
-          example: 12 crescent street
-        address_suite:
-          type: string
-          example: app. 1B
-        city:
-          type: string
-          example: Cityville
-        state:
-          type: string
-          example: Quebec
-        zip:
-          type: string
-          example: H1H1H1
-        country:
-          type: string
-          example: Canada
-        phone_main:
-          type: string
-          example: '5141234567'
-    ClientSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 16
-          minimum: 1
-        first_name:
-          type: string
-          example: Jane
-        last_name:
-          type: string
-          example: Jones
-    PrivateInvoicesSchema:
-      type: object
-      properties:
-        invoice_number:
-          type: integer
-          example: 2348
-        invoice_version:
-          type: integer
-          example: 0
-        master_invoice_id:
-          type: integer
-          example: 12345
-          minimum: 1
-        status:
-          type: string
-          example: draft
-        balance:
-          type: string
-          example: '5.00'
-        payments:
-          type: string
-          example: '2.00'
-        adjustments:
-          type: string
-          example: '3.00'
-        total:
-          type: string
-          example: '10.00'
-        pdf_url:
-          type: string
-          example: https://alayacare.com/invoice5283_20190625.pdf
-        pdf_url_create_time:
-          type: string
-          format: date-time
-          example: 2018-01-16T14:17:05-0500
-        id:
-          type: integer
-          example: 12
-          minimum: 1
-        emailed:
-          type: boolean
-          example: true
-        client:
-          $ref: '#/components/schemas/ClientSchema'
-        program:
-          $ref: '#/components/schemas/ProgramSchema'
-        payor:
-          $ref: '#/components/schemas/PayorSchema'
+          enum:
+          - draft
+          - revised
+          - sent
+          - void
+          - deleted
+          - copy
+          - paid
+          - written_off
+          - suspended
+          - rejected
+    invoiceSearch:
+      name: invoice_search
+      in: query
+      required: false
+      schema:
+        type: string
+    balanceFrom:
+      name: balance_from
+      in: query
+      required: false
+      schema:
+        type: number
   securitySchemes:
     basic_auth:
       type: http

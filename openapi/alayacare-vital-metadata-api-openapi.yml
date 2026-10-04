@@ -90,7 +90,97 @@ paths:
       operationId: getVitalsClientByIdByExternalClientIdMetadata
       x-operation-id-source: derived
 components:
+  responses:
+    NotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Progress note not found
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
   schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    VitalName:
+      type: string
+      description: The name identifying the vital type.
+      enum:
+      - blood_glucose
+      - bmi
+      - height
+      - pulse
+      - pressure_min
+      - pressure_max
+      - weight
+      - respiratory_rate
+      - spo2
+      - temperature
+      example: pressure_max
+    VitalMetadata:
+      type: object
+      description: Vital metadata
+      required:
+      - active
+      - label
+      - groups
+      - max
+      - min
+      - name
+      - options
+      - unit
+      properties:
+        active:
+          type: boolean
+          description: Whether the vital is active.
+          example: true
+        groups:
+          type: array
+          description: The groups to which the vital belongs. If no groups are set, this will be set to `name`.
+          items:
+            type: string
+            example: blood_pressure
+        label:
+          type: string
+          description: The vital label.
+          example: Systolic Blood pressure
+        max:
+          type: number
+          description: The maximum threshold for the vital.
+          example: 120
+        min:
+          type: number
+          description: The minimum threshold for the vital.
+          example: 60
+        name:
+          $ref: '#/components/schemas/VitalName'
+        options:
+          $ref: '#/components/schemas/VitalMetadataOptions'
+        unit:
+          type: string
+          description: The default unit used for the vital.
+          example: mmhg
     VitalMetadataOptions:
       type: object
       description: The metadata options available for the vital.
@@ -151,19 +241,6 @@ components:
                 type: string
                 description: The unit code.
                 example: mmhg
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     VitalMetadataList:
       type: object
       description: A list of vital metadata
@@ -174,83 +251,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VitalMetadata'
-    VitalName:
-      type: string
-      description: The name identifying the vital type.
-      enum:
-      - blood_glucose
-      - bmi
-      - height
-      - pulse
-      - pressure_min
-      - pressure_max
-      - weight
-      - respiratory_rate
-      - spo2
-      - temperature
-      example: pressure_max
-    VitalMetadata:
-      type: object
-      description: Vital metadata
-      required:
-      - active
-      - label
-      - groups
-      - max
-      - min
-      - name
-      - options
-      - unit
-      properties:
-        active:
-          type: boolean
-          description: Whether the vital is active.
-          example: true
-        groups:
-          type: array
-          description: The groups to which the vital belongs. If no groups are set, this will be set to `name`.
-          items:
-            type: string
-            example: blood_pressure
-        label:
-          type: string
-          description: The vital label.
-          example: Systolic Blood pressure
-        max:
-          type: number
-          description: The maximum threshold for the vital.
-          example: 120
-        min:
-          type: number
-          description: The minimum threshold for the vital.
-          example: 60
-        name:
-          $ref: '#/components/schemas/VitalName'
-        options:
-          $ref: '#/components/schemas/VitalMetadataOptions'
-        unit:
-          type: string
-          description: The default unit used for the vital.
-          example: mmhg
-  responses:
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    NotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Progress note not found
   securitySchemes:
     basic_auth:
       type: http

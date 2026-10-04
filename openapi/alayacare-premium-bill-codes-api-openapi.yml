@@ -83,39 +83,18 @@ paths:
       operationId: patchPremiumsByPremiumIdBillCodes
       x-operation-id-source: derived
 components:
-  schemas:
-    Success:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Success
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    BillCodeStub:
-      type: object
-      description: Only one of id or guid should be present
-      properties:
-        id:
-          type: integer
-          example: 3
-        guid:
-          type: integer
-          example: 3
   responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
     ErrorResponseAccessDenied:
       description: Access denied
       content:
@@ -138,17 +117,38 @@ components:
               value:
                 code: '404'
                 message: Premium not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
+  schemas:
+    BillCodeStub:
+      type: object
+      description: Only one of id or guid should be present
+      properties:
+        id:
+          type: integer
+          example: 3
+        guid:
+          type: integer
+          example: 3
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Success
   securitySchemes:
     basic_auth:
       type: http

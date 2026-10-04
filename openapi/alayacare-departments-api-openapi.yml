@@ -47,17 +47,31 @@ paths:
       operationId: getDepartments
       x-operation-id-source: derived
 components:
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    branch_id:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
   schemas:
-    DepartmentList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of departments
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/DepartmentListItem'
     Department:
       description: AlayaCare department.
       type: object
@@ -73,17 +87,6 @@ components:
       required:
       - id
       - name
-    DepartmentListItem:
-      allOf:
-      - $ref: '#/components/schemas/Department'
-      description: AlayaCare department.
-      type: object
-      properties:
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
-      required:
-      - id
-      - name
     BranchSummary:
       description: Branch summary
       type: object
@@ -96,6 +99,19 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -117,43 +133,27 @@ components:
       - page
       - total_pages
       - items
-    ErrorResponse:
-      description: Error response
+    DepartmentList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of departments
       type: object
       properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentListItem'
+    DepartmentListItem:
+      allOf:
+      - $ref: '#/components/schemas/Department'
+      description: AlayaCare department.
+      type: object
+      properties:
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
       required:
-      - code
-      - message
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    branch_id:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
+      - id
+      - name
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

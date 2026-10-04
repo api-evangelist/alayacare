@@ -171,20 +171,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    RegionalTakeRateDetailResponse:
-      type: object
-      properties:
-        rate:
-          $ref: '#/components/schemas/TakeRateCore'
-      required:
-      - rate
-    DemandTakeRateCollectionResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/DemandTakeRateCore'
     RegionalTakeRateUpdateRequest:
       type: object
       properties:
@@ -202,6 +188,25 @@ components:
         between 0 and 1. For example, a regional take rate of 0.1 is 10%.
 
         '
+    DemandTakeRateCollectionResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DemandTakeRateCore'
+    DemandTakeRateCreateRequest:
+      type: object
+      properties:
+        rate:
+          $ref: '#/components/schemas/TakeRateCore'
+    RegionalTakeRateDetailResponse:
+      type: object
+      properties:
+        rate:
+          $ref: '#/components/schemas/TakeRateCore'
+      required:
+      - rate
     DemandTakeRateCore:
       type: object
       properties:
@@ -213,11 +218,6 @@ components:
       required:
       - demand_persona_id
       - rate
-    DemandTakeRateCreateRequest:
-      type: object
-      properties:
-        rate:
-          $ref: '#/components/schemas/TakeRateCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

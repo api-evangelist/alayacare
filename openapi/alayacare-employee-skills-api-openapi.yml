@@ -343,16 +343,91 @@ paths:
       operationId: deleteEmployeesByIdByExternalEmployeeIdSkillsBySkillId
       x-operation-id-source: derived
 components:
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    filter:
+      description: Substring search on skill category and name
+      name: filter
+      in: query
+      required: false
+      schema:
+        type: string
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    category_id:
+      description: Filter skills by category ID, one or more using **OR**
+      name: category_id
+      in: query
+      required: false
+      schema:
+        type: integer
   schemas:
-    EmployeeSkillCreate:
+    BranchSummary:
+      description: Branch summary
       type: object
-      required:
-      - skill_id
       properties:
-        skill_id:
+        id:
           type: integer
-          description: Id of the skill to assign to the employee
-          example: 123
+          description: ID of the branch
+          example: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    CreatedDetails:
+      description: Created by and Created at information
+      type: object
+      properties:
+        created_by:
+          type: object
+          description: User who created the employee skill entry
+          properties:
+            id:
+              type: integer
+              description: Id of the employee who assigned the skill
+              example: 284
+            external_id:
+              type: string
+              description: External ID of the employee who assigned the skill
+              example: 450
+            name:
+              type: string
+              description: Name of the employee who assigned the skill
+              example: John Smith
+        created_at:
+          type: string
+          format: date-time
+          description: Date employee specific skill was assigned to the employee (ISO 8601) - Time saved at `T00:00:00+00:00`
+          example: '2017-07-08T00:00:00+00:00'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    EmployeeSkillUpdate:
+      type: object
+      properties:
         comment:
           type: string
           description: Free text comment on the employee specific skill
@@ -380,45 +455,6 @@ components:
       - page
       - total_pages
       - items
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
-    EmployeeSkillField:
-      description: Field(s) configured in the skill
-      type: object
-      required:
-      - acquired_date
-      - expired_date
-      - label_1
-      - label_2
-      properties:
-        acquired_date:
-          type: string
-          format: date
-          description: The skill field `acquired_date` value. For `type = Date` format must be ISO 8601
-          example: '2018-07-08T00:00:00+00:00'
-        expired_date:
-          type: string
-          format: date
-          description: The skill field `expired_date` value. For `type = Date` format must be ISO 8601
-          example: '2020-07-08T00:00:00+00:00'
-        label_1:
-          type: string
-          description: The skill field `label_1` value.
-          example: X3S J1M
-        label_2:
-          type: string
-          description: The skill field `label_2` value.
-          example: Volkswagen
     EmployeeSkillList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -432,9 +468,15 @@ components:
           items:
             allOf:
             - $ref: '#/components/schemas/EmployeeSkillDetails'
-    EmployeeSkillUpdate:
+    EmployeeSkillCreate:
       type: object
+      required:
+      - skill_id
       properties:
+        skill_id:
+          type: integer
+          description: Id of the skill to assign to the employee
+          example: 123
         comment:
           type: string
           description: Free text comment on the employee specific skill
@@ -471,31 +513,6 @@ components:
           $ref: '#/components/schemas/EmployeeSkillField'
         created_details:
           $ref: '#/components/schemas/CreatedDetails'
-    CreatedDetails:
-      description: Created by and Created at information
-      type: object
-      properties:
-        created_by:
-          type: object
-          description: User who created the employee skill entry
-          properties:
-            id:
-              type: integer
-              description: Id of the employee who assigned the skill
-              example: 284
-            external_id:
-              type: string
-              description: External ID of the employee who assigned the skill
-              example: 450
-            name:
-              type: string
-              description: Name of the employee who assigned the skill
-              example: John Smith
-        created_at:
-          type: string
-          format: date-time
-          description: Date employee specific skill was assigned to the employee (ISO 8601) - Time saved at `T00:00:00+00:00`
-          example: '2017-07-08T00:00:00+00:00'
     SkillCategory:
       description: Skill Category
       type: object
@@ -511,51 +528,43 @@ components:
           type: string
           description: Name of the skill category
           example: Languages
-    ErrorResponse:
-      description: Error response
+    EmployeeSkillField:
+      description: Field(s) configured in the skill
       type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
       required:
-      - code
-      - message
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    category_id:
-      description: Filter skills by category ID, one or more using **OR**
-      name: category_id
-      in: query
-      required: false
-      schema:
-        type: integer
-    filter:
-      description: Substring search on skill category and name
-      name: filter
-      in: query
-      required: false
-      schema:
-        type: string
+      - acquired_date
+      - expired_date
+      - label_1
+      - label_2
+      properties:
+        acquired_date:
+          type: string
+          format: date
+          description: The skill field `acquired_date` value. For `type = Date` format must be ISO 8601
+          example: '2018-07-08T00:00:00+00:00'
+        expired_date:
+          type: string
+          format: date
+          description: The skill field `expired_date` value. For `type = Date` format must be ISO 8601
+          example: '2020-07-08T00:00:00+00:00'
+        label_1:
+          type: string
+          description: The skill field `label_1` value.
+          example: X3S J1M
+        label_2:
+          type: string
+          description: The skill field `label_2` value.
+          example: Volkswagen
   responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
     ErrorResponseEmployeeNotFound:
       description: Employee not found
       content:
@@ -574,15 +583,6 @@ components:
           example:
             code: 404
             message: Employee skill relationship not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

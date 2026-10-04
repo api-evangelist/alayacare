@@ -94,22 +94,45 @@ paths:
       operationId: getAdlsClientByIdByClientId
       x-operation-id-source: derived
 components:
-  parameters:
-    alayacare_service_id:
-      name: alayacare_service_id
-      in: query
-      required: false
-      description: Filter by AlayaCare service ID
-      schema:
-        type: integer
-    service_id:
-      name: service_id
-      in: query
-      required: false
-      description: Filter by external service ID
-      schema:
-        type: string
   schemas:
+    DailyActivityList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of ADLs
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyActivity'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    DailyActivityService:
+      description: Daily activity service
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_external_id_1
+        alayacare_id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -146,15 +169,6 @@ components:
       - adl_household_management
       - adl_support
       - adl_medication
-    DailyActivityList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of ADLs
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyActivity'
     DailyActivity:
       type: object
       properties:
@@ -175,63 +189,7 @@ components:
       required:
       - category
       - name
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    DailyActivityService:
-      description: Daily activity service
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_external_id_1
-        alayacare_id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1
   responses:
-    ErrorResponseAdlsInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: service_id and alayacare_service_id are mutually exclusive
-    ErrorResponseClientNotFound:
-      description: Client not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required due to feature flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -241,6 +199,48 @@ components:
           example:
             code: 401
             message: Authorization required.
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required due to feature flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found
+    ErrorResponseAdlsInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: service_id and alayacare_service_id are mutually exclusive
+  parameters:
+    service_id:
+      name: service_id
+      in: query
+      required: false
+      description: Filter by external service ID
+      schema:
+        type: string
+    alayacare_service_id:
+      name: alayacare_service_id
+      in: query
+      required: false
+      description: Filter by AlayaCare service ID
+      schema:
+        type: integer
   securitySchemes:
     basic_auth:
       type: http

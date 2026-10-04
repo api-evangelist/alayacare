@@ -132,40 +132,6 @@ paths:
       operationId: deleteCostCentresByCostCentreIdClientsByIdByClientExternalId
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseCostCentreDisabled:
-      description: The cost centre referenced by cost_centre_id is disabled
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Cost centre is disabled
-    ErrorResponseClientCostCentreNotFound:
-      description: The client with the referenced cost_centre_id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Client with ID 1010 and Cost Centre ID 10 not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   schemas:
     CostCentreClientCreate:
       type: object
@@ -208,6 +174,40 @@ components:
           description: Cost centre ID
           example: 10
           minimum: 1
+  responses:
+    ErrorResponseCostCentreDisabled:
+      description: The cost centre referenced by cost_centre_id is disabled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Cost centre is disabled
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    ErrorResponseClientCostCentreNotFound:
+      description: The client with the referenced cost_centre_id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Client with ID 1010 and Cost Centre ID 10 not found
   securitySchemes:
     basic_auth:
       type: http

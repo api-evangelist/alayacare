@@ -129,17 +129,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    ServiceIdQueryParam:
-      in: query
-      name: service_id
-      schema:
-        type: string
-        format: uuid
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
     PageNumberParam:
       in: query
       name: page
@@ -151,6 +140,16 @@ components:
       schema:
         type: string
         format: uuid
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
     VisitIdPathParam:
       in: path
       name: visit_id
@@ -159,12 +158,53 @@ components:
         format: uuid
       required: true
       description: ID of a visit.
-    ItemsPerPageParam:
+    ServiceIdQueryParam:
       in: query
-      name: items_per_page
+      name: service_id
       schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
+        type: string
+        format: uuid
   schemas:
+    SysAdminVisitCollectionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+        inbox_id:
+          type: string
+        referral_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        service_outbox_id:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          enum:
+          - scheduled
+          - deleted
+          - cancelled
+          - on_hold
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+      required:
+      - status
+      - id
+      - referral_id
+      - service_id
+      - service_outbox_id
+      - start_at
+      - end_at
     SysAdminVisitDetailResponse:
       type: object
       properties:
@@ -278,6 +318,25 @@ components:
       - supply
       - visit
       - tasks
+    PageCore:
+      description: Root page schema for returning collections.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageNumberCore'
+        items_per_page:
+          $ref: '#/components/schemas/ItemsPerPageCore'
+        total_items:
+          type: integer
+          minimum: 0
+        total_pages:
+          type: integer
+          minimum: 0
+      required:
+      - page
+      - items_per_page
+      - total_items
+      - total_pages
     SysAdminVisitPageResponse:
       allOf:
       - $ref: '#/components/schemas/PageCore'
@@ -301,65 +360,6 @@ components:
       type: integer
       minimum: 1
       default: 100
-    PageCore:
-      description: Root page schema for returning collections.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/PageNumberCore'
-        items_per_page:
-          $ref: '#/components/schemas/ItemsPerPageCore'
-        total_items:
-          type: integer
-          minimum: 0
-        total_pages:
-          type: integer
-          minimum: 0
-      required:
-      - page
-      - items_per_page
-      - total_items
-      - total_pages
-    SysAdminVisitCollectionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        outbox_id:
-          type: string
-        inbox_id:
-          type: string
-        referral_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        service_outbox_id:
-          type: string
-          minLength: 1
-        status:
-          type: string
-          enum:
-          - scheduled
-          - deleted
-          - cancelled
-          - on_hold
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-      required:
-      - status
-      - id
-      - referral_id
-      - service_id
-      - service_outbox_id
-      - start_at
-      - end_at
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

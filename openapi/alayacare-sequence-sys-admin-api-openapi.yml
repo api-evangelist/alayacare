@@ -96,60 +96,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SequenceServiceResponse:
-      type: object
-      properties:
-        outbox_id:
-          type: string
-          minLength: 1
-        name:
-          type: string
-          minLength: 1
-      required:
-      - name
-      - outbox_id
-    DemographicLeanCore:
-      type: object
-      properties:
-        first_name:
-          type: string
-          minLength: 1
-        last_name:
-          type: string
-          minLength: 1
-      required:
-      - first_name
-      - last_name
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    SequenceLatestReferralResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-      - id
-    OrganizationLeanCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-      required:
-      - id
-      - name
     SequenceClientResponse:
       type: object
       properties:
@@ -164,10 +110,14 @@ components:
       required:
       - outbox_id
       - demographics
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
+    SequenceLatestReferralResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+      - id
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -195,17 +145,40 @@ components:
           format: uuid
       required:
       - id
-    SysAdminSequencePageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
-        required:
-        - items
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    DemographicLeanCore:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+      required:
+      - first_name
+      - last_name
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
     SysAdminSequenceCollectionResponse:
       type: object
       properties:
@@ -237,17 +210,44 @@ components:
       - supply
       - client
       - service
+    SysAdminSequencePageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/SysAdminSequenceCollectionResponse'
+        required:
+        - items
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    SequenceServiceResponse:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+      required:
+      - name
+      - outbox_id
   parameters:
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
     PageNumberParam:
       in: query
       name: page
       schema:
         $ref: '#/components/schemas/PageNumberCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
     ItemsPerPageParam:
       in: query
       name: items_per_page

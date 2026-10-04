@@ -234,10 +234,6 @@ components:
       required:
       - message
       - request_id
-    TaskCommentList:
-      type: object
-      items:
-        $ref: '#/components/schemas/TaskComment'
     TaskComment:
       type: object
       description: Comments on a task.
@@ -266,16 +262,11 @@ components:
         updated_by:
           $ref: '#/components/schemas/Person'
           description: Who updated the comment
+    TaskCommentList:
+      type: object
+      items:
+        $ref: '#/components/schemas/TaskComment'
   responses:
-    403Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    404NotFound:
-      description: Entity not found
     400BadRequest:
       description: Bad request
     401Unauthorized:
@@ -285,6 +276,15 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       headers: {}
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    404NotFound:
+      description: Entity not found
   parameters:
     comment_id:
       name: comment_id

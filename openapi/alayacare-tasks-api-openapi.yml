@@ -711,61 +711,6 @@ paths:
     - url: https://homecare.uat.alayacare.com
       description: UAT server
 components:
-  responses:
-    ErrorResponseTaskIdInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Only one of either `client_id` or `external_client_id` should be specified.
-    ErrorResponseTaskNotFound:
-      description: Task not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Task not found.
-    InvalidRequest:
-      description: Invalid data submitted for task creation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Task description is required.
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse_2'
-      headers: {}
-    404NotFound:
-      description: Entity not found
-    400BadRequest:
-      description: Bad request
-    403Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse_2'
-      headers: {}
   parameters:
     page:
       name: page
@@ -783,106 +728,6 @@ components:
       schema:
         type: integer
         default: 100
-    context_external_client_id:
-      name: context_external_client_id
-      in: query
-      required: false
-      schema:
-        type: string
-      description: 'The external client identifier of the client to filter on when searching for
-
-        tasks associated with a client context. When set, a context search will be
-
-        included for the specified client.'
-    created_by:
-      name: created_by
-      in: query
-      schema:
-        type: integer
-      description: The user identifier of the user who created the task. Please refer to the external employee API for more information on employee id.
-      example: 1123
-    status_in_path:
-      name: status
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/Status'
-    employee_group_ids:
-      name: employee_group_ids
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          type: integer
-        explode: true
-      description: Return tasks that have an employee context that is associated with one of the specified employee groups or all of the specified employee groups (depending on the `employee_group_ids_mode` parameter).
-      example:
-      - 100
-      - 101
-      - 102
-    due_at_min:
-      name: due_at_min
-      in: query
-      schema:
-        type: string
-        format: datetime
-      description: Minimum due date
-      example: '2023-01-31T22:00:00.000Z'
-    page_2:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      example: 1
-    context_external_employee_id:
-      name: context_external_employee_id
-      in: query
-      required: false
-      schema:
-        type: string
-      description: 'The external employee identifier of the employee to filter on when searching
-
-        for tasks associated with an employee context. When set, a context search
-
-        will be included for the specified employee.   '
-    branches:
-      name: branches
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          type: string
-      explode: true
-      description: Branch identifiers to filter on. Please refer to the external employee API for more information on branches.
-      example: headquarter
-    priorities:
-      name: priorities
-      description: Priorities to include.
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/Priority'
-        explode: true
-      example: null
-    client_group_ids_mode:
-      name: client_group_ids_mode
-      in: query
-      required: false
-      schema:
-        type: string
-        oneOf:
-        - title: all
-          const: all
-        - title: any
-          const: any
-      description: When set to 'all', only tasks that have a client context that is associated with all of the specified client groups will be returned. When set to 'any', tasks that have a client context that is associated with any of the specified client groups will be returned. To be used in conjunction with `client_groups_ids`
-      example: any
     created_at_min:
       name: created_at_min
       in: query
@@ -891,29 +736,16 @@ components:
         format: datetime
       description: Minimum created date
       example: '2023-01-31T22:00:00.000Z'
-    statuses:
-      name: statuses
-      description: Statuses to include.
+    task_sources:
+      name: sources
       in: query
       required: false
       schema:
         type: array
         items:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/TaskSource'
         explode: true
-    assigned_to_user_id_groups:
-      name: assigned_to_user_id_groups
-      in: query
-      schema:
-        type: array
-        items:
-          type: integer
-      explode: true
-      description: Include tasks that are assigned to members of the specified groups. Depending on the value of `assigned_to_user_id_groups_mode`, tasks will be returned that are assigned to a user in any of the specified groups or all of the specified groups. Please refer to the external employee API for more information on groups.
-      example:
-      - 100
-      - 355
-      - 150
+      description: Sources to include in results.
     due_at_max:
       name: due_at_max
       in: query
@@ -939,37 +771,14 @@ components:
       - (include
       - form
       - 123)
-    update_extensions:
-      name: update_extensions
+    page_2:
+      name: page
       in: query
       required: false
       schema:
-        type: boolean
-      description: Whether to update extensions from the payload
-    task_sources:
-      name: sources
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/TaskSource'
-        explode: true
-      description: Sources to include in results.
-    update_tags:
-      name: update_tags
-      in: query
-      required: false
-      schema:
-        type: boolean
-      description: Whether to update tags from the payload
-    update_escalation_dates:
-      name: update_escalation_dates
-      in: query
-      required: false
-      schema:
-        type: boolean
-      description: Whether to update escalation dates from the payload
+        type: integer
+        minimum: 1
+      example: 1
     is_assigned:
       name: is_assigned
       in: query
@@ -977,31 +786,50 @@ components:
         type: boolean
       description: When set, only tasks that are assigned to a user or group will be included.
       example: true
-    assigned_to_user_id_groups_mode:
-      name: assigned_to_user_id_groups_mode
+    count_2:
+      name: count
       in: query
       schema:
-        type: string
-        oneOf:
-        - title: all
-          const: all
-        - title: any
-          const: any
-      description: When set to 'all', only tasks that are assigned to a user in all of the specified groups will be returned. When set to 'any', tasks that are assigned to a user in any of the specified groups will be returned. To be used in conjunction with `assigned_to_user_id_groups`
-      example: all
-    employee_group_ids_mode:
-      name: employee_group_ids_mode
+        type: integer
+        maxLength: 100
+        minLength: 1
+      description: Number of items per page to return
+      example: 50
+    employee_group_ids:
+      name: employee_group_ids
       in: query
       required: false
       schema:
-        type: string
-        oneOf:
-        - title: all
-          const: all
-        - title: any
-          const: any
-      description: When set to 'all', only tasks that have a employee context that is associated with all of the specified employee groups will be returned. When set to 'any', tasks that have a employee context that is associated with any of the specified employee groups will be returned.
-      example: all
+        type: array
+        items:
+          type: integer
+        explode: true
+      description: Return tasks that have an employee context that is associated with one of the specified employee groups or all of the specified employee groups (depending on the `employee_group_ids_mode` parameter).
+      example:
+      - 100
+      - 101
+      - 102
+    assigned_to_external_employee_ids:
+      name: assigned_to_external_employee_ids
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: true
+      description: The external employee identifiers of the employee who is assigned the task. Please refer to the external employee API for more information on external employee id.
+      example: abc_123
+    branches:
+      name: branches
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      explode: true
+      description: Branch identifiers to filter on. Please refer to the external employee API for more information on branches.
+      example: headquarter
     created_at_max:
       name: created_at_max
       in: query
@@ -1010,16 +838,23 @@ components:
         format: datetime
       description: Maximum created date
       example: '2023-01-31T22:00:00.000Z'
-    assigned_to_user_ids:
-      name: assigned_to_user_ids
+    update_tags:
+      name: update_tags
       in: query
+      required: false
+      schema:
+        type: boolean
+      description: Whether to update tags from the payload
+    statuses:
+      name: statuses
+      description: Statuses to include.
+      in: query
+      required: false
       schema:
         type: array
         items:
-          type: integer
+          $ref: '#/components/schemas/Status'
         explode: true
-      description: The user identifiers of the user who is assigned the task. Please refer to the external employee API for more information on employee id.
-      example: 1234
     task_id:
       name: task_id
       in: path
@@ -1044,29 +879,6 @@ components:
           type: string
         explode: true
       description: Tags to include in results
-    count_2:
-      name: count
-      in: query
-      schema:
-        type: integer
-        maxLength: 100
-        minLength: 1
-      description: Number of items per page to return
-      example: 50
-    branch_id:
-      name: branch_id
-      in: query
-      schema:
-        type: integer
-      description: The branch identifier to filter on. Please refer to the external employee API for more information on branches.
-      example: 100
-    no_due_at:
-      name: no_due_at
-      in: query
-      schema:
-        type: boolean
-      description: Set to true to filter on tasks without a due date
-      example: true
     is_assigned_to_user:
       name: is_assigned_to_user
       in: query
@@ -1074,13 +886,6 @@ components:
         type: boolean
       description: When set, only tasks that are assigned to a user will be included.
       example: true
-    task_text:
-      name: text
-      in: query
-      required: false
-      schema:
-        type: string
-      description: Search for text in tasks. The `name` and `details` fields are searched.
     client_group_ids:
       name: client_group_ids
       in: query
@@ -1095,6 +900,89 @@ components:
       - 100
       - 101
       - 102
+    assigned_to_user_ids:
+      name: assigned_to_user_ids
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+        explode: true
+      description: The user identifiers of the user who is assigned the task. Please refer to the external employee API for more information on employee id.
+      example: 1234
+    update_escalation_dates:
+      name: update_escalation_dates
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Whether to update escalation dates from the payload
+    context_external_employee_id:
+      name: context_external_employee_id
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 'The external employee identifier of the employee to filter on when searching
+
+        for tasks associated with an employee context. When set, a context search
+
+        will be included for the specified employee.   '
+    created_by:
+      name: created_by
+      in: query
+      schema:
+        type: integer
+      description: The user identifier of the user who created the task. Please refer to the external employee API for more information on employee id.
+      example: 1123
+    due_at_min:
+      name: due_at_min
+      in: query
+      schema:
+        type: string
+        format: datetime
+      description: Minimum due date
+      example: '2023-01-31T22:00:00.000Z'
+    employee_group_ids_mode:
+      name: employee_group_ids_mode
+      in: query
+      required: false
+      schema:
+        type: string
+        oneOf:
+        - title: all
+          const: all
+        - title: any
+          const: any
+      description: When set to 'all', only tasks that have a employee context that is associated with all of the specified employee groups will be returned. When set to 'any', tasks that have a employee context that is associated with any of the specified employee groups will be returned.
+      example: all
+    update_extensions:
+      name: update_extensions
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Whether to update extensions from the payload
+    assigned_to_user_id_groups:
+      name: assigned_to_user_id_groups
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+      explode: true
+      description: Include tasks that are assigned to members of the specified groups. Depending on the value of `assigned_to_user_id_groups_mode`, tasks will be returned that are assigned to a user in any of the specified groups or all of the specified groups. Please refer to the external employee API for more information on groups.
+      example:
+      - 100
+      - 355
+      - 150
+    no_due_at:
+      name: no_due_at
+      in: query
+      schema:
+        type: boolean
+      description: Set to true to filter on tasks without a due date
+      example: true
     assigned_to_group_id:
       name: assigned_to_group_id
       in: query
@@ -1102,75 +990,74 @@ components:
         type: integer
       description: The group identifier of the group which is assigned the task. Please refer to the external employee API for more information on groups.
       example: 123
-    assigned_to_external_employee_ids:
-      name: assigned_to_external_employee_ids
+    branch_id:
+      name: branch_id
       in: query
+      schema:
+        type: integer
+      description: The branch identifier to filter on. Please refer to the external employee API for more information on branches.
+      example: 100
+    client_group_ids_mode:
+      name: client_group_ids_mode
+      in: query
+      required: false
+      schema:
+        type: string
+        oneOf:
+        - title: all
+          const: all
+        - title: any
+          const: any
+      description: When set to 'all', only tasks that have a client context that is associated with all of the specified client groups will be returned. When set to 'any', tasks that have a client context that is associated with any of the specified client groups will be returned. To be used in conjunction with `client_groups_ids`
+      example: any
+    task_text:
+      name: text
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Search for text in tasks. The `name` and `details` fields are searched.
+    context_external_client_id:
+      name: context_external_client_id
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 'The external client identifier of the client to filter on when searching for
+
+        tasks associated with a client context. When set, a context search will be
+
+        included for the specified client.'
+    status_in_path:
+      name: status
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Status'
+    priorities:
+      name: priorities
+      description: Priorities to include.
+      in: query
+      required: false
       schema:
         type: array
         items:
-          type: string
-      explode: true
-      description: The external employee identifiers of the employee who is assigned the task. Please refer to the external employee API for more information on external employee id.
-      example: abc_123
+          $ref: '#/components/schemas/Priority'
+        explode: true
+      example: null
+    assigned_to_user_id_groups_mode:
+      name: assigned_to_user_id_groups_mode
+      in: query
+      schema:
+        type: string
+        oneOf:
+        - title: all
+          const: all
+        - title: any
+          const: any
+      description: When set to 'all', only tasks that are assigned to a user in all of the specified groups will be returned. When set to 'any', tasks that are assigned to a user in any of the specified groups will be returned. To be used in conjunction with `assigned_to_user_id_groups`
+      example: all
   schemas:
-    TaskPriority:
-      type: string
-      description: Task priority. Not a required field; default value is `low`.
-      enum:
-      - low
-      - normal
-      - important
-      - urgent
-    TaskStatus:
-      type: string
-      description: Task status.
-      enum:
-      - open
-      - on_hold
-      - pending
-      - closed
-      - rejected
-    FormCreate:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: integer
-          description: Report form ID of the task.
-          example: 1604
-    TaskList:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Task'
-    ReportFieldCreate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The form field identifier.
-          example: field_1234
-        value:
-          type: string
-          description: The form field value.
-          example: Client input data.
     ReportRead:
       type: object
       required:
@@ -1191,6 +1078,94 @@ components:
           description: The Report field values.
           items:
             $ref: '#/components/schemas/ReportField'
+    ReportFieldCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The form field identifier.
+          example: field_1234
+        value:
+          type: string
+          description: The form field value.
+          example: Client input data.
+    ReportField:
+      type: object
+      required:
+      - id
+      - field_id
+      - name
+      - type
+      - label
+      properties:
+        id:
+          type: integer
+          description: The report field identifier.
+          example: 321
+        field_id:
+          type: integer
+          description: The form field identifier.
+          example: 1234
+        name:
+          type: string
+          description: The form field identifier name.
+          example: field_1234
+        type:
+          type: string
+          description: The form field type.
+          example: text
+        label:
+          type: string
+          description: The form field label describing the field.
+          example: Record the client condition
+        value:
+          type: string
+          description: The form field value entered by the user.
+          example: Client condition has improved
+    TaskCreate:
+      type: object
+      required:
+      - description
+      properties:
+        form:
+          $ref: '#/components/schemas/FormCreate'
+        report:
+          $ref: '#/components/schemas/ReportCreate'
+        description:
+          type: string
+          description: 'Task description. Limited to 256 chars.
+
+            '
+          example: Call client for assessment.
+        due_date:
+          type: string
+          format: date-time
+          description: Date and/or time when task is due. (ISO 8601).
+          example: '2017-07-08T14:00:00+00:00'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        employee_id:
+          type: integer
+          description: ID of the employee assigned to the task.
+          example: 104
+        external_employee_id:
+          type: string
+          description: External ID of the employee assigned to the task.
+          example: sor_id_1
+        client_id:
+          type: integer
+          description: AlayaCare ID of the client assigned to the task.
+          example: 5432
+        external_client_id:
+          type: string
+          description: External client ID.
+          example: sor_id_1
+        details:
+          type: string
+          description: Details of the task.
+          example: Client prefers mobile phone after 4pm.
     TaskUpdate:
       type: object
       properties:
@@ -1225,39 +1200,46 @@ components:
           type: string
           description: Details of the task.
           example: Client prefers mobile phone after 4pm.
-    ReportField:
+    ErrorResponse:
+      description: Error response
       type: object
-      required:
-      - id
-      - field_id
-      - name
-      - type
-      - label
       properties:
-        id:
+        code:
           type: integer
-          description: The report field identifier.
-          example: 321
-        field_id:
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
+    TaskPriority:
+      type: string
+      description: Task priority. Not a required field; default value is `low`.
+      enum:
+      - low
+      - normal
+      - important
+      - urgent
+    TaskList:
+      type: object
+      properties:
+        count:
           type: integer
-          description: The form field identifier.
-          example: 1234
-        name:
-          type: string
-          description: The form field identifier name.
-          example: field_1234
-        type:
-          type: string
-          description: The form field type.
-          example: text
-        label:
-          type: string
-          description: The form field label describing the field.
-          example: Record the client condition
-        value:
-          type: string
-          description: The form field value entered by the user.
-          example: Client condition has improved
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
     Task:
       type: object
       required:
@@ -1349,71 +1331,6 @@ components:
           type: integer
           description: ID of the task branch.
           example: 1000
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    ReportCreate:
-      type: object
-      required:
-      - fields
-      properties:
-        fields:
-          type: array
-          description: The Report fied values.
-          items:
-            $ref: '#/components/schemas/ReportFieldCreate'
-    TaskCreate:
-      type: object
-      required:
-      - description
-      properties:
-        form:
-          $ref: '#/components/schemas/FormCreate'
-        report:
-          $ref: '#/components/schemas/ReportCreate'
-        description:
-          type: string
-          description: 'Task description. Limited to 256 chars.
-
-            '
-          example: Call client for assessment.
-        due_date:
-          type: string
-          format: date-time
-          description: Date and/or time when task is due. (ISO 8601).
-          example: '2017-07-08T14:00:00+00:00'
-        priority:
-          $ref: '#/components/schemas/TaskPriority'
-        employee_id:
-          type: integer
-          description: ID of the employee assigned to the task.
-          example: 104
-        external_employee_id:
-          type: string
-          description: External ID of the employee assigned to the task.
-          example: sor_id_1
-        client_id:
-          type: integer
-          description: AlayaCare ID of the client assigned to the task.
-          example: 5432
-        external_client_id:
-          type: string
-          description: External client ID.
-          example: sor_id_1
-        details:
-          type: string
-          description: Details of the task.
-          example: Client prefers mobile phone after 4pm.
     FormRead:
       type: object
       required:
@@ -1430,79 +1347,47 @@ components:
 
             '
           example: New Client Assessment
-    PaginatedTaskList:
-      $reg: '#/components/schemas/PaginatedResults'
+    ReportCreate:
+      type: object
+      required:
+      - fields
       properties:
-        items:
-          $ref: '#/components/schemas/Task_2'
-    Status:
+        fields:
+          type: array
+          description: The Report fied values.
+          items:
+            $ref: '#/components/schemas/ReportFieldCreate'
+    FormCreate:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Report form ID of the task.
+          example: 1604
+    TaskStatus:
+      type: string
+      description: Task status.
+      enum:
+      - open
+      - on_hold
+      - pending
+      - closed
+      - rejected
+    Priority:
       type: integer
       oneOf:
-      - title: Open
+      - title: Low
         const: 1
-      - title: In Progress
+      - title: Normal
+        const: 2
+      - title: Important
         const: 3
-      - title: Completed
-        const: 5
-      - title: Closed
-        const: 7
-      example: 1
-      description: Status of a Task or Sub Task
-    TaskExtension:
-      type: object
-      description: Custom defined extensions
-      title: Task Extension
-      properties:
-        field_id:
-          type: integer
-          example: 1
-          description: Extension field ID
-          nullable: false
-        field_type:
-          ref: '#/components/schemas/TaskExtensionType'
-        field_label:
-          type: string
-          example: Health Care Number
-          description: 'Label of the extension. The label is used as the title of the extension
-
-            when rendered.'
-        field_value:
-          type: object
-          additionalProperties:
-            type:
-            - string
-            - integer
-            - number
-            - boolean
-            - object
-          example: true
-          description: Value. The type is dependent on the extension type.
-    TaskCount:
-      type: object
-      description: Task Count
-      title: Task Count
-      properties:
-        count:
-          type: integer
-          example: 1
-          description: Number of tasks
-    BulkUpdateStatusActionRequest:
-      type: object
-      description: Encapsulates a bulk update status action request
-      properties:
-        items:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Status'
-          description: 'The task identifiers and status to update. All tasks specified in the
-
-            payload will be updated. This operation either succeeds as a whole or
-
-            fails at a whole. If any of the tasks does not exist or is inaccessible,
-
-            the entire operation will fail. Use the task identifiers as keys in the
-
-            dictionary, and the status as values.'
+      - title: Urgent
+        const: 4
+      example: 4
+      description: Priority of a Task or Sub Task
     NamedEntity:
       type: object
       description: Encapsulates an entity that has a name, but is not a person.
@@ -1520,76 +1405,67 @@ components:
         deep_link:
           type: string
           description: Deep link to entity
-    TaskPatchRequest:
+    Status:
+      type: integer
+      oneOf:
+      - title: Open
+        const: 1
+      - title: In Progress
+        const: 3
+      - title: Completed
+        const: 5
+      - title: Closed
+        const: 7
+      example: 1
+      description: Status of a Task or Sub Task
+    TaskContext:
       type: object
-      description: 'Request body for patching a task. The request contains one or more fields to update in a task. The fields are optional, but at least one field must be provided.
-
-        It should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the task will retain its current value. If a field is set to `null`, the value will be blanked out in the task object.'
-      title: Task Patch Request
+      description: Context to which a task applies.
+      title: Task Context
       properties:
-        name:
+        type:
           type: string
-          example: Check vitals for Mrs. Doe
+          example: api.patients.client
+          description: 'Type of the context. Domain services define their contexts and provide
+
+            instructions on how to connect to them through the component registry.'
           nullable: false
-          description: Free-form name of the task as entered by the user.
-        due_at:
+        primary_id:
           type: string
-          format: date-time
-          example: '2023-01-31T22:00:00.000Z'
-          nullable: true
-          description: When the task is due.
-        assigned_to_user:
-          $ref: '#/components/schemas/Person'
-          nullable: true
-          description: Person to whom the task is assigned.
-        assigned_to_group:
-          $ref: '#/components/schemas/NamedEntity'
-          nullable: true
-          description: Group to which the task is assigned.
-        custom_icon:
+          example: 27
+          description: Identifies the referenced context.
+          nullable: false
+        display_name:
           type: string
+          example: John Doe
+          description: Display name of the context.
           nullable: true
-          description: Custom icon to be displayed for the task.
-        initial_priority:
-          $ref: '#/components/schemas/Priority'
-          description: 'Reset the initial priority. if there are `escalation_dates` defined, then the `current_priority` may
-
-            be immediately different from the `initial_priority`.'
-        status:
-          $ref: '#/components/schemas/Status'
-        details:
+        deep_link:
           type: string
-          example: 'Check Blood Pressure and Heart Rate.
+          example: /#/employees/2s/overview
+          description: 'Deep link to the context. Domain services define their deep links and
 
-            Recent readings were out of range.
+            provide instructions on how to connect to them through the component
 
-            If readings are out of range again, alert nursing staff.'
-          description: Free text entered by user to provide more detail.
-        notify_at:
-          type: string
+            registry.'
           nullable: true
-          format: date-time
-          example: '2023-01-20T19:23:05.000Z'
-          description: 'Time the assignee(s) should be notified. Assignee(s) will not be notified
+        is_visible:
+          type: boolean
+          example: true
+          description: 'Indicates whether the context is visible. If set to False, the context
 
-            if blank.'
-        tags:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            maxLength: 25
-          description: User-defined tags.
-        contexts:
-          type: array
-          items:
-            $ref: '#/components/schemas/TaskContext'
-          description: Applicable contexts.
-        extensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TaskExtension'
-          description: Custom defined extensions
+            will not be displayed in the frontend.'
+        props:
+          type: object
+          additionalProperties: true
+          description: 'Contents are context-dependent. Has the most important fields from a context.
+
+            For examples, a Client context may contain `first_name` and `last_name`.
+
+            Depending on the context type, this field may be two-way.'
+          example:
+            name.last: Doe
+            name.first: John
     SubTask:
       type: object
       description: 'Tasks can have 0 or more sub tasks. Progress on a parent task is tracked by
@@ -1641,94 +1517,190 @@ components:
           items:
             $ref: '#/components/schemas/TaskContext'
           description: Applicable contexts.
-    TaskExtensionType:
-      type: string
-      oneOf:
-      - title: text
-        const: text
-      - title: textarea
-        const: textarea
-      - title: number
-        const: number
-      - title: signature
-        const: signature
-      - title: checkbox
-        const: checkbox
-      - title: list
-        const: list
-      - title: list_multiple
-        const: list_multiple
-      - title: section
-        const: section
-      - title: time
-        const: time
-      - title: date
-        const: date
-      - title: hyperlink
-        const: hyperlink
-      - title: information
-        const: information
-    Priority:
-      type: integer
-      oneOf:
-      - title: Low
-        const: 1
-      - title: Normal
-        const: 2
-      - title: Important
-        const: 3
-      - title: Urgent
-        const: 4
-      example: 4
-      description: Priority of a Task or Sub Task
-    TaskContext:
+    TaskCount:
       type: object
-      description: Context to which a task applies.
-      title: Task Context
+      description: Task Count
+      title: Task Count
       properties:
+        count:
+          type: integer
+          example: 1
+          description: Number of tasks
+    BulkUpdateActionRequest:
+      type: object
+      description: Encapsulates a bulk update action request
+      properties:
+        update_contexts:
+          type: boolean
+          description: 'Whether to update contexts from the payload. If set to true, the
+
+            `contexts` property must be set in the payload.'
+        update_escalation_dates:
+          type: boolean
+          description: 'Whether to update escalation dates from the payload. If set to true, the
+
+            `escalation_dates` property must be set in the payload.'
+        update_extensions:
+          type: boolean
+          description: 'Whether to update extensions from the payload. If set to true, the
+
+            `extensions` property must be set in the payload.'
+        update_tags:
+          type: boolean
+          description: 'Whether to update tags from the payload. If set to true, the `tags`
+
+            property must be set in the payload.'
+        items:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Task_2'
+          description: 'The tasks to update. All tasks specified in the payload will be updated.
+
+            This operation either succeeds as a whole or fails at a whole. If any of
+
+            the tasks does not exist or is inaccessible, the entire operation will
+
+            fail. Use the task identifiers as keys in the dictionary, and the full
+
+            task payload as values.'
+    BulkUpdateStatusActionRequest:
+      type: object
+      description: Encapsulates a bulk update status action request
+      properties:
+        items:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Status'
+          description: 'The task identifiers and status to update. All tasks specified in the
+
+            payload will be updated. This operation either succeeds as a whole or
+
+            fails at a whole. If any of the tasks does not exist or is inaccessible,
+
+            the entire operation will fail. Use the task identifiers as keys in the
+
+            dictionary, and the status as values.'
+    TaskExtensionSchema:
+      type: object
+      description: Schema for custom defined extension field
+      title: Task Extension Schema
+      properties:
+        field_id:
+          type: integer
+          example: 1
+          description: Extension field ID
+          nullable: false
         type:
+          $ref: '#/components/schemas/TaskExtensionType'
+        label:
           type: string
-          example: api.patients.client
-          description: 'Type of the context. Domain services define their contexts and provide
+          example: Health Care Number
+          description: 'Label of the extension. The label is used as the title of the extension
 
-            instructions on how to connect to them through the component registry.'
-          nullable: false
-        primary_id:
+            when rendered.'
+        tag:
           type: string
-          example: 27
-          description: Identifies the referenced context.
-          nullable: false
-        display_name:
+          example: intake
+          description: Additional tag
+        instructions:
           type: string
-          example: John Doe
-          description: Display name of the context.
-          nullable: true
-        deep_link:
-          type: string
-          example: /#/employees/2s/overview
-          description: 'Deep link to the context. Domain services define their deep links and
-
-            provide instructions on how to connect to them through the component
-
-            registry.'
-          nullable: true
-        is_visible:
+          example: Enter the health care number of the patient
+          description: Instructions for the extension.
+        rank:
+          type: integer
+          example: 1
+          description: Rank of the extension. Extensions are rendered in ascending order of rank.
+        required:
           type: boolean
           example: true
-          description: 'Indicates whether the context is visible. If set to False, the context
+          description: 'Indicates whether the extension is required. If set to True, the extension
 
-            will not be displayed in the frontend.'
-        props:
+            must be filled.'
+        settings:
           type: object
           additionalProperties: true
-          description: 'Contents are context-dependent. Has the most important fields from a context.
+          description: 'Additional settings for the extension. The settings are dependent on the
 
-            For examples, a Client context may contain `first_name` and `last_name`.
+            extension type.'
+    CloneTaskRequest:
+      type: object
+      description: Encapsulates a clone task request
+      properties:
+        task_id:
+          type: integer
+          description: The task identifier of the task to clone.
+      name:
+        type: string
+        description: The name of the cloned task. If not provided, the name of the original task  will be used.
+    TaskExtension:
+      type: object
+      description: Custom defined extensions
+      title: Task Extension
+      properties:
+        field_id:
+          type: integer
+          example: 1
+          description: Extension field ID
+          nullable: false
+        field_type:
+          ref: '#/components/schemas/TaskExtensionType'
+        field_label:
+          type: string
+          example: Health Care Number
+          description: 'Label of the extension. The label is used as the title of the extension
 
-            Depending on the context type, this field may be two-way.'
-          example:
-            name.last: Doe
-            name.first: John
+            when rendered.'
+        field_value:
+          type: object
+          additionalProperties:
+            type:
+            - string
+            - integer
+            - number
+            - boolean
+            - object
+          example: true
+          description: Value. The type is dependent on the extension type.
+    ErrorResponse_2:
+      title: Error response
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              code:
+                type: string
+            required:
+            - message
+      required:
+      - message
+      - request_id
+    TaskSource:
+      type: integer
+      oneOf:
+      - title: Web
+        const: 0
+      - title: Client Family Portal
+        const: 1
+      - title: Mobile
+        const: 2
+      - title: External
+        const: 3
+    PaginatedTaskList:
+      $reg: '#/components/schemas/PaginatedResults'
+      properties:
+        items:
+          $ref: '#/components/schemas/Task_2'
     BulkUpdateActionResponse:
       type: object
       description: Encapsulates a bulk update action response
@@ -1755,23 +1727,49 @@ components:
             fails at a whole. If any of the tasks does not exist or is inaccessible,
 
             the entire operation will fail.'
-    BulkUpdatePatchActionRequest:
-      type: object
-      description: Encapsulates a bulk update patch action request
+    PaginatedSubTaskList:
+      $reg: '#/components/schemas/PaginatedResults'
       properties:
         items:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/TaskPatchRequest'
-          description: 'The tasks to update. All tasks specified in the payload will be updated.
-
-            This operation either succeeds as a whole or fails at a whole. If any of
-
-            the tasks does not exist or is inaccessible, the entire operation will
-
-            fail. Use the task identifiers as keys in the dictionary, and the patch
-
-            data structure in the values.'
+          $ref: '#/components/schemas/SubTask'
+    Person:
+      type: object
+      description: Encapsulates the bare details of a person
+      properties:
+        id:
+          type: integer
+          nullable: false
+          description: Primary ID (Employee ID, User ID etc.) of person
+        external_id:
+          type: string
+          nullable: true
+          description: External ID of person
+        guid:
+          type: integer
+          nullable: true
+          description: GUID
+        profile_id:
+          type: integer
+          nullable: true
+          description: Profile ID
+        last_name:
+          type: string
+          description: Last Name/Family Name
+        first_name:
+          type: string
+          description: First Name
+        full_name:
+          type: string
+          description: Full Name
+        status:
+          type: string
+          description: Status of person
+        deep_link:
+          type: string
+          description: Deep link to person
+        profile_photo_url:
+          type: string
+          description: URL to profile photo
     Task_2:
       type: object
       description: 'Task Model
@@ -1887,173 +1885,175 @@ components:
           items:
             $ref: '#/components/schemas/TaskExtensionSchema'
           description: Schema for custom defined extension fields
-    ErrorResponse_2:
-      title: Error response
+    TaskExtensionType:
+      type: string
+      oneOf:
+      - title: text
+        const: text
+      - title: textarea
+        const: textarea
+      - title: number
+        const: number
+      - title: signature
+        const: signature
+      - title: checkbox
+        const: checkbox
+      - title: list
+        const: list
+      - title: list_multiple
+        const: list_multiple
+      - title: section
+        const: section
+      - title: time
+        const: time
+      - title: date
+        const: date
+      - title: hyperlink
+        const: hyperlink
+      - title: information
+        const: information
+    BulkUpdatePatchActionRequest:
       type: object
+      description: Encapsulates a bulk update patch action request
       properties:
-        code:
-          type: string
-        message:
-          type: string
-        request_id:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              code:
-                type: string
-            required:
-            - message
-      required:
-      - message
-      - request_id
-    TaskExtensionSchema:
-      type: object
-      description: Schema for custom defined extension field
-      title: Task Extension Schema
-      properties:
-        field_id:
-          type: integer
-          example: 1
-          description: Extension field ID
-          nullable: false
-        type:
-          $ref: '#/components/schemas/TaskExtensionType'
-        label:
-          type: string
-          example: Health Care Number
-          description: 'Label of the extension. The label is used as the title of the extension
-
-            when rendered.'
-        tag:
-          type: string
-          example: intake
-          description: Additional tag
-        instructions:
-          type: string
-          example: Enter the health care number of the patient
-          description: Instructions for the extension.
-        rank:
-          type: integer
-          example: 1
-          description: Rank of the extension. Extensions are rendered in ascending order of rank.
-        required:
-          type: boolean
-          example: true
-          description: 'Indicates whether the extension is required. If set to True, the extension
-
-            must be filled.'
-        settings:
-          type: object
-          additionalProperties: true
-          description: 'Additional settings for the extension. The settings are dependent on the
-
-            extension type.'
-    BulkUpdateActionRequest:
-      type: object
-      description: Encapsulates a bulk update action request
-      properties:
-        update_contexts:
-          type: boolean
-          description: 'Whether to update contexts from the payload. If set to true, the
-
-            `contexts` property must be set in the payload.'
-        update_escalation_dates:
-          type: boolean
-          description: 'Whether to update escalation dates from the payload. If set to true, the
-
-            `escalation_dates` property must be set in the payload.'
-        update_extensions:
-          type: boolean
-          description: 'Whether to update extensions from the payload. If set to true, the
-
-            `extensions` property must be set in the payload.'
-        update_tags:
-          type: boolean
-          description: 'Whether to update tags from the payload. If set to true, the `tags`
-
-            property must be set in the payload.'
         items:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/Task_2'
+            $ref: '#/components/schemas/TaskPatchRequest'
           description: 'The tasks to update. All tasks specified in the payload will be updated.
 
             This operation either succeeds as a whole or fails at a whole. If any of
 
             the tasks does not exist or is inaccessible, the entire operation will
 
-            fail. Use the task identifiers as keys in the dictionary, and the full
+            fail. Use the task identifiers as keys in the dictionary, and the patch
 
-            task payload as values.'
-    TaskSource:
-      type: integer
-      oneOf:
-      - title: Web
-        const: 0
-      - title: Client Family Portal
-        const: 1
-      - title: Mobile
-        const: 2
-      - title: External
-        const: 3
-    CloneTaskRequest:
+            data structure in the values.'
+    TaskPatchRequest:
       type: object
-      description: Encapsulates a clone task request
+      description: 'Request body for patching a task. The request contains one or more fields to update in a task. The fields are optional, but at least one field must be provided.
+
+        It should also be noted that there is a difference between providing a value of `null` for a field and not providing a field. When a field is not in the payload, it is ignored and the task will retain its current value. If a field is set to `null`, the value will be blanked out in the task object.'
+      title: Task Patch Request
       properties:
-        task_id:
-          type: integer
-          description: The task identifier of the task to clone.
-      name:
-        type: string
-        description: The name of the cloned task. If not provided, the name of the original task  will be used.
-    Person:
-      type: object
-      description: Encapsulates the bare details of a person
-      properties:
-        id:
-          type: integer
+        name:
+          type: string
+          example: Check vitals for Mrs. Doe
           nullable: false
-          description: Primary ID (Employee ID, User ID etc.) of person
-        external_id:
+          description: Free-form name of the task as entered by the user.
+        due_at:
+          type: string
+          format: date-time
+          example: '2023-01-31T22:00:00.000Z'
+          nullable: true
+          description: When the task is due.
+        assigned_to_user:
+          $ref: '#/components/schemas/Person'
+          nullable: true
+          description: Person to whom the task is assigned.
+        assigned_to_group:
+          $ref: '#/components/schemas/NamedEntity'
+          nullable: true
+          description: Group to which the task is assigned.
+        custom_icon:
           type: string
           nullable: true
-          description: External ID of person
-        guid:
-          type: integer
-          nullable: true
-          description: GUID
-        profile_id:
-          type: integer
-          nullable: true
-          description: Profile ID
-        last_name:
-          type: string
-          description: Last Name/Family Name
-        first_name:
-          type: string
-          description: First Name
-        full_name:
-          type: string
-          description: Full Name
+          description: Custom icon to be displayed for the task.
+        initial_priority:
+          $ref: '#/components/schemas/Priority'
+          description: 'Reset the initial priority. if there are `escalation_dates` defined, then the `current_priority` may
+
+            be immediately different from the `initial_priority`.'
         status:
+          $ref: '#/components/schemas/Status'
+        details:
           type: string
-          description: Status of person
-        deep_link:
+          example: 'Check Blood Pressure and Heart Rate.
+
+            Recent readings were out of range.
+
+            If readings are out of range again, alert nursing staff.'
+          description: Free text entered by user to provide more detail.
+        notify_at:
           type: string
-          description: Deep link to person
-        profile_photo_url:
-          type: string
-          description: URL to profile photo
-    PaginatedSubTaskList:
-      $reg: '#/components/schemas/PaginatedResults'
-      properties:
-        items:
-          $ref: '#/components/schemas/SubTask'
+          nullable: true
+          format: date-time
+          example: '2023-01-20T19:23:05.000Z'
+          description: 'Time the assignee(s) should be notified. Assignee(s) will not be notified
+
+            if blank.'
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 25
+          description: User-defined tags.
+        contexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskContext'
+          description: Applicable contexts.
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskExtension'
+          description: Custom defined extensions
+  responses:
+    ErrorResponseTaskNotFound:
+      description: Task not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Task not found.
+    InvalidRequest:
+      description: Invalid data submitted for task creation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Task description is required.
+    ErrorResponseTaskIdInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Only one of either `client_id` or `external_client_id` should be specified.
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    400BadRequest:
+      description: Bad request
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+      headers: {}
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+      headers: {}
+    404NotFound:
+      description: Entity not found
   securitySchemes:
     basic_auth:
       type: http

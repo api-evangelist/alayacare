@@ -147,11 +147,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    label:
-      name: label
-      in: query
-      schema:
-        type: string
     page:
       name: page
       schema:
@@ -160,31 +155,44 @@ components:
       in: query
       required: false
       description: Page number to filter by
-    is_override:
-      name: is_override
-      in: query
+    is_infusion:
+      name: is_infusion
       schema:
         type: boolean
+      in: query
     code_term:
       name: code_term
       in: query
       schema:
         type: string
-    is_ingredient_strength:
-      name: is_ingredient_strength
-      in: query
+    count:
+      name: count
       schema:
-        type: boolean
-    is_dosage_quantity:
-      name: is_dosage_quantity
+        type: integer
+        default: 10
       in: query
-      schema:
-        type: boolean
-    code_collection_term:
-      name: code_collection_term
+      required: false
+      description: Max number of items to filter by
+    label:
+      name: label
       in: query
       schema:
         type: string
+    is_override:
+      name: is_override
+      in: query
+      schema:
+        type: boolean
+    sort_order:
+      name: sort_order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      in: query
+      required: false
+      description: 'Order in which the items should be sorted by. Ex: asc, desc'
     settings_sort_by:
       name: sort_by
       schema:
@@ -199,21 +207,38 @@ components:
       in: query
       required: false
       description: Parameter to sort items by
-    sort_order:
-      name: sort_order
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
+    is_dosage_quantity:
+      name: is_dosage_quantity
       in: query
-      required: false
-      description: 'Order in which the items should be sorted by. Ex: asc, desc'
-    is_infusion:
-      name: is_infusion
       schema:
         type: boolean
+    is_dosage_form:
+      name: is_dosage_form
       in: query
+      schema:
+        type: boolean
+    is_ingredient_strength:
+      name: is_ingredient_strength
+      in: query
+      schema:
+        type: boolean
+    default_label:
+      name: default_label
+      in: query
+      schema:
+        type: string
+    code_collection_term:
+      name: code_collection_term
+      in: query
+      schema:
+        type: string
+    branch_id:
+      name: branch_id
+      in: path
+      required: true
+      description: ID of the branch
+      schema:
+        type: integer
     is_enabled:
       name: is_enabled
       in: query
@@ -230,101 +255,6 @@ components:
         - en
         - fr
         - es
-    count:
-      name: count
-      schema:
-        type: integer
-        default: 10
-      in: query
-      required: false
-      description: Max number of items to filter by
-    branch_id:
-      name: branch_id
-      in: path
-      required: true
-      description: ID of the branch
-      schema:
-        type: integer
-    is_dosage_form:
-      name: is_dosage_form
-      in: query
-      schema:
-        type: boolean
-    default_label:
-      name: default_label
-      in: query
-      schema:
-        type: string
-  responses:
-    MedicationSettingList:
-      description: Medication settings list
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MedicationSettingList'
-          examples:
-            MedicationSetting:
-              $ref: '#/components/examples/MedicationSettingList'
-    MedicationSetting:
-      description: Medication setting objectF
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MedicationSettingList'
-          examples:
-            MedicationSetting:
-              $ref: '#/components/examples/MedicationSettings'
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/APIError'
-          examples:
-            InvalidRequestExample:
-              $ref: '#/components/examples/InvalidRequest'
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/APIError'
-          examples:
-            InvalidRequest:
-              $ref: '#/components/examples/AuthChallenge'
-  examples:
-    InvalidRequest:
-      value:
-        code: '400'
-        message: There was a problem with your request.
-      summary: Invalid data.
-    MedicationSettings:
-      value:
-        name: Setting name
-    MedicationSettingList:
-      value:
-        count: 745
-        items:
-        - branch_id: 1000
-          codes:
-          - code: a
-            collection: FHIR
-          is_enabled: true
-          is_override: false
-          labels:
-          - default_label: None
-            label: None
-            lang: en
-          name: none
-          type: medication_administration_reason_setting
-        items_per_page: 15
-        page: 1
-        total_pages: 745
-    AuthChallenge:
-      value:
-        code: '401'
-        message: Please verify your access level for this url.
-      summary: Authentication required.
   schemas:
     MedicationSettings:
       type: object
@@ -498,21 +428,6 @@ components:
           example: allowed
           x-nullable: false
           default: allowed
-    APIError:
-      type: object
-      description: Error returned from the API
-      properties:
-        code:
-          type: string
-          description: The error code
-          example: '500'
-        message:
-          type: string
-          example: An error occurred
-          description: The error description
-      required:
-      - code
-      - message
     MedicationSettingList:
       type: object
       properties:
@@ -529,6 +444,91 @@ components:
         total_pages:
           type: integer
           description: Total number of pages available
+    APIError:
+      type: object
+      description: Error returned from the API
+      properties:
+        code:
+          type: string
+          description: The error code
+          example: '500'
+        message:
+          type: string
+          example: An error occurred
+          description: The error description
+      required:
+      - code
+      - message
+  responses:
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequestExample:
+              $ref: '#/components/examples/InvalidRequest'
+    MedicationSettingList:
+      description: Medication settings list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettingList'
+    MedicationSetting:
+      description: Medication setting objectF
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MedicationSettingList'
+          examples:
+            MedicationSetting:
+              $ref: '#/components/examples/MedicationSettings'
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+          examples:
+            InvalidRequest:
+              $ref: '#/components/examples/AuthChallenge'
+  examples:
+    MedicationSettingList:
+      value:
+        count: 745
+        items:
+        - branch_id: 1000
+          codes:
+          - code: a
+            collection: FHIR
+          is_enabled: true
+          is_override: false
+          labels:
+          - default_label: None
+            label: None
+            lang: en
+          name: none
+          type: medication_administration_reason_setting
+        items_per_page: 15
+        page: 1
+        total_pages: 745
+    AuthChallenge:
+      value:
+        code: '401'
+        message: Please verify your access level for this url.
+      summary: Authentication required.
+    MedicationSettings:
+      value:
+        name: Setting name
+    InvalidRequest:
+      value:
+        code: '400'
+        message: There was a problem with your request.
+      summary: Invalid data.
   securitySchemes:
     basicAuth:
       type: http

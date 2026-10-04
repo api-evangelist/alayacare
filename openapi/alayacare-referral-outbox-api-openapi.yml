@@ -256,18 +256,62 @@ paths:
       operationId: postV1OutboxReferralsByReferralIdUpdate
       x-operation-id-source: derived
 components:
+  parameters:
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    RevisionsQueryParam:
+      in: query
+      name: revisions
+      schema:
+        type: string
+        description: Filter in all revisions for a given referral, or only the latest revision, or only the archived revision(s).
+        enum:
+        - all
+        - latest
+        - archived
+        default: latest
+    ShiftIdQueryParam:
+      in: query
+      name: shift_id
+      schema:
+        type: string
+        format: uuid
+    ReferralIdPathParam:
+      in: path
+      name: referral_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    OfferIdQueryParam:
+      in: query
+      name: offer_id
+      schema:
+        type: string
+        format: uuid
   schemas:
-    OutboxCarePlanGoalCore:
+    OutboxCarePlanInterventionCore:
       allOf:
-      - $ref: '#/components/schemas/CarePlanGoalCore'
+      - $ref: '#/components/schemas/CarePlanInterventionCore'
       - type: object
         properties:
-          outbox_id:
-            type: integer
-          diagnoses:
+          goals:
             type: array
             items:
-              title: OutboxCarePlanGoalDiagnosisCore
+              title: OutboxCarePlanInterventionGoalCore
               type: object
               properties:
                 outbox_id:
@@ -277,8 +321,137 @@ components:
               required:
               - outbox_id
               - name
+          outbox_id:
+            type: integer
         required:
         - outbox_id
+    OutboxCarePlanDiagnosisCore:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanDiagnosisCore'
+      - type: object
+        properties:
+          outbox_id:
+            type: integer
+        required:
+        - outbox_id
+    OutboxReferralPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutboxReferralCollectionResponse'
+    PriceCore:
+      type: object
+      properties:
+        rate:
+          type: number
+          format: decimal
+          description: The dollar amount for offer per unit.
+          example: 30.0
+        unit:
+          type: string
+          description: The unit for the rate.
+          enum:
+          - per_visit
+          - per_hour
+          - amount
+      required:
+      - rate
+      - unit
+    OutboxReferralVisitTaskResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        is_required:
+          type: boolean
+      required:
+      - id
+      - outbox_id
+      - name
+      - is_required
+    FormTemplateCore:
+      type: object
+      properties:
+        admin_eyes_only:
+          type: boolean
+        approve_automatically:
+          type: boolean
+        clinical_event_name:
+          type: string
+        display_instructions_in_pdf:
+          type: boolean
+        display_report:
+          type: boolean
+        exclude_from_shift_report:
+          type: boolean
+        form_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        language_code:
+          type: string
+        name:
+          type: string
+        notify_alert_queue:
+          type: boolean
+        pre_populate:
+          type: boolean
+        requires_clock_in:
+          type: boolean
+        schema_id:
+          type: string
+          format: uuid
+        schema_version:
+          type: integer
+        visit_link_required:
+          type: boolean
+      required:
+      - admin_eyes_only
+      - approve_automatically
+      - display_instructions_in_pdf
+      - display_report
+      - exclude_from_shift_report
+      - form_type
+      - id
+      - language_code
+      - name
+      - notify_alert_queue
+      - pre_populate
+      - requires_clock_in
+      - schema_id
+      - schema_version
+      - visit_link_required
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    CustomFieldCore:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
     CarePlanDiagnosisCore:
       type: object
       properties:
@@ -324,15 +497,68 @@ components:
       - outbox_id
       - name
       - is_required
-    OutboxCarePlanInterventionCore:
+    ReferralReasonCodeCore:
+      description: '`reason_code` associated to a cancelled or closed referral.
+
+        '
+      type: object
+      properties:
+        reason_code:
+          type: string
+          enum:
+          - datetime_change
+          - client_request
+          - client_hospitalization
+          - client_passed_away
+          - client_refused_service
+          - processing_error
+          - other
+    OutboxReferralClientResponse:
       allOf:
-      - $ref: '#/components/schemas/CarePlanInterventionCore'
+      - $ref: '#/components/schemas/ClientCore'
       - type: object
         properties:
-          goals:
+          id:
+            type: string
+            format: uuid
+          outbox_id:
+            type: string
+            minLength: 1
+        required:
+        - id
+        - outbox_id
+    CaseManagerCore:
+      type: object
+      properties:
+        name:
+          type: string
+        phone_number:
+          type: string
+        fax_number:
+          type: string
+        email:
+          type: string
+    OutboxReferralClientRequest:
+      allOf:
+      - $ref: '#/components/schemas/ClientCore'
+      - type: object
+        properties:
+          outbox_id:
+            type: string
+            minLength: 1
+        required:
+        - outbox_id
+    OutboxCarePlanGoalCore:
+      allOf:
+      - $ref: '#/components/schemas/CarePlanGoalCore'
+      - type: object
+        properties:
+          outbox_id:
+            type: integer
+          diagnoses:
             type: array
             items:
-              title: OutboxCarePlanInterventionGoalCore
+              title: OutboxCarePlanGoalDiagnosisCore
               type: object
               properties:
                 outbox_id:
@@ -342,10 +568,451 @@ components:
               required:
               - outbox_id
               - name
-          outbox_id:
-            type: integer
         required:
         - outbox_id
+    OutboxReferralDetailResponse:
+      allOf:
+      - type: object
+        properties:
+          referral:
+            $ref: '#/components/schemas/OutboxReferralCore'
+          supply:
+            $ref: '#/components/schemas/OrganizationLeanCore'
+          alayacare:
+            $ref: '#/components/schemas/OutboxAlayaCareCore'
+          case_manager:
+            $ref: '#/components/schemas/CaseManagerCore'
+          price:
+            $ref: '#/components/schemas/PriceCore'
+          client:
+            $ref: '#/components/schemas/OutboxReferralClientResponse'
+          service:
+            title: OutboxReferralServiceDetailResponse
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              outbox_id:
+                type: string
+                minLength: 1
+              use_client_address:
+                type: boolean
+              address:
+                $ref: '#/components/schemas/AddressCore'
+              name:
+                type: string
+                minLength: 1
+              start_at:
+                type: string
+                format: date-time
+              expected_start_at:
+                type: string
+                format: date-time
+              end_at:
+                type: string
+                format: date-time
+              instructions:
+                type: string
+              notes:
+                type: string
+              skills:
+                type: array
+                items:
+                  type: string
+              custom_fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldCore'
+            required:
+            - id
+            - outbox_id
+            - name
+          visits:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutboxReferralVisitResponse'
+          revision:
+            $ref: '#/components/schemas/ReferralRevisionResponse'
+        required:
+        - referral
+        - supply
+        - client
+        - service
+        - revision
+    OutboxReferralCreateRequest:
+      type: object
+      properties:
+        referral:
+          type: object
+          properties:
+            care_type:
+              $ref: '#/components/schemas/CareTypeCore'
+            referral_type:
+              $ref: '#/components/schemas/ReferralTypeCore'
+            comment:
+              type: string
+            demand_labels:
+              type: array
+              items:
+                type: string
+              minItems: 1
+          required:
+          - care_type
+          - referral_type
+        supply_persona_id:
+          type: string
+          format: uuid
+          description: The supply organization to which the referral is destined.
+        alayacare:
+          $ref: '#/components/schemas/OutboxAlayaCareCore'
+        case_manager:
+          $ref: '#/components/schemas/CaseManagerCore'
+        price:
+          $ref: '#/components/schemas/PriceCore'
+        client:
+          $ref: '#/components/schemas/OutboxReferralClientRequest'
+        service:
+          title: OutboxReferralServiceCreateRequest
+          type: object
+          properties:
+            outbox_id:
+              type: string
+              minLength: 1
+            use_client_address:
+              type: boolean
+              description: 'For informational purposes only. This is an explicit indicator to the
+
+                supply organization whether the client address should be used as the
+
+                service address.
+
+
+                Setting to `true` means the client address should be used for the
+
+                service address. So, if a service address is also provided in the
+
+                request, it can safely be ignored.
+
+
+                Not providing this or setting to `false` means the specified
+
+                service address should be used instead.
+
+                '
+            address:
+              $ref: '#/components/schemas/AddressCore'
+            name:
+              type: string
+              minLength: 1
+            start_at:
+              type: string
+              format: date-time
+            expected_start_at:
+              type: string
+              format: date-time
+            end_at:
+              type: string
+              format: date-time
+            instructions:
+              type: string
+            notes:
+              type: string
+            skills:
+              type: array
+              items:
+                type: string
+            custom_fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+          required:
+          - outbox_id
+          - name
+        visits:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxReferralVisitRequest'
+      required:
+      - referral
+      - supply_persona_id
+      - client
+      - service
+    OutboxReferralVisitResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        instructions:
+          type: string
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxReferralVisitTaskResponse'
+      required:
+      - id
+      - start_at
+      - end_at
+    CareTypeCore:
+      type: string
+      enum:
+      - psw
+      - nursing
+    AddressCore:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+          minLength: 1
+        address_suite:
+          type: string
+        city:
+          type: string
+          minLength: 1
+        state:
+          type: string
+          minLength: 1
+        zip:
+          type: string
+          minLength: 1
+        country:
+          type: string
+          minLength: 1
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+      required:
+      - address
+      - city
+      - state
+      - zip
+      - country
+    AllergyCore:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        severity:
+          type: string
+        start_date:
+          type: string
+          format: date
+        treatment:
+          type: string
+    RiskCore:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          example: allergy
+        severity:
+          type: integer
+        start_date:
+          type: string
+          format: date
+    ReferralTypeCore:
+      type: string
+      enum:
+      - visit
+      - service
+    AuthorizationCore:
+      type: object
+      properties:
+        authorization_number:
+          type: string
+        authorization_status:
+          type: string
+        end_date:
+          type: string
+          format: date
+        first_day_of_week:
+          type: integer
+        id:
+          type: integer
+        import_id:
+          type: string
+        member_number:
+          type: string
+        notes:
+          type: string
+        program_id:
+          type: string
+        custom_number_of_days:
+          type: integer
+        rule_type:
+          type: string
+        rule_custom:
+          type: number
+          format: decimal
+        rule_daily:
+          type: number
+          format: decimal
+        rule_weekly:
+          type: number
+          format: decimal
+        rule_monthly:
+          type: number
+          format: decimal
+        rule_period:
+          type: number
+          format: decimal
+        rule_monday:
+          type: number
+          format: decimal
+        rule_tuesday:
+          type: number
+          format: decimal
+        rule_wednesday:
+          type: number
+          format: decimal
+        rule_thursday:
+          type: number
+          format: decimal
+        rule_friday:
+          type: number
+          format: decimal
+        rule_saturday:
+          type: number
+          format: decimal
+        rule_sunday:
+          type: number
+          format: decimal
+        start_date:
+          type: string
+          format: date
+      required:
+      - authorization_status
+      - first_day_of_week
+      - rule_type
+      - start_date
+    PageCore:
+      description: Root page schema for returning collections.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageNumberCore'
+        items_per_page:
+          $ref: '#/components/schemas/ItemsPerPageCore'
+        total_items:
+          type: integer
+          minimum: 0
+        total_pages:
+          type: integer
+          minimum: 0
+      required:
+      - page
+      - items_per_page
+      - total_items
+      - total_pages
+    OutboxReferralVisitRequest:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+          minLength: 1
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        instructions:
+          type: string
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxReferralVisitTaskRequest'
+      required:
+      - outbox_id
+      - start_at
+      - end_at
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    ReferralStatusCore:
+      type: string
+      enum:
+      - assigned
+      - processed
+      - cancelled
+    OutboxCarePlanCore:
+      type: object
+      properties:
+        outbox_id:
+          type: integer
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+        diagnoses:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxCarePlanDiagnosisCore'
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxCarePlanGoalCore'
+        interventions:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxCarePlanInterventionCore'
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - outbox_id
+      - start_date
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    OutboxFormTemplateCore:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateCore'
+      - type: object
+        properties:
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/FormTemplateFieldCore'
     FormTemplateFieldCore:
       type: object
       properties:
@@ -431,194 +1098,82 @@ components:
         - status
         - start_at
         - created_at
-    OutboxFormTemplateCore:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateCore'
-      - type: object
-        properties:
-          fields:
-            type: array
-            items:
-              $ref: '#/components/schemas/FormTemplateFieldCore'
-    OutboxReferralClientResponse:
-      allOf:
-      - $ref: '#/components/schemas/ClientCore'
-      - type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-          outbox_id:
-            type: string
-            minLength: 1
-        required:
-        - id
-        - outbox_id
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    OutboxReferralUpdateRequest:
+    OutboxReferralCollectionResponse:
+      description: 'API response of an referral on the outbox API.
+
+        '
+      type: object
       properties:
         referral:
-          title: OutboxReferralUpdateReferralRequest
-          type: object
-          properties:
-            comment:
-              type: string
-            demand_labels:
-              type: array
-              items:
-                type: string
-              minItems: 1
-        supply_persona_id:
-          type: string
-          format: uuid
-          description: The supply organization to which the referral is destined.
+          $ref: '#/components/schemas/OutboxReferralCore'
+        supply:
+          $ref: '#/components/schemas/OrganizationLeanCore'
         alayacare:
-          $ref: '#/components/schemas/OutboxAlayaCareCore'
-        case_manager:
-          $ref: '#/components/schemas/CaseManagerCore'
-        price:
-          $ref: '#/components/schemas/PriceCore'
+          title: OutboxReferralCollectionAlayacareResponse
+          properties:
+            has_authorization:
+              type: boolean
+          required:
+          - has_authorization
         client:
-          $ref: '#/components/schemas/OutboxReferralClientRequest'
-        service:
-          title: OutboxReferralUpdateServiceRequest
+          title: OutboxReferralCollectionClientResponse
           type: object
           properties:
+            id:
+              type: string
+              format: uuid
             outbox_id:
               type: string
-              minLength: 1
-            use_client_address:
-              type: boolean
-              description: 'For informational purposes only. This is an explicit indicator to the
-
-                supply organization whether the client address should be used as the
-
-                service address.
-
-
-                Setting to `true` means the client address should be used for the
-
-                service address. So, if a service address is also provided in the
-
-                request, it can safely be ignored.
-
-
-                Not providing this or setting to `false` means the specified
-
-                service address should be used instead.
-
-                '
-            address:
-              $ref: '#/components/schemas/AddressCore'
+            demographics:
+              $ref: '#/components/schemas/DemographicLeanCore'
+          required:
+          - id
+          - outbox_id
+          - demographics
+        service:
+          title: OutboxReferralCollectionServiceResponse
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            outbox_id:
+              type: string
             name:
               type: string
               minLength: 1
-            start_at:
-              type: string
-              format: date-time
-            expected_start_at:
-              type: string
-              format: date-time
-            end_at:
-              type: string
-              format: date-time
-            instructions:
-              type: string
-            notes:
-              type: string
-            skills:
-              type: array
-              items:
-                type: string
-            custom_fields:
-              type: array
-              items:
-                $ref: '#/components/schemas/CustomFieldCore'
           required:
-          - outbox_id
+          - id
           - name
-        visits:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxReferralVisitRequest'
+          - outbox_id
         revision:
-          title: OutboxReferralUpdateRevisionRequest
+          title: OutboxReferralCollectionRevisionResponse
           type: object
           properties:
-            reasons:
+            revision_group_id:
+              type: string
+              format: uuid
+            revision_number:
+              type: integer
+              minimum: 1
+            revision_reasons:
               type: array
               items:
                 type: string
-            comment:
+            revision_comment:
               type: string
+            is_latest_revision:
+              type: boolean
           required:
-          - reasons
+          - revision_group_id
+          - revision_number
+          - is_latest_revision
       required:
       - referral
-      - supply_persona_id
+      - supply
       - client
       - service
       - revision
-    ReferralStatusCore:
-      type: string
-      enum:
-      - assigned
-      - processed
-      - cancelled
-    RiskCore:
-      type: object
-      properties:
-        name:
-          type: string
-        category:
-          type: string
-          example: allergy
-        severity:
-          type: integer
-        start_date:
-          type: string
-          format: date
-    AddressCore:
-      type: object
-      properties:
-        name:
-          type: string
-        address:
-          type: string
-          minLength: 1
-        address_suite:
-          type: string
-        city:
-          type: string
-          minLength: 1
-        state:
-          type: string
-          minLength: 1
-        zip:
-          type: string
-          minLength: 1
-        country:
-          type: string
-          minLength: 1
-        latitude:
-          type: number
-          format: double
-          minimum: -90
-          maximum: 90
-        longitude:
-          type: number
-          format: double
-          minimum: -180
-          maximum: 180
-      required:
-      - address
-      - city
-      - state
-      - zip
-      - country
     CarePlanInterventionCore:
       type: object
       properties:
@@ -694,17 +1249,27 @@ components:
       - start_date
       - status
       - type
-    CaseManagerCore:
+    ReferralRevisionResponse:
       type: object
       properties:
-        name:
+        revision_group_id:
           type: string
-        phone_number:
+          format: uuid
+        revision_number:
+          type: integer
+          minimum: 1
+        revision_reasons:
+          type: array
+          items:
+            type: string
+        revision_comment:
           type: string
-        fax_number:
-          type: string
-        email:
-          type: string
+        is_latest_revision:
+          type: boolean
+      required:
+      - revision_group_id
+      - revision_number
+      - is_latest_revision
     ClientCore:
       type: object
       properties:
@@ -849,241 +1414,12 @@ components:
       required:
       - demographics
       - address
-    OutboxReferralDetailResponse:
-      allOf:
-      - type: object
-        properties:
-          referral:
-            $ref: '#/components/schemas/OutboxReferralCore'
-          supply:
-            $ref: '#/components/schemas/OrganizationLeanCore'
-          alayacare:
-            $ref: '#/components/schemas/OutboxAlayaCareCore'
-          case_manager:
-            $ref: '#/components/schemas/CaseManagerCore'
-          price:
-            $ref: '#/components/schemas/PriceCore'
-          client:
-            $ref: '#/components/schemas/OutboxReferralClientResponse'
-          service:
-            title: OutboxReferralServiceDetailResponse
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              outbox_id:
-                type: string
-                minLength: 1
-              use_client_address:
-                type: boolean
-              address:
-                $ref: '#/components/schemas/AddressCore'
-              name:
-                type: string
-                minLength: 1
-              start_at:
-                type: string
-                format: date-time
-              expected_start_at:
-                type: string
-                format: date-time
-              end_at:
-                type: string
-                format: date-time
-              instructions:
-                type: string
-              notes:
-                type: string
-              skills:
-                type: array
-                items:
-                  type: string
-              custom_fields:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CustomFieldCore'
-            required:
-            - id
-            - outbox_id
-            - name
-          visits:
-            type: array
-            items:
-              $ref: '#/components/schemas/OutboxReferralVisitResponse'
-          revision:
-            $ref: '#/components/schemas/ReferralRevisionResponse'
-        required:
-        - referral
-        - supply
-        - client
-        - service
-        - revision
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    AuthorizationCore:
-      type: object
-      properties:
-        authorization_number:
-          type: string
-        authorization_status:
-          type: string
-        end_date:
-          type: string
-          format: date
-        first_day_of_week:
-          type: integer
-        id:
-          type: integer
-        import_id:
-          type: string
-        member_number:
-          type: string
-        notes:
-          type: string
-        program_id:
-          type: string
-        custom_number_of_days:
-          type: integer
-        rule_type:
-          type: string
-        rule_custom:
-          type: number
-          format: decimal
-        rule_daily:
-          type: number
-          format: decimal
-        rule_weekly:
-          type: number
-          format: decimal
-        rule_monthly:
-          type: number
-          format: decimal
-        rule_period:
-          type: number
-          format: decimal
-        rule_monday:
-          type: number
-          format: decimal
-        rule_tuesday:
-          type: number
-          format: decimal
-        rule_wednesday:
-          type: number
-          format: decimal
-        rule_thursday:
-          type: number
-          format: decimal
-        rule_friday:
-          type: number
-          format: decimal
-        rule_saturday:
-          type: number
-          format: decimal
-        rule_sunday:
-          type: number
-          format: decimal
-        start_date:
-          type: string
-          format: date
-      required:
-      - authorization_status
-      - first_day_of_week
-      - rule_type
-      - start_date
-    OutboxCarePlanDiagnosisCore:
-      allOf:
-      - $ref: '#/components/schemas/CarePlanDiagnosisCore'
-      - type: object
-        properties:
-          outbox_id:
-            type: integer
-        required:
-        - outbox_id
-    ReferralTypeCore:
+    SortOrderCore:
       type: string
       enum:
-      - visit
-      - service
-    ReferralReasonCodeCore:
-      description: '`reason_code` associated to a cancelled or closed referral.
-
-        '
-      type: object
-      properties:
-        reason_code:
-          type: string
-          enum:
-          - datetime_change
-          - client_request
-          - client_hospitalization
-          - client_passed_away
-          - client_refused_service
-          - processing_error
-          - other
-    ReferralRevisionResponse:
-      type: object
-      properties:
-        revision_group_id:
-          type: string
-          format: uuid
-        revision_number:
-          type: integer
-          minimum: 1
-        revision_reasons:
-          type: array
-          items:
-            type: string
-        revision_comment:
-          type: string
-        is_latest_revision:
-          type: boolean
-      required:
-      - revision_group_id
-      - revision_number
-      - is_latest_revision
-    OutboxReferralVisitRequest:
-      type: object
-      properties:
-        outbox_id:
-          type: string
-          minLength: 1
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-        instructions:
-          type: string
-        tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxReferralVisitTaskRequest'
-      required:
-      - outbox_id
-      - start_at
-      - end_at
-    PriceCore:
-      type: object
-      properties:
-        rate:
-          type: number
-          format: decimal
-          description: The dollar amount for offer per unit.
-          example: 30.0
-        unit:
-          type: string
-          description: The unit for the rate.
-          enum:
-          - per_visit
-          - per_hour
-          - amount
-      required:
-      - rate
-      - unit
+      - asc
+      - desc
+      default: desc
     CarePlanGoalCore:
       type: object
       properties:
@@ -1128,71 +1464,12 @@ components:
       - is_primary
       - type
       - progress_type
-    OutboxReferralVisitTaskResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        outbox_id:
-          type: string
-          minLength: 1
-        name:
-          type: string
-          minLength: 1
-        description:
-          type: string
-        is_required:
-          type: boolean
-      required:
-      - id
-      - outbox_id
-      - name
-      - is_required
-    OutboxCarePlanCore:
-      type: object
-      properties:
-        outbox_id:
-          type: integer
-        name:
-          type: string
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        status:
-          type: string
-        diagnoses:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxCarePlanDiagnosisCore'
-        goals:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxCarePlanGoalCore'
-        interventions:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxCarePlanInterventionCore'
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - name
-      - outbox_id
-      - start_date
-    OutboxReferralCreateRequest:
-      type: object
+    OutboxReferralUpdateRequest:
       properties:
         referral:
+          title: OutboxReferralUpdateReferralRequest
           type: object
           properties:
-            care_type:
-              $ref: '#/components/schemas/CareTypeCore'
-            referral_type:
-              $ref: '#/components/schemas/ReferralTypeCore'
             comment:
               type: string
             demand_labels:
@@ -1200,9 +1477,6 @@ components:
               items:
                 type: string
               minItems: 1
-          required:
-          - care_type
-          - referral_type
         supply_persona_id:
           type: string
           format: uuid
@@ -1216,7 +1490,7 @@ components:
         client:
           $ref: '#/components/schemas/OutboxReferralClientRequest'
         service:
-          title: OutboxReferralServiceCreateRequest
+          title: OutboxReferralUpdateServiceRequest
           type: object
           properties:
             outbox_id:
@@ -1276,103 +1550,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OutboxReferralVisitRequest'
+        revision:
+          title: OutboxReferralUpdateRevisionRequest
+          type: object
+          properties:
+            reasons:
+              type: array
+              items:
+                type: string
+            comment:
+              type: string
+          required:
+          - reasons
       required:
       - referral
       - supply_persona_id
       - client
       - service
-    FormTemplateCore:
-      type: object
-      properties:
-        admin_eyes_only:
-          type: boolean
-        approve_automatically:
-          type: boolean
-        clinical_event_name:
-          type: string
-        display_instructions_in_pdf:
-          type: boolean
-        display_report:
-          type: boolean
-        exclude_from_shift_report:
-          type: boolean
-        form_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        language_code:
-          type: string
-        name:
-          type: string
-        notify_alert_queue:
-          type: boolean
-        pre_populate:
-          type: boolean
-        requires_clock_in:
-          type: boolean
-        schema_id:
-          type: string
-          format: uuid
-        schema_version:
-          type: integer
-        visit_link_required:
-          type: boolean
-      required:
-      - admin_eyes_only
-      - approve_automatically
-      - display_instructions_in_pdf
-      - display_report
-      - exclude_from_shift_report
-      - form_type
-      - id
-      - language_code
-      - name
-      - notify_alert_queue
-      - pre_populate
-      - requires_clock_in
-      - schema_id
-      - schema_version
-      - visit_link_required
-    OutboxReferralPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/OutboxReferralCollectionResponse'
-    OutboxReferralClientRequest:
-      allOf:
-      - $ref: '#/components/schemas/ClientCore'
-      - type: object
-        properties:
-          outbox_id:
-            type: string
-            minLength: 1
-        required:
-        - outbox_id
-    PageCore:
-      description: Root page schema for returning collections.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/PageNumberCore'
-        items_per_page:
-          $ref: '#/components/schemas/ItemsPerPageCore'
-        total_items:
-          type: integer
-          minimum: 0
-        total_pages:
-          type: integer
-          minimum: 0
-      required:
-      - page
-      - items_per_page
-      - total_items
-      - total_pages
+      - revision
     OutboxReferralCancelRequest:
       allOf:
       - $ref: '#/components/schemas/ReferralReasonCodeCore'
@@ -1381,11 +1576,6 @@ components:
           comment:
             type: string
             maxLength: 1000
-    CareTypeCore:
-      type: string
-      enum:
-      - psw
-      - nursing
     DemographicLeanCore:
       type: object
       properties:
@@ -1398,150 +1588,6 @@ components:
       required:
       - first_name
       - last_name
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    AllergyCore:
-      type: object
-      properties:
-        name:
-          type: string
-        category:
-          type: string
-        severity:
-          type: string
-        start_date:
-          type: string
-          format: date
-        treatment:
-          type: string
-    OutboxReferralVisitResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        outbox_id:
-          type: string
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-        instructions:
-          type: string
-        tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxReferralVisitTaskResponse'
-      required:
-      - id
-      - start_at
-      - end_at
-    CustomFieldCore:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-    OrganizationLeanCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-      required:
-      - id
-      - name
-    OutboxReferralCollectionResponse:
-      description: 'API response of an referral on the outbox API.
-
-        '
-      type: object
-      properties:
-        referral:
-          $ref: '#/components/schemas/OutboxReferralCore'
-        supply:
-          $ref: '#/components/schemas/OrganizationLeanCore'
-        alayacare:
-          title: OutboxReferralCollectionAlayacareResponse
-          properties:
-            has_authorization:
-              type: boolean
-          required:
-          - has_authorization
-        client:
-          title: OutboxReferralCollectionClientResponse
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-            outbox_id:
-              type: string
-            demographics:
-              $ref: '#/components/schemas/DemographicLeanCore'
-          required:
-          - id
-          - outbox_id
-          - demographics
-        service:
-          title: OutboxReferralCollectionServiceResponse
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-            outbox_id:
-              type: string
-            name:
-              type: string
-              minLength: 1
-          required:
-          - id
-          - name
-          - outbox_id
-        revision:
-          title: OutboxReferralCollectionRevisionResponse
-          type: object
-          properties:
-            revision_group_id:
-              type: string
-              format: uuid
-            revision_number:
-              type: integer
-              minimum: 1
-            revision_reasons:
-              type: array
-              items:
-                type: string
-            revision_comment:
-              type: string
-            is_latest_revision:
-              type: boolean
-          required:
-          - revision_group_id
-          - revision_number
-          - is_latest_revision
-      required:
-      - referral
-      - supply
-      - client
-      - service
-      - revision
     OutboxAlayaCareCore:
       type: object
       properties:
@@ -1555,52 +1601,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OutboxFormTemplateCore'
-  parameters:
-    OfferIdQueryParam:
-      in: query
-      name: offer_id
-      schema:
-        type: string
-        format: uuid
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    ReferralIdPathParam:
-      in: path
-      name: referral_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    RevisionsQueryParam:
-      in: query
-      name: revisions
-      schema:
-        type: string
-        description: Filter in all revisions for a given referral, or only the latest revision, or only the archived revision(s).
-        enum:
-        - all
-        - latest
-        - archived
-        default: latest
-    ShiftIdQueryParam:
-      in: query
-      name: shift_id
-      schema:
-        type: string
-        format: uuid
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

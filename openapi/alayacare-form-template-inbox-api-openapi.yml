@@ -60,36 +60,14 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FormTemplateFieldCore:
-      type: object
-      properties:
-        field_tag:
-          type: string
-        field_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        json_logic:
-          type: object
-        label:
-          type: string
-        parent_id:
-          type: integer
-        rank:
-          type: integer
-        required:
-          type: boolean
-        settings:
-          type: object
-      required:
-      - field_type
-      - id
-      - label
-      - parent_id
-      - rank
-      - required
+    InboxFormTemplateFieldResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateFieldCore'
+      - type: object
+        properties:
+          field_id:
+            type: string
+            format: uuid
     FormTemplateCore:
       type: object
       properties:
@@ -144,14 +122,36 @@ components:
       - schema_id
       - schema_version
       - visit_link_required
-    InboxFormTemplateFieldResponse:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateFieldCore'
-      - type: object
-        properties:
-          field_id:
-            type: string
-            format: uuid
+    FormTemplateFieldCore:
+      type: object
+      properties:
+        field_tag:
+          type: string
+        field_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        json_logic:
+          type: object
+        label:
+          type: string
+        parent_id:
+          type: integer
+        rank:
+          type: integer
+        required:
+          type: boolean
+        settings:
+          type: object
+      required:
+      - field_type
+      - id
+      - label
+      - parent_id
+      - rank
+      - required
     InboxFormTemplateDetailResponse:
       allOf:
       - $ref: '#/components/schemas/FormTemplateCore'

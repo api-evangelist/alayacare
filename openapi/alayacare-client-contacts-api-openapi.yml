@@ -325,7 +325,93 @@ paths:
                     code: 409
                     message: 'Contact already exists with external ID: contact_external_id_1'
 components:
+  requestBodies:
+    ClientContactUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientContactUpdate'
+      description: Client contact data in JSON format
+      required: true
   schemas:
+    ClientContactDemographics:
+      description: 'Collection of key/value pairs where keys are existing attributes in the patient contact profile, defined through the AlayaCare web application.
+
+        On the example below default profile keys for the client contact are used.
+
+
+        Example profile attributes:
+
+        + `first_name`: string
+
+        + `last_name`: string
+
+        + `city`: string
+
+        + `title`: string
+
+        + `state`: string
+
+        + `gender`: string
+
+        + `relationship`: string
+
+        + `contact_type`: string
+
+        + `fax`: string
+
+        + `company`: string
+
+        + `phone_other`: string
+
+        + `phone_main`: string
+
+        + `address`: string
+
+        + `country`: string
+
+        + `zip`: string
+
+        + `address_suite`: string
+
+        + `remarks`: string
+
+        '
+      type: object
+      properties:
+        first_name:
+          description: Profile first name
+          type: string
+          example: Jane
+        last_name:
+          description: Profile last name
+          type: string
+          example: Smith
+        gender:
+          description: Profile gender
+          type: string
+          example: M
+          enum:
+          - M
+          - F
+          - O
+    SuccessResponse:
+      description: Success response.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare ID
+          example: 1001
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: External ID
+          example: entity_external_id
+      required:
+      - id
+      - external_id
     ClientContactCreate:
       description: Only one of 'client_id' and 'external_client_id' can be provided
       allOf:
@@ -336,27 +422,6 @@ components:
           description: AlayaCare profile ID
           type: integer
           example: 100
-    ClientContactRolesUpdate:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - Client Designee
-          - Legal Guardian
-          - Health Care Proxy
-          - Physician
-          - Power of Attorney
-          - Client Representative
-          - Enduring Guardian (ANZ)
-        is_active:
-          type: boolean
-        effective_from:
-          type: string
-          format: date-time
-        effective_to:
-          type: string
-          format: date-time
     ClientStatus:
       type:
       - string
@@ -368,6 +433,122 @@ components:
       - discharged
       - waiting_list
       - unknown
+    ClientContactDetails:
+      description: AlayaCare client list item
+      type: object
+      properties:
+        id:
+          description: AlayaCare client ID
+          type: integer
+          example: 1000
+        ac_id:
+          type: string
+          description: AlayaCare ID for display in-app
+          example: AC000000024
+        branch:
+          type: object
+          description: AlayaCare branch
+          properties:
+            id:
+              description: Branch ID
+              type: integer
+              example: 1000
+            name:
+              description: Branch name
+              type: string
+              example: Toronto branch
+        external_id:
+          description: External client ID
+          type:
+          - string
+          - 'null'
+          example: sor_client_external_id_1
+        first_name:
+          description: Client first name
+          type: string
+          example: John
+        last_name:
+          description: Client last name
+          type: string
+          example: Smith
+        status:
+          $ref: '#/components/schemas/ClientStatus'
+        contact_relationship:
+          $ref: '#/components/schemas/ClientContactRelationship'
+        _link:
+          description: Client link on the web application
+          type: string
+          example: https://demo3.alayacare.ca/permalink/client/b1
+    ClientContactStatus:
+      type: string
+      enum:
+      - enabled
+      - disabled
+    ClientContactUpdate:
+      type: object
+      properties:
+        external_id:
+          type: string
+          example: crm_client_contact_external_id_1
+          description: Client contact external ID
+        status:
+          $ref: '#/components/schemas/ClientContactStatus'
+        contact_type:
+          type: string
+          example: Medical
+        relationship:
+          type: string
+          example: Doctor
+        client_id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        external_client_id:
+          type: string
+          description: External client ID
+          example: sor_client_external_id_1
+        is_billing_contact:
+          type: boolean
+          example: false
+          description: Is the contact a billing contact
+        emergency:
+          type:
+          - boolean
+          - 'null'
+          example: false
+          default: false
+        language:
+          $ref: '#/components/schemas/ClientLanguage'
+        demographics:
+          $ref: '#/components/schemas/ClientContactDemographics'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientContactRolesUpdate'
+        eb_medicaid_provider_type:
+          type: string
+          example: Attending provider
+        eb_medicaid_npi:
+          type: string
+          example: '1234567'
+        eb_medicaid_employee_relationship:
+          type: string
+          example: Spouse
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     ClientLanguage:
       type:
       - string
@@ -456,11 +637,6 @@ components:
           - string
           - 'null'
           example: '12345678'
-    ClientContactStatus:
-      type: string
-      enum:
-      - enabled
-      - disabled
     ClientContact:
       type: object
       properties:
@@ -542,218 +718,28 @@ components:
       - external_id
       - status
       - demographics
-    SuccessResponse:
-      description: Success response.
+    ClientContactRolesUpdate:
       type: object
       properties:
-        id:
-          type: integer
-          description: AlayaCare ID
-          example: 1001
-        external_id:
-          type:
-          - string
-          - 'null'
-          description: External ID
-          example: entity_external_id
-      required:
-      - id
-      - external_id
-    ClientContactDemographics:
-      description: 'Collection of key/value pairs where keys are existing attributes in the patient contact profile, defined through the AlayaCare web application.
-
-        On the example below default profile keys for the client contact are used.
-
-
-        Example profile attributes:
-
-        + `first_name`: string
-
-        + `last_name`: string
-
-        + `city`: string
-
-        + `title`: string
-
-        + `state`: string
-
-        + `gender`: string
-
-        + `relationship`: string
-
-        + `contact_type`: string
-
-        + `fax`: string
-
-        + `company`: string
-
-        + `phone_other`: string
-
-        + `phone_main`: string
-
-        + `address`: string
-
-        + `country`: string
-
-        + `zip`: string
-
-        + `address_suite`: string
-
-        + `remarks`: string
-
-        '
-      type: object
-      properties:
-        first_name:
-          description: Profile first name
+        role:
           type: string
-          example: Jane
-        last_name:
-          description: Profile last name
-          type: string
-          example: Smith
-        gender:
-          description: Profile gender
-          type: string
-          example: M
           enum:
-          - M
-          - F
-          - O
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    ClientContactDetails:
-      description: AlayaCare client list item
-      type: object
-      properties:
-        id:
-          description: AlayaCare client ID
-          type: integer
-          example: 1000
-        ac_id:
-          type: string
-          description: AlayaCare ID for display in-app
-          example: AC000000024
-        branch:
-          type: object
-          description: AlayaCare branch
-          properties:
-            id:
-              description: Branch ID
-              type: integer
-              example: 1000
-            name:
-              description: Branch name
-              type: string
-              example: Toronto branch
-        external_id:
-          description: External client ID
-          type:
-          - string
-          - 'null'
-          example: sor_client_external_id_1
-        first_name:
-          description: Client first name
-          type: string
-          example: John
-        last_name:
-          description: Client last name
-          type: string
-          example: Smith
-        status:
-          $ref: '#/components/schemas/ClientStatus'
-        contact_relationship:
-          $ref: '#/components/schemas/ClientContactRelationship'
-        _link:
-          description: Client link on the web application
-          type: string
-          example: https://demo3.alayacare.ca/permalink/client/b1
-    ClientContactUpdate:
-      type: object
-      properties:
-        external_id:
-          type: string
-          example: crm_client_contact_external_id_1
-          description: Client contact external ID
-        status:
-          $ref: '#/components/schemas/ClientContactStatus'
-        contact_type:
-          type: string
-          example: Medical
-        relationship:
-          type: string
-          example: Doctor
-        client_id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        external_client_id:
-          type: string
-          description: External client ID
-          example: sor_client_external_id_1
-        is_billing_contact:
+          - Client Designee
+          - Legal Guardian
+          - Health Care Proxy
+          - Physician
+          - Power of Attorney
+          - Client Representative
+          - Enduring Guardian (ANZ)
+        is_active:
           type: boolean
-          example: false
-          description: Is the contact a billing contact
-        emergency:
-          type:
-          - boolean
-          - 'null'
-          example: false
-          default: false
-        language:
-          $ref: '#/components/schemas/ClientLanguage'
-        demographics:
-          $ref: '#/components/schemas/ClientContactDemographics'
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientContactRolesUpdate'
-        eb_medicaid_provider_type:
+        effective_from:
           type: string
-          example: Attending provider
-        eb_medicaid_npi:
+          format: date-time
+        effective_to:
           type: string
-          example: '1234567'
-        eb_medicaid_employee_relationship:
-          type: string
-          example: Spouse
+          format: date-time
   responses:
-    SuccessResponseClientContactCreate:
-      description: Contact created successfuly
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessResponse'
-          examples:
-            response:
-              value:
-                id: 1001
-                external_id: crm_client_contact_external_id_1
-    ErrorResponseClientContactNotFound:
-      description: Client contact not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Client contact not found.
     ErrorResponseClientContactInvalidRequest:
       description: Invalid request
       content:
@@ -776,6 +762,17 @@ components:
               value:
                 code: 401
                 message: Authorization required.
+    SuccessResponseClientContactCreate:
+      description: Contact created successfuly
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+          examples:
+            response:
+              value:
+                id: 1001
+                external_id: crm_client_contact_external_id_1
     ErrorResponseClientNotFound:
       description: Client not found
       content:
@@ -787,17 +784,6 @@ components:
               value:
                 code: 404
                 message: Client not found.
-    ErrorResponseClientContactNotFoundGet:
-      description: Client contact not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 404
-                message: Client contact not found
     SuccessResponseClientContactUpdate:
       description: Client updated successfuly
       content:
@@ -809,14 +795,28 @@ components:
               value:
                 id: 1001
                 external_id: crm_client_contact_external_id_1
-  requestBodies:
-    ClientContactUpdate:
+    ErrorResponseClientContactNotFoundGet:
+      description: Client contact not found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ClientContactUpdate'
-      description: Client contact data in JSON format
-      required: true
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client contact not found
+    ErrorResponseClientContactNotFound:
+      description: Client contact not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 404
+                message: Client contact not found.
   securitySchemes:
     basic_auth:
       type: http

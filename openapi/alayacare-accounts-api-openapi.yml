@@ -230,6 +230,43 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    BranchSummary:
+      description: Branch summary
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the branch
+          example: 1
+          minimum: 1
+        name:
+          type: string
+          description: Name of the branch
+          example: Headquarters
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    AccountList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of accounts
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -297,61 +334,7 @@ components:
           - equity
           - revenue
           - expense
-    BranchSummary:
-      description: Branch summary
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the branch
-          example: 1
-          minimum: 1
-        name:
-          type: string
-          description: Name of the branch
-          example: Headquarters
-    AccountList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of accounts
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
   responses:
-    ErrorResponseAccessDenied:
-      description: Access denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '403'
-                message: You do not have the required permissions to perform this action
-    ErrorResponseInvalidAccountParams:
-      description: Invalid account parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -363,6 +346,23 @@ components:
               value:
                 code: '401'
                 message: Authorization required.
+    ErrorResponseInvalidAccountParams:
+      description: Invalid account parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ErrorResponseAccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '403'
+                message: You do not have the required permissions to perform this action
   securitySchemes:
     basic_auth:
       type: http

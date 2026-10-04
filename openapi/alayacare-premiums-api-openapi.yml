@@ -186,29 +186,98 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PayCode:
-      description: AlayaCare pay code
+    PremiumExtendedSchema:
       type: object
       properties:
         id:
           type: integer
-          description: AlayCare pay code ID
+          example: 453
+        guid:
+          type: integer
+          example: 356689
+        code:
+          type: string
+          example: TESTCODE
+        pay_code:
+          $ref: '#/components/schemas/PayCodeSchema'
+        rule:
+          type: string
+          example: Evening
+        rule_data:
+          description: Not really supported but returned as is, the rule data is stored as a json
+          type: string
+          example: null
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeQuerySchema'
+    BillCodeStub:
+      type: object
+      description: Only one of id or guid should be present
+      properties:
+        id:
+          type: integer
           example: 3
-          minimum: 1
+        guid:
+          type: integer
+          example: 3
+    BillCodeQuerySchema:
+      properties:
+        branch:
+          $ref: '#/components/schemas/Branch'
         code:
           type: string
-          description: AlayCare pay code name
-          example: 783
-    PayCodeSchema:
+        excluded_from_billing:
+          type: boolean
+        guid:
+          type: integer
+        id:
+          type: integer
+        is_disabled:
+          type: boolean
+        name:
+          type: string
+        units:
+          type: string
+      required:
+      - id
+      - code
+      - name
+      - excluded_from_billing
+      - is_disabled
+      - units
+      type: object
+    BillCode:
+      description: AlayaCare bill code
       type: object
       properties:
         id:
           type: integer
-          example: 1
+          description: AlayCare bill code ID
+          example: 783
           minimum: 1
         code:
           type: string
-          example: SP
+          description: AlayCare bill code name
+          example: MEDIBILL
+      required:
+      - id
+      - code
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -235,6 +304,16 @@ components:
       - page
       - total_pages
       - items
+    PremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      type: object
+      description: Paginated list of premiums
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Premium'
     PremiumCreateSchema:
       type: object
       required:
@@ -255,31 +334,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BillCodeStub'
-    ErrorResponse:
-      description: Error response
+    PayCode:
+      description: AlayaCare pay code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare pay code ID
+          example: 3
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare pay code name
+          example: 783
+    PayCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
+    PremiumUpdateSchema:
       type: object
       properties:
         code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
           type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    PremiumsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      type: object
-      description: Paginated list of premiums
-      properties:
-        items:
+          example: TESTCODE
+        pay_code_id:
+          type: integer
+          example: 1
+          minimum: 1
+        bill_codes:
           type: array
           items:
-            $ref: '#/components/schemas/Premium'
+            $ref: '#/components/schemas/BillCodeStub'
     Premium:
       description: A premium configured in AlayaCare Accounting Settings
       type: object
@@ -308,31 +399,6 @@ components:
       required:
       - code
       - premium_id
-    PremiumExtendedSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 453
-        guid:
-          type: integer
-          example: 356689
-        code:
-          type: string
-          example: TESTCODE
-        pay_code:
-          $ref: '#/components/schemas/PayCodeSchema'
-        rule:
-          type: string
-          example: Evening
-        rule_data:
-          description: Not really supported but returned as is, the rule data is stored as a json
-          type: string
-          example: null
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeQuerySchema'
     Branch:
       description: AlayaCare branch
       type: object
@@ -346,73 +412,18 @@ components:
           type: string
           description: Branch name
           example: AlayaCare Health
-    BillCodeQuerySchema:
-      properties:
-        branch:
-          $ref: '#/components/schemas/Branch'
-        code:
-          type: string
-        excluded_from_billing:
-          type: boolean
-        guid:
-          type: integer
-        id:
-          type: integer
-        is_disabled:
-          type: boolean
-        name:
-          type: string
-        units:
-          type: string
-      required:
-      - id
-      - code
-      - name
-      - excluded_from_billing
-      - is_disabled
-      - units
-      type: object
-    BillCodeStub:
-      type: object
-      description: Only one of id or guid should be present
-      properties:
-        id:
-          type: integer
-          example: 3
-        guid:
-          type: integer
-          example: 3
-    PremiumUpdateSchema:
-      type: object
-      properties:
-        code:
-          type: string
-          example: TESTCODE
-        pay_code_id:
-          type: integer
-          example: 1
-          minimum: 1
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeStub'
-    BillCode:
-      description: AlayaCare bill code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare bill code ID
-          example: 783
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare bill code name
-          example: MEDIBILL
-      required:
-      - id
-      - code
   responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
     ErrorResponseAccessDenied:
       description: Access denied
       content:
@@ -435,17 +446,6 @@ components:
               value:
                 code: '404'
                 message: Premium not found
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

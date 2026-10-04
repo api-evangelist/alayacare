@@ -131,7 +131,101 @@ paths:
     servers:
     - url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 components:
+  parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    filter_partial_search:
+      name: filter_partial_search
+      description: 'Substring search on profile tag and description values.
+
+        Ex: `name`
+
+        '
+      in: query
+      required: false
+      schema:
+        type: string
+    filter_partial_search_2:
+      name: filter (partial search)
+      description: 'Substring search on profile tag and description values.
+
+        Ex: `name`
+
+        '
+      in: query
+      required: false
+      schema:
+        type: string
+    count_2:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
+    page_2:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    filter_partial_search_3:
+      name: filter (partial search)
+      description: 'Substring search on profile tag and description values.
+
+        Ex: `name`
+
+        '
+      in: query
+      required: false
+      schema:
+        type: string
   schemas:
+    ProfileAttribute:
+      type: object
+      properties:
+        tag:
+          description: Attribute key in the demographics object
+          type: string
+          example: first_name
+        description:
+          description: Attribute description as it shows in the web application
+          type: string
+          example: First Name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -157,17 +251,6 @@ components:
       - page
       - total_pages
       - items
-    ProfileAttribute:
-      type: object
-      properties:
-        tag:
-          description: Attribute key in the demographics object
-          type: string
-          example: first_name
-        description:
-          description: Attribute description as it shows in the web application
-          type: string
-          example: First Name
     ProfileAttributeList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -178,17 +261,15 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/ProfileAttribute'
-    ErrorResponse:
+    ErrorResponse_2:
       description: Error response
       type: object
       properties:
         code:
           type: integer
-          example: 400
           description: Response code
         message:
           type: string
-          example: Invalid request
           description: Detailed error message
       required:
       - code
@@ -224,19 +305,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProfileAttribute'
-    ErrorResponse_2:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     ProfileAttributeList_3:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -280,74 +348,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProfileAttribute'
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    filter_partial_search:
-      name: filter_partial_search
-      description: 'Substring search on profile tag and description values.
-
-        Ex: `name`
-
-        '
-      in: query
-      required: false
-      schema:
-        type: string
-    filter_partial_search_2:
-      name: filter (partial search)
-      description: 'Substring search on profile tag and description values.
-
-        Ex: `name`
-
-        '
-      in: query
-      required: false
-      schema:
-        type: string
-    page_2:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
-    count_2:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
-    filter_partial_search_3:
-      name: filter (partial search)
-      description: 'Substring search on profile tag and description values.
-
-        Ex: `name`
-
-        '
-      in: query
-      required: false
-      schema:
-        type: string
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

@@ -212,35 +212,38 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ModifierRuleSchema:
+    RRuleSchema:
       type: object
+      description: A recurrence rule for a Bill Code Rate
       properties:
-        id:
+        duration:
           type: integer
-          example: 12
-          minimum: 1
-        code:
+        rrule:
           type: string
-          example: code
-        rule_type:
-          type: integer
-          example: 1
-    AccountStub:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        name:
+          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
+          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
+          description: A recurrence rule string following RFC-5545
+        start_at:
           type: string
-          example: AlayaCare
-        is_disabled:
-          type: boolean
-          example: false
-      required:
-      - id
-      - name
-      - is_disabled
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+        end_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+    BillCodeUpdateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeBaseSchema'
+      - $ref: '#/components/schemas/BillCodeUpdateBaseSchema'
+      - type: object
+        properties:
+          rates:
+            description: Rates can be provided here for validation only
+            type: array
+            items:
+              $ref: '#/components/schemas/BillCodeRateCreateSchema'
     BillCodeRateTierCreateSchema:
       type: object
       properties:
@@ -269,17 +272,127 @@ components:
       - rate
       - start_at
       - unit
-    BranchSchema:
-      description: The branch associated with the Billcode
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Entity not found
+      required:
+      - code
+      - message
+    LinkedEntitySchema:
       type: object
       properties:
         id:
           type: integer
-          example: 1
-          minimum: 1
+          example: 12
+    BillCodeScalarQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeCollectionQuerySchema'
+      - type: object
+        properties:
+          rates:
+            type: array
+            items:
+              type: string
+              example: '123'
+          taxes:
+            type: array
+            items:
+              $ref: '#/components/schemas/BillCodeTaxSchema'
+          rounding_rule:
+            $ref: '#/components/schemas/RoundingRuleSchema'
+          modifier_rules:
+            type: array
+            items:
+              $ref: '#/components/schemas/ModifierRuleSetQuerySchema'
+    BillCodeRateRRuleCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        required:
+        - rate
+        - order
+        - override_holiday_multiplicator
+    BillCodeTaxSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
         name:
           type: string
-          example: AlayaCare Health
+          example: TPS
+        percent:
+          type: number
+          example: 12.5
+      required:
+      - id
+      - name
+      - percent
+    BillCodeRateRRuleBaseSchema:
+      type: object
+      properties:
+        rate:
+          type: number
+          example: 12.5
+        external_id:
+          type: string
+          pattern: (^$|^[0-9a-zA-Z\\-_]+$)
+          example: '123'
+        order:
+          type: integer
+          example: 1
+        override_holiday_multiplicator:
+          type: integer
+          description: effectively a boolean
+          enum:
+          - 0
+          - 1
+          example: 1
+        duration:
+          type: integer
+          example: 10
+        rrule:
+          $ref: '#/components/schemas/RRuleSchema'
+    BillCodeCollectionQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeBaseSchema'
+      - type: object
+        properties:
+          id:
+            description: Bill Code ID
+            type: integer
+            example: 12
+          is_disabled:
+            description: Flag indicating if the Billcode is disabled
+            type: boolean
+            example: false
+          funder:
+            $ref: '#/components/schemas/FunderStubSchema'
+          is_read_only:
+            description: Flag indicating if the Billcode is read only
+            type: boolean
+            example: false
+          guid:
+            description: Globally Unique Identifier
+            type: integer
+            example: 12
+          gl_revenue:
+            $ref: '#/components/schemas/AccountStub'
+          branch:
+            $ref: '#/components/schemas/BranchSchema'
+      required:
+      - id
+      - code
+      - name
+      - excluded_from_billing
+      - is_midnight_rule_applicable
+      - is_disabled
     BillCodeRateCreateSchema:
       type: object
       properties:
@@ -311,87 +424,112 @@ components:
       - rate
       - units
       - start_at
-    BillCodeScalarQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeCollectionQuerySchema'
-      - type: object
-        properties:
-          rates:
-            type: array
-            items:
-              type: string
-              example: '123'
-          taxes:
-            type: array
-            items:
-              $ref: '#/components/schemas/BillCodeTaxSchema'
-          rounding_rule:
-            $ref: '#/components/schemas/RoundingRuleSchema'
-          modifier_rules:
-            type: array
-            items:
-              $ref: '#/components/schemas/ModifierRuleSetQuerySchema'
-    PaginatedList:
-      description: Base model of all paginated lists
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        count:
+        code:
           type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
       required:
-      - count
-      - page
-      - total_pages
-      - items
-    RRuleSchema:
-      type: object
-      description: A recurrence rule for a Bill Code Rate
-      properties:
-        duration:
-          type: integer
-        rrule:
-          type: string
-          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
-          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
-          description: A recurrence rule string following RFC-5545
-        start_at:
-          type: string
-          format: date-time
-          example: '2019-01-01T00:00:00+00:00'
-          description: Date the Rate begins to apply
-        end_at:
-          type: string
-          format: date-time
-          example: '2019-01-01T00:00:00+00:00'
-          description: Date the Rate begins to apply
-    LinkedEntitySchema:
+      - code
+      - message
+    FunderStubSchema:
+      description: Funder associated with the Billcode
       type: object
       properties:
         id:
           type: integer
           example: 12
-    BillCodeRateRRuleCreateSchema:
+          minimum: 1
+        name:
+          type: string
+          example: Funder
+    AccountStub:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: AlayaCare
+        is_disabled:
+          type: boolean
+          example: false
+      required:
+      - id
+      - name
+      - is_disabled
+    ModifierRuleSetQuerySchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          minimum: 1
+        name:
+          type: string
+          example: modifer_rule_name
+        description:
+          type: string
+          example: A rule that modifies
+        branch_id:
+          type: integer
+          example: 1
+        type:
+          type: integer
+          example: 1
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModifierRuleSchema'
+    BillCodeCreateSchema:
       allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - $ref: '#/components/schemas/BillCodeBaseSchema'
+      - $ref: '#/components/schemas/BillCodeUpdateBaseSchema'
       - type: object
-        required:
-        - rate
-        - order
-        - override_holiday_multiplicator
+        properties:
+          branch_id:
+            type: integer
+            description: ID of the branch the Billcode belongs to
+      required:
+      - code
+      - name
+      - units
+      - bill_clocked_time
+      - send_decimal_units
+      - rates
+    BillCodeUpdateBaseSchema:
+      type: object
+      properties:
+        gl_revenue_id:
+          type: integer
+          example: 1
+        rates:
+          description: Rates associated with the Billcode
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeRateCreateSchema'
+        funder_id:
+          type: integer
+          example: 1
+        taxes:
+          description: Taxes associated with the Billcode
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkedEntitySchema'
+        rounding_rule:
+          $ref: '#/components/schemas/RoundingRuleSchema'
+        modifier_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkedEntitySchema'
     BillCodeBaseSchema:
       type: object
       properties:
@@ -468,95 +606,45 @@ components:
             '
           type: boolean
           example: true
-    BillCodeRateRRuleBaseSchema:
+    PaginatedList:
+      description: Base model of all paginated lists
       type: object
       properties:
-        rate:
-          type: number
-          example: 12.5
-        external_id:
-          type: string
-          pattern: (^$|^[0-9a-zA-Z\\-_]+$)
-          example: '123'
-        order:
+        count:
           type: integer
-          example: 1
-        override_holiday_multiplicator:
-          type: integer
-          description: effectively a boolean
-          enum:
-          - 0
-          - 1
-          example: 1
-        duration:
-          type: integer
+          description: Number of items in the response
           example: 10
-        rrule:
-          $ref: '#/components/schemas/RRuleSchema'
-    NotFound:
-      type: object
-      properties:
-        code:
-          type: string
-          example: 404
-        message:
-          type: string
-          example: Entity not found
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
       required:
-      - code
-      - message
-    BillCodeCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeBaseSchema'
-      - $ref: '#/components/schemas/BillCodeUpdateBaseSchema'
-      - type: object
-        properties:
-          branch_id:
-            type: integer
-            description: ID of the branch the Billcode belongs to
-      required:
-      - code
-      - name
-      - units
-      - bill_clocked_time
-      - send_decimal_units
-      - rates
-    FunderStubSchema:
-      description: Funder associated with the Billcode
+      - count
+      - page
+      - total_pages
+      - items
+    ModifierRuleSchema:
       type: object
       properties:
         id:
           type: integer
           example: 12
           minimum: 1
-        name:
+        code:
           type: string
-          example: Funder
-    BillCodeUpdateBaseSchema:
-      type: object
-      properties:
-        gl_revenue_id:
+          example: code
+        rule_type:
           type: integer
           example: 1
-        rates:
-          description: Rates associated with the Billcode
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeRateCreateSchema'
-        funder_id:
-          type: integer
-          example: 1
-        taxes:
-          description: Taxes associated with the Billcode
-          type: array
-          items:
-            $ref: '#/components/schemas/LinkedEntitySchema'
-        rounding_rule:
-          $ref: '#/components/schemas/RoundingRuleSchema'
-        modifier_rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/LinkedEntitySchema'
     RoundingRuleSchema:
       description: The rounding rule that the Bill Code applies to a Visit's approved time
       type: object
@@ -589,105 +677,35 @@ components:
           type: boolean
         auto_update:
           type: boolean
-    BillCodeCollectionQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeBaseSchema'
-      - type: object
-        properties:
-          id:
-            description: Bill Code ID
-            type: integer
-            example: 12
-          is_disabled:
-            description: Flag indicating if the Billcode is disabled
-            type: boolean
-            example: false
-          funder:
-            $ref: '#/components/schemas/FunderStubSchema'
-          is_read_only:
-            description: Flag indicating if the Billcode is read only
-            type: boolean
-            example: false
-          guid:
-            description: Globally Unique Identifier
-            type: integer
-            example: 12
-          gl_revenue:
-            $ref: '#/components/schemas/AccountStub'
-          branch:
-            $ref: '#/components/schemas/BranchSchema'
-      required:
-      - id
-      - code
-      - name
-      - excluded_from_billing
-      - is_midnight_rule_applicable
-      - is_disabled
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-    ModifierRuleSetQuerySchema:
+    BranchSchema:
+      description: The branch associated with the Billcode
       type: object
       properties:
         id:
           type: integer
-          example: 12
+          example: 1
           minimum: 1
         name:
           type: string
-          example: modifer_rule_name
-        description:
-          type: string
-          example: A rule that modifies
-        branch_id:
-          type: integer
-          example: 1
-        type:
-          type: integer
-          example: 1
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/ModifierRuleSchema'
-    BillCodeUpdateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeBaseSchema'
-      - $ref: '#/components/schemas/BillCodeUpdateBaseSchema'
-      - type: object
-        properties:
-          rates:
-            description: Rates can be provided here for validation only
-            type: array
-            items:
-              $ref: '#/components/schemas/BillCodeRateCreateSchema'
-    BillCodeTaxSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 12
-        name:
-          type: string
-          example: TPS
-        percent:
-          type: number
-          example: 12.5
-      required:
-      - id
-      - name
-      - percent
+          example: AlayaCare Health
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
+    BillCodeNotFound:
+      description: The Billcode referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
   parameters:
     page:
       description: Filter by page number.
@@ -712,24 +730,6 @@ components:
       schema:
         type: integer
         default: 100
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
-    BillCodeNotFound:
-      description: The Billcode referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
   securitySchemes:
     basic_auth:
       type: http

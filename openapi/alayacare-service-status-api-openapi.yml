@@ -89,14 +89,47 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponseAuthentication'
 components:
-  requestBodies:
-    ServiceStatusCreate:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ServiceStatusCreate'
-      required: true
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseClientStatusInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 400
+                idstatus:
+                - Not a valid choice.
+                message: Validation error.
   schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     ServiceStatusCreate:
       type: object
       properties:
@@ -131,46 +164,13 @@ components:
           description: End date of the status
       required:
       - status_id
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-  responses:
-    ErrorResponseClientStatusInvalidRequest:
-      description: Invalid request
+  requestBodies:
+    ServiceStatusCreate:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 400
-                idstatus:
-                - Not a valid choice.
-                message: Validation error.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
+            $ref: '#/components/schemas/ServiceStatusCreate'
+      required: true
   securitySchemes:
     basic_auth:
       type: http

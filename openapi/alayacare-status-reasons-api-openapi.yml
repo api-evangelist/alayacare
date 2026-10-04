@@ -73,6 +73,14 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
     branchId:
       description: Filter by branch ID
       name: branch_id
@@ -90,15 +98,34 @@ components:
         type: integer
         default: 1
         minimum: 1
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -125,15 +152,6 @@ components:
       - page
       - total_pages
       - items
-    StatusReasonsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of status reasons
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusReasonDetail'
     StatusReasonDetail:
       description: Client status reason.
       type: object
@@ -170,33 +188,15 @@ components:
               type: string
               description: Branch name
               example: Toronto branch
-    ErrorResponse:
-      description: Error response
-      type: object
+    StatusReasonsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of status reasons
       properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusReasonDetail'
   securitySchemes:
     basic_auth:
       type: http

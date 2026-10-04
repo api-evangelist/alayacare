@@ -192,52 +192,28 @@ paths:
       operationId: deleteBillcodesByBillcodeIdRatesByBillcodeRateId
       x-operation-id-source: derived
 components:
-  parameters:
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
-    billcodeRateId:
-      name: billcode_rate_id
-      in: path
-      required: true
-      schema:
-        type: integer
-    billcodeId:
-      name: billcode_id
-      in: path
-      required: true
-      schema:
-        type: integer
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
   schemas:
-    BillCodeRateRRuleQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
-      - type: object
-        properties:
-          id:
-            type: integer
-            example: 12
-        required:
-        - id
-        - rate
-        - external_id
-        - duration
-        - order
-        - override_holiday_multiplicator
+    RRuleSchema:
+      type: object
+      description: A recurrence rule for a Bill Code Rate
+      properties:
+        duration:
+          type: integer
+        rrule:
+          type: string
+          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
+          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
+          description: A recurrence rule string following RFC-5545
+        start_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
+        end_at:
+          type: string
+          format: date-time
+          example: '2019-01-01T00:00:00+00:00'
+          description: Date the Rate begins to apply
     BillCodeRateTierCreateSchema:
       type: object
       properties:
@@ -266,6 +242,50 @@ components:
       - rate
       - start_at
       - unit
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 404
+        message:
+          type: string
+          example: Entity not found
+      required:
+      - code
+      - message
+    BillCodeRateRRuleCreateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        required:
+        - rate
+        - order
+        - override_holiday_multiplicator
+    BillCodeRateUpdateSchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
+      - type: object
+        properties:
+          tiered_rates:
+            $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
+    BillCodeRateQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+          rrules:
+            $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
+          tiered_rates:
+            $ref: '#/components/schemas/BillCodeRateTierQuerySchema'
+      required:
+      - id
+    BillCodeRateTierQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
     BillCodeRateCreateSchema:
       type: object
       properties:
@@ -297,6 +317,36 @@ components:
       - rate
       - units
       - start_at
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+    BillCodeRateRRuleQuerySchema:
+      allOf:
+      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 12
+        required:
+        - id
+        - rate
+        - external_id
+        - duration
+        - order
+        - override_holiday_multiplicator
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -323,59 +373,6 @@ components:
       - page
       - total_pages
       - items
-    RRuleSchema:
-      type: object
-      description: A recurrence rule for a Bill Code Rate
-      properties:
-        duration:
-          type: integer
-        rrule:
-          type: string
-          pattern: ^(\w+=\w+)?(;\w+=\w+)*;?$
-          example: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1
-          description: A recurrence rule string following RFC-5545
-        start_at:
-          type: string
-          format: date-time
-          example: '2019-01-01T00:00:00+00:00'
-          description: Date the Rate begins to apply
-        end_at:
-          type: string
-          format: date-time
-          example: '2019-01-01T00:00:00+00:00'
-          description: Date the Rate begins to apply
-    BillCodeRateRRuleCreateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateRRuleBaseSchema'
-      - type: object
-        required:
-        - rate
-        - order
-        - override_holiday_multiplicator
-    BillCodeRateQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
-      - type: object
-        properties:
-          id:
-            type: integer
-            example: 12
-          rrules:
-            $ref: '#/components/schemas/BillCodeRateRRuleQuerySchema'
-          tiered_rates:
-            $ref: '#/components/schemas/BillCodeRateTierQuerySchema'
-      required:
-      - id
-    BillCodeRateTierQuerySchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
-    BillCodeRateUpdateSchema:
-      allOf:
-      - $ref: '#/components/schemas/BillCodeRateCreateSchema'
-      - type: object
-        properties:
-          tiered_rates:
-            $ref: '#/components/schemas/BillCodeRateTierCreateSchema'
     BillCodeRateRRuleBaseSchema:
       type: object
       properties:
@@ -401,33 +398,6 @@ components:
           example: 10
         rrule:
           $ref: '#/components/schemas/RRuleSchema'
-    NotFound:
-      type: object
-      properties:
-        code:
-          type: string
-          example: 404
-        message:
-          type: string
-          example: Entity not found
-      required:
-      - code
-      - message
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
   responses:
     ErrorResponseAuthentication:
       description: Authorization required
@@ -440,18 +410,48 @@ components:
               value:
                 code: '401'
                 message: Authorization required.
-    BillCodeRateNotFound:
-      description: The Bill Code Rate Recurrence Rule referenced by id was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
     BillCodeNotFound:
       description: The Billcode referenced by id was not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/NotFound'
+    BillCodeRateNotFound:
+      description: The Bill Code Rate Recurrence Rule referenced by id was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+  parameters:
+    billcodeRateId:
+      name: billcode_rate_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    billcodeId:
+      name: billcode_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http
