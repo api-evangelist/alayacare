@@ -291,72 +291,22 @@ components:
           type: string
           description: Content of the progress note as simple text (only if include_textonly is true)
           example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
-    ProgressNotesList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of a client's progress notes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProgressNote'
-    ErrorResponse:
-      description: Error response
+    SuccessProgressNoteCreate:
       type: object
+      description: Progress note created successfully
       properties:
-        code:
-          type: integer
-          description: Response code
-        message:
+        id:
           type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    ProgressNoteCreate:
-      description: Progress note data required for creation.
-      type: object
-      required:
-      - note_type
-      - content
-      properties:
-        is_hidden:
-          type: boolean
-          default: false
-        note_type:
+          description: The entity ID.
+          example: 70ad613a-376c-4389-bb45-78374dddd03e
+        type:
           type: string
-          description: Note type category of the progress note
-          example: progress_nursing
-        content:
+          description: The clinical document type.
+          example: progress_note
+        uri:
           type: string
-          format: html
-          description: Content of the progress note.  A subset of HTML is accepted.
-          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
+          description: The entity URI.
+          example: /progress_note/70ad613a-376c-4389-bb45-78374dddd03e
     ProgressNoteDetails:
       description: A progress note
       type: object
@@ -398,22 +348,72 @@ components:
           type: string
           description: Content of the progress note as simple text (only if include_textonly is true)
           example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
-    SuccessProgressNoteCreate:
+    ProgressNoteCreate:
+      description: Progress note data required for creation.
       type: object
-      description: Progress note created successfully
+      required:
+      - note_type
+      - content
       properties:
-        id:
+        is_hidden:
+          type: boolean
+          default: false
+        note_type:
           type: string
-          description: The entity ID.
-          example: 70ad613a-376c-4389-bb45-78374dddd03e
-        type:
+          description: Note type category of the progress note
+          example: progress_nursing
+        content:
           type: string
-          description: The clinical document type.
-          example: progress_note
-        uri:
+          format: html
+          description: Content of the progress note.  A subset of HTML is accepted.
+          example: Client achieved 1 of 5 goals today when client walked up stairs unassissted.
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
           type: string
-          description: The entity URI.
-          example: /progress_note/70ad613a-376c-4389-bb45-78374dddd03e
+          description: Detailed error message
+      required:
+      - code
+      - message
+    ProgressNotesList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of a client's progress notes
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressNote'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
   responses:
     InvalidRequest:
       description: Invalid data.
@@ -424,15 +424,6 @@ components:
           example:
             code: 400
             message: Invalid request
-    ClientNotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found.
     AuthChallenge:
       description: Authentication required.
       content:
@@ -460,6 +451,15 @@ components:
           example:
             code: 404
             message: Progress note not found
+    ClientNotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found.
   securitySchemes:
     basic_auth:
       type: http

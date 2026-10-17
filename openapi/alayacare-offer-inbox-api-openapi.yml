@@ -172,419 +172,42 @@ paths:
       operationId: postV1InboxOffersByOfferIdDecline
       x-operation-id-source: derived
 components:
-  parameters:
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    OfferIdPathParam:
-      in: path
-      name: offer_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of an offer
-    ShiftIdQueryParam:
-      in: query
-      name: shift_id
-      schema:
-        type: string
-        format: uuid
-    SortByParam:
-      in: query
-      name: sort_by
-      schema:
-        $ref: '#/components/schemas/SortByCore'
   schemas:
-    InboxOfferDeclineRequest:
-      allOf:
-      - $ref: '#/components/schemas/OfferMatchReasonCodeCore'
-    OfferMatchCore:
-      description: 'Core representation of an Offer Match.
-
-        Meant to be used in the nested `match` in a top level (API) response schema.
-
-        '
-      allOf:
-      - $ref: '#/components/schemas/OfferMatchReasonCodeCore'
-      - type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-          response:
-            $ref: '#/components/schemas/OfferMatchResponseCore'
-          status:
-            $ref: '#/components/schemas/OfferMatchStatusCore'
-          sequence_id:
-            type: string
-            format: uuid
-          created_at:
-            type: string
-            format: date-time
-          updated_at:
-            type: string
-            format: date-time
-        required:
-        - id
-        - response
-        - status
-        - sequence_id
-        - created_at
-    PriceCore:
-      type: object
-      properties:
-        rate:
-          type: number
-          format: decimal
-          description: The dollar amount for offer per unit.
-          example: 30.0
-        unit:
-          type: string
-          description: The unit for the rate.
-          enum:
-          - per_visit
-          - per_hour
-          - amount
-      required:
-      - rate
-      - unit
-    InboxOfferCarePlanResponse:
-      type: object
-      properties:
-        name:
-          type: string
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        status:
-          type: string
-        interventions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanInterventionCore'
-        updated_at:
-          type: string
-          format: date-time
-      required:
-      - name
-      - start_date
-    FormTemplateCore:
-      type: object
-      properties:
-        admin_eyes_only:
-          type: boolean
-        approve_automatically:
-          type: boolean
-        clinical_event_name:
-          type: string
-        display_instructions_in_pdf:
-          type: boolean
-        display_report:
-          type: boolean
-        exclude_from_shift_report:
-          type: boolean
-        form_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        language_code:
-          type: string
-        name:
-          type: string
-        notify_alert_queue:
-          type: boolean
-        pre_populate:
-          type: boolean
-        requires_clock_in:
-          type: boolean
-        schema_id:
-          type: string
-          format: uuid
-        schema_version:
-          type: integer
-        visit_link_required:
-          type: boolean
-      required:
-      - admin_eyes_only
-      - approve_automatically
-      - display_instructions_in_pdf
-      - display_report
-      - exclude_from_shift_report
-      - form_type
-      - id
-      - language_code
-      - name
-      - notify_alert_queue
-      - pre_populate
-      - requires_clock_in
-      - schema_id
-      - schema_version
-      - visit_link_required
-    ItemsPerPageCore:
-      type: integer
-      minimum: 1
-      default: 100
-    CustomFieldCore:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-    InboxOfferDetailResponse:
-      description: 'API response for the anonymous representation of an offer on the inbox API.
-
-        Similarly to the `InboxOfferCore`, this schema is meant to be used in the nested `offer`
-
-        in a top level (API) response schema, e.g. the `InboxOfferScalarApiResponse`
-
-        This includes everything from the `InboxOfferCore` along with some additional information
-
-        on the client, service and visits.
-
-        Not all client information is included here, hence the "anon" (anonymous) prefix.
-
-        '
-      type: object
-      properties:
-        offer:
-          $ref: '#/components/schemas/InboxOfferCore'
-        alayacare:
-          $ref: '#/components/schemas/InboxOfferAlayaCareResponse'
-        case_manager:
-          $ref: '#/components/schemas/CaseManagerCore'
-        price:
-          $ref: '#/components/schemas/PriceCore'
-        client:
-          title: InboxOfferDetailClientResponse
-          type: object
-          properties:
-            address:
-              $ref: '#/components/schemas/AddressAnonCore'
-            allergies:
-              type: array
-              items:
-                $ref: '#/components/schemas/AllergyCore'
-            risks:
-              type: array
-              items:
-                $ref: '#/components/schemas/RiskCore'
-            custom_fields:
-              type: array
-              items:
-                $ref: '#/components/schemas/CustomFieldCore'
-          required:
-          - address
-        service:
-          title: InboxOfferDetailServiceResponse
-          allOf:
-          - $ref: '#/components/schemas/ServiceCore'
-          - type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              use_client_address:
-                type: boolean
-              address:
-                $ref: '#/components/schemas/AddressAnonCore'
-            required:
-            - id
-        visits:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxOfferVisitResponse'
-        match:
-          $ref: '#/components/schemas/OfferMatchCore'
-        demand:
-          $ref: '#/components/schemas/OrganizationLeanCore'
-      required:
-      - offer
-      - match
-      - demand
-      - client
-      - service
-    InboxOfferFormTemplateResponse:
-      allOf:
-      - $ref: '#/components/schemas/FormTemplateCore'
-      - type: object
-        properties:
-          fields:
-            type: array
-            items:
-              $ref: '#/components/schemas/FormTemplateFieldCore'
-    InboxOfferPageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PageCore'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/InboxOfferCollectionResponse'
-        required:
-        - items
-    SortByCore:
-      type: string
-      enum:
-      - last_modified
-      default: last_modified
-    InboxOfferVisitResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-        instructions:
-          type: string
-        tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxOfferVisitTaskResponse'
-      required:
-      - id
-      - start_at
-      - end_at
-    OfferMatchResponseCore:
-      type: string
-      enum:
-      - pending
-      - accepted
-      - declined
-    AddressAnonCore:
-      type: object
-      properties:
-        city:
-          type: string
-          minLength: 1
-        state:
-          type: string
-          minLength: 1
-        zip:
-          type: string
-          minLength: 1
-        country:
-          type: string
-          minLength: 1
-        approx_latitude:
-          type: number
-          format: double
-          minimum: -90
-          maximum: 90
-        approx_longitude:
-          type: number
-          format: double
-          minimum: -180
-          maximum: 180
-        approx_radius_meters:
-          type: number
-          format: double
-          minimum: 0
-      required:
-      - city
-      - state
-      - zip
-      - country
-    CaseManagerCore:
-      type: object
-      properties:
-        name:
-          type: string
-        phone_number:
-          type: string
-        fax_number:
-          type: string
-        email:
-          type: string
-    InboxOfferAlayaCareResponse:
-      type: object
-      properties:
-        authorizations:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuthorizationCore'
-        care_plan:
-          $ref: '#/components/schemas/InboxOfferCarePlanResponse'
-        form_templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/InboxOfferFormTemplateResponse'
-    InboxOfferCollectionResponse:
-      description: 'API response for the core representation of an offer response on the inbox API.
-
-        '
-      type: object
-      properties:
-        offer:
-          $ref: '#/components/schemas/InboxOfferCore'
-        match:
-          $ref: '#/components/schemas/OfferMatchCore'
-    OfferTypeCore:
-      type: string
-      enum:
-      - visit
-      - service
-    RiskCore:
-      type: object
-      properties:
-        name:
-          type: string
-        category:
-          type: string
-          example: allergy
-        severity:
-          type: integer
-        start_date:
-          type: string
-          format: date
-    AllergyCore:
-      type: object
-      properties:
-        name:
-          type: string
-        category:
-          type: string
-        severity:
-          type: string
-        start_date:
-          type: string
-          format: date
-        treatment:
-          type: string
     CareTypeCore:
       type: string
       enum:
       - psw
       - nursing
+    FormTemplateFieldCore:
+      type: object
+      properties:
+        field_tag:
+          type: string
+        field_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        json_logic:
+          type: object
+        label:
+          type: string
+        parent_id:
+          type: integer
+        rank:
+          type: integer
+        required:
+          type: boolean
+        settings:
+          type: object
+      required:
+      - field_type
+      - id
+      - label
+      - parent_id
+      - rank
+      - required
     AuthorizationCore:
       type: object
       properties:
@@ -655,6 +278,48 @@ components:
       - first_day_of_week
       - rule_type
       - start_date
+    PriceCore:
+      type: object
+      properties:
+        rate:
+          type: number
+          format: decimal
+          description: The dollar amount for offer per unit.
+          example: 30.0
+        unit:
+          type: string
+          description: The unit for the rate.
+          enum:
+          - per_visit
+          - per_hour
+          - amount
+      required:
+      - rate
+      - unit
+    OfferMatchStatusCore:
+      type:
+      - string
+      - 'null'
+      enum:
+      - open
+      - expired
+      - closed
+      - assigned
+      - fulfilled
+    InboxOfferDeclineRequest:
+      allOf:
+      - $ref: '#/components/schemas/OfferMatchReasonCodeCore'
+    InboxOfferPageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PageCore'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/InboxOfferCollectionResponse'
+        required:
+        - items
     PageCore:
       description: Root page schema for returning collections.
       type: object
@@ -674,6 +339,180 @@ components:
       - items_per_page
       - total_items
       - total_pages
+    ServiceCore:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        start_at:
+          type: string
+          format: date-time
+        expected_start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        instructions:
+          type: string
+        notes:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldCore'
+      required:
+      - name
+    SortByCore:
+      type: string
+      enum:
+      - last_modified
+      default: last_modified
+    OfferTypeCore:
+      type: string
+      enum:
+      - visit
+      - service
+    FormTemplateCore:
+      type: object
+      properties:
+        admin_eyes_only:
+          type: boolean
+        approve_automatically:
+          type: boolean
+        clinical_event_name:
+          type: string
+        display_instructions_in_pdf:
+          type: boolean
+        display_report:
+          type: boolean
+        exclude_from_shift_report:
+          type: boolean
+        form_type:
+          type: string
+        id:
+          type: integer
+        instructions:
+          type: string
+        language_code:
+          type: string
+        name:
+          type: string
+        notify_alert_queue:
+          type: boolean
+        pre_populate:
+          type: boolean
+        requires_clock_in:
+          type: boolean
+        schema_id:
+          type: string
+          format: uuid
+        schema_version:
+          type: integer
+        visit_link_required:
+          type: boolean
+      required:
+      - admin_eyes_only
+      - approve_automatically
+      - display_instructions_in_pdf
+      - display_report
+      - exclude_from_shift_report
+      - form_type
+      - id
+      - language_code
+      - name
+      - notify_alert_queue
+      - pre_populate
+      - requires_clock_in
+      - schema_id
+      - schema_version
+      - visit_link_required
+    InboxOfferVisitResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        instructions:
+          type: string
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxOfferVisitTaskResponse'
+      required:
+      - id
+      - start_at
+      - end_at
+    AddressAnonCore:
+      type: object
+      properties:
+        city:
+          type: string
+          minLength: 1
+        state:
+          type: string
+          minLength: 1
+        zip:
+          type: string
+          minLength: 1
+        country:
+          type: string
+          minLength: 1
+        approx_latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        approx_longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+        approx_radius_meters:
+          type: number
+          format: double
+          minimum: 0
+      required:
+      - city
+      - state
+      - zip
+      - country
+    InboxOfferAcceptRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+    OfferMatchReasonCodeCore:
+      description: '`reason_code` associated with a declined Offer Match.
+
+        '
+      type: object
+      properties:
+        reason_code:
+          type: string
+        comment:
+          type: string
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
+    OfferMatchResponseCore:
+      type: string
+      enum:
+      - pending
+      - accepted
+      - declined
     InboxOfferCore:
       description: 'Core representation of an offer on the inbox API.
 
@@ -718,92 +557,6 @@ components:
         - expires_at
         - start_at
         - created_at
-    OrganizationLeanCore:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-      required:
-      - id
-      - name
-    OfferReasonCodeCore:
-      description: '`reason_code` and `reason_comment` associated to a cancelled or closed offer.
-
-        '
-      type: object
-      properties:
-        reason_code:
-          type: string
-          enum:
-          - datetime_change
-          - client_request
-          - client_hospitalization
-          - client_passed_away
-          - client_refused_service
-          - processing_error
-          - other
-        reason_comment:
-          type: string
-    InboxOfferAcceptRequest:
-      type: object
-      properties:
-        comment:
-          type: string
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
-    FormTemplateFieldCore:
-      type: object
-      properties:
-        field_tag:
-          type: string
-        field_type:
-          type: string
-        id:
-          type: integer
-        instructions:
-          type: string
-        json_logic:
-          type: object
-        label:
-          type: string
-        parent_id:
-          type: integer
-        rank:
-          type: integer
-        required:
-          type: boolean
-        settings:
-          type: object
-      required:
-      - field_type
-      - id
-      - label
-      - parent_id
-      - rank
-      - required
-    InboxOfferVisitTaskResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          minLength: 1
-        description:
-          type: string
-        is_required:
-          type: boolean
-      required:
-      - id
-      - name
-      - is_required
     CarePlanInterventionCore:
       type: object
       properties:
@@ -879,61 +632,308 @@ components:
       - start_date
       - status
       - type
-    SortOrderCore:
-      type: string
-      enum:
-      - asc
-      - desc
-      default: desc
-    OfferMatchStatusCore:
-      type:
-      - string
-      - 'null'
-      enum:
-      - open
-      - expired
-      - closed
-      - assigned
-      - fulfilled
-    OfferMatchReasonCodeCore:
-      description: '`reason_code` associated with a declined Offer Match.
+    InboxOfferFormTemplateResponse:
+      allOf:
+      - $ref: '#/components/schemas/FormTemplateCore'
+      - type: object
+        properties:
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/FormTemplateFieldCore'
+    InboxOfferCollectionResponse:
+      description: 'API response for the core representation of an offer response on the inbox API.
+
+        '
+      type: object
+      properties:
+        offer:
+          $ref: '#/components/schemas/InboxOfferCore'
+        match:
+          $ref: '#/components/schemas/OfferMatchCore'
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+      - id
+      - name
+    AllergyCore:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        severity:
+          type: string
+        start_date:
+          type: string
+          format: date
+        treatment:
+          type: string
+    CustomFieldCore:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+    OfferMatchCore:
+      description: 'Core representation of an Offer Match.
+
+        Meant to be used in the nested `match` in a top level (API) response schema.
+
+        '
+      allOf:
+      - $ref: '#/components/schemas/OfferMatchReasonCodeCore'
+      - type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          response:
+            $ref: '#/components/schemas/OfferMatchResponseCore'
+          status:
+            $ref: '#/components/schemas/OfferMatchStatusCore'
+          sequence_id:
+            type: string
+            format: uuid
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+        required:
+        - id
+        - response
+        - status
+        - sequence_id
+        - created_at
+    InboxOfferVisitTaskResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        is_required:
+          type: boolean
+      required:
+      - id
+      - name
+      - is_required
+    InboxOfferDetailResponse:
+      description: 'API response for the anonymous representation of an offer on the inbox API.
+
+        Similarly to the `InboxOfferCore`, this schema is meant to be used in the nested `offer`
+
+        in a top level (API) response schema, e.g. the `InboxOfferScalarApiResponse`
+
+        This includes everything from the `InboxOfferCore` along with some additional information
+
+        on the client, service and visits.
+
+        Not all client information is included here, hence the "anon" (anonymous) prefix.
+
+        '
+      type: object
+      properties:
+        offer:
+          $ref: '#/components/schemas/InboxOfferCore'
+        alayacare:
+          $ref: '#/components/schemas/InboxOfferAlayaCareResponse'
+        case_manager:
+          $ref: '#/components/schemas/CaseManagerCore'
+        price:
+          $ref: '#/components/schemas/PriceCore'
+        client:
+          title: InboxOfferDetailClientResponse
+          type: object
+          properties:
+            address:
+              $ref: '#/components/schemas/AddressAnonCore'
+            allergies:
+              type: array
+              items:
+                $ref: '#/components/schemas/AllergyCore'
+            risks:
+              type: array
+              items:
+                $ref: '#/components/schemas/RiskCore'
+            custom_fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+          required:
+          - address
+        service:
+          title: InboxOfferDetailServiceResponse
+          allOf:
+          - $ref: '#/components/schemas/ServiceCore'
+          - type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              use_client_address:
+                type: boolean
+              address:
+                $ref: '#/components/schemas/AddressAnonCore'
+            required:
+            - id
+        visits:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxOfferVisitResponse'
+        match:
+          $ref: '#/components/schemas/OfferMatchCore'
+        demand:
+          $ref: '#/components/schemas/OrganizationLeanCore'
+      required:
+      - offer
+      - match
+      - demand
+      - client
+      - service
+    InboxOfferCarePlanResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+        interventions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanInterventionCore'
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
+      - start_date
+    OfferReasonCodeCore:
+      description: '`reason_code` and `reason_comment` associated to a cancelled or closed offer.
 
         '
       type: object
       properties:
         reason_code:
           type: string
-        comment:
+          enum:
+          - datetime_change
+          - client_request
+          - client_hospitalization
+          - client_passed_away
+          - client_refused_service
+          - processing_error
+          - other
+        reason_comment:
           type: string
-    ServiceCore:
+    RiskCore:
       type: object
       properties:
         name:
           type: string
-          minLength: 1
-        start_at:
+        category:
           type: string
-          format: date-time
-        expected_start_at:
+          example: allergy
+        severity:
+          type: integer
+        start_date:
           type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-        instructions:
-          type: string
-        notes:
-          type: string
-        skills:
+          format: date
+    InboxOfferAlayaCareResponse:
+      type: object
+      properties:
+        authorizations:
           type: array
           items:
-            type: string
-        custom_fields:
+            $ref: '#/components/schemas/AuthorizationCore'
+        care_plan:
+          $ref: '#/components/schemas/InboxOfferCarePlanResponse'
+        form_templates:
           type: array
           items:
-            $ref: '#/components/schemas/CustomFieldCore'
-      required:
-      - name
+            $ref: '#/components/schemas/InboxOfferFormTemplateResponse'
+    SortOrderCore:
+      type: string
+      enum:
+      - asc
+      - desc
+      default: desc
+    ItemsPerPageCore:
+      type: integer
+      minimum: 1
+      default: 100
+    CaseManagerCore:
+      type: object
+      properties:
+        name:
+          type: string
+        phone_number:
+          type: string
+        fax_number:
+          type: string
+        email:
+          type: string
+  parameters:
+    SortByParam:
+      in: query
+      name: sort_by
+      schema:
+        $ref: '#/components/schemas/SortByCore'
+    OfferIdPathParam:
+      in: path
+      name: offer_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of an offer
+    ShiftIdQueryParam:
+      in: query
+      name: shift_id
+      schema:
+        type: string
+        format: uuid
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

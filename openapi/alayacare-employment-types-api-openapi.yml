@@ -46,23 +46,16 @@ paths:
       operationId: getEmploymentTypes
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
     BranchSummary:
       description: Branch summary
@@ -76,6 +69,30 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
+    EmploymentTypeDetails:
+      description: Employment Type Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the employment type
+          example: 1
+        name:
+          type: string
+          description: Name of employment type
+          example: Full time
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
+    EmploymentTypeDetailsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of employment types
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmploymentTypeDetails'
     ErrorResponse:
       description: Error response
       type: object
@@ -110,40 +127,23 @@ components:
       - page
       - total_pages
       - items
-    EmploymentTypeDetails:
-      description: Employment Type Details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the employment type
-          example: 1
-        name:
-          type: string
-          description: Name of employment type
-          example: Full time
-        branch:
-          $ref: '#/components/schemas/BranchSummary'
-    EmploymentTypeDetailsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of employment types
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmploymentTypeDetails'
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

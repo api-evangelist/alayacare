@@ -186,6 +186,16 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    PayCodeSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          minimum: 1
+        code:
+          type: string
+          example: SP
     PremiumExtendedSchema:
       type: object
       properties:
@@ -211,16 +221,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BillCodeQuerySchema'
-    BillCodeStub:
-      type: object
-      description: Only one of id or guid should be present
-      properties:
-        id:
-          type: integer
-          example: 3
-        guid:
-          type: integer
-          example: 3
     BillCodeQuerySchema:
       properties:
         branch:
@@ -247,6 +247,114 @@ components:
       - is_disabled
       - units
       type: object
+    Branch:
+      description: AlayaCare branch
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Branch ID
+          example: 1000
+          minimum: 1
+        name:
+          type: string
+          description: Branch name
+          example: AlayaCare Health
+    BillCodeStub:
+      type: object
+      description: Only one of id or guid should be present
+      properties:
+        id:
+          type: integer
+          example: 3
+        guid:
+          type: integer
+          example: 3
+    Premium:
+      description: A premium configured in AlayaCare Accounting Settings
+      type: object
+      properties:
+        code:
+          type: string
+          description: AlayaCare premium code name
+          example: MILEAGE
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          example: 643
+          minimum: 1
+        pay_code:
+          $ref: '#/components/schemas/PayCode'
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCode'
+        rule:
+          type: string
+          description: AlayaCare premium rule name
+          example: Weekends
+        branch:
+          $ref: '#/components/schemas/Branch'
+      required:
+      - code
+      - premium_id
+    PremiumUpdateSchema:
+      type: object
+      properties:
+        code:
+          type: string
+          example: TESTCODE
+        pay_code_id:
+          type: integer
+          example: 1
+          minimum: 1
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeStub'
+    PremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      type: object
+      description: Paginated list of premiums
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Premium'
+    PayCode:
+      description: AlayaCare pay code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare pay code ID
+          example: 3
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare pay code name
+          example: 783
+    PremiumCreateSchema:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          example: TESTCODE
+        pay_code_id:
+          type: integer
+          example: 1
+          minimum: 1
+        branch_id:
+          type: integer
+          example: 1
+          minimum: 1
+        bill_codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillCodeStub'
     BillCode:
       description: AlayaCare bill code
       type: object
@@ -304,114 +412,6 @@ components:
       - page
       - total_pages
       - items
-    PremiumsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      type: object
-      description: Paginated list of premiums
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Premium'
-    PremiumCreateSchema:
-      type: object
-      required:
-      - code
-      properties:
-        code:
-          type: string
-          example: TESTCODE
-        pay_code_id:
-          type: integer
-          example: 1
-          minimum: 1
-        branch_id:
-          type: integer
-          example: 1
-          minimum: 1
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeStub'
-    PayCode:
-      description: AlayaCare pay code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare pay code ID
-          example: 3
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare pay code name
-          example: 783
-    PayCodeSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-          minimum: 1
-        code:
-          type: string
-          example: SP
-    PremiumUpdateSchema:
-      type: object
-      properties:
-        code:
-          type: string
-          example: TESTCODE
-        pay_code_id:
-          type: integer
-          example: 1
-          minimum: 1
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCodeStub'
-    Premium:
-      description: A premium configured in AlayaCare Accounting Settings
-      type: object
-      properties:
-        code:
-          type: string
-          description: AlayaCare premium code name
-          example: MILEAGE
-        premium_id:
-          type: integer
-          description: AlayaCare premium ID
-          example: 643
-          minimum: 1
-        pay_code:
-          $ref: '#/components/schemas/PayCode'
-        bill_codes:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillCode'
-        rule:
-          type: string
-          description: AlayaCare premium rule name
-          example: Weekends
-        branch:
-          $ref: '#/components/schemas/Branch'
-      required:
-      - code
-      - premium_id
-    Branch:
-      description: AlayaCare branch
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Branch ID
-          example: 1000
-          minimum: 1
-        name:
-          type: string
-          description: Branch name
-          example: AlayaCare Health
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

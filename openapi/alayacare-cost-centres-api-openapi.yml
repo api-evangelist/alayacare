@@ -68,6 +68,18 @@ paths:
       operationId: getCostCentres
       x-operation-id-source: derived
 components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   parameters:
     count:
       description: Number of items per page.
@@ -86,29 +98,7 @@ components:
         type: integer
         default: 1
         minimum: 1
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
   schemas:
-    CostCentreList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of cost centres
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CostCentre'
     CostCentre:
       description: Details of a cost centre
       type:
@@ -132,6 +122,16 @@ components:
           type: string
           description: Cost centre status
           example: enabled
+    CostCentreList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of cost centres
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CostCentre'
     ErrorResponse:
       description: Error response
       type: object

@@ -274,34 +274,6 @@ paths:
       operationId: putFacilityVisitsByIdByVisitIdTags
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
-    ErrorResponseVisitTagInvalidRequest:
-      description: Invalid data submitted for visit tag creation
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Tag does not exist for visits
   schemas:
     BaseVisit:
       type: object
@@ -383,11 +355,6 @@ components:
       - end_at
       - cancelled
       - cancel_code
-    VisitTagCreate:
-      type: array
-      description: An array of visit tags.
-      items:
-        $ref: '#/components/schemas/VisitTag'
     VisitNote:
       allOf:
       - $ref: '#/components/schemas/VisitNoteCreate'
@@ -414,6 +381,45 @@ components:
       required:
       - code
       - message
+    Visit:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisit'
+      properties:
+        alayacare_client_id:
+          type: integer
+          description: AlayaCare client ID
+          example: 1001
+        client_id:
+          type:
+          - string
+          - 'null'
+          description: External client ID
+          example: sor_client_id_1
+      required:
+      - alayacare_client_id
+    VisitCancelCode:
+      description: Visit cancellation code
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type: integer
+          description: AlayaCare cancel code ID
+          example: 1
+        code:
+          type: string
+          description: Cancel code
+          example: CLNT_REQ_RESCHEDULE
+        description:
+          type:
+          - string
+          - 'null'
+          description: Cancel code description
+          example: Client requested reschedule
+      required:
+      - id
+      - code
     VisitNoteCreate:
       description: Visit note
       type: object
@@ -425,6 +431,23 @@ components:
           example: A sample visit note.
       required:
       - text
+    VisitTag:
+      type: string
+      description: Name of tag.
+      example: First visit
+    VisitTagList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitTag'
+    VisitTagCreate:
+      type: array
+      description: An array of visit tags.
+      items:
+        $ref: '#/components/schemas/VisitTag'
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -450,57 +473,34 @@ components:
       - page
       - total_pages
       - items
-    VisitCancelCode:
-      description: Visit cancellation code
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type: integer
-          description: AlayaCare cancel code ID
-          example: 1
-        code:
-          type: string
-          description: Cancel code
-          example: CLNT_REQ_RESCHEDULE
-        description:
-          type:
-          - string
-          - 'null'
-          description: Cancel code description
-          example: Client requested reschedule
-      required:
-      - id
-      - code
-    Visit:
-      allOf:
-      - $ref: '#/components/schemas/BaseVisit'
-      properties:
-        alayacare_client_id:
-          type: integer
-          description: AlayaCare client ID
-          example: 1001
-        client_id:
-          type:
-          - string
-          - 'null'
-          description: External client ID
-          example: sor_client_id_1
-      required:
-      - alayacare_client_id
-    VisitTagList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisitTag'
-    VisitTag:
-      type: string
-      description: Name of tag.
-      example: First visit
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
+    ErrorResponseVisitTagInvalidRequest:
+      description: Invalid data submitted for visit tag creation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Tag does not exist for visits
   securitySchemes:
     basic_auth:
       type: http

@@ -133,6 +133,20 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CostCentreClientResponse:
+      description: Client to cost centre link
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: client ID
+          example: 1010
+          minimum: 1
+        cost_centre_id:
+          type: integer
+          description: Cost centre ID
+          example: 10
+          minimum: 1
     CostCentreClientCreate:
       type: object
       properties:
@@ -160,32 +174,7 @@ components:
       required:
       - code
       - message
-    CostCentreClientResponse:
-      description: Client to cost centre link
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: client ID
-          example: 1010
-          minimum: 1
-        cost_centre_id:
-          type: integer
-          description: Cost centre ID
-          example: 10
-          minimum: 1
   responses:
-    ErrorResponseCostCentreDisabled:
-      description: The cost centre referenced by cost_centre_id is disabled
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '400'
-                message: Cost centre is disabled
     ErrorResponseAuthentication:
       description: Authorization required
       content:
@@ -197,6 +186,17 @@ components:
               value:
                 code: '401'
                 message: Authorization required.
+    ErrorResponseCostCentreDisabled:
+      description: The cost centre referenced by cost_centre_id is disabled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '400'
+                message: Cost centre is disabled
     ErrorResponseClientCostCentreNotFound:
       description: The client with the referenced cost_centre_id was not found
       content:

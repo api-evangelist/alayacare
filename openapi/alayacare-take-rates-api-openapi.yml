@@ -171,23 +171,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    RegionalTakeRateUpdateRequest:
-      type: object
-      properties:
-        rate:
-          $ref: '#/components/schemas/TakeRateCore'
-      required:
-      - rate
-    TakeRateCore:
-      type: number
-      format: decimal
-      minimum: 0
-      maximum: 1
-      description: 'A percentage of the offer price set by demand, represented by a fraction
-
-        between 0 and 1. For example, a regional take rate of 0.1 is 10%.
-
-        '
     DemandTakeRateCollectionResponse:
       type: object
       properties:
@@ -195,11 +178,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DemandTakeRateCore'
-    DemandTakeRateCreateRequest:
-      type: object
-      properties:
-        rate:
-          $ref: '#/components/schemas/TakeRateCore'
     RegionalTakeRateDetailResponse:
       type: object
       properties:
@@ -218,6 +196,28 @@ components:
       required:
       - demand_persona_id
       - rate
+    DemandTakeRateCreateRequest:
+      type: object
+      properties:
+        rate:
+          $ref: '#/components/schemas/TakeRateCore'
+    RegionalTakeRateUpdateRequest:
+      type: object
+      properties:
+        rate:
+          $ref: '#/components/schemas/TakeRateCore'
+      required:
+      - rate
+    TakeRateCore:
+      type: number
+      format: decimal
+      minimum: 0
+      maximum: 1
+      description: 'A percentage of the offer price set by demand, represented by a fraction
+
+        between 0 and 1. For example, a regional take rate of 0.1 is 10%.
+
+        '
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

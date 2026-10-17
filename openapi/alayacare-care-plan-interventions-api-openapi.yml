@@ -142,28 +142,6 @@ components:
       schema:
         type: string
   schemas:
-    InterventionList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of interventions
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Intervention'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
     InterventionService:
       description: Intervention service
       type: object
@@ -178,31 +156,19 @@ components:
           - 'null'
           description: External service ID
           example: sor_service_external_id_1
-    PaginatedList:
-      description: Base model of all paginated lists
+    ErrorResponse:
+      description: Error response
       type: object
       properties:
-        count:
+        code:
           type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
       required:
-      - count
-      - page
-      - total_pages
-      - items
+      - code
+      - message
     Intervention:
       type: object
       description: Care plan intervention
@@ -239,16 +205,41 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InterventionService'
+    InterventionList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of interventions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intervention'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
   responses:
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
     AuthChallenge:
       description: Authentication required.
       content:
@@ -258,15 +249,6 @@ components:
           example:
             code: 401
             message: Please verify your access level for this url.
-    ClientNotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found.
     ErrorResponseAdlsInvalidRequest:
       description: Invalid request
       content:
@@ -276,6 +258,24 @@ components:
           example:
             code: 400
             message: service_id and external_service_id are mutually exclusive
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ClientNotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found.
   securitySchemes:
     basic_auth:
       type: http

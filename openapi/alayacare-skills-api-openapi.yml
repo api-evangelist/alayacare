@@ -157,6 +157,32 @@ components:
           items:
             allOf:
             - $ref: '#/components/schemas/SkillDetails'
+    SkillCreate:
+      properties:
+        name:
+          type: string
+          description: Skill Name
+          example: Hoyer lift
+        category_id:
+          type: integer
+          description: 'Set the skill category.
+
+            '
+          example: 4
+        branch_id:
+          type: integer
+          description: 'Set skill branch. If not specified, will default to branch of the user creating the employee.
+
+            '
+          example: 1
+        fields:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/SkillFieldCreate'
+      required:
+      - name
+      - category_id
     BranchSummary:
       description: Branch summary
       type: object
@@ -169,56 +195,6 @@ components:
           type: string
           description: Name of the branch
           example: Headquarters
-    SkillUpdate:
-      properties:
-        name:
-          type: string
-          description: Skill Name
-          example: Hoyer lift
-        category_id:
-          type: integer
-          description: 'Set the skill category.
-
-            '
-          example: 4
-        fields:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/SkillFieldCreate'
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    SkillFieldCreate:
-      description: Skill custom field attributes
-      type: object
-      required:
-      - name
-      - label
-      properties:
-        name:
-          type: string
-          description: Name of the customizable field
-          example: acquired_date
-          enum:
-          - acquired_date
-          - expired_date
-          - label_1
-          - label_2
-        label:
-          type: string
-          description: Label of the customizable field
-          example: Acquired date
     SkillField:
       description: Skill custom field attributes
       type: object
@@ -268,21 +244,23 @@ components:
       - page
       - total_pages
       - items
-    SkillCategory:
-      description: Skill Category
-      type: object
-      required:
-      - id
-      - name
+    SkillUpdate:
       properties:
-        id:
-          type: integer
-          description: ID of the skill category
-          example: 1
         name:
           type: string
-          description: Name of the skill category
-          example: Languages
+          description: Skill Name
+          example: Hoyer lift
+        category_id:
+          type: integer
+          description: 'Set the skill category.
+
+            '
+          example: 4
+        fields:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/SkillFieldCreate'
     SkillDetails:
       description: AlayaCare skill entity
       type: object
@@ -309,51 +287,65 @@ components:
           items:
             allOf:
             - $ref: '#/components/schemas/SkillField'
-    SkillCreate:
+    SkillFieldCreate:
+      description: Skill custom field attributes
+      type: object
+      required:
+      - name
+      - label
       properties:
         name:
           type: string
-          description: Skill Name
-          example: Hoyer lift
-        category_id:
+          description: Name of the customizable field
+          example: acquired_date
+          enum:
+          - acquired_date
+          - expired_date
+          - label_1
+          - label_2
+        label:
+          type: string
+          description: Label of the customizable field
+          example: Acquired date
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
           type: integer
-          description: 'Set the skill category.
-
-            '
-          example: 4
-        branch_id:
-          type: integer
-          description: 'Set skill branch. If not specified, will default to branch of the user creating the employee.
-
-            '
-          example: 1
-        fields:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/SkillFieldCreate'
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
       required:
+      - code
+      - message
+    SkillCategory:
+      description: Skill Category
+      type: object
+      required:
+      - id
       - name
-      - category_id
+      properties:
+        id:
+          type: integer
+          description: ID of the skill category
+          example: 1
+        name:
+          type: string
+          description: Name of the skill category
+          example: Languages
   parameters:
-    filter:
-      description: Substring search on skill category and name
-      name: filter
-      in: query
-      required: false
-      schema:
-        type: string
-    count:
-      description: Number of items per page.
-      name: count
+    branch_id:
+      description: Filter by branch ID
+      name: branch_id
       in: query
       required: false
       schema:
         type: integer
-        default: 100
-    branch_id:
-      description: Filter by branch ID
-      name: branch_id
+    category_id:
+      description: Filter skills by category ID, one or more using **OR**
+      name: category_id
       in: query
       required: false
       schema:
@@ -366,13 +358,21 @@ components:
       schema:
         type: integer
         default: 1
-    category_id:
-      description: Filter skills by category ID, one or more using **OR**
-      name: category_id
+    count:
+      description: Number of items per page.
+      name: count
       in: query
       required: false
       schema:
         type: integer
+        default: 100
+    filter:
+      description: Substring search on skill category and name
+      name: filter
+      in: query
+      required: false
+      schema:
+        type: string
   responses:
     ErrorResponseAuthentication:
       description: Authorization required

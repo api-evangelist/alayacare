@@ -100,17 +100,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    InboxWorkSessionStartResponse:
-      allOf:
-      - $ref: '#/components/schemas/InboxWorkSessionStartRequest'
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Work Session ID.
-      required:
-      - id
     InboxWorkSessionStartRequest:
       type: object
       properties:
@@ -166,6 +155,17 @@ components:
           type: string
       required:
       - end_at
+    InboxWorkSessionStartResponse:
+      allOf:
+      - $ref: '#/components/schemas/InboxWorkSessionStartRequest'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Work Session ID.
+      required:
+      - id
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

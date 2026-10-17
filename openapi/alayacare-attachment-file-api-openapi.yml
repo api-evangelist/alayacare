@@ -276,6 +276,17 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    FileNotFoundSchema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status response code
+          example: 404
+        message:
+          type: string
+          description: Detail on the error
+          example: File "/path/file.txt" not found
     AttachmentAction:
       description: Attachment actions
       type: object
@@ -303,20 +314,9 @@ components:
       required:
       - code
       - message
-    FileNotFoundSchema:
-      type: object
-      properties:
-        code:
-          type: integer
-          description: http status response code
-          example: 404
-        message:
-          type: string
-          description: Detail on the error
-          example: File "/path/file.txt" not found
   responses:
-    ErrorResponseFileAlreadyExists:
-      description: File already exists.
+    ErrorResponseInvalidFileName:
+      description: The file name contains unsupported characters
       content:
         application/json:
           schema:
@@ -325,11 +325,11 @@ components:
               code:
                 type: integer
                 description: http status response code
-                example: 409
+                example: 400
               message:
                 type: string
                 description: Detail on the error
-                example: File "/path/file.txt" already exists
+                example: Invalid file name
     ErrorResponseFileMissing:
       description: File missing
       content:
@@ -345,15 +345,21 @@ components:
                 type: string
                 description: Detail on the error
                 example: Could not find a file to upload
-    ErrorResponseEmployeeNotFound:
-      description: Employee not found
+    ErrorResponseFileAlreadyExists:
+      description: File already exists.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Employee not found.
+            type: object
+            properties:
+              code:
+                type: integer
+                description: http status response code
+                example: 409
+              message:
+                type: string
+                description: Detail on the error
+                example: File "/path/file.txt" already exists
     SuccessResponseAttachmentFileUpdate:
       description: File copied, moved or renamed
       content:
@@ -371,21 +377,6 @@ components:
 
                   '
                 example: /new_location.txt
-    ErrorResponseInvalidFileName:
-      description: The file name contains unsupported characters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                description: http status response code
-                example: 400
-              message:
-                type: string
-                description: Detail on the error
-                example: Invalid file name
     SuccessResponseFileUpload:
       description: File uploaded
       content:
@@ -401,6 +392,15 @@ components:
                 type: string
                 description: Url to the file uploaded
                 example: Physician Order/file.pdf
+    ErrorResponseEmployeeNotFound:
+      description: Employee not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Employee not found.
   securitySchemes:
     basic_auth:
       type: http

@@ -171,7 +171,70 @@ paths:
       operationId: deleteTasksByTaskIdCommentsByCommentId
       x-operation-id-source: derived
 components:
+  responses:
+    404NotFound:
+      description: Entity not found
+    400BadRequest:
+      description: Bad request
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+  parameters:
+    task_id:
+      name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The task identifier
+    comment_id:
+      name: comment_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The uniqut task comment identifier
+      example: 11111
   schemas:
+    TaskComment:
+      type: object
+      description: Comments on a task.
+      title: Task Comment
+      properties:
+        comment_id:
+          type: integer
+          example: 1
+          description: Primary Key
+        comment:
+          type: string
+          example: Comment
+        created_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:45.000Z'
+          description: When the comment was created
+        created_by:
+          $ref: '#/components/schemas/Person'
+          description: Who created the comment.
+        updated_at:
+          type: string
+          format: datetime
+          example: '2023-02-02T19:00:58.000Z'
+          description: When the comment was most recently updated.
+        updated_by:
+          $ref: '#/components/schemas/Person'
+          description: Who updated the comment
     Person:
       type: object
       description: Encapsulates the bare details of a person
@@ -210,6 +273,10 @@ components:
         profile_photo_url:
           type: string
           description: URL to profile photo
+    TaskCommentList:
+      type: object
+      items:
+        $ref: '#/components/schemas/TaskComment'
     ErrorResponse:
       title: Error response
       type: object
@@ -234,70 +301,3 @@ components:
       required:
       - message
       - request_id
-    TaskComment:
-      type: object
-      description: Comments on a task.
-      title: Task Comment
-      properties:
-        comment_id:
-          type: integer
-          example: 1
-          description: Primary Key
-        comment:
-          type: string
-          example: Comment
-        created_at:
-          type: string
-          format: datetime
-          example: '2023-02-02T19:00:45.000Z'
-          description: When the comment was created
-        created_by:
-          $ref: '#/components/schemas/Person'
-          description: Who created the comment.
-        updated_at:
-          type: string
-          format: datetime
-          example: '2023-02-02T19:00:58.000Z'
-          description: When the comment was most recently updated.
-        updated_by:
-          $ref: '#/components/schemas/Person'
-          description: Who updated the comment
-    TaskCommentList:
-      type: object
-      items:
-        $ref: '#/components/schemas/TaskComment'
-  responses:
-    400BadRequest:
-      description: Bad request
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    403Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
-    404NotFound:
-      description: Entity not found
-  parameters:
-    comment_id:
-      name: comment_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The uniqut task comment identifier
-      example: 11111
-    task_id:
-      name: task_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The task identifier

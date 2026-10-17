@@ -155,134 +155,17 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Priority:
-      type: integer
-      oneOf:
-      - title: Low
-        const: 1
-      - title: Normal
-        const: 2
-      - title: Important
-        const: 3
-      - title: Urgent
-        const: 4
-      example: 4
-      description: Priority of a Task or Sub Task
-    NamedEntity:
+    BulkUpdateActionResponse:
       type: object
-      description: Encapsulates an entity that has a name, but is not a person.
+      description: Encapsulates a bulk update action response
       properties:
-        id:
-          type: integer
-          nullable: false
-          description: Primary ID of entity
-        name:
-          type: string
-          description: Name of entity
-        status:
-          type: string
-          description: Status of entity
-        deep_link:
-          type: string
-          description: Deep link to entity
-    Status:
-      type: integer
-      oneOf:
-      - title: Open
-        const: 1
-      - title: In Progress
-        const: 3
-      - title: Completed
-        const: 5
-      - title: Closed
-        const: 7
-      example: 1
-      description: Status of a Task or Sub Task
-    TaskContext:
-      type: object
-      description: Context to which a task applies.
-      title: Task Context
-      properties:
-        type:
-          type: string
-          example: api.patients.client
-          description: 'Type of the context. Domain services define their contexts and provide
-
-            instructions on how to connect to them through the component registry.'
-          nullable: false
-        primary_id:
-          type: string
-          example: 27
-          description: Identifies the referenced context.
-          nullable: false
-        display_name:
-          type: string
-          example: John Doe
-          description: Display name of the context.
-          nullable: true
-        deep_link:
-          type: string
-          example: /#/employees/2s/overview
-          description: 'Deep link to the context. Domain services define their deep links and
-
-            provide instructions on how to connect to them through the component
-
-            registry.'
-          nullable: true
-        is_visible:
-          type: boolean
-          example: true
-          description: 'Indicates whether the context is visible. If set to False, the context
-
-            will not be displayed in the frontend.'
-        props:
-          type: object
-          additionalProperties: true
-          description: 'Contents are context-dependent. Has the most important fields from a context.
-
-            For examples, a Client context may contain `first_name` and `last_name`.
-
-            Depending on the context type, this field may be two-way.'
-          example:
-            name.last: Doe
-            name.first: John
-    BulkUpdateActionRequest:
-      type: object
-      description: Encapsulates a bulk update action request
-      properties:
-        update_contexts:
-          type: boolean
-          description: 'Whether to update contexts from the payload. If set to true, the
-
-            `contexts` property must be set in the payload.'
-        update_escalation_dates:
-          type: boolean
-          description: 'Whether to update escalation dates from the payload. If set to true, the
-
-            `escalation_dates` property must be set in the payload.'
-        update_extensions:
-          type: boolean
-          description: 'Whether to update extensions from the payload. If set to true, the
-
-            `extensions` property must be set in the payload.'
-        update_tags:
-          type: boolean
-          description: 'Whether to update tags from the payload. If set to true, the `tags`
-
-            property must be set in the payload.'
         items:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/Task'
-          description: 'The tasks to update. All tasks specified in the payload will be updated.
+          description: 'The first 100 tasks that were updated. The task identifiers are the keys
 
-            This operation either succeeds as a whole or fails at a whole. If any of
-
-            the tasks does not exist or is inaccessible, the entire operation will
-
-            fail. Use the task identifiers as keys in the dictionary, and the full
-
-            task payload as values.'
+            in the dictionary, and the full task payload are sent as values.'
     BulkUpdateStatusActionRequest:
       type: object
       description: Encapsulates a bulk update status action request
@@ -300,176 +183,40 @@ components:
             the entire operation will fail. Use the task identifiers as keys in the
 
             dictionary, and the status as values.'
-    TaskExtensionSchema:
+    BulkUpdatePatchActionRequest:
       type: object
-      description: Schema for custom defined extension field
-      title: Task Extension Schema
-      properties:
-        field_id:
-          type: integer
-          example: 1
-          description: Extension field ID
-          nullable: false
-        type:
-          $ref: '#/components/schemas/TaskExtensionType'
-        label:
-          type: string
-          example: Health Care Number
-          description: 'Label of the extension. The label is used as the title of the extension
-
-            when rendered.'
-        tag:
-          type: string
-          example: intake
-          description: Additional tag
-        instructions:
-          type: string
-          example: Enter the health care number of the patient
-          description: Instructions for the extension.
-        rank:
-          type: integer
-          example: 1
-          description: Rank of the extension. Extensions are rendered in ascending order of rank.
-        required:
-          type: boolean
-          example: true
-          description: 'Indicates whether the extension is required. If set to True, the extension
-
-            must be filled.'
-        settings:
-          type: object
-          additionalProperties: true
-          description: 'Additional settings for the extension. The settings are dependent on the
-
-            extension type.'
-    TaskExtension:
-      type: object
-      description: Custom defined extensions
-      title: Task Extension
-      properties:
-        field_id:
-          type: integer
-          example: 1
-          description: Extension field ID
-          nullable: false
-        field_type:
-          ref: '#/components/schemas/TaskExtensionType'
-        field_label:
-          type: string
-          example: Health Care Number
-          description: 'Label of the extension. The label is used as the title of the extension
-
-            when rendered.'
-        field_value:
-          type: object
-          additionalProperties:
-            type:
-            - string
-            - integer
-            - number
-            - boolean
-            - object
-          example: true
-          description: Value. The type is dependent on the extension type.
-    ErrorResponse:
-      title: Error response
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        request_id:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              code:
-                type: string
-            required:
-            - message
-      required:
-      - message
-      - request_id
-    TaskSource:
-      type: integer
-      oneOf:
-      - title: Web
-        const: 0
-      - title: Client Family Portal
-        const: 1
-      - title: Mobile
-        const: 2
-      - title: External
-        const: 3
-    BulkUpdateActionResponse:
-      type: object
-      description: Encapsulates a bulk update action response
+      description: Encapsulates a bulk update patch action request
       properties:
         items:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/Task'
-          description: 'The first 100 tasks that were updated. The task identifiers are the keys
+            $ref: '#/components/schemas/TaskPatchRequest'
+          description: 'The tasks to update. All tasks specified in the payload will be updated.
 
-            in the dictionary, and the full task payload are sent as values.'
-    BulkDeleteActionRequest:
+            This operation either succeeds as a whole or fails at a whole. If any of
+
+            the tasks does not exist or is inaccessible, the entire operation will
+
+            fail. Use the task identifiers as keys in the dictionary, and the patch
+
+            data structure in the values.'
+    NamedEntity:
       type: object
-      description: Encapsulates a bulk delete action request
-      properties:
-        items:
-          type: array
-          items:
-            type: integer
-          description: 'The task identifiers of the tasks to delete. All tasks specified in the
-
-            payload will be deleted. This operation either succeeds as a whole or
-
-            fails at a whole. If any of the tasks does not exist or is inaccessible,
-
-            the entire operation will fail.'
-    Person:
-      type: object
-      description: Encapsulates the bare details of a person
+      description: Encapsulates an entity that has a name, but is not a person.
       properties:
         id:
           type: integer
           nullable: false
-          description: Primary ID (Employee ID, User ID etc.) of person
-        external_id:
+          description: Primary ID of entity
+        name:
           type: string
-          nullable: true
-          description: External ID of person
-        guid:
-          type: integer
-          nullable: true
-          description: GUID
-        profile_id:
-          type: integer
-          nullable: true
-          description: Profile ID
-        last_name:
-          type: string
-          description: Last Name/Family Name
-        first_name:
-          type: string
-          description: First Name
-        full_name:
-          type: string
-          description: Full Name
+          description: Name of entity
         status:
           type: string
-          description: Status of person
+          description: Status of entity
         deep_link:
           type: string
-          description: Deep link to person
-        profile_photo_url:
-          type: string
-          description: URL to profile photo
+          description: Deep link to entity
     Task:
       type: object
       description: 'Task Model
@@ -585,6 +332,48 @@ components:
           items:
             $ref: '#/components/schemas/TaskExtensionSchema'
           description: Schema for custom defined extension fields
+    TaskExtensionSchema:
+      type: object
+      description: Schema for custom defined extension field
+      title: Task Extension Schema
+      properties:
+        field_id:
+          type: integer
+          example: 1
+          description: Extension field ID
+          nullable: false
+        type:
+          $ref: '#/components/schemas/TaskExtensionType'
+        label:
+          type: string
+          example: Health Care Number
+          description: 'Label of the extension. The label is used as the title of the extension
+
+            when rendered.'
+        tag:
+          type: string
+          example: intake
+          description: Additional tag
+        instructions:
+          type: string
+          example: Enter the health care number of the patient
+          description: Instructions for the extension.
+        rank:
+          type: integer
+          example: 1
+          description: Rank of the extension. Extensions are rendered in ascending order of rank.
+        required:
+          type: boolean
+          example: true
+          description: 'Indicates whether the extension is required. If set to True, the extension
+
+            must be filled.'
+        settings:
+          type: object
+          additionalProperties: true
+          description: 'Additional settings for the extension. The settings are dependent on the
+
+            extension type.'
     TaskExtensionType:
       type: string
       oneOf:
@@ -612,23 +401,147 @@ components:
         const: hyperlink
       - title: information
         const: information
-    BulkUpdatePatchActionRequest:
+    TaskContext:
       type: object
-      description: Encapsulates a bulk update patch action request
+      description: Context to which a task applies.
+      title: Task Context
       properties:
-        items:
+        type:
+          type: string
+          example: api.patients.client
+          description: 'Type of the context. Domain services define their contexts and provide
+
+            instructions on how to connect to them through the component registry.'
+          nullable: false
+        primary_id:
+          type: string
+          example: 27
+          description: Identifies the referenced context.
+          nullable: false
+        display_name:
+          type: string
+          example: John Doe
+          description: Display name of the context.
+          nullable: true
+        deep_link:
+          type: string
+          example: /#/employees/2s/overview
+          description: 'Deep link to the context. Domain services define their deep links and
+
+            provide instructions on how to connect to them through the component
+
+            registry.'
+          nullable: true
+        is_visible:
+          type: boolean
+          example: true
+          description: 'Indicates whether the context is visible. If set to False, the context
+
+            will not be displayed in the frontend.'
+        props:
+          type: object
+          additionalProperties: true
+          description: 'Contents are context-dependent. Has the most important fields from a context.
+
+            For examples, a Client context may contain `first_name` and `last_name`.
+
+            Depending on the context type, this field may be two-way.'
+          example:
+            name.last: Doe
+            name.first: John
+    Status:
+      type: integer
+      oneOf:
+      - title: Open
+        const: 1
+      - title: In Progress
+        const: 3
+      - title: Completed
+        const: 5
+      - title: Closed
+        const: 7
+      example: 1
+      description: Status of a Task or Sub Task
+    TaskExtension:
+      type: object
+      description: Custom defined extensions
+      title: Task Extension
+      properties:
+        field_id:
+          type: integer
+          example: 1
+          description: Extension field ID
+          nullable: false
+        field_type:
+          ref: '#/components/schemas/TaskExtensionType'
+        field_label:
+          type: string
+          example: Health Care Number
+          description: 'Label of the extension. The label is used as the title of the extension
+
+            when rendered.'
+        field_value:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/TaskPatchRequest'
-          description: 'The tasks to update. All tasks specified in the payload will be updated.
-
-            This operation either succeeds as a whole or fails at a whole. If any of
-
-            the tasks does not exist or is inaccessible, the entire operation will
-
-            fail. Use the task identifiers as keys in the dictionary, and the patch
-
-            data structure in the values.'
+            type:
+            - string
+            - integer
+            - number
+            - boolean
+            - object
+          example: true
+          description: Value. The type is dependent on the extension type.
+    Priority:
+      type: integer
+      oneOf:
+      - title: Low
+        const: 1
+      - title: Normal
+        const: 2
+      - title: Important
+        const: 3
+      - title: Urgent
+        const: 4
+      example: 4
+      description: Priority of a Task or Sub Task
+    Person:
+      type: object
+      description: Encapsulates the bare details of a person
+      properties:
+        id:
+          type: integer
+          nullable: false
+          description: Primary ID (Employee ID, User ID etc.) of person
+        external_id:
+          type: string
+          nullable: true
+          description: External ID of person
+        guid:
+          type: integer
+          nullable: true
+          description: GUID
+        profile_id:
+          type: integer
+          nullable: true
+          description: Profile ID
+        last_name:
+          type: string
+          description: Last Name/Family Name
+        first_name:
+          type: string
+          description: First Name
+        full_name:
+          type: string
+          description: Full Name
+        status:
+          type: string
+          description: Status of person
+        deep_link:
+          type: string
+          description: Deep link to person
+        profile_photo_url:
+          type: string
+          description: URL to profile photo
     TaskPatchRequest:
       type: object
       description: 'Request body for patching a task. The request contains one or more fields to update in a task. The fields are optional, but at least one field must be provided.
@@ -699,16 +612,94 @@ components:
           items:
             $ref: '#/components/schemas/TaskExtension'
           description: Custom defined extensions
+    BulkDeleteActionRequest:
+      type: object
+      description: Encapsulates a bulk delete action request
+      properties:
+        items:
+          type: array
+          items:
+            type: integer
+          description: 'The task identifiers of the tasks to delete. All tasks specified in the
+
+            payload will be deleted. This operation either succeeds as a whole or
+
+            fails at a whole. If any of the tasks does not exist or is inaccessible,
+
+            the entire operation will fail.'
+    BulkUpdateActionRequest:
+      type: object
+      description: Encapsulates a bulk update action request
+      properties:
+        update_contexts:
+          type: boolean
+          description: 'Whether to update contexts from the payload. If set to true, the
+
+            `contexts` property must be set in the payload.'
+        update_escalation_dates:
+          type: boolean
+          description: 'Whether to update escalation dates from the payload. If set to true, the
+
+            `escalation_dates` property must be set in the payload.'
+        update_extensions:
+          type: boolean
+          description: 'Whether to update extensions from the payload. If set to true, the
+
+            `extensions` property must be set in the payload.'
+        update_tags:
+          type: boolean
+          description: 'Whether to update tags from the payload. If set to true, the `tags`
+
+            property must be set in the payload.'
+        items:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Task'
+          description: 'The tasks to update. All tasks specified in the payload will be updated.
+
+            This operation either succeeds as a whole or fails at a whole. If any of
+
+            the tasks does not exist or is inaccessible, the entire operation will
+
+            fail. Use the task identifiers as keys in the dictionary, and the full
+
+            task payload as values.'
+    TaskSource:
+      type: integer
+      oneOf:
+      - title: Web
+        const: 0
+      - title: Client Family Portal
+        const: 1
+      - title: Mobile
+        const: 2
+      - title: External
+        const: 3
+    ErrorResponse:
+      title: Error response
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              code:
+                type: string
+            required:
+            - message
+      required:
+      - message
+      - request_id
   responses:
-    400BadRequest:
-      description: Bad request
-    401Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      headers: {}
     403Forbidden:
       description: Forbidden
       content:
@@ -716,3 +707,12 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       headers: {}
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      headers: {}
+    400BadRequest:
+      description: Bad request

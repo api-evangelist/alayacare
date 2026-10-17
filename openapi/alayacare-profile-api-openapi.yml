@@ -131,23 +131,46 @@ paths:
     servers:
     - url: https://homecare.alayacare.ca/ext/api/v2/scheduler
 components:
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: 401
+                message: Authorization required.
+    ErrorResponseAuthentication_2:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseAuthentication_3:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseAuthentication_4:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
     filter_partial_search:
       name: filter_partial_search
       description: 'Substring search on profile tag and description values.
@@ -159,6 +182,22 @@ components:
       required: false
       schema:
         type: string
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
     filter_partial_search_2:
       name: filter (partial search)
       description: 'Substring search on profile tag and description values.
@@ -170,24 +209,6 @@ components:
       required: false
       schema:
         type: string
-    count_2:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
-    page_2:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
     filter_partial_search_3:
       name: filter (partial search)
       description: 'Substring search on profile tag and description values.
@@ -199,7 +220,35 @@ components:
       required: false
       schema:
         type: string
+    page_2:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    count_2:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
   schemas:
+    ProfileAttributeList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      - type: object
+        description: Paginated list of profile attributes
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProfileAttribute'
     ProfileAttribute:
       type: object
       properties:
@@ -251,16 +300,16 @@ components:
       - page
       - total_pages
       - items
-    ProfileAttributeList:
+    ProfileAttributeList_2:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      - type: object
-        description: Paginated list of profile attributes
-        properties:
+      - $ref: '#/components/schemas/PaginatedList_2'
+      description: Paginated list of profile attributes
+      type: object
+      properties:
+        items:
+          type: array
           items:
-            type: array
-            items:
-              $ref: '#/components/schemas/ProfileAttribute'
+            $ref: '#/components/schemas/ProfileAttribute'
     ErrorResponse_2:
       description: Error response
       type: object
@@ -295,19 +344,18 @@ components:
       - page
       - total_pages
       - items
-    ProfileAttributeList_2:
+    ProfileAttributeList_3:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList_2'
+      - $ref: '#/components/schemas/PaginatedList'
       description: Paginated list of profile attributes
-      type: object
       properties:
         items:
           type: array
           items:
             $ref: '#/components/schemas/ProfileAttribute'
-    ProfileAttributeList_3:
+    ProfileAttributeList_4:
       allOf:
-      - $ref: '#/components/schemas/PaginatedList'
+      - $ref: '#/components/schemas/PaginatedList_3'
       description: Paginated list of profile attributes
       properties:
         items:
@@ -339,54 +387,6 @@ components:
       - page
       - total_pages
       - items
-    ProfileAttributeList_4:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList_3'
-      description: Paginated list of profile attributes
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProfileAttribute'
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: 401
-                message: Authorization required.
-    ErrorResponseAuthentication_2:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse_2'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseAuthentication_3:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseAuthentication_4:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
   securitySchemes:
     basic_auth:
       type: http

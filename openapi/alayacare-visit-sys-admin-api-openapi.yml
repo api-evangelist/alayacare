@@ -128,83 +128,7 @@ paths:
       operationId: getV1SysAdminVisitsByVisitId
       x-operation-id-source: derived
 components:
-  parameters:
-    PageNumberParam:
-      in: query
-      name: page
-      schema:
-        $ref: '#/components/schemas/PageNumberCore'
-    ReferralIdQueryParam:
-      in: query
-      name: referral_id
-      schema:
-        type: string
-        format: uuid
-    SortOrderParam:
-      in: query
-      name: sort_order
-      schema:
-        $ref: '#/components/schemas/SortOrderCore'
-    ItemsPerPageParam:
-      in: query
-      name: items_per_page
-      schema:
-        $ref: '#/components/schemas/ItemsPerPageCore'
-    VisitIdPathParam:
-      in: path
-      name: visit_id
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: ID of a visit.
-    ServiceIdQueryParam:
-      in: query
-      name: service_id
-      schema:
-        type: string
-        format: uuid
   schemas:
-    SysAdminVisitCollectionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        outbox_id:
-          type: string
-        inbox_id:
-          type: string
-        referral_id:
-          type: string
-          format: uuid
-        service_id:
-          type: string
-          format: uuid
-        service_outbox_id:
-          type: string
-          minLength: 1
-        status:
-          type: string
-          enum:
-          - scheduled
-          - deleted
-          - cancelled
-          - on_hold
-        start_at:
-          type: string
-          format: date-time
-        end_at:
-          type: string
-          format: date-time
-      required:
-      - status
-      - id
-      - referral_id
-      - service_id
-      - service_outbox_id
-      - start_at
-      - end_at
     SysAdminVisitDetailResponse:
       type: object
       properties:
@@ -337,6 +261,10 @@ components:
       - items_per_page
       - total_items
       - total_pages
+    PageNumberCore:
+      type: integer
+      minimum: 1
+      default: 1
     SysAdminVisitPageResponse:
       allOf:
       - $ref: '#/components/schemas/PageCore'
@@ -346,20 +274,92 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/SysAdminVisitCollectionResponse'
+    SysAdminVisitCollectionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+        inbox_id:
+          type: string
+        referral_id:
+          type: string
+          format: uuid
+        service_id:
+          type: string
+          format: uuid
+        service_outbox_id:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          enum:
+          - scheduled
+          - deleted
+          - cancelled
+          - on_hold
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+      required:
+      - status
+      - id
+      - referral_id
+      - service_id
+      - service_outbox_id
+      - start_at
+      - end_at
     SortOrderCore:
       type: string
       enum:
       - asc
       - desc
       default: desc
-    PageNumberCore:
-      type: integer
-      minimum: 1
-      default: 1
     ItemsPerPageCore:
       type: integer
       minimum: 1
       default: 100
+  parameters:
+    ReferralIdQueryParam:
+      in: query
+      name: referral_id
+      schema:
+        type: string
+        format: uuid
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageCore'
+    ServiceIdQueryParam:
+      in: query
+      name: service_id
+      schema:
+        type: string
+        format: uuid
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderCore'
+    VisitIdPathParam:
+      in: path
+      name: visit_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: ID of a visit.
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberCore'
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

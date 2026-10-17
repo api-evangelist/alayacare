@@ -278,92 +278,171 @@ paths:
       operationId: putCareplansGoalsByGoalIdStatusCompleted
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorInsufficientAccess:
-      description: You do not have the required permissions to perform this action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 403
-            message: Access required
-    ErrorResponseInvalidArchivalForRootItemType:
-      description: The root item type cannot be archived once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be archived once it has been completed
-    ErrorResponseInvalidUpdateForRootItemType:
-      description: The root item type cannot be deleted once it has been completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The root item type cannot be deleted in current status
-    ErrorResponseGoalTypeNotFound:
-      description: Field 'goal_type' is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Field 'goal_type' is invalid
-    ErrorResponseCarePlanNotFound:
-      description: Care plan not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Care plan not found
-    ErrorResponseInvalidRequest:
-      description: Invalid data submitted for item creation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 400
-            message: The field 'start_date' is required.
-    ErrorResponseGoalNotFound:
-      description: Goal not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 404
-            message: Goal not found
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status_code: 401
-            message: Please verify your access level for this url.
   schemas:
-    User:
-      description: User id, first and last names
+    UpdateCarePlanGoal:
+      description: JSON schema for creating care plan diagnosis
       type: object
       properties:
-        id:
-          description: The id of user
-          type: integer
-          example: 5
-        external_id:
-          description: The id of user
+        name:
+          description: A title of care plan goal
           type: string
-          example: sor_external_id_1
+          example: Example goal
+        start_date:
+          description: A start date of goal
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: A end date of goal
+          type: string
+          example: '2018-01-10'
+        description:
+          description: A description of care plan goal
+          type: string
+          example: Description of goal
+        is_primary:
+          description: Define that this goal is primary
+          type: boolean
+          example: true
+        rank:
+          description: Used for ordering of goals in list. The smaller, the higher. Can be the number of place in the list of goals in care plan
+          type: integer
+          example: 0
+        type:
+          $ref: '#/components/schemas/GoalType'
+        progress_type:
+          $ref: '#/components/schemas/GoalMethod'
+        department_id:
+          description: The ID of selected department
+          type:
+          - integer
+          - 'null'
+          example: 1
+        service_ids:
+          description: The list of service ID's that is linked to created diagnosis.Only services assigned to the client can be linked to the diagnosis.
+          type: array
+          items:
+            type: integer
+          example:
+          - 1
+          - 4
+          - 6
+        tag_ids:
+          description: The list of tag ID's that is linked to created diagnosis
+          type: array
+          items:
+            type: integer
+          example:
+          - 2
+          - 4
+          - 8
+        diagnosis_ids:
+          description: 'The list of diagnosis IDs that is linked to created goal. '
+          type: array
+          items:
+            type: integer
+          example:
+          - 2
+          - 4
+          - 8
+    ServiceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServiceDetails'
+    CreateCarePlanGoal:
+      description: JSON schema for creating care plan goal
+      type: object
+      required:
+      - name
+      - start_date
+      - type
+      - progress_type
+      - department_id
+      - is_primary
+      properties:
+        name:
+          description: Title of the care plan goal
+          type: string
+          example: Example goal
+        start_date:
+          description: Start date of the goal
+          type: string
+          example: '2018-01-10'
+        end_date:
+          description: End date of the goal
+          type: string
+          example: '2018-01-10'
+        description:
+          description: Description of the care plan goal
+          type: string
+          example: Description of goal
+        is_primary:
+          description: Define that this goal is primary
+          type: boolean
+          example: true
+        type:
+          type: string
+          description: Goal Type
+          example: Desires/Motivations
+        progress_type:
+          $ref: '#/components/schemas/GoalMethod'
+        department_id:
+          description: The ID of selected department
+          type:
+          - integer
+          - 'null'
+          example: 1
+        service_ids:
+          description: The list of service ID's that is linked to created diagnosis.Only services assigned to the client can be linked to the diagnosis.
+          type: array
+          items:
+            type: integer
+          example:
+          - 1
+          - 4
+          - 6
+        external_service_ids:
+          description: The list of service external ID's that is linked to a diagnosis. Only services assigned to the client can be linked to the diagnosis.
+          type: array
+          items:
+            type: string
+          example:
+          - sor_service_id_1
+          - sor_service_id_2
+          - sor_service_id_3
+        tag_ids:
+          description: The list of tag ID's that is linked to created diagnosis
+          type: array
+          items:
+            type: integer
+          example:
+          - 2
+          - 4
+          - 8
+        diagnosis_ids:
+          description: The list of diagnosis ID that is linked to created goal. Only giagnoses available in the careplan can be assigned to the goal.
+          type: array
+          items:
+            type: integer
+          example:
+          - 2
+          - 4
+          - 8
+    GoalTypeList:
+      description: List of goal types
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalType'
+    CarePlanGoalList:
+      description: The list of goals
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanGoal'
     ServiceDetails:
       description: Service details
       type:
@@ -380,28 +459,6 @@ components:
           - 'null'
           description: External service ID
           example: sor_service_id_1
-    CarePlanGoalList:
-      description: The list of goals
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanGoal'
-    EntitySummary:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: integer
-          description: AlayaCare entity ID
-          example: 1001
-        name:
-          type: string
-          description: Alayacare entity name
-          example: entity name
     CarePlanGoal:
       description: Care plan goal
       type: object
@@ -488,6 +545,18 @@ components:
           type:
           - string
           - 'null'
+    User:
+      description: User id, first and last names
+      type: object
+      properties:
+        id:
+          description: The id of user
+          type: integer
+          example: 5
+        external_id:
+          description: The id of user
+          type: string
+          example: sor_external_id_1
     GoalMethod:
       description: Progress tracking method of goal
       type: string
@@ -496,12 +565,29 @@ components:
       - per_visits
       - percentage
       example: percentage
-    CareplanItemStatus:
-      type: string
-      enum:
-      - active
-      - completed
-      - archived
+    EntitySummary:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          description: AlayaCare entity ID
+          example: 1001
+        name:
+          type: string
+          description: Alayacare entity name
+          example: entity name
+    GoalType:
+      description: List of goal types
+      type: object
+      example:
+      - Nursing
+      - Physiotherapy
+      - Occupational Therapy
+      - Speech Therapy
+      - Personal Care
     GoalProgress:
       description: Goal progress information
       properties:
@@ -514,6 +600,10 @@ components:
       example:
         comment: That was hard
         completed: false
+    EntitySummaryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntitySummary'
     ErrorResponse:
       description: Error response
       type: object
@@ -527,175 +617,85 @@ components:
       required:
       - code
       - message
-    GoalTypeList:
-      description: List of goal types
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/GoalType'
-    GoalType:
-      description: List of goal types
-      type: object
-      example:
-      - Nursing
-      - Physiotherapy
-      - Occupational Therapy
-      - Speech Therapy
-      - Personal Care
-    EntitySummaryList:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntitySummary'
-    ServiceList:
-      type: array
-      items:
-        $ref: '#/components/schemas/ServiceDetails'
-    UpdateCarePlanGoal:
-      description: JSON schema for creating care plan diagnosis
-      type: object
-      properties:
-        name:
-          description: A title of care plan goal
-          type: string
-          example: Example goal
-        start_date:
-          description: A start date of goal
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: A end date of goal
-          type: string
-          example: '2018-01-10'
-        description:
-          description: A description of care plan goal
-          type: string
-          example: Description of goal
-        is_primary:
-          description: Define that this goal is primary
-          type: boolean
-          example: true
-        rank:
-          description: Used for ordering of goals in list. The smaller, the higher. Can be the number of place in the list of goals in care plan
-          type: integer
-          example: 0
-        type:
-          $ref: '#/components/schemas/GoalType'
-        progress_type:
-          $ref: '#/components/schemas/GoalMethod'
-        department_id:
-          description: The ID of selected department
-          type:
-          - integer
-          - 'null'
-          example: 1
-        service_ids:
-          description: The list of service ID's that is linked to created diagnosis.Only services assigned to the client can be linked to the diagnosis.
-          type: array
-          items:
-            type: integer
+    CareplanItemStatus:
+      type: string
+      enum:
+      - active
+      - completed
+      - archived
+  responses:
+    ErrorResponseCarePlanNotFound:
+      description: Care plan not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - 1
-          - 4
-          - 6
-        tag_ids:
-          description: The list of tag ID's that is linked to created diagnosis
-          type: array
-          items:
-            type: integer
+            status_code: 404
+            message: Care plan not found
+    ErrorResponseGoalNotFound:
+      description: Goal not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - 2
-          - 4
-          - 8
-        diagnosis_ids:
-          description: 'The list of diagnosis IDs that is linked to created goal. '
-          type: array
-          items:
-            type: integer
+            status_code: 404
+            message: Goal not found
+    ErrorResponseInvalidArchivalForRootItemType:
+      description: The root item type cannot be archived once it has been completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - 2
-          - 4
-          - 8
-    CreateCarePlanGoal:
-      description: JSON schema for creating care plan goal
-      type: object
-      required:
-      - name
-      - start_date
-      - type
-      - progress_type
-      - department_id
-      - is_primary
-      properties:
-        name:
-          description: Title of the care plan goal
-          type: string
-          example: Example goal
-        start_date:
-          description: Start date of the goal
-          type: string
-          example: '2018-01-10'
-        end_date:
-          description: End date of the goal
-          type: string
-          example: '2018-01-10'
-        description:
-          description: Description of the care plan goal
-          type: string
-          example: Description of goal
-        is_primary:
-          description: Define that this goal is primary
-          type: boolean
-          example: true
-        type:
-          type: string
-          description: Goal Type
-          example: Desires/Motivations
-        progress_type:
-          $ref: '#/components/schemas/GoalMethod'
-        department_id:
-          description: The ID of selected department
-          type:
-          - integer
-          - 'null'
-          example: 1
-        service_ids:
-          description: The list of service ID's that is linked to created diagnosis.Only services assigned to the client can be linked to the diagnosis.
-          type: array
-          items:
-            type: integer
+            status_code: 400
+            message: The root item type cannot be archived once it has been completed
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - 1
-          - 4
-          - 6
-        external_service_ids:
-          description: The list of service external ID's that is linked to a diagnosis. Only services assigned to the client can be linked to the diagnosis.
-          type: array
-          items:
-            type: string
+            status_code: 401
+            message: Please verify your access level for this url.
+    ErrorResponseInvalidRequest:
+      description: Invalid data submitted for item creation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - sor_service_id_1
-          - sor_service_id_2
-          - sor_service_id_3
-        tag_ids:
-          description: The list of tag ID's that is linked to created diagnosis
-          type: array
-          items:
-            type: integer
+            status_code: 400
+            message: The field 'start_date' is required.
+    ErrorResponseInvalidUpdateForRootItemType:
+      description: The root item type cannot be deleted once it has been completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - 2
-          - 4
-          - 8
-        diagnosis_ids:
-          description: The list of diagnosis ID that is linked to created goal. Only giagnoses available in the careplan can be assigned to the goal.
-          type: array
-          items:
-            type: integer
+            status_code: 400
+            message: The root item type cannot be deleted in current status
+    ErrorResponseGoalTypeNotFound:
+      description: Field 'goal_type' is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-          - 2
-          - 4
-          - 8
+            status_code: 404
+            message: Field 'goal_type' is invalid
+    ErrorInsufficientAccess:
+      description: You do not have the required permissions to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status_code: 403
+            message: Access required
   securitySchemes:
     basic_auth:
       type: http

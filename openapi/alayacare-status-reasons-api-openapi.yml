@@ -72,32 +72,6 @@ paths:
       operationId: getStatusReasons
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    branchId:
-      description: Filter by branch ID
-      name: branch_id
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
   responses:
     ErrorResponseAuthentication:
       description: Authorization required
@@ -111,6 +85,51 @@ components:
                 code: '401'
                 message: Authorization required.
   schemas:
+    StatusReasonsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of status reasons
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusReasonDetail'
+    StatusReasonDetail:
+      description: Client status reason.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayaCare status reason ID.
+          example: 1
+        status:
+          type: string
+          description: Alayacare client status
+          example: on_hold
+          enum:
+          - on_hold
+          - discharged
+        name:
+          type: string
+          description: AlayaCare status reason name.
+          example: Vacation
+        description:
+          type: string
+          description: AlayaCare status reason description
+          example: Yearly summer vacation.
+        branch:
+          type: object
+          description: AlayaCare branch
+          properties:
+            id:
+              type: integer
+              description: Branch ID
+              example: 1000
+              minimum: 1
+            name:
+              type: string
+              description: Branch name
+              example: Toronto branch
     ErrorResponse:
       description: Error response
       type: object
@@ -152,51 +171,32 @@ components:
       - page
       - total_pages
       - items
-    StatusReasonDetail:
-      description: Client status reason.
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayaCare status reason ID.
-          example: 1
-        status:
-          type: string
-          description: Alayacare client status
-          example: on_hold
-          enum:
-          - on_hold
-          - discharged
-        name:
-          type: string
-          description: AlayaCare status reason name.
-          example: Vacation
-        description:
-          type: string
-          description: AlayaCare status reason description
-          example: Yearly summer vacation.
-        branch:
-          type: object
-          description: AlayaCare branch
-          properties:
-            id:
-              type: integer
-              description: Branch ID
-              example: 1000
-              minimum: 1
-            name:
-              type: string
-              description: Branch name
-              example: Toronto branch
-    StatusReasonsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of status reasons
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusReasonDetail'
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    branchId:
+      description: Filter by branch ID
+      name: branch_id
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

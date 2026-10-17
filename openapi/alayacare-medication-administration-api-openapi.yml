@@ -137,24 +137,46 @@ paths:
       operationId: getMedicationsByMedicationIdAdministrationsByAdminId
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      name: count
-      in: query
-      required: false
-      description: Number of items per page. If not specified will default to 100.
-      schema:
-        type: integer
-        default: 100
-    page:
-      name: page
-      in: query
-      required: false
-      description: Filter by page number. If not specified will default to 1.
-      schema:
-        type: integer
-        default: 1
+  responses:
+    InvalidRequest:
+      description: Invalid data.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Invalid request
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    NotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Progress note not found
   schemas:
+    MedicationAdministration:
+      allOf:
+      - $ref: '#/components/schemas/MedicationAdministrationCreate'
+      type: object
+      description: Medication admninistration details
+      required:
+      - medication_id
+      - created_employee_id
+      - date_complete
+      - id
+      - updated_employee_id
     YesNo:
       type:
       - string
@@ -164,6 +186,31 @@ components:
       - 'yes'
       - 'no'
       example: 'yes'
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 1
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        total_pages:
+          type: integer
+          description: Total number of pages availbale
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
     MedicationAdministrationList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -173,6 +220,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MedicationAdministration'
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Response code
+        message:
+          type: string
+          description: Detailed error message
+      required:
+      - code
+      - message
     MedicationAdministrationCreate:
       type: object
       description: Medication admninistration details
@@ -324,83 +384,23 @@ components:
         updated_employee_id:
           type: integer
           description: The ID of the employee that last updated the entity.
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Response code
-        message:
-          type: string
-          description: Detailed error message
-      required:
-      - code
-      - message
-    MedicationAdministration:
-      allOf:
-      - $ref: '#/components/schemas/MedicationAdministrationCreate'
-      type: object
-      description: Medication admninistration details
-      required:
-      - medication_id
-      - created_employee_id
-      - date_complete
-      - id
-      - updated_employee_id
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 1
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-        total_pages:
-          type: integer
-          description: Total number of pages availbale
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
-  responses:
-    InvalidRequest:
-      description: Invalid data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Invalid request
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    NotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Progress note not found
+  parameters:
+    page:
+      name: page
+      in: query
+      required: false
+      description: Filter by page number. If not specified will default to 1.
+      schema:
+        type: integer
+        default: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Number of items per page. If not specified will default to 100.
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basic_auth:
       type: http

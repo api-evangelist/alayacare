@@ -303,22 +303,87 @@ paths:
       operationId: getSubmissionsBySubmissionIdSubmissionRevision
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      name: count
-      description: Number of items per page. If not specified will default to 100
-      in: query
-      schema:
-        type: integer
-        default: 100
-    page:
-      name: page
-      description: Filter by page number. If not specified will default to 1
-      in: query
-      schema:
-        type: integer
-        default: 1
+  responses:
+    PermissionError:
+      description: Permission error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    AuthChallenge:
+      description: Authentication required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Please verify your access level for this url.
+    ErrorResponseNotFound:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Form Submission not found.
+    ErrorResponseInvalidRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: Only one of either `account_id` or `external_client_id` should be specified.
   schemas:
+    UserShortSchema:
+      description: A user
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the user
+          example: 1
+        guid:
+          type: integer
+          description: The guid of the user
+          example: 100
+        profile_id:
+          type: integer
+          description: The guid of the user
+          example: 123
+        name:
+          type: string
+          description: The name of the user
+          example: John Snow
+        roles:
+          type: array
+          description: roles of the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The ID of the role
+                example: 1
+              name:
+                type: string
+                description: The name of the role
+                example: admin
+    BranchSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Branch A
     Submission:
       description: The full content of a submission
       type: object
@@ -448,6 +513,121 @@ components:
           $ref: '#/components/schemas/BranchSchema'
         visit:
           $ref: '#/components/schemas/VisitSchema'
+    SubmissionCoord:
+      description: Create a record of the GPS coordinates of the user when the submission was created.
+      type: object
+      required:
+      - lat
+      - lng
+      - measured_at
+      properties:
+        accuracy:
+          description: The accuracy of the GPS coordinates, in meters.
+          type: number
+          example: 123.4
+        lat:
+          description: The GPS latitude.
+          type: number
+          example: 45.516136
+        lng:
+          description: The GPS longitude.
+          type: number
+          example: -73.65683
+        measured_at:
+          description: The date-time at which the coordinates were measured.
+          type: string
+          format: date-time
+          example: '2017-07-08T13:30:00+00:00'
+    SubmissionFieldRead:
+      description: The submission field schema containing the form values.
+      type: object
+      required:
+      - field_id
+      - field_value
+      properties:
+        field_id:
+          description: Unique ID of the field
+          type: integer
+          example: 1
+        field_label:
+          description: The name of the field
+          type: string
+          example: Agency Name
+        field_type:
+          description: The type of the field
+          type: string
+          example: textarea
+        field_value:
+          description: "An object containing the field value.\nThis is a polymorphic field and the schema changes with the type.\n\n checkbox => boolean\n \n date => string (format: date)\n \n demographics => uses simple type schemas: autocomplete, boolean, list, list_multiple, number, text, textarea, autocomplete\n \n drawing => string (format: url)\n \n hyperlink => string (format: url)\n \n list => FieldValueList\n \n list_multiple => FieldValueListMultiple\n \n grid_fixed => FieldValueListMultiple\n \n grid_flexible => FieldValueListMultiple\n \n medication => FieldValueEntity\n \n medical_history => FieldValueEntity\n \n number => number\n \n picture => string (format: url)\n \n progress_notes => string\n \n risk => FieldValueEntity\n \n signature => string (format: url)\n \n text => string\n \n textarea => string\n \n time => string (format: time)\n \n vital => FieldValueEntity\n"
+          type: string
+          example: Text field value
+    AccountShortSchema:
+      type: object
+      description: A client
+      properties:
+        id:
+          type: integer
+          description: The ID of the client or facility
+          example: 10
+        guid:
+          type: integer
+          description: The guid of the client or facility
+          example: 12345
+        profile_id:
+          type: integer
+          description: The profile ID of the client or facility
+          example: 120
+        name:
+          type: string
+          description: The name of the client or facility
+          example: Mary Jane
+        external_id:
+          type: string
+          description: The external ID of the client or facility
+          example: ex-123
+    VisitSubmissionCountResponse:
+      description: Schema for the visit submission count response.
+      properties:
+        default:
+          $ref: '#/components/schemas/VisitSubmissionCount'
+      additionalProperties:
+        $ref: '#/components/schemas/VisitSubmissionCount'
+      example:
+        submission_counts:
+          12345:
+            approved_count: 2
+            total_count: 5
+          12346:
+            approved_count: 0
+            total_count: 2
+    SubmissionStatus:
+      description: The status of a form submission
+      type: string
+      default: unapproved
+      enum:
+      - draft
+      - unapproved
+      - approved
+      - verification
+      - job_pending
+      - to_delete
+      - correcting
+      - sent
+      - inactive
+      - correction_number_reqquired
+      - sent_inactive
+    VisitSchema:
+      type: object
+      properties:
+        start_at:
+          type: integer
+          example: 1642053489
+        end_at:
+          type: integer
+          example: 1642053489
+        employee_name:
+          type: string
+          example: John Doe
     SubmissionList:
       description: A list of form submissions
       type: object
@@ -478,46 +658,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Submission'
-    VisitSubmissionCountResponse:
-      description: Schema for the visit submission count response.
-      properties:
-        default:
-          $ref: '#/components/schemas/VisitSubmissionCount'
-      additionalProperties:
-        $ref: '#/components/schemas/VisitSubmissionCount'
-      example:
-        submission_counts:
-          12345:
-            approved_count: 2
-            total_count: 5
-          12346:
-            approved_count: 0
-            total_count: 2
-    SubmissionCoord:
-      description: Create a record of the GPS coordinates of the user when the submission was created.
+    VisitSubmissionCount:
+      description: Count of form submissions for a visit.
       type: object
-      required:
-      - lat
-      - lng
-      - measured_at
       properties:
-        accuracy:
-          description: The accuracy of the GPS coordinates, in meters.
-          type: number
-          example: 123.4
-        lat:
-          description: The GPS latitude.
-          type: number
-          example: 45.516136
-        lng:
-          description: The GPS longitude.
-          type: number
-          example: -73.65683
-        measured_at:
-          description: The date-time at which the coordinates were measured.
-          type: string
-          format: date-time
-          example: '2017-07-08T13:30:00+00:00'
+        approved_count:
+          description: Count of approved form submissions for a visit.
+          type: integer
+        total_count:
+          description: Count of total form submissions for a visit.
+          type: integer
     ErrorResponse:
       description: Error response
       type: object
@@ -531,171 +681,21 @@ components:
       required:
       - code
       - message
-    AccountShortSchema:
-      type: object
-      description: A client
-      properties:
-        id:
-          type: integer
-          description: The ID of the client or facility
-          example: 10
-        guid:
-          type: integer
-          description: The guid of the client or facility
-          example: 12345
-        profile_id:
-          type: integer
-          description: The profile ID of the client or facility
-          example: 120
-        name:
-          type: string
-          description: The name of the client or facility
-          example: Mary Jane
-        external_id:
-          type: string
-          description: The external ID of the client or facility
-          example: ex-123
-    VisitSubmissionCount:
-      description: Count of form submissions for a visit.
-      type: object
-      properties:
-        approved_count:
-          description: Count of approved form submissions for a visit.
-          type: integer
-        total_count:
-          description: Count of total form submissions for a visit.
-          type: integer
-    VisitSchema:
-      type: object
-      properties:
-        start_at:
-          type: integer
-          example: 1642053489
-        end_at:
-          type: integer
-          example: 1642053489
-        employee_name:
-          type: string
-          example: John Doe
-    BranchSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        name:
-          type: string
-          example: Branch A
-    UserShortSchema:
-      description: A user
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The ID of the user
-          example: 1
-        guid:
-          type: integer
-          description: The guid of the user
-          example: 100
-        profile_id:
-          type: integer
-          description: The guid of the user
-          example: 123
-        name:
-          type: string
-          description: The name of the user
-          example: John Snow
-        roles:
-          type: array
-          description: roles of the user
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The ID of the role
-                example: 1
-              name:
-                type: string
-                description: The name of the role
-                example: admin
-    SubmissionFieldRead:
-      description: The submission field schema containing the form values.
-      type: object
-      required:
-      - field_id
-      - field_value
-      properties:
-        field_id:
-          description: Unique ID of the field
-          type: integer
-          example: 1
-        field_label:
-          description: The name of the field
-          type: string
-          example: Agency Name
-        field_type:
-          description: The type of the field
-          type: string
-          example: textarea
-        field_value:
-          description: "An object containing the field value.\nThis is a polymorphic field and the schema changes with the type.\n\n checkbox => boolean\n \n date => string (format: date)\n \n demographics => uses simple type schemas: autocomplete, boolean, list, list_multiple, number, text, textarea, autocomplete\n \n drawing => string (format: url)\n \n hyperlink => string (format: url)\n \n list => FieldValueList\n \n list_multiple => FieldValueListMultiple\n \n grid_fixed => FieldValueListMultiple\n \n grid_flexible => FieldValueListMultiple\n \n medication => FieldValueEntity\n \n medical_history => FieldValueEntity\n \n number => number\n \n picture => string (format: url)\n \n progress_notes => string\n \n risk => FieldValueEntity\n \n signature => string (format: url)\n \n text => string\n \n textarea => string\n \n time => string (format: time)\n \n vital => FieldValueEntity\n"
-          type: string
-          example: Text field value
-    SubmissionStatus:
-      description: The status of a form submission
-      type: string
-      default: unapproved
-      enum:
-      - draft
-      - unapproved
-      - approved
-      - verification
-      - job_pending
-      - to_delete
-      - correcting
-      - sent
-      - inactive
-      - correction_number_reqquired
-      - sent_inactive
-  responses:
-    PermissionError:
-      description: Permission error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    AuthChallenge:
-      description: Authentication required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Please verify your access level for this url.
-    ErrorResponseInvalidRequest:
-      description: Invalid request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 400
-            message: Only one of either `account_id` or `external_client_id` should be specified.
-    ErrorResponseNotFound:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Form Submission not found.
+  parameters:
+    page:
+      name: page
+      description: Filter by page number. If not specified will default to 1
+      in: query
+      schema:
+        type: integer
+        default: 1
+    count:
+      name: count
+      description: Number of items per page. If not specified will default to 100
+      in: query
+      schema:
+        type: integer
+        default: 100
   securitySchemes:
     basicAuth:
       type: http

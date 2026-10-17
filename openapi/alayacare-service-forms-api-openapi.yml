@@ -66,25 +66,16 @@ paths:
       operationId: getServicesForms
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        default: 100
-        type: integer
-        minimum: 0
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        default: 1
-        type: integer
-        minimum: 1
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
   schemas:
     ServiceFormList:
       allOf:
@@ -95,6 +86,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ServiceForm'
+    Branch:
+      description: AlayaCare branch
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: Branch ID
+          example: 1000
+        name:
+          type: string
+          description: Branch name
+          example: Toronto branch
     ServiceForm:
       description: Details of forms
       type: object
@@ -158,29 +162,25 @@ components:
       - page
       - total_pages
       - items
-    Branch:
-      description: AlayaCare branch
-      type: object
-      properties:
-        id:
-          type: integer
-          minimum: 1
-          description: Branch ID
-          example: 1000
-        name:
-          type: string
-          description: Branch name
-          example: Toronto branch
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        default: 100
+        type: integer
+        minimum: 0
   securitySchemes:
     basicAuth:
       type: http

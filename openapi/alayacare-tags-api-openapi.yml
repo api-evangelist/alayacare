@@ -68,23 +68,6 @@ paths:
       operationId: getCareplansTags
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
   responses:
     ErrorResponseInvalidTagId:
       description: Field 'tag_id' is invalid
@@ -113,6 +96,23 @@ components:
           example:
             status_code: 403
             message: Access required
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
     CarePlanTagList:
       description: List of care plan tags
@@ -126,6 +126,16 @@ components:
           description: Tag name
           type: string
           example: Review care plan
+    CarePlanTags:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: Paginated list of care plan tags
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarePlanTagList'
     ErrorResponse:
       description: Error response
       type: object
@@ -160,16 +170,6 @@ components:
       - page
       - total_pages
       - items
-    CarePlanTags:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: Paginated list of care plan tags
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarePlanTagList'
   securitySchemes:
     basic_auth:
       type: http

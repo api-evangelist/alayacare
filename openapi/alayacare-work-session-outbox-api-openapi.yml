@@ -71,6 +71,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    OutboxWorkSessionPageResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxWorkSessionCollectionResponse'
+      required:
+      - items
     OutboxWorkSessionCollectionResponse:
       type: object
       properties:
@@ -113,15 +122,6 @@ components:
       - id
       - visit_id
       - start_at
-    OutboxWorkSessionPageResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutboxWorkSessionCollectionResponse'
-      required:
-      - items
   securitySchemes:
     CognitoAuthorizer:
       type: apiKey

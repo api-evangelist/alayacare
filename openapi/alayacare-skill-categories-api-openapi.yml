@@ -44,23 +44,6 @@ paths:
       operationId: getSkillCategories
       x-operation-id-source: derived
 components:
-  parameters:
-    count:
-      description: Number of items per page.
-      name: count
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 100
-    page:
-      description: Filter by page number.
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        default: 1
   responses:
     ErrorResponseAuthentication:
       description: Authorization required
@@ -71,7 +54,50 @@ components:
           example:
             code: 401
             message: Authorization required.
+  parameters:
+    page:
+      description: Filter by page number.
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    count:
+      description: Number of items per page.
+      name: count
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
   schemas:
+    SkillCategoryList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
+      description: List of skill Categories
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/SkillCategory'
+    SkillCategory:
+      description: Skill Category
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          description: ID of the skill category
+          example: 1
+        name:
+          type: string
+          description: Name of the skill category
+          example: Languages
     ErrorResponse:
       description: Error response
       type: object
@@ -106,32 +132,6 @@ components:
       - page
       - total_pages
       - items
-    SkillCategory:
-      description: Skill Category
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: integer
-          description: ID of the skill category
-          example: 1
-        name:
-          type: string
-          description: Name of the skill category
-          example: Languages
-    SkillCategoryList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
-      description: List of skill Categories
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/SkillCategory'
   securitySchemes:
     basic_auth:
       type: http

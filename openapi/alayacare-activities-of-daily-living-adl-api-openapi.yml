@@ -94,7 +94,84 @@ paths:
       operationId: getAdlsClientByIdByClientId
       x-operation-id-source: derived
 components:
+  parameters:
+    service_id:
+      name: service_id
+      in: query
+      required: false
+      description: Filter by external service ID
+      schema:
+        type: string
+    alayacare_service_id:
+      name: alayacare_service_id
+      in: query
+      required: false
+      description: Filter by AlayaCare service ID
+      schema:
+        type: integer
+  responses:
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseAdlsInvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: service_id and alayacare_service_id are mutually exclusive
+    ErrorResponseCareplanFeatureFlagState:
+      description: Authorization required due to feature flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseClientNotFound:
+      description: Client not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Client not found
   schemas:
+    DailyActivityService:
+      description: Daily activity service
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: External service ID
+          example: sor_service_external_id_1
+        alayacare_id:
+          type: integer
+          description: AlayaCare service ID
+          example: 1
+    DailyActivityCategory:
+      description: Daily activity category
+      type: string
+      enum:
+      - adl_personal_care
+      - adl_mobility
+      - adl_equipment
+      - adl_nutrition
+      - adl_household_management
+      - adl_support
+      - adl_medication
     DailyActivityList:
       allOf:
       - $ref: '#/components/schemas/PaginatedList'
@@ -104,6 +181,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DailyActivity'
+    DailyActivity:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/DailyActivityCategory'
+        name:
+          type: string
+          description: Activity name.
+          example: brush teeth
+        rrule:
+          type: string
+          description: Recurrence rule applied to the daily activity.
+          example: FREQ=WEEKLY;DTSTART=20180204T180000Z;UNTIL=20180304T180000Z;WKST=MO;BYDAY=MO,WE,FR
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyActivityService'
+      required:
+      - category
+      - name
     ErrorResponse:
       description: Error response
       type: object
@@ -119,20 +216,6 @@ components:
       required:
       - code
       - message
-    DailyActivityService:
-      description: Daily activity service
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: External service ID
-          example: sor_service_external_id_1
-        alayacare_id:
-          type: integer
-          description: AlayaCare service ID
-          example: 1
     PaginatedList:
       description: Base model of all paginated lists
       type: object
@@ -158,89 +241,6 @@ components:
       - page
       - total_pages
       - items
-    DailyActivityCategory:
-      description: Daily activity category
-      type: string
-      enum:
-      - adl_personal_care
-      - adl_mobility
-      - adl_equipment
-      - adl_nutrition
-      - adl_household_management
-      - adl_support
-      - adl_medication
-    DailyActivity:
-      type: object
-      properties:
-        category:
-          $ref: '#/components/schemas/DailyActivityCategory'
-        name:
-          type: string
-          description: Activity name.
-          example: brush teeth
-        rrule:
-          type: string
-          description: Recurrence rule applied to the daily activity.
-          example: FREQ=WEEKLY;DTSTART=20180204T180000Z;UNTIL=20180304T180000Z;WKST=MO;BYDAY=MO,WE,FR
-        services:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyActivityService'
-      required:
-      - category
-      - name
-  responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseCareplanFeatureFlagState:
-      description: Authorization required due to feature flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    ErrorResponseClientNotFound:
-      description: Client not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Client not found
-    ErrorResponseAdlsInvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: service_id and alayacare_service_id are mutually exclusive
-  parameters:
-    service_id:
-      name: service_id
-      in: query
-      required: false
-      description: Filter by external service ID
-      schema:
-        type: string
-    alayacare_service_id:
-      name: alayacare_service_id
-      in: query
-      required: false
-      description: Filter by AlayaCare service ID
-      schema:
-        type: integer
   securitySchemes:
     basic_auth:
       type: http

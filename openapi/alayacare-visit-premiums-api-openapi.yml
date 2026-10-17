@@ -180,17 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            response:
-              value:
-                code: '401'
-                message: Authorization required.
     ErrorVisitNotFound:
       description: The visit referenced by visit_id was not found
       content:
@@ -213,36 +202,18 @@ components:
               value:
                 code: '409'
                 message: The funding configuration of this premium does not match that of the visit
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            response:
+              value:
+                code: '401'
+                message: Authorization required.
   schemas:
-    BillCode:
-      description: AlayaCare bill code
-      type: object
-      properties:
-        id:
-          type: integer
-          description: AlayCare bill code ID
-          example: 783
-          minimum: 1
-        code:
-          type: string
-          description: AlayCare bill code name
-          example: MEDIBILL
-      required:
-      - id
-      - code
-    Branch:
-      description: AlayaCare branch
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Branch ID
-          example: 1000
-          minimum: 1
-        name:
-          type: string
-          description: Branch name
-          example: AlayaCare Health
     ErrorResponse:
       description: Error response
       type: object
@@ -258,45 +229,19 @@ components:
       required:
       - code
       - message
-    VisitPremiumUpdateSchema:
+    Branch:
+      description: AlayaCare branch
       type: object
       properties:
-        premium_id:
+        id:
           type: integer
-          description: AlayaCare premium ID
+          description: Branch ID
+          example: 1000
           minimum: 1
-        quantity:
-          type: number
-          example: 1.01
-        description:
+        name:
           type: string
-          example: Mileage KMs
-    PaginatedList:
-      description: Base model of all paginated lists
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Number of items in the response
-          example: 10
-        page:
-          type: integer
-          description: Current page number
-          example: 1
-          minimum: 1
-        total_pages:
-          type: integer
-          description: Total number of pages available
-          example: 1
-        items:
-          type: array
-          items:
-            type: object
-      required:
-      - count
-      - page
-      - total_pages
-      - items
+          description: Branch name
+          example: AlayaCare Health
     PayCode:
       description: AlayaCare pay code
       type: object
@@ -310,29 +255,16 @@ components:
           type: string
           description: AlayCare pay code name
           example: 783
-    VisitPremiumDetails:
-      description: A visit premium
+    VisitPremiumsList:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedList'
       type: object
+      description: Paginated list of premiums
       properties:
-        visit_premium_id:
-          type: integer
-          description: AlayaCare visit premium ID
-          example: 345
-          minimum: 1
-        description:
-          type: string
-          description: Description of the visit premium
-          example: Reported travel KMs
-        quantity:
-          type: integer
-          description: Quantity of premiums applied to the visit
-          example: 2
-        premium:
-          $ref: '#/components/schemas/Premium'
-      required:
-      - visit_premium_id
-      - quantity
-      - premium
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitPremiumDetails'
     VisitPremiumCreateSchema:
       type: object
       required:
@@ -389,16 +321,84 @@ components:
       required:
       - code
       - premium_id
-    VisitPremiumsList:
-      allOf:
-      - $ref: '#/components/schemas/PaginatedList'
+    VisitPremiumUpdateSchema:
       type: object
-      description: Paginated list of premiums
       properties:
+        premium_id:
+          type: integer
+          description: AlayaCare premium ID
+          minimum: 1
+        quantity:
+          type: number
+          example: 1.01
+        description:
+          type: string
+          example: Mileage KMs
+    BillCode:
+      description: AlayaCare bill code
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlayCare bill code ID
+          example: 783
+          minimum: 1
+        code:
+          type: string
+          description: AlayCare bill code name
+          example: MEDIBILL
+      required:
+      - id
+      - code
+    VisitPremiumDetails:
+      description: A visit premium
+      type: object
+      properties:
+        visit_premium_id:
+          type: integer
+          description: AlayaCare visit premium ID
+          example: 345
+          minimum: 1
+        description:
+          type: string
+          description: Description of the visit premium
+          example: Reported travel KMs
+        quantity:
+          type: integer
+          description: Quantity of premiums applied to the visit
+          example: 2
+        premium:
+          $ref: '#/components/schemas/Premium'
+      required:
+      - visit_premium_id
+      - quantity
+      - premium
+    PaginatedList:
+      description: Base model of all paginated lists
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of items in the response
+          example: 10
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+          minimum: 1
+        total_pages:
+          type: integer
+          description: Total number of pages available
+          example: 1
         items:
           type: array
           items:
-            $ref: '#/components/schemas/VisitPremiumDetails'
+            type: object
+      required:
+      - count
+      - page
+      - total_pages
+      - items
   securitySchemes:
     basic_auth:
       type: http

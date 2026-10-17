@@ -55,87 +55,7 @@ paths:
       operationId: getVisitVerificationVisitsByAlayacareVisitId
       x-operation-id-source: derived
 components:
-  responses:
-    ErrorResponseUnauthorized:
-      description: Authorization required due to release flag state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 403
-            message: You do not have the required permissions to perform this action.
-    ErrorResponseAuthentication:
-      description: Authorization required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 401
-            message: Authorization required.
-    ErrorResponseVisitNotFound:
-      description: Visit not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 404
-            message: Visit not found
   schemas:
-    VisitVerificationException:
-      type: object
-      properties:
-        reason_code:
-          type: string
-          example: reason_code
-        reason_name:
-          type: string
-          example: Stuck in traffic
-        reason_category:
-          type: string
-          example: Reason Category
-        resolution_code:
-          type: string
-          example: resolution_code
-        resolution_name:
-          type: string
-          example: Validated with comments
-        comments:
-          type: string
-          example: Arrived under acceptable time frame
-        is_acknowledged:
-          type: boolean
-          example: false
-        status:
-          type: string
-          enum:
-          - resolved
-          - unresolved
-        details:
-          type: string
-          example: Work session information unavailable
-          description: Visit exception details
-        name:
-          type: string
-          example: Client overlapping work sessions
-          description: Exception type name
-    ErrorResponse:
-      description: Error response
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-          description: Response code
-        message:
-          type: string
-          example: Invalid request
-          description: Detailed error message
-      required:
-      - code
-      - message
     VisitVerificationDetails:
       description: Extended Visit Verification information
       type: object
@@ -197,6 +117,86 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VisitVerificationException'
+    VisitVerificationException:
+      type: object
+      properties:
+        reason_code:
+          type: string
+          example: reason_code
+        reason_name:
+          type: string
+          example: Stuck in traffic
+        reason_category:
+          type: string
+          example: Reason Category
+        resolution_code:
+          type: string
+          example: resolution_code
+        resolution_name:
+          type: string
+          example: Validated with comments
+        comments:
+          type: string
+          example: Arrived under acceptable time frame
+        is_acknowledged:
+          type: boolean
+          example: false
+        status:
+          type: string
+          enum:
+          - resolved
+          - unresolved
+        details:
+          type: string
+          example: Work session information unavailable
+          description: Visit exception details
+        name:
+          type: string
+          example: Client overlapping work sessions
+          description: Exception type name
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: Response code
+        message:
+          type: string
+          example: Invalid request
+          description: Detailed error message
+      required:
+      - code
+      - message
+  responses:
+    ErrorResponseUnauthorized:
+      description: Authorization required due to release flag state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: You do not have the required permissions to perform this action.
+    ErrorResponseAuthentication:
+      description: Authorization required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: Authorization required.
+    ErrorResponseVisitNotFound:
+      description: Visit not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: Visit not found
   securitySchemes:
     basic_auth:
       type: http
